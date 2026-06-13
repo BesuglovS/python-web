@@ -408,6 +408,37 @@ section li {
   margin-bottom: 5px;
 }
 
+/* === ЗНАЧОК КОНТЕСТА (задачи к уроку) === */
+.contest-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 2;
+  line-height: 1;
+}
+
+.contest-badge:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.5);
+}
+
+/* Карточкам нужно relative для абсолютного позиционирования значка */
+.topic-card {
+  position: relative;
+}
+
 /* === ПРОГРЕСС-БАР (главная) === */
 .progress-bar-container {
   background: var(--progress-bar-bg);

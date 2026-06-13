@@ -26,17 +26,14 @@
 <h2>Три формы range()</h2>
 <p>range(stop) — от 0 до stop-1:</p>
 <pre class="code-block">
-
 list(range(5))     # [0, 1, 2, 3, 4]
 </pre>
 <p>range(start, stop) — от start до stop-1:</p>
 <pre class="code-block">
-
 list(range(2, 7))  # [2, 3, 4, 5, 6]
 </pre>
 <p>range(start, stop, step) — с шагом step:</p>
 <pre class="code-block">
-
 list(range(0, 10, 2))  # [0, 2, 4, 6, 8]
 list(range(10, 0, -2)) # [10, 8, 6, 4, 2]
 </pre>
@@ -45,7 +42,6 @@ list(range(10, 0, -2)) # [10, 8, 6, 4, 2]
 <h2>range() в цикле for</h2>
 <p>Самое частое применение — повторение N раз:</p>
 <pre class="code-block">
-
 for i in range(3):
     print("Hello")  # Hello Hello Hello
 
@@ -59,7 +55,6 @@ for i in range(len(words)):
 <h2>Особенности range()</h2>
 <p>range() не создаёт список, а генерирует числа на лету (экономит память):</p>
 <pre class="code-block">
-
 # range — это отдельный тип
 r = range(1000000)
 print(type(r))  # <class 'range'>

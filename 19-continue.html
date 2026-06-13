@@ -26,7 +26,6 @@
 <h2>Как работает continue</h2>
 <p>continue пропускает оставшуюся часть текущей итерации и переходит к следующей:</p>
 <pre class="code-block">
-
 for i in range(5):
     if i == 2:
         continue
@@ -37,7 +36,6 @@ for i in range(5):
 <h2>Пример: печать только чётных</h2>
 <p>Пропускаем нечётные числа:</p>
 <pre class="code-block">
-
 for num in range(1, 11):
     if num % 2 != 0:
         continue
@@ -48,7 +46,6 @@ for num in range(1, 11):
 <h2>continue в while</h2>
 <p>В while важно не забыть обновить счётчик до continue:</p>
 <pre class="code-block">
-
 num = 0
 while num < 10:
     num += 1
@@ -61,7 +58,6 @@ while num < 10:
 <h2>break vs continue</h2>
 <p>Сравнение:</p>
 <pre class="code-block">
-
 # break — выход из цикла
 for i in range(5):
     if i == 3:

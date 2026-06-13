@@ -26,7 +26,6 @@
 <h2>Базовый синтаксис</h2>
 <p>Списочное выражение (list comprehension) — компактный способ создания списков:</p>
 <pre class="code-block">
-
 # Обычный цикл
 squares = []
 for x in range(5):
@@ -41,7 +40,6 @@ print(squares)  # [0, 1, 4, 9, 16]
 <h2>С условием (if)</h2>
 <p>Можно добавить фильтрацию:</p>
 <pre class="code-block">
-
 # Только чётные числа
 evens = [x for x in range(10) if x % 2 == 0]
 print(evens)  # [0, 2, 4, 6, 8]
@@ -55,7 +53,6 @@ print(odd_squares)  # [1, 9, 25, 49, 81]
 <h2>Вложенные списочные выражения</h2>
 <p>Можно использовать несколько for:</p>
 <pre class="code-block">
-
 # Матрица 3x3
 matrix = [[i * 3 + j for j in range(3)] for i in range(3)]
 print(matrix)  # [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
@@ -69,7 +66,6 @@ print(flat)  # [0, 1, 2, 3, 4, 5, 6, 7, 8]
 <h2>Словарные выражения</h2>
 <p>Аналогично для словарей:</p>
 <pre class="code-block">
-
 # Словарь квадратов
 squares_dict = {x: x**2 for x in range(5)}
 print(squares_dict)  # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}

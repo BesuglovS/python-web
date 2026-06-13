@@ -3,6 +3,7 @@
  * Подсветка синтаксиса, темы, копирование кода, поиск, прогресс, оглавление
  */
 
+
 // === ПОДСВЕТКА СИНТАКСИСА (Highlight.js) ===
 (function () {
   document.addEventListener('DOMContentLoaded', () => {
@@ -303,6 +304,22 @@
           numDiv.classList.add('completed-num');
         }
       }
+
+      // Добавляем значок контеста
+      var lessonNum = parseInt(card.getAttribute('data-lesson'));
+      if (lessonNum && THEORY_CONTESTS[lessonNum]) {
+        var contestId = THEORY_CONTESTS[lessonNum];
+        var contestUrl = CONTEST_BASE_URL + contestId;
+        var badge = document.createElement('a');
+        badge.className = 'contest-badge';
+        badge.href = contestUrl;
+        badge.target = '_blank';
+        badge.rel = 'noopener noreferrer';
+        badge.title = 'Задачи к этой теме';
+        badge.innerHTML = '📝';
+        badge.setAttribute('aria-label', 'Открыть задачи контеста');
+        card.appendChild(badge);
+      }
     });
   });
 })();
@@ -368,5 +385,36 @@
         target.scrollIntoView({ behavior: 'smooth' });
       }
     });
+  });
+})();
+
+// === ДИНАМИЧЕСКАЯ ВСТАВКА ССЫЛКИ НА КОНТЕСТ ===
+(function () {
+  if (typeof THEORY_CONTESTS === 'undefined' || typeof CONTEST_BASE_URL === 'undefined') return;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    var placeholder = document.getElementById('contest-link-placeholder');
+    if (!placeholder) return;
+
+    // Определяем номер урока из имени файла (например, 06-number-ops.html → 6)
+    var pageName = window.location.pathname.split('/').pop();
+    var match = pageName.match(/^(\d+)/);
+    if (!match) return;
+    var lessonNum = parseInt(match[1], 10);
+
+    var contestId = THEORY_CONTESTS[lessonNum];
+    if (!contestId) return;
+
+    var contestUrl = CONTEST_BASE_URL + contestId;
+
+    var div = document.createElement('div');
+    div.className = 'contest-link';
+    div.innerHTML =
+      '<p style="text-align: center; margin-top: 2rem; padding: 1rem; background: #1e3a5f; border-radius: 8px; color: #e0e0e0;">' +
+      '🏆 Решай задачи по пройденным темам на сайте ' +
+      '<a href="' + contestUrl + '" target="_blank" rel="noopener noreferrer" style="color: #7ec8ff; font-weight: 600; text-decoration: underline;">contest.nayanovaacademy.ru</a>' +
+      '</p>';
+
+    placeholder.parentNode.replaceChild(div, placeholder);
   });
 })();

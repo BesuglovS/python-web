@@ -26,7 +26,6 @@
 <h2>Конкатенация и умножение</h2>
         <p>Строки можно складывать (конкатенация) и умножать на число:</p>
         <pre class="code-block">
-
 hello = "Привет" + ", " + "мир!"   # "Привет, мир!"
 repeated = "Ha" * 3                # "HaHaHa"
 line = "-" * 20                    # "--------------------"
@@ -37,7 +36,6 @@ line = "-" * 20                    # "--------------------"
 <h2>Экранирование символов</h2>
         <p>Обратный слеш \ позволяет вставлять специальные символы:</p>
         <pre class="code-block">
-
 text = "Он сказал: \"Привет\""
 path = "C:\\Users\\Name"
 newline = "Строка1\nСтрока2"
@@ -53,7 +51,6 @@ tab = "Колонка1\tКолонка2"
           <code>{}</code> — код Python:
         </p>
         <pre class="code-block">
-
 name = "Анна"
 age = 17
 print(f"Меня зовут {name}, мне {age} лет.")
@@ -77,7 +74,6 @@ print(f"Цена: {price:>10.2f} руб.")   # "Цена:      12.50 руб."
           регулярных выражений:
         </p>
         <pre class="code-block">
-
 path = r"C:\Users\Name\Documents"
 print(path)   # C:\Users\Name\Documents
 
@@ -92,7 +88,6 @@ print(path)   # C:\Users\Name\Documents
           текст на нескольких строках:
         </p>
         <pre class="code-block">
-
 text = """Это многострочная
 строка. Она сохраняет
 переносы строк."""
@@ -111,7 +106,6 @@ print(text)
           возвращают <strong>новую</strong> строку — исходная не меняется:
         </p>
         <pre class="code-block">
-
 s = "  Hello, World!  "
 print(s.upper())                # "  HELLO, WORLD!  "
 print(s.lower())                # "  hello, world!  "
@@ -125,7 +119,6 @@ print(len(s))                   # 18 (длина строки)
           <section>
 <h2>Методы изменения регистра</h2>
         <pre class="code-block">
-
 word = "python programming"
 
 print(word.capitalize())   # "Python programming" (первая буква заглавная)
@@ -142,7 +135,6 @@ print(word.lower())        # "python programming"
 <h2>Методы проверки символов</h2>
         <p>Возвращают <code>True</code> или <code>False</code>:</p>
         <pre class="code-block">
-
 print("123".isdigit())      # True  — только цифры
 print("abc".isalpha())      # True  — только буквы
 print("abc123".isalnum())   # True  — только буквы и цифры
@@ -157,7 +149,6 @@ print("Hello World".istitle())  # True — каждое слово с загла
           <section>
 <h2>Методы поиска и подсчёта</h2>
         <pre class="code-block">
-
 text = "раз два раз два раз"
 
 print(text.count("раз"))        # 3 — сколько раз встречается подстрока
@@ -180,7 +171,6 @@ print(text.index("два"))        # 4
           <section>
 <h2>Разделение и объединение строк</h2>
         <pre class="code-block">
-
 # split() — разбивает строку на список по разделителю
 csv = "яблоко,груша,банан"
 fruits = csv.split(",")
@@ -204,7 +194,6 @@ print(phone.rpartition("-"))    # ('+7-123-456-78', '-', '90')
           <section>
 <h2>Удаление пробелов</h2>
         <pre class="code-block">
-
 s = "  \tтекст\n  "
 
 print(s.strip())    # "текст"       — удаляет пробелы с обоих концов
@@ -221,7 +210,6 @@ print(url.strip("."))            # "www.example.com"
           <section>
 <h2>Выравнивание и заполнение</h2>
         <pre class="code-block">
-
 text = "Привет"
 
 print(text.center(15))          # "    Привет    "
@@ -239,7 +227,6 @@ print(num.zfill(5))             # "00042"
 <h2>Проверка вхождения (in)</h2>
         <p>Оператор <code>in</code> проверяет, содержит ли строка подстроку:</p>
         <pre class="code-block">
-
 text = "Python programming"
 print("Python" in text)    # True
 print("Java" in text)      # False
@@ -261,7 +248,6 @@ if "Java" not in text:
           остаётся без изменений:
         </p>
         <pre class="code-block">
-
 s = "Привет"
 # s[0] = "п"          # Ошибка! TypeError
 s_upper = s.upper()   # Создаётся новая строка
@@ -274,7 +260,6 @@ print(s_upper)        # "ПРИВЕТ"
 <h2>Сравнение строк</h2>
         <p>Строки сравниваются лексикографически (по кодам символов):</p>
         <pre class="code-block">
-
 print("abc" == "abc")   # True
 print("abc" != "xyz")   # True
 print("abc" < "abd")    # True  — 'c' < 'd'
@@ -288,7 +273,6 @@ print("Hello".lower() == "HELLO".lower())   # True
           <section>
 <h2>Преобразование типов</h2>
         <pre class="code-block">
-
 # Число → строка
 n = 42
 s = str(n)               # "42"
@@ -300,14 +284,16 @@ f = float("3.14")        # 3.14
 </pre
         >
           </section>
+          <div id="contest-link-placeholder"></div>
         </div>
       </div>
       <footer class="topic-footer">
 <a href="08-indentation.html" class="prev-link">← Отступы</a>
-<a href="10-complex-conditions.html" class="next-link">Далее: Сложные условия →</a>
+        <a href="09-complex-conditions.html" class="next-link">Далее: →</a>
       </footer>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
