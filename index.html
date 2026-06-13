@@ -3,86 +3,104 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Основы программирования на Python</title>
+    <meta name="description" content="Изучайте Python с нуля — 27 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса." />
+    <meta property="og:title" content="Python — Основы программирования" />
+    <meta property="og:description" content="27 уроков по Python для начинающих: от переменных до словарей. Бесплатно, с примерами кода." />
+    <meta property="og:type" content="website" />
+    <title>Основы программирования на Python — 27 уроков для начинающих</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      /* Стили, специфичные для главной страницы */
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
-        color: #333;
+      }
+      [data-theme="dark"] body {
+        background: linear-gradient(135deg, #1a1030 0%, #0f0a20 100%);
       }
       .container {
-        max-width: 1000px;
+        max-width: 1040px;
         margin: 0 auto;
         padding: 40px 20px;
       }
       header {
         text-align: center;
-        padding: 60px 20px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        margin-bottom: 40px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        padding: 50px 30px 36px;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        margin-bottom: 32px;
+        box-shadow: var(--shadow-lg);
+        transition: background var(--transition), box-shadow var(--transition);
       }
       header h1 {
-        font-size: 2.5em;
-        color: #2c3e50;
-        margin-bottom: 10px;
+        font-size: 2.4em;
+        color: var(--text);
+        margin-bottom: 8px;
+        transition: color var(--transition);
       }
       header h1 span {
-        color: #3498db;
+        color: var(--primary);
       }
       header p {
-        color: #7f8c8d;
-        font-size: 1.1em;
+        color: var(--text-muted);
+        font-size: 1.08em;
+        transition: color var(--transition);
       }
       nav {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 14px;
       }
       .topic-card {
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--card-bg);
         border-radius: 12px;
-        padding: 20px 25px;
+        padding: 20px 24px;
         text-decoration: none;
-        color: #2c3e50;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        color: var(--text);
+        transition: all var(--transition);
+        box-shadow: var(--shadow);
         display: flex;
         align-items: center;
         gap: 15px;
+        border: 1px solid transparent;
       }
       .topic-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        background: #fff;
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        background: var(--card-hover-bg);
+        border-color: var(--primary);
       }
       .topic-num {
         background: linear-gradient(135deg, #667eea, #764ba2);
         color: white;
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: bold;
-        font-size: 1.1em;
+        font-size: 1.05em;
         flex-shrink: 0;
+        transition: all var(--transition);
+      }
+      .topic-card.completed .topic-num, .topic-num.completed-num {
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+      .topic-card.completed {
+        border-left: 4px solid #10b981;
       }
       .topic-info h2 {
-        font-size: 1.1em;
-        margin-bottom: 4px;
+        font-size: 1.05em;
+        margin-bottom: 3px;
+        color: var(--text);
+        transition: color var(--transition);
       }
       .topic-info p {
-        font-size: 0.85em;
-        color: #7f8c8d;
+        font-size: 0.83em;
+        color: var(--text-muted);
+        transition: color var(--transition);
       }
       footer {
         text-align: center;
@@ -90,6 +108,21 @@
         margin-top: 40px;
         padding: 20px;
         font-size: 0.9em;
+      }
+      /* Прогресс */
+      .progress-bar-container {
+        max-width: 400px;
+        margin: 14px auto 6px;
+      }
+      .progress-info {
+        display: block;
+        text-align: center;
+        margin-top: 4px;
+      }
+
+      @media (max-width: 480px) {
+        header h1 { font-size: 1.5em; }
+        nav { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -99,6 +132,8 @@
         <h1>🐍 <span>Python</span> — основы программирования</h1>
         <p>27 базовых тем для начинающих с примерами кода</p>
       </header>
+      <!-- Поиск будет добавлен через JS -->
+      <!-- Прогресс-бар будет добавлен через JS -->
       <nav>
         <a href="01-history.html" class="topic-card">
           <div class="topic-num">1</div>
@@ -135,46 +170,46 @@
             <p>print(), input(), форматирование</p>
           </div>
         </a>
-        <a href="06-conditional.html" class="topic-card">
+        <a href="06-number-ops.html" class="topic-card">
           <div class="topic-num">6</div>
+          <div class="topic-info">
+            <h2>Операции над числами</h2>
+            <p>+, -, *, /, //, %, **</p>
+          </div>
+        </a>
+        <a href="07-conditional.html" class="topic-card">
+          <div class="topic-num">7</div>
           <div class="topic-info">
             <h2>Условный оператор</h2>
             <p>if, elif, else</p>
           </div>
         </a>
-        <a href="07-indentation.html" class="topic-card">
-          <div class="topic-num">7</div>
+        <a href="08-indentation.html" class="topic-card">
+          <div class="topic-num">8</div>
           <div class="topic-info">
             <h2>Отступы</h2>
             <p>Блоки кода, PEP 8</p>
           </div>
         </a>
-        <a href="08-string-ops.html" class="topic-card">
-          <div class="topic-num">8</div>
+        <a href="09-string-ops.html" class="topic-card">
+          <div class="topic-num">9</div>
           <div class="topic-info">
             <h2>Операции над строками</h2>
             <p>Конкатенация, умножение, методы</p>
           </div>
         </a>
-        <a href="09-complex-conditions.html" class="topic-card">
-          <div class="topic-num">9</div>
+        <a href="10-complex-conditions.html" class="topic-card">
+          <div class="topic-num">10</div>
           <div class="topic-info">
             <h2>Сложные условия</h2>
             <p>and, or, not</p>
           </div>
         </a>
-        <a href="10-nested-structures.html" class="topic-card">
-          <div class="topic-num">10</div>
+        <a href="11-nested-structures.html" class="topic-card">
+          <div class="topic-num">11</div>
           <div class="topic-info">
             <h2>Вложенные структуры</h2>
             <p>Условия внутри условий</p>
-          </div>
-        </a>
-        <a href="11-number-ops.html" class="topic-card">
-          <div class="topic-num">11</div>
-          <div class="topic-info">
-            <h2>Операции над числами</h2>
-            <p>+, -, *, /, //, %, **</p>
           </div>
         </a>
         <a href="12-priority.html" class="topic-card">
@@ -291,9 +326,11 @@
         </a>
       </nav>
       <footer>
-        Создано для изучения основ Python. Все примеры можно запустить в
-        интерпретаторе.
+        Создано для изучения основ Python. Все примеры можно запустить в интерпретаторе.
       </footer>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

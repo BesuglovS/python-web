@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 16: range(). Генерация последовательностей чисел" />
+    <meta property="og:title" content="16. range() — Python: основы" />
+    <meta property="og:description" content="Урок 16: range(). Генерация последовательностей чисел" />
+    <meta property="og:type" content="article" />
     <title>range() — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>16. range()</h1>
         <p class="subtitle">Генерация последовательностей чисел</p>
       </header>
-
-      <section>
-        <h2>Три формы range()</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Три формы range()</h2>
 <p>range(stop) — от 0 до stop-1:</p>
 <pre class="code-block">
 
@@ -32,9 +40,9 @@ list(range(2, 7))  # [2, 3, 4, 5, 6]
 list(range(0, 10, 2))  # [0, 2, 4, 6, 8]
 list(range(10, 0, -2)) # [10, 8, 6, 4, 2]
 </pre>
-      </section>
-      <section>
-        <h2>range() в цикле for</h2>
+          </section>
+          <section>
+<h2>range() в цикле for</h2>
 <p>Самое частое применение — повторение N раз:</p>
 <pre class="code-block">
 
@@ -46,9 +54,9 @@ words = ["яблоко", "банан", "вишня"]
 for i in range(len(words)):
     print(f"{i}: {words[i]}")
 </pre>
-      </section>
-      <section>
-        <h2>Особенности range()</h2>
+          </section>
+          <section>
+<h2>Особенности range()</h2>
 <p>range() не создаёт список, а генерирует числа на лету (экономит память):</p>
 <pre class="code-block">
 
@@ -62,12 +70,15 @@ print(r[-1])    # 999999
 # Преобразовать в список при необходимости
 nums = list(range(5))  # [0, 1, 2, 3, 4]
 </pre>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="15-for.html" class="prev-link">← Назад</a>
+<a href="15-for.html" class="prev-link">← Назад</a>
         <a href="17-booleans.html" class="next-link">Далее: →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

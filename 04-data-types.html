@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 4: Типы данных. int, float, str, bool, NoneType, type(), isinstance()" />
+    <meta property="og:title" content="4. Типы данных — Python: основы" />
+    <meta property="og:description" content="Урок 4: Типы данных. int, float, str, bool, NoneType, type(), isinstance()" />
+    <meta property="og:type" content="article" />
     <title>Типы данных — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>4. Типы данных</h1>
         <p class="subtitle">int, float, str, bool, NoneType, type(), isinstance()</p>
       </header>
-
-      <section>
-        <h2>Основные встроенные типы</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Основные встроенные типы</h2>
 <p>В Python у каждого значения есть тип:</p>
 <pre class="code-block">
 
@@ -33,9 +41,9 @@ flag = True      # bool — булево значение
 # Пустой тип
 result = None    # NoneType — отсутствие значения
 </pre>
-      </section>
-      <section>
-        <h2>Определение типа — type() и isinstance()</h2>
+          </section>
+          <section>
+<h2>Определение типа — type() и isinstance()</h2>
 <p>Узнать тип переменной:</p>
 <pre class="code-block">
 
@@ -48,9 +56,9 @@ print(isinstance(10, int))       # True
 print(isinstance("abc", str))    # True
 print(isinstance(10, (int, float)))  # True
 </pre>
-      </section>
-      <section>
-        <h2>Преобразование типов</h2>
+          </section>
+          <section>
+<h2>Преобразование типов</h2>
 <p>Явное преобразование (приведение) типов — превращение значения из одного типа в другой с помощью функций-конструкторов: <code>int()</code>, <code>float()</code>, <code>str()</code>, <code>bool()</code>.</p>
 
 <h3>Числовые преобразования</h3>
@@ -109,9 +117,9 @@ print(int(False))      # 0
 print(True + 5)        # 6
 print(False * 10)      # 0
 </pre>
-      </section>
-      <section>
-        <h2>Изменяемые и неизменяемые типы</h2>
+          </section>
+          <section>
+<h2>Изменяемые и неизменяемые типы</h2>
 <p>Неизменяемые (immutable): int, float, str, bool, tuple, frozenset</p>
 <p>Изменяемые (mutable): list, dict, set</p>
 <pre class="code-block">
@@ -125,12 +133,15 @@ s = "H" + s[1:]  # Нужно создать новую строку
 lst = [1, 2, 3]
 lst[0] = 10  # Работает!
 </pre>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="03-variables.html" class="prev-link">← Назад</a>
+<a href="03-variables.html" class="prev-link">← Назад</a>
         <a href="05-io.html" class="next-link">Далее: →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

@@ -3,20 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Урок 8: Отступы (indentation). Как Python использует отступы для определения блоков кода" />
+<meta property="og:title" content="8. Отступы (indentation) — Python: основы" />
+<meta property="og:description" content="Урок 8: Отступы (indentation). Как Python использует отступы для определения блоков кода" />
+    <meta property="og:type" content="article" />
     <title>Отступы — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
-        <h1>7. Отступы (indentation)</h1>
-        <p class="subtitle">
-          Как Python использует отступы для определения блоков кода
-        </p>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+<h1>8. Отступы (indentation)</h1>
+        <p class="subtitle">Как Python использует отступы для определения блоков кода</p>
       </header>
-      <section>
-        <h2>Зачем нужны отступы?</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Зачем нужны отступы?</h2>
         <p>
           В отличие от многих языков, Python не использует фигурные скобки
           <code>{}</code> или команды <code>Begin end</code> для выделения
@@ -28,9 +35,9 @@ if True:
     print("Это тоже внутри if")
 print("А это уже вне блока if")</pre
         >
-      </section>
-      <section>
-        <h2>Пример с if</h2>
+          </section>
+          <section>
+<h2>Пример с if</h2>
         <pre class="code-block">
 age = 20
 if age >= 18:
@@ -40,27 +47,27 @@ else:
     print("Доступ запрещён")
     print("Вам нет 18 лет")</pre
         >
-      </section>
-      <section>
-        <h2>Пример с циклом for</h2>
+          </section>
+          <section>
+<h2>Пример с циклом for</h2>
         <pre class="code-block">
 for i in range(3):
     print(f"Итерация {i}")
     print("Всё ещё внутри цикла")
 print("Цикл завершён")</pre
         >
-      </section>
-      <section>
-        <h2>Тело функции</h2>
+          </section>
+          <section>
+<h2>Тело функции</h2>
         <pre class="code-block">
 def greet(name):
     print(f"Привет, {name}!")
     print("Рады вас видеть!")
 greet("Анна")</pre
         >
-      </section>
-      <section>
-        <h2>Стандарт PEP 8</h2>
+          </section>
+          <section>
+<h2>Стандарт PEP 8</h2>
         <p>
           PEP 8 рекомендует использовать <strong>4 пробела</strong> для каждого
           уровня отступа. Не смешивайте табуляцию и пробелы!
@@ -70,9 +77,9 @@ greet("Анна")</pre
 if x > 0:
     print("Положительное")</pre
         >
-      </section>
-      <section>
-        <h2>Автоформатирование в VS Code</h2>
+          </section>
+          <section>
+<h2>Автоформатирование в VS Code</h2>
         <p>
           Редактор <strong>VS Code</strong> умеет автоматически расставлять
           отступы при сохранении файла:
@@ -98,9 +105,9 @@ if x > 0:
           <code>Shift + Alt + F</code> (Windows) или
           <code>Shift + Option + F</code> (macOS).
         </p>
-      </section>
-      <section>
-        <h2>Автоформатирование в PyCharm</h2>
+          </section>
+          <section>
+<h2>Автоформатирование в PyCharm</h2>
         <p>
           <strong>PyCharm</strong> также предоставляет мощные средства для
           работы с отступами:
@@ -127,9 +134,9 @@ if x > 0:
             т.д.
           </li>
         </ul>
-      </section>
-      <section>
-        <h2>Распространённые ошибки</h2>
+          </section>
+          <section>
+<h2>Распространённые ошибки</h2>
         <ul>
           <li>
             <strong>IndentationError:</strong> unexpected indent — лишний отступ
@@ -149,13 +156,17 @@ if x > 0:
 if True:
 print("Ошибка!")</pre
         >
-      </section>
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="06-conditional.html" class="prev-link">← Назад</a>
-        <a href="08-string-ops.html" class="next-link"
+<a href="07-conditional.html" class="prev-link">← Условный оператор</a>
+<a href="09-string-ops.html" class="next-link"
           >Далее: Операции над строками →</a
         >
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

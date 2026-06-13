@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 14: Цикл с предусловием (while). while — повторение пока условие истинно" />
+    <meta property="og:title" content="14. Цикл с предусловием (while) — Python: основы" />
+    <meta property="og:description" content="Урок 14: Цикл с предусловием (while). while — повторение пока условие истинно" />
+    <meta property="og:type" content="article" />
     <title>Цикл с предусловием (while) — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>14. Цикл с предусловием (while)</h1>
         <p class="subtitle">while — повторение пока условие истинно</p>
       </header>
-
-      <section>
-        <h2>Синтаксис while</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Синтаксис while</h2>
 <p>while выполняет блок кода, пока условие истинно:</p>
 <pre class="code-block">
 
@@ -31,9 +39,9 @@ while count < 5:
 # Счёт: 3
 # Счёт: 4
 </pre>
-      </section>
-      <section>
-        <h2>Бесконечный цикл</h2>
+          </section>
+          <section>
+<h2>Бесконечный цикл</h2>
 <p>Если условие всегда истинно — цикл бесконечен. Используйте break для выхода:</p>
 <pre class="code-block">
 
@@ -43,9 +51,9 @@ while True:
         break
     print(f"Вы ввели: {cmd}")
 </pre>
-      </section>
-      <section>
-        <h2>while с else</h2>
+          </section>
+          <section>
+<h2>while с else</h2>
 <p>Блок else выполняется, если цикл завершился нормально (без break):</p>
 <pre class="code-block">
 
@@ -58,9 +66,9 @@ else:
 
 # Вывод: 0 1 2 "Цикл завершён"
 </pre>
-      </section>
-      <section>
-        <h2>Пример: сумма чисел до нуля</h2>
+          </section>
+          <section>
+<h2>Пример: сумма чисел до нуля</h2>
 <p>Пользователь вводит числа, суммируем их до тех пор, пока не введёт 0:</p>
 <pre class="code-block">
 
@@ -71,12 +79,15 @@ while num != 0:
     num = int(input("Число: "))
 print(f"Сумма: {total}")
 </pre>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="13-functions.html" class="prev-link">← Назад</a>
+<a href="13-functions.html" class="prev-link">← Назад</a>
         <a href="15-for.html" class="next-link">Далее: →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

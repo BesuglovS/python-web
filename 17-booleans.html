@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 17: Булевы переменные. True, False, bool(), truthy и falsy значения" />
+    <meta property="og:title" content="17. Булевы переменные — Python: основы" />
+    <meta property="og:description" content="Урок 17: Булевы переменные. True, False, bool(), truthy и falsy значения" />
+    <meta property="og:type" content="article" />
     <title>Булевы переменные — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>17. Булевы переменные</h1>
         <p class="subtitle">True, False, bool(), truthy и falsy значения</p>
       </header>
-
-      <section>
-        <h2>Тип bool</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Тип bool</h2>
 <p>bool — это подтип int. True = 1, False = 0:</p>
 <pre class="code-block">
 
@@ -26,9 +34,9 @@ print(type(is_active))  # <class 'bool'>
 print(True + 1)         # 2
 print(False * 5)        # 0
 </pre>
-      </section>
-      <section>
-        <h2>Функция bool()</h2>
+          </section>
+          <section>
+<h2>Функция bool()</h2>
 <p>bool() преобразует любое значение в True или False:</p>
 <pre class="code-block">
 
@@ -47,9 +55,9 @@ print(bool(-1))       # True
 print(bool("text"))   # True
 print(bool([1, 2]))   # True
 </pre>
-      </section>
-      <section>
-        <h2>Логические операции</h2>
+          </section>
+          <section>
+<h2>Логические операции</h2>
 <p>and, or, not с булевыми значениями:</p>
 <pre class="code-block">
 
@@ -62,12 +70,15 @@ print(0 and 42)        # 0 (and возвращает первое falsy)
 print(3 or 0)          # 3 (or возвращает первое truthy)
 print("" or "default") # "default"
 </pre>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="16-range.html" class="prev-link">← Назад</a>
+<a href="16-range.html" class="prev-link">← Назад</a>
         <a href="18-break.html" class="next-link">Далее: →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

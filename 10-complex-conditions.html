@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Урок 10: Сложные условия. and, or, not — логические операторы" />
+<meta property="og:title" content="10. Сложные условия — Python: основы" />
+<meta property="og:description" content="Урок 10: Сложные условия. and, or, not — логические операторы" />
+    <meta property="og:type" content="article" />
     <title>Сложные условия — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
-        <h1>9. Сложные условия</h1>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+<h1>10. Сложные условия</h1>
         <p class="subtitle">and, or, not — логические операторы</p>
       </header>
-
-      <section>
-        <h2>Логический оператор and</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Логический оператор and</h2>
         <p>and возвращает True, только если оба условия истинны:</p>
         <pre class="code-block">
 
@@ -32,9 +40,9 @@ if age >= 18 and has_license:
 # False and False -> False
 </pre
         >
-      </section>
-      <section>
-        <h2>Логический оператор or</h2>
+          </section>
+          <section>
+<h2>Логический оператор or</h2>
         <p>or возвращает True, если хотя бы одно условие истинно:</p>
         <pre class="code-block">
 
@@ -51,9 +59,9 @@ if is_weekend or is_holiday:
 # False or False -> False
 </pre
         >
-      </section>
-      <section>
-        <h2>Логический оператор not</h2>
+          </section>
+          <section>
+<h2>Логический оператор not</h2>
         <p>not инвертирует булево значение:</p>
         <pre class="code-block">
 
@@ -65,9 +73,9 @@ if not is_raining:
 # not False -> True
 </pre
         >
-      </section>
-      <section>
-        <h2>Сложные составные условия</h2>
+          </section>
+          <section>
+<h2>Сложные составные условия</h2>
         <p>Можно комбинировать несколько операторов:</p>
         <pre class="code-block">
 
@@ -81,9 +89,9 @@ if (age >= 18 and has_ticket) or is_vip:
 # Скобки помогают задать порядок вычислений
 </pre
         >
-      </section>
-      <section>
-        <h2>Short-circuit evaluation</h2>
+          </section>
+          <section>
+<h2>Short-circuit evaluation</h2>
         <p>
           Python вычисляет условия слева направо и останавливается, как только
           результат определён:
@@ -99,12 +107,15 @@ if first() or second():
     pass
 </pre
         >
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="08-string-ops.html" class="prev-link">← Назад</a>
-        <a href="10-nested-structures.html" class="next-link">Далее: →</a>
+<a href="09-string-ops.html" class="prev-link">← Операции над строками</a>
+<a href="11-nested-structures.html" class="next-link">Далее: Вложенные структуры →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

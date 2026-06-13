@@ -3,29 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 2: Создание проекта в IDLE, VS Code и PyCharm. Настройка окружения для разработки на Python" />
+    <meta property="og:title" content="2. Создание проекта в IDLE, VS Code и PyCharm — Python: основы" />
+    <meta property="og:description" content="Урок 2: Создание проекта в IDLE, VS Code и PyCharm. Настройка окружения для разработки на Python" />
+    <meta property="og:type" content="article" />
     <title>Настройка IDE: VS Code и PyCharm — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>2. Создание проекта в IDLE, VS Code и PyCharm</h1>
         <p class="subtitle">Настройка окружения для разработки на Python</p>
-        <p>
-          Самый простой способ начать — использовать <strong>IDLE</strong>,
-          встроенную среду, которая устанавливается вместе с Python. Для более
-          серьёзной работы подойдут <strong>Visual Studio Code</strong> (VS
-          Code) и <strong>PyCharm</strong>. Прежде чем писать код, нужно
-          подготовить рабочее окружение. Современные IDE (Integrated Development
-          Environment) — среды разработки — предоставляют удобный редактор кода,
-          автодополнение, отладчик и управление проектами. В этом уроке мы
-          рассмотрим все три инструмента.
-        </p>
       </header>
-
-      <section>
-        <h2>Обзор IDLE, VS Code и PyCharm</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Обзор IDLE, VS Code и PyCharm</h2>
         <table>
           <tr>
             <th>Характеристика</th>
@@ -69,10 +67,9 @@
           — разница для начинающего минимальна. Мы рассмотрим их чтобы вы могли
           принять взвешенное решение.
         </p>
-      </section>
-
-      <section>
-        <h2>Запуск Python через IDLE (встроенная среда)</h2>
+          </section>
+          <section>
+<h2>Запуск Python через IDLE (встроенная среда)</h2>
         <p>
           <strong>IDLE</strong> (Integrated Development and Learning
           Environment) — это простая среда разработки, которая входит в состав
@@ -152,10 +149,9 @@ Hello, World!</pre
           Когда вы освоитесь, можно перейти к более мощным инструментам — VS
           Code или PyCharm.
         </p>
-      </section>
-
-      <section>
-        <h2>Настройка VS Code</h2>
+          </section>
+          <section>
+<h2>Настройка VS Code</h2>
 
         <h3>Шаг 1. Установка VS Code</h3>
         <p>
@@ -254,10 +250,9 @@ print("Python работает!")</pre
           <li><strong>GitLens</strong> — удобная работа с Git</li>
           <li><strong>Prettier / Black</strong> — форматирование кода</li>
         </ul>
-      </section>
-
-      <section>
-        <h2>Настройка PyCharm</h2>
+          </section>
+          <section>
+<h2>Настройка PyCharm</h2>
 
         <h3>Шаг 1. Установка PyCharm</h3>
         <p>
@@ -364,10 +359,9 @@ print("Python работает!")</pre
             >
           </li>
         </ul>
-      </section>
-
-      <section>
-        <h2>Сравнение: VS Code vs PyCharm для новичка</h2>
+          </section>
+          <section>
+<h2>Сравнение: VS Code vs PyCharm для новичка</h2>
         <table>
           <tr>
             <th>Критерий</th>
@@ -419,10 +413,9 @@ print("Python работает!")</pre
           установите VS Code и PyCharm, создайте в каждом простой проект и
           выберите ту среду, в которой вам комфортнее работать.
         </div>
-      </section>
-
-      <section>
-        <h2>Виртуальное окружение (venv)</h2>
+          </section>
+          <section>
+<h2>Виртуальное окружение (venv)</h2>
         <p>
           <strong>Виртуальное окружение</strong> — это изолированная среда для
           Python-проекта, в которой устанавливаются свои пакеты и зависимости.
@@ -451,12 +444,15 @@ deactivate</pre
           проекта. PyCharm создаёт его автоматически при создании нового
           проекта.
         </p>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="01-history.html" class="prev-link">← История и обзор Python</a>
+<a href="01-history.html" class="prev-link">← История и обзор Python</a>
         <a href="03-variables.html" class="next-link">Далее: Переменные →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

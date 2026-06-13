@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 22: Строки: индексация и срезы. Индексы, [start:stop:step]" />
+    <meta property="og:title" content="22. Строки: индексация и срезы — Python: основы" />
+    <meta property="og:description" content="Урок 22: Строки: индексация и срезы. Индексы, [start:stop:step]" />
+    <meta property="og:type" content="article" />
     <title>Строки: индексация и срезы — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>22. Строки: индексация и срезы</h1>
         <p class="subtitle">Индексы, [start:stop:step]</p>
       </header>
-
-      <section>
-        <h2>Индексация строк</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Индексация строк</h2>
 <p>Каждый символ строки имеет индекс — номер позиции:</p>
 <pre class="code-block">
 
@@ -28,9 +36,9 @@ print(s[2])    # t
 print(s[-1])   # n (последний символ)
 print(s[-3])   # h (третий с конца)
 </pre>
-      </section>
-      <section>
-        <h2>Срезы строк [start:stop:step]</h2>
+          </section>
+          <section>
+<h2>Срезы строк [start:stop:step]</h2>
 <p>Срез — подстрока от start до stop-1 с шагом step:</p>
 <pre class="code-block">
 
@@ -44,9 +52,9 @@ print(s[::2])       # "Pto rgamn" — каждый второй
 print(s[::-1])      # "gnimmargorP nohtyP" — разворот
 print(s[-11:-1])    # "Programmin" — отрицательные индексы
 </pre>
-      </section>
-      <section>
-        <h2>Неизменяемость строк</h2>
+          </section>
+          <section>
+<h2>Неизменяемость строк</h2>
 <p>Строки нельзя изменить — можно только создать новую:</p>
 <pre class="code-block">
 
@@ -59,12 +67,15 @@ s = "H" + s[1:]  # "Hello"
 # len() — длина строки
 print(len("Python"))  # 6
 </pre>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="21-sets.html" class="prev-link">← Назад</a>
+<a href="21-sets.html" class="prev-link">← Назад</a>
         <a href="23-lists.html" class="next-link">Далее: →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

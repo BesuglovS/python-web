@@ -3,27 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 5: Ввод и вывод. print(), input(), форматирование строк" />
+    <meta property="og:title" content="5. Ввод и вывод — Python: основы" />
+    <meta property="og:description" content="Урок 5: Ввод и вывод. print(), input(), форматирование строк" />
+    <meta property="og:type" content="article" />
     <title>Ввод и вывод — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>5. Ввод и вывод</h1>
         <p class="subtitle">print(), input(), форматирование строк</p>
-        <p>
-          Ввод и вывод (I/O) — основа взаимодействия программы с пользователем.
-          Функция <code>print()</code> выводит данные на экран,
-          <code>input()</code> считывает введённый пользователем текст, а
-          форматирование строк позволяет гибко встраивать значения переменных в
-          текст. Эти три инструмента используются практически в каждой программе
-          на Python.
-        </p>
       </header>
-
-      <section>
-        <h2>Вывод на экран — print()</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Вывод на экран — print()</h2>
         <p>Функция <code>print()</code> выводит данные в консоль:</p>
         <pre class="code-block">
 print("Привет, мир!")        # Привет, мир!
@@ -38,10 +38,9 @@ print("A", "B", "C")         # A B C</pre
 print("a", "b", "c", sep="-")      # a-b-c
 print("Привет", end="!!!\n")       # Привет!!!</pre
         >
-      </section>
-
-      <section>
-        <h2>Ввод с клавиатуры — input()</h2>
+          </section>
+          <section>
+<h2>Ввод с клавиатуры — input()</h2>
         <p>
           <code>input()</code> читает строку, введённую пользователем.
           Опционально можно передать подсказку:
@@ -142,10 +141,9 @@ print(f"Произведение: {a * b}")     # Произведение: 10.0
           ошибкой <code>ValueError</code>. Обработку таких ситуаций с помощью
           <code>try / except</code> мы разберём в одной из следующих глав.
         </p>
-      </section>
-
-      <section>
-        <h2>Форматирование строк</h2>
+          </section>
+          <section>
+<h2>Форматирование строк</h2>
         <p>
           Форматирование строк позволяет подставлять значения переменных в
           текст, управлять шириной полей, количеством знаков после запятой и
@@ -174,10 +172,9 @@ print("Меня зовут {}, мне {} лет.".format(name, age))  # Меня
 # Именованные аргументы
 print("Меня зовут {n}, мне {a} лет.".format(n="Иван", a=30))  # Меня зовут Иван, мне 30 лет.</pre
         >
-      </section>
-
-      <section>
-        <h2>Таблица символов</h2>
+          </section>
+          <section>
+<h2>Таблица символов</h2>
         <p>Специальные символы:</p>
         <table>
           <tr>
@@ -201,14 +198,17 @@ print("Меня зовут {n}, мне {a} лет.".format(n="Иван", a=30)) 
             <td>Двойная кавычка внутри строки</td>
           </tr>
         </table>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="04-data-types.html" class="prev-link">← Типы данных</a>
-        <a href="06-conditional.html" class="next-link">
-          Далее: Условный оператор →</a
+<a href="04-data-types.html" class="prev-link">← Типы данных</a>
+<a href="06-number-ops.html" class="next-link">
+          Далее: Операции над числами →</a
         >
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

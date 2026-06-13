@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 26: Списочные выражения. [x for x in ... if ...]" />
+    <meta property="og:title" content="26. Списочные выражения — Python: основы" />
+    <meta property="og:description" content="Урок 26: Списочные выражения. [x for x in ... if ...]" />
+    <meta property="og:type" content="article" />
     <title>Списочные выражения — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1>26. Списочные выражения</h1>
         <p class="subtitle">[x for x in ... if ...]</p>
       </header>
-
-      <section>
-        <h2>Базовый синтаксис</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Базовый синтаксис</h2>
 <p>Списочное выражение (list comprehension) — компактный способ создания списков:</p>
 <pre class="code-block">
 
@@ -28,9 +36,9 @@ for x in range(5):
 squares = [x**2 for x in range(5)]
 print(squares)  # [0, 1, 4, 9, 16]
 </pre>
-      </section>
-      <section>
-        <h2>С условием (if)</h2>
+          </section>
+          <section>
+<h2>С условием (if)</h2>
 <p>Можно добавить фильтрацию:</p>
 <pre class="code-block">
 
@@ -42,9 +50,9 @@ print(evens)  # [0, 2, 4, 6, 8]
 odd_squares = [x**2 for x in range(10) if x % 2 != 0]
 print(odd_squares)  # [1, 9, 25, 49, 81]
 </pre>
-      </section>
-      <section>
-        <h2>Вложенные списочные выражения</h2>
+          </section>
+          <section>
+<h2>Вложенные списочные выражения</h2>
 <p>Можно использовать несколько for:</p>
 <pre class="code-block">
 
@@ -56,9 +64,9 @@ print(matrix)  # [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
 flat = [num for row in matrix for num in row]
 print(flat)  # [0, 1, 2, 3, 4, 5, 6, 7, 8]
 </pre>
-      </section>
-      <section>
-        <h2>Словарные выражения</h2>
+          </section>
+          <section>
+<h2>Словарные выражения</h2>
 <p>Аналогично для словарей:</p>
 <pre class="code-block">
 
@@ -71,12 +79,15 @@ original = {"a": 1, "b": 2, "c": 3, "d": 4}
 filtered = {k: v for k, v in original.items() if v > 2}
 print(filtered)  # {"c": 3, "d": 4}
 </pre>
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="25-split-join.html" class="prev-link">← Назад</a>
+<a href="25-split-join.html" class="prev-link">← Назад</a>
         <a href="27-dicts.html" class="next-link">Далее: →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

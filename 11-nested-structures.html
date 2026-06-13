@@ -3,19 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Урок 11: Вложенные структуры. Условия внутри условий, вложенные блоки" />
+<meta property="og:title" content="11. Вложенные структуры — Python: основы" />
+<meta property="og:description" content="Урок 11: Вложенные структуры. Условия внутри условий, вложенные блоки" />
+    <meta property="og:type" content="article" />
     <title>Вложенные структуры — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
   <body>
     <div class="container">
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
-        <h1>10. Вложенные структуры</h1>
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+<h1>11. Вложенные структуры</h1>
         <p class="subtitle">Условия внутри условий, вложенные блоки</p>
       </header>
-
-      <section>
-        <h2>Вложенные условные операторы</h2>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Вложенные условные операторы</h2>
         <p>if может находиться внутри другого if:</p>
         <pre class="code-block">
 
@@ -32,9 +40,9 @@ else:
     print("Вход запрещён")
 </pre
         >
-      </section>
-      <section>
-        <h2>Глубокое вложение</h2>
+          </section>
+          <section>
+<h2>Глубокое вложение</h2>
         <p>Избегайте слишком глубокого вложения (более 3-4 уровней):</p>
         <pre class="code-block">
 
@@ -49,9 +57,9 @@ if a and b and c:
     print("Все условия выполнены")
 </pre
         >
-      </section>
-      <section>
-        <h2>Вложенные циклы (анонс)</h2>
+          </section>
+          <section>
+<h2>Вложенные циклы (анонс)</h2>
         <p>Циклы тоже могут быть вложенными (подробнее в теме 20):</p>
         <pre class="code-block">
 
@@ -60,12 +68,15 @@ for i in range(3):
         print(f"i={i}, j={j}")
 </pre
         >
-      </section>
-
+          </section>
+        </div>
+      </div>
       <footer class="topic-footer">
-        <a href="09-complex-conditions.html" class="prev-link">← Назад</a>
-        <a href="11-number-ops.html" class="next-link">Далее: →</a>
+<a href="10-complex-conditions.html" class="prev-link">← Сложные условия</a>
+<a href="12-priority.html" class="next-link">Далее: Приоритет операторов →</a>
       </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
