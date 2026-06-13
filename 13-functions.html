@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 13: Простейшие функции. def, return, параметры, аргументы" />
-    <meta property="og:title" content="13. Простейшие функции — Python: основы" />
-    <meta property="og:description" content="Урок 13: Простейшие функции. def, return, параметры, аргументы" />
+    <meta name="description" content="Урок 13: Создание простейших функций. def, return, параметры, аргументы" />
+    <meta property="og:title" content="13. Создание простейших функций — Python: основы" />
+    <meta property="og:description" content="Урок 13: Создание простейших функций. def, return, параметры, аргументы" />
     <meta property="og:type" content="article" />
-    <title>Простейшие функции — Python: основы</title>
+    <title>Создание простейших функций — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
@@ -17,7 +17,7 @@
       <header class="topic-header">
         <a href="index.html" class="back-link">← Назад к оглавлению</a>
         <div id="breadcrumbs" class="breadcrumbs"></div>
-        <h1>13. Простейшие функции</h1>
+        <h1>13. Создание простейших функций</h1>
         <p class="subtitle">def, return, параметры, аргументы</p>
       </header>
       <div class="content-layout">
@@ -84,14 +84,128 @@ print(add.__doc__)  # "Возвращает сумму двух чисел."
 help(add)           # Покажет документацию
 </pre>
           </section>
+          <section>
+<h2>Несколько параметров</h2>
+<p>Функция может принимать любое количество параметров через запятую:</p>
+<pre class="code-block">
+def describe_person(name, age, city):
+    print(f"{name}, {age} лет, город {city}")
+
+describe_person("Олег", 25, "Москва")
+# "Олег, 25 лет, город Москва"
+
+# Параметры передаются по порядку
+def power(base, exp):
+    return base ** exp
+
+print(power(2, 10))   # 1024
+print(power(10, 2))   # 100  (порядок важен!)
+</pre>
+          </section>
+          <section>
+<h2>Область видимости переменных</h2>
+<p>Переменные, созданные внутри функции, не видны снаружи (локальная область видимости):</p>
+<pre class="code-block">
+def my_func():
+    x = 100        # Локальная переменная
+    print(x)
+
+my_func()          # 100
+# print(x)         # Ошибка! NameError: x не определена
+
+# Переменные снаружи функции доступны для чтения, но не для изменения
+total = 0
+
+def add_to_total(n):
+    # global total     # Раскомментируйте, чтобы изменять глобальную переменную
+    local = total + n   # Чтение глобальной — ОК
+    return local
+
+print(add_to_total(5))  # 5
+print(total)            # 0 (не изменилась!)
+</pre>
+          </section>
+          <section>
+<h2>Именованные аргументы</h2>
+<p>При вызове можно явно указать, какому параметру присваивается значение. Это позволяет не запоминать порядок:</p>
+<pre class="code-block">
+def greet(name, greeting="Привет"):
+    print(f"{greeting}, {name}!")
+
+# Позиционные аргументы (по порядку)
+greet("Анна", "Здравствуйте")     # "Здравствуйте, Анна!"
+
+# Именованные аргументы (порядок не важен)
+greet(greeting="Здравствуйте", name="Анна")  # "Здравствуйте, Анна!"
+greet(name="Борис")                          # "Привет, Борис!"
+
+# Смешанный вызов: сначала позиционные, затем именованные
+greet("Виктор", greeting="Добрый день")      # "Добрый день, Виктор!"
+</pre>
+          </section>
+          <section>
+<h2>Аннотации типов</h2>
+<p>Начиная с Python 3.5, можно указывать ожидаемые типы параметров и возвращаемого значения. Это помогает читать код и использовать автодополнение в IDE:</p>
+<pre class="code-block">
+def add(a: int, b: int) -> int:
+    """Складывает два целых числа."""
+    return a + b
+
+def greet(name: str, times: int = 1) -> None:
+    """Приветствует указанное количество раз."""
+    for _ in range(times):
+        print(f"Привет, {name}!")
+
+result: int = add(5, 3)   # Аннотация переменной
+greet("Анна", 3)           # Аннотации не проверяются во время выполнения
+</pre>
+          </section>
+          <section>
+<h2>Практический пример: калькулятор</h2>
+<p>Объединим изученные концепции в одной программе:</p>
+<pre class="code-block">
+def calculate(a: float, b: float, operation: str = "+") -> float:
+    """Выполняет арифметическую операцию над двумя числами.
+    
+    Аргументы:
+        a, b — числа
+        operation — знак операции: "+", "-", "*", "/"
+    
+    Возвращает:
+        Результат вычисления.
+    """
+    if operation == "+":
+        return a + b
+    elif operation == "-":
+        return a - b
+    elif operation == "*":
+        return a * b
+    elif operation == "/":
+        if b != 0:
+            return a / b
+        else:
+            print("Ошибка: деление на ноль!")
+            return None
+    else:
+        print(f"Неизвестная операция: {operation}")
+        return None
+
+# Использование
+print(calculate(10, 5, "+"))   # 15.0
+print(calculate(10, 5, "/"))   # 2.0
+print(calculate(10, 0, "/"))   # Ошибка: деление на ноль! \n None
+</pre>
+          </section>
+          <div id="contest-link-placeholder"></div>
         </div>
       </div>
       <footer class="topic-footer">
 <a href="12-priority.html" class="prev-link">← Назад</a>
-        <a href="14-while.html" class="next-link">Далее: →</a>
+        <a href="14-while.html" class="next-link">Далее: Цикл с предусловием →</a>
       </footer>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

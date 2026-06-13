@@ -18,7 +18,7 @@
 | 10  | Вложенные структуры                    | `10-nested-structures.html`   |
 | 11  | Операции над числами                   | `11-number-ops.html`          |
 | 12  | Приоритет операций                     | `12-priority.html`            |
-| 13  | Простейшие функции                     | `13-functions.html`           |
+| 13  | Создание простейших функций            | `13-functions.html`           |
 | 14  | Цикл с предусловием                    | `14-while.html`               |
 | 15  | Цикл for                               | `15-for.html`                 |
 | 16  | range()                                | `16-range.html`               |
