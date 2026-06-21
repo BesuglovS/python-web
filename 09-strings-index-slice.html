@@ -1,0 +1,273 @@
+﻿<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 9: Строки: индексация и срезы. Индексы, [start:stop:step]" />
+    <meta property="og:title" content="9. Строки: индексация и срезы — Python: основы" />
+    <meta property="og:description" content="Урок 9: Строки: индексация и срезы. Индексы, [start:stop:step]" />
+    <meta property="og:type" content="article" />
+    <title>Строки: индексация и срезы — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>9. Строки: индексация и срезы</h1>
+        <p class="subtitle">Индексы, [start:stop:step]</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Индексация строк</h2>
+<p>Каждый символ строки имеет <strong>индекс</strong> — порядковый номер позиции. Индексы начинаются с <code>0</code> (первый символ) и идут до <code>len(s) - 1</code> (последний символ).</p>
+<pre class="code-block">
+s = "Python"
+#    0 1 2 3 4 5   — положительные индексы (слева направо)
+#   -6-5-4-3-2-1   — отрицательные индексы (справа налево)
+
+print(s[0])     # P — первый символ
+print(s[1])     # y — второй символ
+print(s[2])     # t
+print(s[5])     # n — последний символ (длина 6, индекс последнего = 5)
+
+# Отрицательные индексы: -1 — последний, -2 — предпоследний и т.д.
+print(s[-1])    # n — последний символ
+print(s[-2])    # o — предпоследний
+print(s[-3])    # h — третий с конца
+print(s[-6])    # P — первый символ (len=6, -len = -6)
+</pre>
+<p class="warning">При выходе за границы индекса (<code>s[100]</code> или <code>s[-100]</code>) возникает ошибка <code>IndexError: string index out of range</code>.</p>
+          </section>
+          <section>
+<h2>Срезы строк [start:stop:step]</h2>
+<p><strong>Срез</strong> (slice) извлекает подстроку по правилу <code>[start:stop:step]</code>:</p>
+<ul>
+  <li><code>start</code> — начальный индекс (включительно). По умолчанию <code>0</code>.</li>
+  <li><code>stop</code> — конечный индекс (<strong>не включительно</strong>). По умолчанию — длина строки.</li>
+  <li><code>step</code> — шаг. По умолчанию <code>1</code>. Может быть отрицательным.</li>
+</ul>
+<pre class="code-block">
+s = "Python Programming"
+#    012345678901234567  — индексы для наглядности
+
+print(s[0:6])        # "Python" — символы с 0 по 5 (6 не включается)
+print(s[7:18])       # "Programming" — символы с 7 по 17
+print(s[7:18:1])     # "Programming" — то же самое, шаг 1 явно
+</pre>
+<p>Важнейшее правило: <strong>start включается, stop — нет</strong>. Длина среза <code>[a:b]</code> равна <code>b - a</code>.</p>
+          </section>
+          <section>
+<h2>Пропуск параметров среза</h2>
+<p>Любой из трёх параметров можно опустить — подставятся значения по умолчанию:</p>
+<pre class="code-block">
+s = "Python"
+
+# Пропуск start — от начала строки
+print(s[:3])     # "Pyt" — символы 0, 1, 2 (эквивалентно s[0:3])
+
+# Пропуск stop — до конца строки
+print(s[2:])     # "thon" — от индекса 2 до конца (эквивалентно s[2:len(s)])
+
+# Пропуск обоих — копия всей строки
+print(s[:])      # "Python" — копия строки (эквивалентно s[0:len(s)])
+
+# Пропуск start и stop, только шаг
+print(s[::2])    # "Pto" — каждый второй символ (эквивалентно s[0:len(s):2])
+print(s[::3])    # "Ph" — каждый третий символ
+</pre>
+          </section>
+          <section>
+<h2>Отрицательные индексы в срезах</h2>
+<p>Отрицательные индексы отсчитываются от конца строки. Особенно удобны, когда нужно взять «всё, кроме последних N символов» или «последние N символов»:</p>
+<pre class="code-block">
+s = "Python Programming"
+
+# Положительные и отрицательные индексы взаимозаменяемы
+print(s[7:18])       # "Programming"
+print(s[7:-1])       # "Programmin" — всё от 7 до предпоследнего (-1 не включается)
+print(s[-11:18])     # "Programming" — start отрицательный, stop положительный
+print(s[-11:-1])     # "Programmin"
+
+# Последние N символов
+print(s[-3:])        # "ing" — последние 3 символа
+print(s[-5:])        # "mming" — последние 5 символов
+
+# Всё, кроме последних N символов
+print(s[:-3])        # "Python Programm" — всё, кроме последних 3
+print(s[:-1])        # "Python Programmin" — всё, кроме последнего символа
+</pre>
+          </section>
+          <section>
+<h2>Шаг в срезах</h2>
+<p>Параметр <code>step</code> задаёт, через сколько позиций брать следующий символ. По умолчанию <code>step = 1</code> — каждый символ подряд.</p>
+<pre class="code-block">
+s = "abcdefghij"
+#    0123456789
+
+print(s[::1])    # "abcdefghij" — каждый символ (по умолчанию)
+print(s[::2])    # "acegi" — каждый второй (индексы 0,2,4,6,8)
+print(s[::3])    # "adgj" — каждый третий (индексы 0,3,6,9)
+print(s[::4])    # "aei" — каждый четвёртый
+
+# Шаг с указанием границ
+print(s[1:9:2])  # "bdfh" — от индекса 1 до 8, каждый второй
+print(s[2:10:3]) # "cfi" — от индекса 2 до 9, каждый третий
+</pre>
+          </section>
+          <section>
+<h2>Отрицательный шаг и разворот строки</h2>
+<p>Отрицательный шаг означает движение <strong>справа налево</strong>. При отрицательном шаге <code>start</code> должен быть правее <code>stop</code> (если они заданы явно).</p>
+<pre class="code-block">
+s = "Python"
+
+# Разворот строки — классический трюк [::-1]
+print(s[::-1])   # "nohtyP" — строка задом наперёд
+
+# Пошаговый разбор: [::-1] означает:
+#   start не задан → конец строки
+#   stop  не задан → начало строки
+#   step  = -1     → идём справа налево по одному символу
+
+s2 = "ABCDEFGHIJ"
+
+# Отрицательный шаг с границами
+print(s2[7:2:-1])   # "HGFED" — от индекса 7 до 3 (индекс 2 не включается)
+print(s2[:2:-1])     # "JIHGFED" — от конца до индекса 3
+print(s2[7::-1])     # "HGFEDCBA" — от индекса 7 до начала
+
+# Каждый второй справа налево
+print(s2[::-2])      # "JHFDB" — каждый второй с конца
+print(s2[9:0:-2])    # "JHFD" — от 9 до 1, каждый второй
+</pre>
+          </section>
+          <section>
+<h2>Неизменяемость строк</h2>
+<p>Строки в Python <strong>неизменяемы</strong> (immutable). Нельзя изменить отдельный символ — можно только создать новую строку:</p>
+<pre class="code-block">
+s = "hello"
+# s[0] = "H"   # Ошибка! TypeError: 'str' object does not support item assignment
+
+# Правильно — создать новую строку через срез и конкатенацию
+s_new = "H" + s[1:]      # "Hello"
+s_new = s.replace("h", "H")  # "Hello" — тоже создаёт новую строку
+
+# Исходная строка не изменилась
+print(s)      # "hello" — по-прежнему
+</pre>
+          </section>
+          <section>
+<h2>Функция len()</h2>
+<p><code>len(s)</code> возвращает количество символов в строке. Это полезно для проверки границ перед индексацией:</p>
+<pre class="code-block">
+s = "Python"
+print(len(s))        # 6
+print(len(""))       # 0 — пустая строка
+print(len("Привет")) # 6 — кириллица считается посимвольно
+
+# Безопасная индексация с проверкой границ
+idx = 2
+if idx < len(s):
+    print(s[idx])    # t — индекс в допустимых пределах
+
+# Индекс последнего символа через len()
+last_idx = len(s) - 1
+print(s[last_idx])   # n — последний символ
+print(s[-1])         # n — то же самое, но короче
+</pre>
+          </section>
+          <section>
+<h2>Операторы in и not in</h2>
+<p>Оператор <code>in</code> проверяет, содержится ли подстрока в строке. <code>not in</code> — обратная проверка. Возвращают <code>True</code> или <code>False</code>:</p>
+<pre class="code-block">
+s = "Python Programming"
+
+print("Python" in s)       # True — подстрока найдена
+print("java" in s)         # False — не найдена
+print("java" not in s)     # True — действительно отсутствует
+print("P" in s)            # True — отдельный символ тоже подстрока
+print("" in s)             # True — пустая строка содержится в любой строке
+
+# Часто используется в условиях
+if "Pro" in s:
+    print("Строка содержит 'Pro'")
+
+# Проверка символов
+char = "o"
+if char in s:
+    print(f"Символ '{char}' найден")
+</pre>
+          </section>
+          <section>
+<h2>Практические примеры</h2>
+<pre class="code-block">
+s = "Python Programming"
+
+# Первое слово
+first_word = s[:6]
+print(first_word)                    # "Python"
+
+# Последнее слово
+last_word = s[7:]
+print(last_word)                     # "Programming"
+
+# Каждый второй символ, начиная с первого
+print(s[::2])                        # "Pto rgamn"
+
+# Строка задом наперёд
+print(s[::-1])                       # "gnimmargorP nohtyP"
+
+# Первая половина строки
+mid = len(s) // 2
+print(s[:mid])                       # "Python P"
+
+# Вторая половина строки
+print(s[mid:])                       # "rogramming"
+
+# Проверить, заканчивается ли строка на "ing" (без .endswith)
+tail = s[-3:]
+print(tail == "ing")                 # True
+</pre>
+          </section>
+          <section>
+<h2>Таблица: поведение среза при разных параметрах</h2>
+<table class="lesson-table">
+  <thead>
+    <tr>
+      <th>Выражение</th>
+      <th>start</th>
+      <th>stop</th>
+      <th>step</th>
+      <th>Результат для "Python"</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>s[0:6]</code></td><td>0</td><td>6</td><td>1</td><td>Python</td></tr>
+    <tr><td><code>s[:3]</code></td><td>0 (умолч.)</td><td>3</td><td>1</td><td>Pyt</td></tr>
+    <tr><td><code>s[2:]</code></td><td>2</td><td>len(s) (умолч.)</td><td>1</td><td>thon</td></tr>
+    <tr><td><code>s[:]</code></td><td>0 (умолч.)</td><td>len(s) (умолч.)</td><td>1</td><td>Python</td></tr>
+    <tr><td><code>s[::2]</code></td><td>0 (умолч.)</td><td>len(s) (умолч.)</td><td>2</td><td>Pto</td></tr>
+    <tr><td><code>s[::-1]</code></td><td>конец (умолч.)</td><td>начало (умолч.)</td><td>-1</td><td>nohtyP</td></tr>
+    <tr><td><code>s[-3:]</code></td><td>-3</td><td>len(s) (умолч.)</td><td>1</td><td>hon</td></tr>
+    <tr><td><code>s[:-2]</code></td><td>0 (умолч.)</td><td>-2</td><td>1</td><td>Pyth</td></tr>
+    <tr><td><code>s[4:1:-1]</code></td><td>4</td><td>1</td><td>-1</td><td>oht</td></tr>
+    <tr><td><code>s[::-2]</code></td><td>конец (умолч.)</td><td>начало (умолч.)</td><td>-2</td><td>nhy</td></tr>
+  </tbody>
+</table>
+          </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="08-indentation.html" class="prev-link">← Отступы (indentation)</a>
+        <a href="10-string-ops.html" class="next-link">Далее: Операции над строками →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
