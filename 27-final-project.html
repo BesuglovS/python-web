@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 27: Финальный проект. Применяем все изученные темы на практике — игра «Угадай число» и калькулятор" />
+    <meta property="og:title" content="27. Финальный проект — Python: основы" />
+    <meta property="og:description" content="Урок 27: Финальный проект. Применяем все изученные темы на практике — игра «Угадай число» и калькулятор" />
+    <meta property="og:type" content="article" />
+    <title>Финальный проект — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>27. Финальный проект</h1>
+        <p class="subtitle">Применяем все изученные темы на практике</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Проект 1: Игра «Угадай число»</h2>
+<p>Компьютер загадывает число от 1 до 100, а игрок пытается его угадать. После каждой попытки компьютер даёт подсказку: «больше» или «меньше».</p>
+<p><strong>Используемые темы:</strong> переменные, ввод/вывод, random, условный оператор, цикл while, обработка ошибок.</p>
+<pre class="code-block">
+import random
+
+def guess_the_number():
+    """Игра «Угадай число»."""
+    secret = random.randint(1, 100)
+    attempts = 0
+    max_attempts = 10
+
+    print("Я загадал число от 1 до 100. У тебя 10 попыток!")
+
+    while attempts < max_attempts:
+        try:
+            guess = int(input(f"Попытка {attempts + 1}/{max_attempts}: "))
+        except ValueError:
+            print("Пожалуйста, введи целое число.")
+            continue
+
+        attempts += 1
+
+        if guess < secret:
+            print("Больше!")
+        elif guess > secret:
+            print("Меньше!")
+        else:
+            print(f"Поздравляю! Ты угадал число {secret} за {attempts} попыток!")
+            return
+
+    print(f"К сожалению, попытки закончились. Я загадал число {secret}.")
+
+# Запуск игры
+guess_the_number()
+</pre>
+          </section>
+          <section>
+<h2>Проект 2: Многофункциональный калькулятор</h2>
+<p>Калькулятор с поддержкой базовых операций, историей вычислений и обработкой ошибок.</p>
+<p><strong>Используемые темы:</strong> функции, словари, циклы, строки, обработка ошибок, форматирование.</p>
+<pre class="code-block">
+def calculator():
+    """Интерактивный калькулятор с историей."""
+    history = []  # Список для хранения истории
+
+    while True:
+        print("\n" + "=" * 30)
+        print("КАЛЬКУЛЯТОР")
+        print("=" * 30)
+        print("1. Сложение (+)")
+        print("2. Вычитание (-)")
+        print("3. Умножение (*)")
+        print("4. Деление (/)")
+        print("5. Возведение в степень (**)")
+        print("6. Показать историю")
+        print("7. Очистить историю")
+        print("0. Выход")
+
+        choice = input("\nВыбери операцию: ")
+
+        if choice == "0":
+            print("До свидания!")
+            break
+        elif choice == "6":
+            if history:
+                print("\nИстория вычислений:")
+                for i, record in enumerate(history, 1):
+                    print(f"  {i}. {record}")
+            else:
+                print("\nИстория пуста.")
+            continue
+        elif choice == "7":
+            history.clear()
+            print("История очищена.")
+            continue
+
+        if choice not in ["1", "2", "3", "4", "5"]:
+            print("Неверный выбор. Попробуй снова.")
+            continue
+
+        try:
+            a = float(input("Введи первое число: "))
+            b = float(input("Введи второе число: "))
+        except ValueError:
+            print("Ошибка: нужно ввести число.")
+            continue
+
+        if choice == "1":
+            result = a + b
+            op = "+"
+        elif choice == "2":
+            result = a - b
+            op = "-"
+        elif choice == "3":
+            result = a * b
+            op = "*"
+        elif choice == "4":
+            if b == 0:
+                print("Ошибка: деление на ноль!")
+                continue
+            result = a / b
+            op = "/"
+        elif choice == "5":
+            result = a ** b
+            op = "**"
+
+        record = f"{a} {op} {b} = {result:.2f}"
+        print(f"Результат: {record}")
+        history.append(record)
+
+# Запуск калькулятора
+calculator()
+</pre>
+          </section>
+          <section>
+<h2>Проект 3: Анализатор текста</h2>
+<p>Программа, которая анализирует введённый текст: считает количество слов, предложений, символов и самые частые слова.</p>
+<p><strong>Используемые темы:</strong> строки, методы строк, списки, словари, list comprehensions, сортировка, срезы.</p>
+<pre class="code-block">
+def text_analyzer(text: str) -> dict:
+    """Анализирует текст и возвращает статистику."""
+    # Количество символов (с пробелами)
+    chars_total = len(text)
+
+    # Количество символов без пробелов
+    chars_no_spaces = len(text.replace(" ", ""))
+
+    # Количество слов
+    words = text.split()
+    word_count = len(words)
+
+    # Количество предложений (по знакам .!?)
+    sentences = [s for s in text.replace("!", ".").replace("?", ".").split(".") if s.strip()]
+    sentence_count = len(sentences)
+
+    # Частота слов
+    word_freq = {}
+    for word in words:
+        word = word.lower().strip(".,!?:;\"'()")
+        if word:
+            word_freq[word] = word_freq.get(word, 0) + 1
+
+    # Топ-5 самых частых слов
+    top_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    return {
+        "symbols_total": chars_total,
+        "symbols_no_spaces": chars_no_spaces,
+        "words": word_count,
+        "sentences": sentence_count,
+        "top_words": top_words
+    }
+
+# Пример использования
+sample_text = """Python — отличный язык для начинающих.
+Он простой, но мощный. Python используется в веб-разработке,
+науке о данных и искусственном интеллекте.
+Python, Python, Python!"""
+
+stats = text_analyzer(sample_text)
+
+print("=" * 40)
+print("АНАЛИЗ ТЕКСТА")
+print("=" * 40)
+print(f"Символов (всего):      {stats['symbols_total']}")
+print(f"Символов (без пробелов): {stats['symbols_no_spaces']}")
+print(f"Слов:                  {stats['words']}")
+print(f"Предложений:           {stats['sentences']}")
+print("\nТоп-5 самых частых слов:")
+for word, count in stats["top_words"]:
+    print(f"  '{word}' — {count} раз(а)")
+</pre>
+          </section>
+          <section>
+<h2>Чек-лист изученных тем</h2>
+<p>Поздравляем! Ты прошёл все 27 уроков и освоил:</p>
+<table>
+  <tr><th>#</th><th>Тема</th><th>Ключевые концепции</th></tr>
+  <tr><td>1</td><td>История Python</td><td>Философия языка, области применения</td></tr>
+  <tr><td>2</td><td>Настройка IDE</td><td>IDLE, VS Code, PyCharm</td></tr>
+  <tr><td>3</td><td>Переменные</td><td>Объявление, присваивание, имена</td></tr>
+  <tr><td>4</td><td>Типы данных</td><td>int, float, str, bool</td></tr>
+  <tr><td>5</td><td>Ввод и вывод</td><td>print(), input(), f-строки</td></tr>
+  <tr><td>6</td><td>Операции над числами</td><td>+, -, *, /, //, %, **</td></tr>
+  <tr><td>7</td><td>Условный оператор + Отступы</td><td>if, elif, else, PEP 8</td></tr>
+  <tr><td>8</td><td>Булевы переменные</td><td>True, False, логические операции</td></tr>
+  <tr><td>9</td><td>Строки: индексы и срезы</td><td>[start:stop:step]</td></tr>
+  <tr><td>10</td><td>Операции над строками</td><td>Конкатенация, методы строк</td></tr>
+  <tr><td>11</td><td>Сложные условия</td><td>and, or, not</td></tr>
+  <tr><td>12</td><td>Вложенные структуры</td><td>Условия внутри условий</td></tr>
+  <tr><td>13</td><td>Приоритет операций</td><td>Порядок вычислений</td></tr>
+  <tr><td>14</td><td>Создание функций</td><td>def, return, параметры</td></tr>
+  <tr><td>15</td><td>Цикл while</td><td>Цикл с предусловием</td></tr>
+  <tr><td>16</td><td>Цикл for</td><td>Перебор последовательностей</td></tr>
+  <tr><td>17</td><td>range()</td><td>Генерация числовых рядов</td></tr>
+  <tr><td>18</td><td>Функции: продвинутые</td><td>*args, **kwargs, области видимости</td></tr>
+  <tr><td>19</td><td>break и continue</td><td>Управление потоком цикла</td></tr>
+  <tr><td>20</td><td>Вложенные циклы</td><td>Циклы внутри циклов</td></tr>
+  <tr><td>21</td><td>Множества</td><td>set, операции над множествами</td></tr>
+  <tr><td>22</td><td>Списки</td><td>list, методы списков</td></tr>
+  <tr><td>23</td><td>Кортежи</td><td>tuple, неизменяемость</td></tr>
+  <tr><td>24</td><td>Словари</td><td>dict, ключи и значения</td></tr>
+  <tr><td>25</td><td>split + join</td><td>Разделение и объединение строк</td></tr>
+  <tr><td>26</td><td>Списочные выражения</td><td>[x for x in ... if ...]</td></tr>
+  <tr><td>27</td><td>Финальный проект</td><td>Применение всех знаний</td></tr>
+</table>
+          </section>
+          <section>
+<h2>Что дальше?</h2>
+<p>Ты освоил фундамент Python. Вот рекомендуемые следующие шаги:</p>
+<ul>
+  <li><strong>ООП</strong> — классы, объекты, наследование, инкапсуляция</li>
+  <li><strong>Работа с файлами</strong> — чтение и запись .txt, .csv, .json</li>
+  <li><strong>Библиотеки</strong> — requests (HTTP), Flask/Django (веб), pandas (данные)</li>
+  <li><strong>Алгоритмы и структуры данных</strong> — сортировки, стеки, очереди, деревья</li>
+  <li><strong>Практика на задачах</strong> — решай задачи на CodeWars, LeetCode, CodinGame</li>
+</ul>
+          </section>
+        <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="26-list-comprehensions.html" class="prev-link">← Списочные выражения</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

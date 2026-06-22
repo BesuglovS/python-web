@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Урок 7: Условный оператор. if, elif, else — ветвление программы" />
-<meta property="og:title" content="7. Условный оператор — Python: основы" />
-<meta property="og:description" content="Урок 7: Условный оператор. if, elif, else — ветвление программы" />
+    <meta name="description" content="Урок 7: Условный оператор и отступы. if, elif, else, отступы в Python" />
+    <meta property="og:title" content="7. Условный оператор и отступы — Python: основы" />
+    <meta property="og:description" content="Урок 7: Условный оператор и отступы. if, elif, else — ветвление программы и правила отступов" />
     <meta property="og:type" content="article" />
-    <title>Условный оператор — Python: основы</title>
+    <title>Условный оператор и отступы — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
@@ -16,50 +16,58 @@
     <div class="container">
       <header class="topic-header">
         <div id="breadcrumbs" class="breadcrumbs"></div>
-<h1>7. Условный оператор</h1>
-        <p class="subtitle">if, elif, else — ветвление программы</p>
+        <h1>7. Условный оператор и отступы</h1>
+        <p class="subtitle">if, elif, else — ветвление программы и правила отступов</p>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
           <section>
-<h2>Простой if</h2>
-        <p>
-          Условный оператор <code>if</code> выполняет блок кода, если условие
-          истинно:
-        </p>
-        <pre class="code-block">
-age = 18
-if age >= 18:
-    print("Вы совершеннолетний")</pre
-        >
-        <p class="note">
-          <strong>Важно:</strong> после условия обязательно ставится двоеточие
-          <code>:</code>, а команды выполняющиеся если условие истинно пишутся с
-          отступом (4 пробела).
-        </p>
+            <h2>Отступы в Python</h2>
+            <p>
+              В отличие от многих языков, Python не использует фигурные скобки
+              <code>{}</code> для выделения блоков. Вместо этого блок кода определяется
+              <strong>отступами</strong> (4 пробела):
+            </p>
+            <pre class="code-block">
+if True:
+    print("Этот код внутри if")
+    print("Это тоже внутри if")
+print("А это уже вне блока if")</pre>
+            <p>После двоеточия <code>:</code> следующая строка <strong>обязательно</strong> должна иметь отступ (4 пробела). Все строки с одинаковым отступом принадлежат одному блоку.</p>
+            <div class="note"><strong>Стандарт PEP 8:</strong> используйте ровно <strong>4 пробела</strong> для каждого уровня отступа. Не смешивайте табуляцию и пробелы!</div>
           </section>
           <section>
-<h2>if-else</h2>
-        <p>
-          Команды после <code>else</code> выполняется, если условие записанное
-          после <code>if</code> ложно:
-        </p>
-        <pre class="code-block">
+            <h2>Простой if</h2>
+            <p>
+              Условный оператор <code>if</code> выполняет блок кода, если условие
+              истинно:
+            </p>
+            <pre class="code-block">
+age = 18
+if age >= 18:
+    print("Вы совершеннолетний")</pre>
+          </section>
+          <section>
+            <h2>if-else</h2>
+            <p>
+              Команды после <code>else</code> выполняются, если условие после
+              <code>if</code> ложно:
+            </p>
+            <pre class="code-block">
 age = 16
 if age >= 18:
     print("Вы совершеннолетний")
 else:
-    print("Вы несовершеннолетний")</pre
-        >
+    print("Вы несовершеннолетний")</pre>
           </section>
           <section>
-<h2>if-elif-else</h2>
-        <p>
-          <code>elif</code> (сокращение от else if) позволяет проверить
-          несколько условий:
-        </p>
-        <pre class="code-block">
+            <h2>if-elif-else</h2>
+            <p>
+              <code>elif</code> (сокращение от else if) позволяет проверить
+              несколько условий:
+            </p>
+            <pre class="code-block">
 score = 85
 
 if score >= 90:
@@ -71,70 +79,56 @@ elif score >= 60:
 else:
     grade = "Неудовлетворительно"
 
-print(f"Оценка: {grade}")  # Хорошо</pre
-        >
-        <p>
-          Условия проверяются сверху вниз. Как только находится истинное,
-          остальные пропускаются.
-        </p>
+print(f"Оценка: {grade}")  # Хорошо</pre>
+            <p>
+              Условия проверяются сверху вниз. Как только находится истинное,
+              остальные пропускаются.
+            </p>
           </section>
           <section>
-<h2>Тернарный оператор</h2>
-        <p>Короткая запись if-else в одну строку:</p>
-        <pre class="code-block">
+            <h2>Тернарный оператор</h2>
+            <p>Короткая запись if-else в одну строку:</p>
+            <pre class="code-block">
 age = 20
 status = "Взрослый" if age >= 18 else "Ребёнок"
-print(status)  # Взрослый</pre
-        >
+print(status)  # Взрослый</pre>
           </section>
           <section>
-<h2>Оператор сравнения</h2>
-        <table>
-          <tr>
-            <th>Оператор</th>
-            <th>Значение</th>
-            <th>Пример</th>
-          </tr>
-          <tr>
-            <td><code>==</code></td>
-            <td>Равно</td>
-            <td><code>5 == 5</code> → True</td>
-          </tr>
-          <tr>
-            <td><code>!=</code></td>
-            <td>Не равно</td>
-            <td><code>5 != 3</code> → True</td>
-          </tr>
-          <tr>
-            <td><code>></code></td>
-            <td>Больше</td>
-            <td><code>5 > 3</code> → True</td>
-          </tr>
-          <tr>
-            <td><code><</code></td>
-            <td>Меньше</td>
-            <td><code>5 < 3</code> → False</td>
-          </tr>
-          <tr>
-            <td><code>>=</code></td>
-            <td>Больше или равно</td>
-            <td><code>5 >= 5</code> → True</td>
-          </tr>
-          <tr>
-            <td><code><=</code></td>
-            <td>Меньше или равно</td>
-            <td><code>5 <= 3</code> → False</td>
-          </tr>
-        </table>
+            <h2>Операторы сравнения</h2>
+            <table>
+              <tr>
+                <th>Оператор</th><th>Значение</th><th>Пример</th>
+              </tr>
+              <tr><td><code>==</code></td><td>Равно</td><td><code>5 == 5</code> → True</td></tr>
+              <tr><td><code>!=</code></td><td>Не равно</td><td><code>5 != 3</code> → True</td></tr>
+              <tr><td><code>></code></td><td>Больше</td><td><code>5 > 3</code> → True</td></tr>
+              <tr><td><code><</code></td><td>Меньше</td><td><code>5 < 3</code> → False</td></tr>
+              <tr><td><code>>=</code></td><td>Больше или равно</td><td><code>5 >= 5</code> → True</td></tr>
+              <tr><td><code><=</code></td><td>Меньше или равно</td><td><code>5 <= 3</code> → False</td></tr>
+            </table>
+          </section>
+          <section>
+            <h2>Распространённые ошибки с отступами</h2>
+            <ul>
+              <li><strong>IndentationError: unexpected indent</strong> — лишний отступ там, где он не нужен</li>
+              <li><strong>IndentationError: expected an indented block</strong> — отсутствует отступ после <code>if</code>, <code>for</code>, <code>def</code> и т.д.</li>
+              <li>Смешивание табуляции и пробелов приводит к трудноуловимым ошибкам</li>
+            </ul>
+            <pre class="code-block">
+# Ошибка: нет отступа после if
+if True:
+print("Ошибка!")</pre>
+            <div class="tip"><strong>Совет:</strong> VS Code (Shift+Alt+F) и PyCharm (Ctrl+Alt+L) умеют автоформатировать отступы. Включите <code>Format On Save</code> в настройках редактора.</div>
           </section>
         </div>
       </div>
       <footer class="topic-footer">
         <a href="06-number-ops.html" class="prev-link">← Операции над числами</a>
-        <a href="08-indentation.html" class="next-link">Далее: Отступы →</a>
+        <a href="08-booleans.html" class="next-link">Далее: Булевы переменные →</a>
       </footer>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

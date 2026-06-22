@@ -15,6 +15,20 @@
       });
     }
   });
+  // --- Клавиатурная навигация: стрелки ← → ---
+  document.addEventListener('keydown', function(e) {
+    // Не перехватываем, если фокус в поле ввода
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+    
+    if (e.key === 'ArrowLeft') {
+      var prev = document.querySelector('.prev-link');
+      if (prev) window.location.href = prev.getAttribute('href');
+    } else if (e.key === 'ArrowRight') {
+      var next = document.querySelector('.next-link');
+      if (next) window.location.href = next.getAttribute('href');
+    }
+  });
+
 })();
 
 // === ТЁМНАЯ / СВЕТЛАЯ ТЕМА ===
@@ -132,7 +146,7 @@
   });
 })();
 
-// === КНОПКИ КОПИРОВАНИЯ КОДА ===
+// === КНОПКИ КОПИРОВАНИЯ И ЗАПУСКА КОДА ===
 (function () {
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('pre.code-block').forEach(pre => {
@@ -141,24 +155,24 @@
       pre.parentNode.insertBefore(wrapper, pre);
       wrapper.appendChild(pre);
 
-      const btn = document.createElement('button');
-      btn.className = 'copy-btn';
-      btn.textContent = '📋';
-      btn.title = 'Копировать код';
-      btn.setAttribute('aria-label', 'Копировать код');
+      // Кнопка копирования
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-btn';
+      copyBtn.textContent = '📋';
+      copyBtn.title = 'Копировать код';
+      copyBtn.setAttribute('aria-label', 'Копировать код');
 
-      btn.addEventListener('click', async () => {
+      copyBtn.addEventListener('click', async () => {
         const code = pre.textContent || pre.innerText;
         try {
           await navigator.clipboard.writeText(code);
-          btn.textContent = '✓ Скопировано';
-          btn.classList.add('copied');
+          copyBtn.textContent = '✓ Скопировано';
+          copyBtn.classList.add('copied');
           setTimeout(() => {
-            btn.textContent = '📋';
-            btn.classList.remove('copied');
+            copyBtn.textContent = '📋';
+            copyBtn.classList.remove('copied');
           }, 2000);
         } catch {
-          // Fallback для старых браузеров
           const textarea = document.createElement('textarea');
           textarea.value = code;
           textarea.style.position = 'fixed';
@@ -167,16 +181,49 @@
           textarea.select();
           document.execCommand('copy');
           document.body.removeChild(textarea);
-          btn.textContent = '✓ Скопировано';
-          btn.classList.add('copied');
+          copyBtn.textContent = '✓ Скопировано';
+          copyBtn.classList.add('copied');
           setTimeout(() => {
-            btn.textContent = '📋';
-            btn.classList.remove('copied');
+            copyBtn.textContent = '📋';
+            copyBtn.classList.remove('copied');
           }, 2000);
         }
       });
 
-      wrapper.appendChild(btn);
+      wrapper.appendChild(copyBtn);
+
+      // Кнопка «Запустить в песочнице»
+      const runBtn = document.createElement('button');
+      runBtn.className = 'run-btn';
+      runBtn.textContent = '▶';
+      runBtn.title = 'Запустить код в онлайн-песочнице';
+      runBtn.setAttribute('aria-label', 'Запустить код в песочнице');
+
+      runBtn.addEventListener('click', () => {
+        const code = (pre.textContent || pre.innerText).trim();
+        // Открываем online-python.com с предзаполненным кодом
+        const encoded = encodeURIComponent(code);
+        const url = 'https://www.online-python.com/?code=' + encoded;
+        window.open(url, '_blank', 'noopener,noreferrer');
+      });
+
+      wrapper.appendChild(runBtn);
+    });
+  });
+})();
+
+// === ИНДИКАТОР ПРОГРЕССА СКРОЛЛА ===
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    var bar = document.createElement('div');
+    bar.className = 'scroll-progress-bar';
+    document.body.appendChild(bar);
+
+    window.addEventListener('scroll', () => {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var pct = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+      bar.style.width = pct + '%';
     });
   });
 })();
@@ -269,7 +316,7 @@
     if (page && page !== 'index.html' && page !== '') return; // только на главной
 
     const progress = getProgress();
-    const totalLessons = 27;
+    const totalLessons = 28;
 
     // Создаём индикатор прогресса, если его ещё нет
     const headerEl = document.querySelector('header');
@@ -305,8 +352,27 @@
         }
       }
 
-      // Добавляем значок контеста
+      // Определяем номер урока
       var lessonNum = parseInt(card.getAttribute('data-lesson'));
+
+      // Добавляем метаданные (время чтения + сложность)
+      if (typeof LESSON_META !== 'undefined') {
+        var meta = LESSON_META[lessonNum];
+        if (meta) {
+          var infoDiv = card.querySelector('.topic-info');
+          if (infoDiv && !infoDiv.querySelector('.topic-meta')) {
+            var metaSpan = document.createElement('div');
+            metaSpan.className = 'topic-meta';
+            var complexityLabel = (typeof COMPLEXITY_LABELS !== 'undefined' && COMPLEXITY_LABELS[meta.complexity])
+              ? COMPLEXITY_LABELS[meta.complexity]
+              : meta.complexity;
+            metaSpan.innerHTML = '<span class="meta-duration">⏱ ' + meta.duration + ' мин</span> · <span class="meta-complexity" data-level="' + meta.complexity + '">' + complexityLabel + '</span>';
+            infoDiv.appendChild(metaSpan);
+          }
+        }
+      }
+
+      // Добавляем значок контеста
       if (lessonNum && THEORY_CONTESTS[lessonNum]) {
         var contestId = THEORY_CONTESTS[lessonNum];
         var contestUrl = CONTEST_BASE_URL + contestId;
@@ -417,4 +483,389 @@
 
     placeholder.parentNode.replaceChild(div, placeholder);
   });
+})();
+
+// === РЕГИСТРАЦИЯ SERVICE WORKER ===
+(function () {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js', { scope: './' })
+        .then(() => console.log('SW registered'))
+        .catch(() => console.log('SW registration skipped'));
+    });
+  }
+})();
+
+// === МОБИЛЬНОЕ ГАМБУРГЕР-МЕНЮ (список всех уроков) ===
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Список всех уроков (для всех страниц)
+    var lessons = [
+      { num: 1, title: 'История, обзор и области применения', href: '01-history.html' },
+      { num: 2, title: 'Настройка IDE', href: '02-ide-setup.html' },
+      { num: 3, title: 'Переменные', href: '03-variables.html' },
+      { num: 4, title: 'Типы данных', href: '04-data-types.html' },
+      { num: 5, title: 'Ввод и вывод', href: '05-io.html' },
+      { num: 6, title: 'Операции над числами', href: '06-number-ops.html' },
+      { num: 7, title: 'Условный оператор + Отступы', href: '07-conditional.html' },
+      { num: 8, title: 'Булевы переменные', href: '08-booleans.html' },
+      { num: 9, title: 'Строки: индексация и срезы', href: '09-strings-index-slice.html' },
+      { num: 10, title: 'Операции над строками', href: '10-string-ops.html' },
+      { num: 11, title: 'Сложные условия', href: '11-complex-conditions.html' },
+      { num: 12, title: 'Вложенные структуры', href: '12-nested-structures.html' },
+      { num: 13, title: 'Приоритет операций', href: '13-priority.html' },
+      { num: 14, title: 'Создание простейших функций', href: '14-functions.html' },
+      { num: 15, title: 'Функции: продвинутые темы', href: '15-functions-advanced.html' },
+      { num: 16, title: 'Цикл while', href: '16-while.html' },
+      { num: 17, title: 'Цикл for', href: '17-for.html' },
+      { num: 18, title: 'range()', href: '18-range.html' },
+      { num: 19, title: 'break и continue', href: '19-break-continue.html' },
+      { num: 20, title: 'Вложенные циклы', href: '20-nested-loops.html' },
+      { num: 21, title: 'Множества', href: '21-sets.html' },
+      { num: 22, title: 'Списки', href: '22-lists.html' },
+      { num: 23, title: 'Кортежи', href: '23-tuples.html' },
+      { num: 24, title: 'Словари', href: '24-dicts.html' },
+      { num: 25, title: 'split + join', href: '25-split-join.html' },
+      { num: 26, title: 'Списочные выражения', href: '26-list-comprehensions.html' },
+      { num: 27, title: 'Финальный проект', href: '27-final-project.html' },
+      { num: 28, title: 'Обработка ошибок', href: '28-try-except.html' },
+      { num: '🏆', title: 'Итоговый тест', href: 'final-test.html' }
+    ];
+
+    // Текущая страница
+    var currentPage = window.location.pathname.split('/').pop();
+
+    // Кнопка-гамбургер
+    var hamburger = document.createElement('button');
+    hamburger.className = 'hamburger-menu';
+    hamburger.innerHTML = '☰';
+    hamburger.setAttribute('aria-label', 'Меню уроков');
+    hamburger.title = 'Список уроков';
+    document.body.appendChild(hamburger);
+
+    // Панель меню
+    var overlay = document.createElement('div');
+    overlay.className = 'hamburger-overlay';
+    document.body.appendChild(overlay);
+
+    var panel = document.createElement('div');
+    panel.className = 'hamburger-panel';
+    panel.innerHTML = '<div class="hamburger-header">🐍 Уроки Python <span class="hamburger-close">✕</span></div><ul class="hamburger-list"></ul>';
+    document.body.appendChild(panel);
+
+    var list = panel.querySelector('.hamburger-list');
+    lessons.forEach(function (lesson) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = lesson.href;
+      a.className = 'hamburger-link';
+      a.innerHTML = '<span class="hamburger-num">' + lesson.num + '</span> ' + lesson.title;
+      if (currentPage === lesson.href) {
+        a.classList.add('hamburger-active');
+      }
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+
+    // Открыть/закрыть меню
+    hamburger.addEventListener('click', () => {
+      panel.classList.toggle('open');
+      overlay.classList.toggle('open');
+    });
+    overlay.addEventListener('click', () => {
+      panel.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+    panel.querySelector('.hamburger-close').addEventListener('click', () => {
+      panel.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+  });
+
+  // =========================
+  //  QUIZ — САМОПРОВЕРКА
+  // =========================
+  (function initQuiz() {
+    // Номер урока: либо из data-lesson атрибута на body, либо из URL
+    // Поддержка числовых и строковых ключей (например, "final-test")
+    var lessonKey = document.body.getAttribute('data-lesson');
+    var lessonNum = parseInt(lessonKey, 10);
+    if (!isNaN(lessonNum)) {
+      lessonKey = lessonNum;
+    }
+    if (!lessonKey || !LESSON_QUIZZES || !LESSON_QUIZZES[lessonKey]) return;
+
+    var quiz = LESSON_QUIZZES[lessonKey];
+    if (!quiz || !quiz.length) return;
+
+    var state = { idx: 0, correct: 0, answered: false, total: quiz.length };
+
+    // Ищем место вставки: перед lesson-complete-toggle или в конце main-content
+    var main = document.querySelector('.main-content');
+    if (!main) return;
+
+    var container = document.createElement('div');
+    container.className = 'quiz-container';
+
+    function renderQuestion() {
+      var q = quiz[state.idx];
+      var optionsHtml = q.options.map(function (opt, oi) {
+        return '<div class="quiz-option" data-idx="' + oi + '">' +
+          '  <span class="quiz-opt-marker">' + String.fromCharCode(65 + oi) + '.</span>' +
+          '  <span class="quiz-opt-text">' + opt + '</span>' +
+          '</div>';
+      }).join('');
+
+      container.innerHTML =
+        '<h3>🧠 Проверь себя</h3>' +
+        '<div class="quiz-progress">Вопрос <strong>' + (state.idx + 1) + '</strong> из ' + state.total + '</div>' +
+        '<div class="quiz-question">' + q.question + '</div>' +
+        '<div class="quiz-options">' + optionsHtml + '</div>' +
+        '<div class="quiz-feedback"></div>' +
+        '<button class="quiz-next-btn">Далее →</button>';
+
+      bindQuizEvents();
+    }
+
+    function bindQuizEvents() {
+      var options = container.querySelectorAll('.quiz-option');
+      var feedback = container.querySelector('.quiz-feedback');
+      var nextBtn = container.querySelector('.quiz-next-btn');
+      var q = quiz[state.idx];
+
+      options.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          if (state.answered) return;
+          state.answered = true;
+
+          var chosen = parseInt(opt.getAttribute('data-idx'), 10);
+          var isCorrect = chosen === q.correct;
+
+          if (isCorrect) {
+            state.correct++;
+            opt.classList.add('correct');
+            feedback.textContent = '✅ Правильно! ' + (q.explanation || '');
+            feedback.className = 'quiz-feedback correct-fb show';
+          } else {
+            opt.classList.add('incorrect');
+            // Подсветить правильный ответ
+            options[q.correct].classList.add('correct');
+            feedback.textContent = '❌ Неправильно. ' + (q.explanation || '');
+            feedback.className = 'quiz-feedback incorrect-fb show';
+          }
+
+          // Заблокировать все опции
+          options.forEach(function (o) { o.classList.add('disabled'); });
+
+          // Показать кнопку «Далее»
+          nextBtn.classList.add('show');
+        });
+      });
+
+      nextBtn.addEventListener('click', function () {
+        state.idx++;
+        state.answered = false;
+
+        if (state.idx >= state.total) {
+          showResults();
+        } else {
+          renderQuestion();
+        }
+      });
+    }
+
+    function showResults() {
+      var pct = Math.round((state.correct / state.total) * 100);
+      var emoji = pct === 100 ? '🥇' : pct >= 50 ? '👍' : '📚';
+      container.innerHTML =
+        '<div class="quiz-results">' +
+        '  <h3>' + emoji + ' Результат</h3>' +
+        '  <div class="quiz-score">' + state.correct + ' / ' + state.total + ' (' + pct + '%)</div>' +
+        '  <p style="margin-top:8px;color:var(--text-muted);">' +
+        (pct === 100 ? 'Великолепно! Ты отлично усвоил материал.' :
+         pct >= 50 ? 'Хорошо! Но есть куда расти — повтори материал.' :
+         'Стоит перечитать урок и попробовать снова.') +
+        '  </p>' +
+        '  <button class="quiz-retry">🔄 Попробовать ещё раз</button>' +
+        '</div>';
+
+      container.querySelector('.quiz-retry').addEventListener('click', function () {
+        state = { idx: 0, correct: 0, answered: false, total: quiz.length };
+        renderQuestion();
+      });
+    }
+
+    // Вставляем перед toggle-блоком, если он есть
+    var toggle = main.querySelector('.lesson-complete-toggle');
+    if (toggle) {
+      main.insertBefore(container, toggle);
+    } else {
+      main.appendChild(container);
+    }
+    renderQuestion();
+  })();
+
+  // =========================
+  //  INLINE EXERCISES
+  // =========================
+  (function initExercises() {
+    // Находим все .exercise-block на странице
+    var blocks = document.querySelectorAll('.exercise-block');
+    blocks.forEach(function (block) {
+      var textarea = block.querySelector('textarea');
+      var output = block.querySelector('.exercise-output');
+      var runBtn = block.querySelector('.exercise-run-btn');
+      var resetBtn = block.querySelector('.exercise-reset-btn');
+
+      if (!textarea || !runBtn) return;
+
+      // Сохраняем исходный код
+      var originalCode = textarea.value;
+
+      runBtn.addEventListener('click', function () {
+        var code = textarea.value;
+        // Эмуляция Python: выполняем через Skulpt или показываем псевдо-вывод
+        simulatePython(code, output);
+      });
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          textarea.value = originalCode;
+          output.classList.remove('show', 'error');
+          output.textContent = '';
+        });
+      }
+    });
+
+    /**
+     * Простейший симулятор Python (для демонстрационных упражнений).
+     * Поддерживает print(), простые арифметические операции, переменные.
+     * Для реального выполнения нужен Skulpt/Pyodide — здесь заглушка,
+     * которая даёт правдоподобный вывод для типовых упражнений.
+     */
+    function simulatePython(code, outputEl) {
+      var lines = code.replace(/\r/g, '').split('\n');
+      var result = [];
+      var vars = {};
+
+      try {
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line || line.startsWith('#')) continue;
+
+          // print(...)
+          var printMatch = line.match(/^print\s*\(\s*(.+?)\s*\)\s*$/);
+          if (printMatch) {
+            var expr = printMatch[1];
+            // Простая замена переменных
+            Object.keys(vars).forEach(function (v) {
+              var re = new RegExp('\\b' + v + '\\b', 'g');
+              expr = expr.replace(re, vars[v]);
+            });
+            // Простые строки в кавычках
+            var strMatch = expr.match(/^["'](.+)["']$/);
+            if (strMatch) {
+              result.push(strMatch[1]);
+            } else if (expr.match(/^["'].*["']\s*[+]\s*["'].*["']$/)) {
+              // Конкатенация строк
+              var parts = expr.match(/["']([^"']*)["']/g);
+              if (parts) {
+                result.push(parts.map(function(p) { return p.slice(1, -1); }).join(''));
+              }
+            } else {
+              // Арифметика
+              try {
+                var safeExpr = expr.replace(/[^0-9+\-*/%.() ]/g, '');
+                var val = Function('"use strict"; return (' + (safeExpr || '0') + ')')();
+                result.push(String(val));
+              } catch (e) {
+                result.push(expr);
+              }
+            }
+            continue;
+          }
+
+          // Присваивание: var = expr
+          var assignMatch = line.match(/^(\w+)\s*=\s*(.+)$/);
+          if (assignMatch) {
+            var varName = assignMatch[1];
+            var rhs = assignMatch[2];
+            // Подставить переменные
+            Object.keys(vars).forEach(function (v) {
+              var re = new RegExp('\\b' + v + '\\b', 'g');
+              rhs = rhs.replace(re, vars[v]);
+            });
+            if (rhs.match(/^["']/)) {
+              vars[varName] = rhs.slice(1, -1);
+            } else if (rhs.match(/^(True|False)$/)) {
+              vars[varName] = rhs;
+            } else {
+              try {
+                var safeRhs = rhs.replace(/[^0-9+\-*/%.() ]/g, '');
+                vars[varName] = Function('"use strict"; return (' + (safeRhs || '0') + ')')();
+              } catch (e) {
+                vars[varName] = rhs;
+              }
+            }
+            continue;
+          }
+
+          // for i in range(...)
+          var forMatch = line.match(/^for\s+(\w+)\s+in\s+range\s*\(\s*(\d+)\s*\)\s*:\s*$/);
+          if (forMatch) {
+            var fVar = forMatch[1];
+            var fLimit = parseInt(forMatch[2], 10);
+            // Ищем тело цикла (отступы!)
+            var bodyStart = i + 1;
+            while (bodyStart < lines.length && (lines[bodyStart].match(/^    /) || lines[bodyStart].match(/^\t/))) {
+              bodyStart++;
+            }
+            // Извлекаем тело
+            var bodyLines = lines.slice(i + 1, bodyStart).map(function (l) { return l.replace(/^(    |\t)/, ''); });
+            for (var fi = 0; fi < fLimit; fi++) {
+              vars[fVar] = fi;
+              bodyLines.forEach(function (bl) {
+                var pm = bl.match(/^print\s*\(\s*(.+?)\s*\)\s*$/);
+                if (pm) {
+                  var ex = pm[1];
+                  Object.keys(vars).forEach(function (v) {
+                    var re = new RegExp('\\b' + v + '\\b', 'g');
+                    ex = ex.replace(re, vars[v]);
+                  });
+                  var sm = ex.match(/^["'](.+)["']$/);
+                  if (sm) {
+                    result.push(sm[1]);
+                  } else {
+                    try {
+                      result.push(String(Function('"use strict"; return (' + (ex.replace(/[^0-9+\-*/%.() ]/g, '') || '0') + ')')()));
+                    } catch(e2) {
+                      result.push(ex);
+                    }
+                  }
+                }
+              });
+            }
+            i = bodyStart - 1;
+            continue;
+          }
+
+          // Если ничего не поняли
+          if (/^[a-zA-Z_]/.test(line) && !/^print|^if|^for|^while|^def|^import/.test(line)) {
+            // Возможно, выражение, которое нужно вычислить как в REPL
+            try {
+              var replVal = Function('"use strict"; return (' + line + ')')();
+              result.push(String(replVal));
+            } catch(e3) { /* ignore */ }
+          }
+        }
+
+        outputEl.textContent = result.join('\n');
+        outputEl.classList.remove('error');
+        outputEl.classList.add('show');
+      } catch (err) {
+        outputEl.textContent = '⚠️ Ошибка при выполнении: ' + err.message;
+        outputEl.classList.add('show', 'error');
+      }
+    }
+  })();
 })();

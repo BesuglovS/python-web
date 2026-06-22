@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 18: Функции — продвинутые темы. *args, **kwargs, области видимости, аннотации типов" />
+    <meta property="og:title" content="18. Функции: продвинутые темы — Python: основы" />
+    <meta property="og:description" content="Урок 18: Функции — продвинутые темы. *args, **kwargs, области видимости, аннотации типов" />
+    <meta property="og:type" content="article" />
+    <title>Функции: продвинутые темы — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>18. Функции: продвинутые темы</h1>
+        <p class="subtitle">*args, **kwargs, области видимости, аннотации типов</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>*args — произвольное количество аргументов</h2>
+<p><code>*args</code> позволяет передать любое количество позиционных аргументов. Внутри функции это кортеж:</p>
+<pre class="code-block">
+def sum_all(*args):
+    """Суммирует все переданные числа."""
+    total = 0
+    for num in args:
+        total += num
+    return total
+
+print(sum_all(1, 2, 3))       # 6
+print(sum_all(10, 20, 30, 40)) # 100
+print(sum_all())               # 0
+</pre>
+          </section>
+          <section>
+<h2>**kwargs — именованные аргументы</h2>
+<p><code>**kwargs</code> собирает все переданные именованные аргументы в словарь:</p>
+<pre class="code-block">
+def describe_person(**kwargs):
+    """Выводит информацию о человеке."""
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+describe_person(name="Анна", age=25, city="Москва")
+# name: Анна
+# age: 25
+# city: Москва
+</pre>
+          </section>
+          <section>
+<h2>Комбинирование *args и **kwargs</h2>
+<p>Можно использовать оба одновременно. Порядок обязателен: обычные параметры, затем *args, затем **kwargs:</p>
+<pre class="code-block">
+def full_info(title, *args, **kwargs):
+    print(f"Заголовок: {title}")
+    if args:
+        print(f"Позиционные: {args}")
+    if kwargs:
+        print(f"Именованные: {kwargs}")
+
+full_info("Отчёт", 100, 200, status="OK", user="admin")
+# Заголовок: Отчёт
+# Позиционные: (100, 200)
+# Именованные: {'status': 'OK', 'user': 'admin'}
+</pre>
+          </section>
+          <section>
+<h2>Области видимости: global и nonlocal</h2>
+<p>Переменные внутри функции локальны. <code>global</code> разрешает изменять глобальную переменную, <code>nonlocal</code> — переменную из внешней функции:</p>
+<pre class="code-block">
+# global — изменение глобальной переменной
+counter = 0
+
+def increment():
+    global counter
+    counter += 1
+
+increment()
+increment()
+print(counter)  # 2
+
+# nonlocal — изменение переменной из внешней (но не глобальной) области
+def outer():
+    x = 10
+    def inner():
+        nonlocal x
+        x += 5
+    inner()
+    print(x)  # 15
+
+outer()
+</pre>
+          </section>
+          <section>
+<h2>Аннотации типов</h2>
+<p>Начиная с Python 3.5, можно указывать ожидаемые типы параметров и возвращаемого значения. Это помогает читать код и использовать автодополнение в IDE:</p>
+<pre class="code-block">
+def add(a: int, b: int) -> int:
+    """Складывает два целых числа."""
+    return a + b
+
+def greet(name: str, times: int = 1) -> None:
+    """Приветствует указанное количество раз."""
+    for _ in range(times):
+        print(f"Привет, {name}!")
+
+result: int = add(5, 3)   # Аннотация переменной
+greet("Анна", 3)           # Аннотации не проверяются во время выполнения
+</pre>
+<div class="note"><strong>Важно:</strong> аннотации типов не проверяются интерпретатором. Для проверки используйте инструменты вроде <code>mypy</code>.</div>
+          </section>
+          <section>
+<h2>Распаковка аргументов</h2>
+<p>Символы <code>*</code> и <code>**</code> работают и при вызове функции — для распаковки списков и словарей:</p>
+<pre class="code-block">
+def multiply(a, b, c):
+    return a * b * c
+
+# Распаковка списка/кортежа через *
+numbers = [2, 3, 4]
+print(multiply(*numbers))  # 24  (эквивалентно multiply(2, 3, 4))
+
+# Распаковка словаря через **
+params = {"a": 2, "b": 5, "c": 3}
+print(multiply(**params))  # 30  (эквивалентно multiply(a=2, b=5, c=3))
+</pre>
+          </section>
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="14-functions.html" class="prev-link">← Создание простейших функций</a>
+        <a href="19-break-continue.html" class="next-link">break и continue →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

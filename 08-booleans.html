@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 8: Булевы переменные. True, False, bool(), truthy и falsy значения" />
+    <meta property="og:title" content="8. Булевы переменные — Python: основы" />
+    <meta property="og:description" content="Урок 8: Булевы переменные. True, False, bool(), truthy и falsy значения. Логические операторы and, or, not." />
+    <meta property="og:type" content="article" />
+    <title>Булевы переменные — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>8. Булевы переменные</h1>
+        <p class="subtitle">True, False, bool(), truthy и falsy значения. Логические операторы</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+            <h2>Тип bool</h2>
+            <p><code>bool</code> — это подтип <code>int</code>. <code>True</code> = 1, <code>False</code> = 0:</p>
+            <pre class="code-block">
+is_active = True
+is_finished = False
+
+print(type(is_active))  # <class 'bool'>
+print(True + 1)         # 2
+print(False * 5)        # 0</pre>
+          </section>
+          <section>
+            <h2>Функция bool()</h2>
+            <p><code>bool()</code> преобразует любое значение в <code>True</code> или <code>False</code>:</p>
+            <pre class="code-block">
+# Falsy значения (преобразуются в False):
+print(bool(0))        # False
+print(bool(0.0))      # False
+print(bool(""))       # False
+print(bool(None))     # False
+print(bool([]))       # False (пустой список)
+print(bool({}))       # False (пустой словарь)
+print(bool(set()))    # False (пустое множество)
+
+# Truthy значения (всё остальное):
+print(bool(1))        # True
+print(bool(-1))       # True
+print(bool("text"))   # True
+print(bool([1, 2]))   # True</pre>
+            <table>
+              <tr><th>Falsy (→ False)</th><th>Truthy (→ True)</th></tr>
+              <tr><td><code>None</code></td><td>Любое ненулевое число</td></tr>
+              <tr><td><code>0</code>, <code>0.0</code></td><td>Непустая строка</td></tr>
+              <tr><td>Пустая строка <code>""</code></td><td>Непустой список/кортеж/словарь</td></tr>
+              <tr><td>Пустой список <code>[]</code></td><td><code>True</code></td></tr>
+              <tr><td>Пустой словарь <code>{}</code></td><td>Любой объект (по умолчанию)</td></tr>
+            </table>
+            <div class="tip"><strong>Почему это важно?</strong> Falsy/truthy значения позволяют писать лаконичные проверки: <code>if name:</code> вместо <code>if name != "":</code></div>
+          </section>
+          <section>
+            <h2>Логические операторы</h2>
+            <p><code>and</code>, <code>or</code>, <code>not</code> работают с булевыми значениями:</p>
+            <pre class="code-block">
+print(True and False)  # False
+print(True or False)   # True
+print(not True)        # False
+
+# С truthy/falsy значениями:
+print(0 and 42)        # 0 (and возвращает первое falsy)
+print(3 or 0)          # 3 (or возвращает первое truthy)
+print("" or "default") # "default"
+print(not "")          # True (пустая строка — falsy)
+print(not [1, 2])      # False (непустой список — truthy)</pre>
+            <p><strong>Правила:</strong></p>
+            <ul>
+              <li><code>and</code> — возвращает первое falsy-значение или последний операнд</li>
+              <li><code>or</code> — возвращает первое truthy-значение или последний операнд</li>
+              <li><code>not</code> — инвертирует булево значение</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Булевы переменные в условиях</h2>
+            <p>Булевы переменные часто используются для управления потоком программы:</p>
+            <pre class="code-block">
+is_authenticated = True
+has_permission = False
+
+if is_authenticated and has_permission:
+    print("Доступ разрешён")
+elif is_authenticated:
+    print("Недостаточно прав")
+else:
+    print("Требуется авторизация")
+
+# Сокращённая проверка (truthy/falsy)
+name = "Анна"
+if name:
+    print(f"Привет, {name}!")  # Выполнится
+else:
+    print("Имя не указано")</pre>
+          </section>
+          <section>
+            <h2>Приоритет логических операторов</h2>
+            <p>Приоритет (от высшего к низшему): <code>not</code> → <code>and</code> → <code>or</code></p>
+            <pre class="code-block">
+# not применяется первым
+print(not True and False)   # False: (not True) → False, затем False and False → False
+
+# and имеет приоритет над or
+print(True or True and False)  # True: True and False → False, затем True or False → True
+
+# Скобки для ясности
+print(True or (True and False))  # True — то же самое, но понятнее</pre>
+            <div class="tip"><strong>Совет:</strong> всегда используйте скобки в сложных выражениях, даже если знаете приоритет. Код должен быть понятен другим.</div>
+          </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="07-conditional.html" class="prev-link">← Условный оператор и отступы</a>
+        <a href="09-strings-index-slice.html" class="next-link">Далее: Строки: индексация и срезы →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

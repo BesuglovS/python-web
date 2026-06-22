@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 28: Обработка ошибок. try/except/finally, перехват исключений, raise в Python" />
+    <meta property="og:title" content="28. Обработка ошибок — Python: основы" />
+    <meta property="og:description" content="Урок 28: Обработка ошибок. try, except, finally, raise — как сделать программу устойчивой к ошибкам" />
+    <meta property="og:type" content="article" />
+    <title>Обработка ошибок — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="28">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>28. Обработка ошибок</h1>
+        <p class="subtitle">try / except / finally / raise — как сделать программу устойчивой к ошибкам</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+            <h2>Зачем нужна обработка ошибок?</h2>
+            <p>
+              Во время выполнения программы могут возникать ошибки (исключения):
+              деление на ноль, неверный тип данных, отсутствующий файл.
+              Если не обработать исключение — программа <strong>аварийно завершится</strong>.
+            </p>
+            <p>
+              Python предоставляет механизм <code>try/except</code> для «перехвата» ошибок
+              и безопасной реакции на них.
+            </p>
+            <pre class="code-block">
+# Без обработки — программа упадёт
+x = int(input("Введите число: "))   # Если ввести "abc" → ValueError
+print(10 / x)                        # Если x = 0 → ZeroDivisionError</pre>
+          </section>
+
+          <section>
+            <h2>Синтаксис try/except</h2>
+            <p>Опасный код помещается в блок <code>try</code>, а реакция на ошибку — в <code>except</code>:</p>
+            <pre class="code-block">
+try:
+    x = int(input("Введите число: "))
+    print("10 /", x, "=", 10 / x)
+except ValueError:
+    print("❌ Это не число!")
+except ZeroDivisionError:
+    print("❌ На ноль делить нельзя!")</pre>
+            <div class="note">
+              <strong>Важно:</strong> как только в блоке <code>try</code> возникает ошибка, выполнение
+              сразу переходит в соответствующий <code>except</code>. Оставшаяся часть <code>try</code>
+              не выполняется.
+            </div>
+          </section>
+
+          <section>
+            <h2>Несколько типов исключений в одном except</h2>
+            <p>Можно перехватывать несколько типов ошибок в одном блоке:</p>
+            <pre class="code-block">
+try:
+    x = int(input("Введите число: "))
+    print(10 / x)
+except (ValueError, ZeroDivisionError) as e:
+    print(f"Ошибка: {e}")</pre>
+            <p>Ключевое слово <code>as</code> позволяет получить сам объект исключения и вывести его описание.</p>
+          </section>
+
+          <section>
+            <h2>Универсальный except</h2>
+            <p>
+              <code>except:</code> без указания типа (или <code>except Exception:</code>)
+              перехватывает <strong>любую</strong> ошибку. Используйте осторожно:
+            </p>
+            <pre class="code-block">
+try:
+    risky_code()
+except Exception as e:
+    print(f"Что-то пошло не так: {e}")</pre>
+            <div class="note">
+              <strong>Совет:</strong> перехватывайте конкретные типы исключений.
+              Голый <code>except:</code> может скрыть ошибки, которые вы не ожидали,
+              и усложнить отладку.
+            </div>
+          </section>
+
+          <section>
+            <h2>Блок else</h2>
+            <p>
+              <code>else</code> выполняется, <strong>только если ошибок не было</strong>:
+            </p>
+            <pre class="code-block">
+try:
+    x = int(input("Число: "))
+except ValueError:
+    print("Это не число!")
+else:
+    print(f"Отлично! Вы ввели {x}")</pre>
+          </section>
+
+          <section>
+            <h2>Блок finally</h2>
+            <p>
+              <code>finally</code> выполняется <strong>всегда</strong> — была ошибка или нет.
+              Используется для очистки ресурсов (закрытие файлов, соединений):
+            </p>
+            <pre class="code-block">
+try:
+    f = open("data.txt", "r")
+    content = f.read()
+except FileNotFoundError:
+    print("Файл не найден!")
+finally:
+    f.close()        # Выполнится всегда
+    print("Файл закрыт")</pre>
+          </section>
+
+          <section>
+            <h2>Полный порядок блоков</h2>
+            <p>Стандартная структура: <code>try → except → else → finally</code></p>
+            <pre class="code-block">
+try:
+    # Код, который может вызвать ошибку
+    result = 10 / int(input("Число: "))
+except ValueError:
+    # Если не число
+    print("Нужно число!")
+except ZeroDivisionError:
+    # Если ноль
+    print("Не дели на ноль!")
+else:
+    # Если ошибок НЕ было
+    print("Результат:", result)
+finally:
+    # Выполнится ВСЕГДА
+    print("Конец операции")</pre>
+          </section>
+
+          <section>
+            <h2>Оператор raise — создаём свои ошибки</h2>
+            <p>
+              <code>raise</code> позволяет <strong>вручную</strong> вызвать исключение.
+              Полезно для проверки входных данных:
+            </p>
+            <pre class="code-block">
+def set_age(age):
+    if age < 0:
+        raise ValueError("Возраст не может быть отрицательным!")
+    if age > 150:
+        raise ValueError("Слишком большой возраст!")
+    print(f"Возраст: {age}")
+
+try:
+    set_age(-5)
+except ValueError as e:
+    print(e)   # "Возраст не может быть отрицательным!"</pre>
+          </section>
+
+          <section>
+            <h2>Создание своих типов исключений</h2>
+            <p>Можно создать собственный класс исключения, унаследовав от <code>Exception</code>:</p>
+            <pre class="code-block">
+class NegativeAgeError(Exception):
+    """Возраст не может быть отрицательным"""
+    pass
+
+def set_age(age):
+    if age < 0:
+        raise NegativeAgeError(f"Возраст {age} < 0!")
+    print(f"OK: {age}")
+
+try:
+    set_age(-10)
+except NegativeAgeError as e:
+    print(f"Поймано своё исключение: {e}")</pre>
+          </section>
+
+          <section>
+            <h2>Основные встроенные исключения Python</h2>
+            <table class="exceptions-table">
+              <thead>
+                <tr><th>Исключение</th><th>Когда возникает</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>ValueError</code></td><td>Неверное значение (например, <code>int("abc")</code>)</td></tr>
+                <tr><td><code>TypeError</code></td><td>Неверный тип данных (например, <code>"a" + 5</code>)</td></tr>
+                <tr><td><code>IndexError</code></td><td>Индекс за пределами списка/строки</td></tr>
+                <tr><td><code>KeyError</code></td><td>Отсутствующий ключ в словаре</td></tr>
+                <tr><td><code>ZeroDivisionError</code></td><td>Деление на ноль</td></tr>
+                <tr><td><code>FileNotFoundError</code></td><td>Файл не найден</td></tr>
+                <tr><td><code>NameError</code></td><td>Использование необъявленной переменной</td></tr>
+                <tr><td><code>SyntaxError</code></td><td>Синтаксическая ошибка в коде</td></tr>
+                <tr><td><code>ImportError</code></td><td>Не удалось импортировать модуль</td></tr>
+                <tr><td><code>AttributeError</code></td><td>Обращение к несуществующему атрибуту объекта</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Практический пример: безопасный ввод числа</h2>
+            <p>Классический паттерн — запрашивать ввод, пока пользователь не введёт корректное значение:</p>
+            <pre class="code-block">
+def get_number(prompt="Введите число: "):
+    """Запрашивает число, пока не будет введено корректное"""
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("❌ Это не число! Попробуйте ещё раз.")
+
+age = get_number("Ваш возраст: ")
+print(f"Ваш возраст: {age}")</pre>
+          </section>
+
+          <section>
+            <h2>Практический пример: безопасное деление</h2>
+            <pre class="code-block">
+def safe_divide(a, b):
+    """Безопасное деление с обработкой ошибок"""
+    try:
+        result = a / b
+    except ZeroDivisionError:
+        print(f"❌ Ошибка: деление {a} на 0 невозможно")
+        return None
+    except TypeError as e:
+        print(f"❌ Ошибка типа: {e}")
+        return None
+    else:
+        print(f"✅ {a} / {b} = {result:.2f}")
+        return result
+
+safe_divide(10, 2)    # ✅ 10 / 2 = 5.00
+safe_divide(10, 0)    # ❌ Ошибка: деление 10 на 0 невозможно
+safe_divide(10, "a")  # ❌ Ошибка типа: ...</pre>
+          </section>
+
+          <section>
+            <h2>Цепочка исключений (raise from)</h2>
+            <p>Можно связать новое исключение с исходным:</p>
+            <pre class="code-block">
+try:
+    x = int("abc")
+except ValueError as original_error:
+    raise RuntimeError("Не удалось обработать ввод") from original_error</pre>
+          </section>
+
+          <section>
+            <h2>Резюме</h2>
+            <ul>
+              <li><code>try</code> — код, который может вызвать ошибку</li>
+              <li><code>except ТипОшибки</code> — перехват конкретной ошибки</li>
+              <li><code>except (Тип1, Тип2)</code> — перехват нескольких типов</li>
+              <li><code>as переменная</code> — получить объект исключения</li>
+              <li><code>else</code> — выполняется, если ошибок не было</li>
+              <li><code>finally</code> — выполняется всегда (очистка ресурсов)</li>
+              <li><code>raise</code> — вызвать исключение вручную</li>
+              <li>Свои исключения — наследование от <code>Exception</code></li>
+            </ul>
+            <div class="note">
+              <strong>Золотое правило:</strong> перехватывайте только те исключения,
+              которые можете осмысленно обработать. Не используйте голый
+              <code>except:</code> без крайней необходимости.
+            </div>
+          </section>
+
+          <!-- Интерактивное упражнение -->
+          <div class="exercise-block">
+            <h3>✏️ Упражнение: Безопасный ввод</h3>
+            <p>
+              Напишите код, который запрашивает у пользователя два числа и выводит
+              результат их деления. Обработайте ситуации:
+            </p>
+            <ol>
+              <li>Пользователь ввёл не число (<code>ValueError</code>)</li>
+              <li>Деление на ноль (<code>ZeroDivisionError</code>)</li>
+            </ol>
+            <textarea class="exercise-ta" rows="12"># ВАШ КОД — напишите функцию safe_calculator()
+def safe_calculator():
+    try:
+        a = float(input("Первое число: "))
+        b = float(input("Второе число: "))
+        # Ваш код здесь...
+    except ValueError:
+        print("Ошибка: нужно ввести число!")
+    except ZeroDivisionError:
+        print("Ошибка: на ноль делить нельзя!")
+
+safe_calculator()</textarea>
+            <button class="exercise-run-btn">▶ Запустить</button>
+            <button class="exercise-reset-btn">↺ Сброс</button>
+            <div class="exercise-output"></div>
+          </div>
+
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="27-final-project.html" class="prev-link">← Финальный проект</a>
+        <a href="final-test.html" class="next-link">Далее: Итоговый тест →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
