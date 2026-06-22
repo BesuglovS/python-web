@@ -41,6 +41,8 @@ function renderSandboxResult(outputEl, result) {
 
   outputEl.innerHTML = html;
   outputEl.className = outputEl.className.replace(/\brunning\b/, '') + ' show';
+  // Явно показываем блок, т.к. он мог быть скрыт через style.display = 'none'
+  outputEl.style.display = 'block';
   if (!result.ok) {
     outputEl.classList.add('error');
   }
@@ -55,6 +57,7 @@ function renderSandboxResult(outputEl, result) {
 async function executeCode(outputEl, code, userInput) {
   outputEl.className = 'sandbox-output running';
   outputEl.innerHTML = '⏳ Выполнение...';
+  outputEl.style.display = 'block';
   try {
     const response = await fetch('sandbox/run.php', {
       method: 'POST',
@@ -78,6 +81,7 @@ async function executeCode(outputEl, code, userInput) {
     renderSandboxResult(outputEl, result);
   } catch (err) {
     outputEl.className = 'sandbox-output error';
+    outputEl.style.display = 'block';
     outputEl.innerHTML = '⚠️ Ошибка: ' + escapeHtml(err.message);
   }
 }
@@ -337,6 +341,7 @@ async function executeCode(outputEl, code, userInput) {
       executeBtn.addEventListener('click', async () => {
         const code = (pre.textContent || pre.innerText).trim();
         const userInput = inputField.value;
+        outputDiv.style.display = 'block';
         executeCode(outputDiv, code, userInput);
       });
 
@@ -907,6 +912,7 @@ async function executeCode(outputEl, code, userInput) {
             renderSandboxResult(output, result);
           } catch (err) {
             output.className = 'exercise-output error';
+            output.style.display = 'block';
             output.innerHTML = '⚠️ Ошибка: ' + escapeHtml(err.message);
           }
           return;
@@ -945,6 +951,7 @@ async function executeCode(outputEl, code, userInput) {
             renderSandboxResult(output, result);
           } catch (err) {
             output.className = 'exercise-output error';
+            output.style.display = 'block';
             output.innerHTML = '⚠️ Ошибка: ' + escapeHtml(err.message);
           }
         }
