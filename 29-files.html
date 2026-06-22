@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 29: Чтение и запись текстовых файлов в Python. open(), with, чтение строк, разбор чисел." />
+    <meta property="og:title" content="29. Файлы — Python: основы" />
+    <meta property="og:description" content="Урок 29: Чтение и запись текстовых файлов. open(), with as, чтение данных разных форматов." />
+    <meta property="og:type" content="article" />
+    <title>Файлы — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="29">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>29. Файлы: чтение и запись</h1>
+        <p class="subtitle">open(), with as, чтение строк, разбор чисел, запись данных</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+
+          <section>
+            <h2>Зачем работать с файлами?</h2>
+            <p>
+              Программы часто обрабатывают данные из внешних источников:
+              результаты измерений, таблицы с баллами, списки имён, лог-файлы.
+              Все эти данные хранятся в текстовых файлах, и Python умеет их читать.
+            </p>
+            <p>
+              В этом уроке мы научимся:
+            </p>
+            <ul>
+              <li>Открывать файл с помощью <code>open()</code></li>
+              <li>Читать файл целиком и построчно</li>
+              <li>Извлекать числа из строк разного формата</li>
+              <li>Записывать данные в новый файл</li>
+              <li>Автоматически закрывать файл с <code>with as</code></li>
+            </ul>
+            <div class="note">
+              <strong>Важно:</strong> весь код этого урока можно запустить у себя на компьютере.
+              Создайте рядом с программой текстовые файлы с примерами данных и экспериментируйте!
+            </div>
+          </section>
+
+          <section>
+            <h2>Функция open() и режимы</h2>
+            <p>
+              Чтобы открыть файл, используется функция <code>open(имя_файла, режим)</code>.
+              Основные режимы:
+            </p>
+            <table class="exceptions-table">
+              <thead>
+                <tr><th>Режим</th><th>Что делает</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>"r"</code></td><td>чтение (read) — файл должен существовать</td></tr>
+                <tr><td><code>"w"</code></td><td>запись (write) — создаёт новый файл или перезаписывает существующий</td></tr>
+                <tr><td><code>"a"</code></td><td>добавление (append) — дописывает в конец файла</td></tr>
+                <tr><td><code>"r+"</code></td><td>чтение и запись</td></tr>
+              </tbody>
+            </table>
+            <pre class="code-block">
+f = open("data.txt", "r")   # открыть для чтения
+content = f.read()          # прочитать всё содержимое
+f.close()                   # обязательно закрыть!</pre>
+            <p>
+              Однако у этого подхода есть недостаток: если между <code>open()</code> и <code>close()</code>
+              произойдёт ошибка, файл может остаться незакрытым.
+            </p>
+          </section>
+
+          <section>
+            <h2>Конструкция with as (рекомендуемый способ)</h2>
+            <p>
+              Конструкция <code>with open(...) as f:</code> гарантирует,
+              что файл будет закрыт автоматически, даже если внутри блока произошла ошибка.
+            </p>
+            <pre class="code-block">
+with open("data.txt", "r") as f:
+    content = f.read()
+    print(content)
+# файл закрыт — можно не вызывать f.close()</pre>            
+          </section>
+
+          <section>
+            <h2>Способы чтения файла</h2>
+            <p>Методы объекта файла для чтения:</p>
+            <ul>
+              <li><code>f.read()</code> — прочитать весь файл одной строкой</li>
+              <li><code>f.readlines()</code> — прочитать все строки в список</li>
+              <li><code>for line in f:</code> — перебрать строки в цикле (экономит память)</li>
+            </ul>
+            <pre class="code-block">
+# Чтение целиком
+with open("poem.txt", "r") as f:
+    text = f.read()
+    print(text)
+
+# Чтение в список строк
+with open("poem.txt", "r") as f:
+    lines = f.readlines()
+    print("Количество строк:", len(lines))
+
+# Построчный перебор (для больших файлов)
+with open("poem.txt", "r") as f:
+    for line in f:
+        print(line.strip())   # strip() убирает лишние пробелы и \n</pre>
+          </section>
+
+          <section>
+            <h2>Пример 1: одно целое число в каждой строке</h2>
+            <p>
+              Допустим, в файле <code>numbers.txt</code> записаны целые числа, по одному на строку:
+            </p>
+            <pre class="code-block">
+# Содержимое numbers.txt:
+42
+17
+100
+-5
+8</pre>
+            <p>Прочитаем числа из файла в список</p>
+            <pre class="code-block">
+f = open('nums.txt')
+a = [int(s) for s in f]</pre>
+            <p>
+                Списочное выражение для каждой строчки в файле <code>for s in f</code> помещает в список 
+              строку преобразованную в число <code>int(s)</code>.
+            </p>
+          </section>
+
+          <section>
+            <h2>Пример 2: два вещественных числа в каждой строке</h2>
+            <p>
+              В файле <code>pairs.txt</code> в каждой строке записаны два числа с плавающей точкой,
+              разделённые пробелом:
+            </p>
+            <pre class="code-block">
+# Содержимое pairs.txt:
+3.5 2.0
+1.1 4.8
+7.0 0.5
+6.6 3.3</pre>            
+            <pre class="code-block">
+with open("pairs.txt", "r") as f:
+    for line in f:
+        parts = line.strip().split()       # ["3.5", "2.0"]
+        a = float(parts[0])
+        b = float(parts[1])</pre>
+            <p>
+              Сначала <code>strip()</code> убирает <code>\n</code>, затем <code>split()</code>
+              разделяет строку по пробелам, и <code>float()</code> преобразует каждую часть
+              в вещественное число.
+            </p>
+          </section>
+
+          <section>
+            <h2>Пример 3: неопределённое количество чисел в каждой строке</h2>
+            <p>
+              В файле <code>matrix.txt</code> записана таблица чисел. В каждой строке неопределённое 
+              количество целых чисел, но мы заранее не знаем, сколько именно:
+            </p>
+            <pre class="code-block">
+# Содержимое matrix.txt:
+1 2 3 4
+5 6 7 8
+9 10 11 12</pre>
+            <p>Прочитаем матрицу в список списков</p>
+            <pre class="code-block">
+f = open('nums.txt')
+a = [[int(x) for x in s.split()] for s in f]
+
+# rows = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]</pre>
+            <p>
+              Списочное выражение для каждой строчки в файле <code>for s in f</code> помещает в список 
+              список чисел в строке. Для этого для каждого фрагмента строки полученного после разделения
+              её на пробельные символы <code>for x in s.split()</code> в список попадает целочисленное
+              представление чисел <code>int(x)</code>.
+            </p>            
+          </section>
+
+          <section>
+            <h2>Пример 4: файл состоит из одной строки</h2>
+            <p>
+              Иногда все данные записаны в одну строку:
+            </p>
+            <pre class="code-block">
+# Содержимое oneline.txt:
+LKASJNLKASJNDFLKJSADNHFLKJASHDFLKJHASDLFKHASLKDJFHASKLDFS</pre>            
+            <pre class="code-block">
+s = open('oneline.txt').readline() # прочитать первую строчку из файла
+</pre>            
+          </section>
+
+          <section>
+            <h2>Запись в текстовый файл</h2>
+            <p>
+              Для записи используется режим <code>"w"</code> (перезапись) или <code>"a"</code> (добавление).
+              Метод <code>f.write()</code> записывает строку. Чтобы перейти на новую строку,
+              нужно явно добавить <code>\n</code>.
+            </p>
+            <pre class="code-block">
+# Запись списка чисел в файл
+numbers = [10, 20, 30, 40, 50]
+
+with open("output.txt", "w") as f:
+    for n in numbers:
+        f.write(str(n) + "\n")
+
+print("Файл output.txt создан!")</pre>
+            <p>
+              Содержимое <code>output.txt</code> после выполнения:
+            </p>
+            <pre class="code-block">
+10
+20
+30
+40
+50</pre>
+            <p>Ещё пример — запись таблицы (матрицы) в файл:</p>
+            <pre class="code-block">
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+with open("matrix_out.txt", "w") as f:
+    for row in matrix:
+        line = " ".join(map(str, row))   # "1 2 3"
+        f.write(line + "\n")
+
+print("Матрица записана в matrix_out.txt")</pre>
+          </section>
+
+          <section>
+            <h2>Обработка ошибок при работе с файлами</h2>
+            <p>
+              При открытии файла может возникнуть ошибка — например, файл не существует.
+              Используем <code>try/except</code> (урок 28):
+            </p>
+            <pre class="code-block">
+try:
+    with open("missing.txt", "r") as f:
+        content = f.read()
+except FileNotFoundError:
+    print("Файл не найден! Проверьте имя файла.")
+except PermissionError:
+    print("Нет прав на чтение файла.")</pre>
+          </section>
+
+          <section>
+            <h2>Практический пример: анализ результатов</h2>
+            <p>
+              В файле <code>scores.txt</code> хранятся результаты учеников:
+              в каждой строке имя и три оценки через пробел.
+            </p>
+            <pre class="code-block">
+# Содержимое scores.txt:
+Анна 85 90 78
+Борис 92 88 95
+Вика 76 81 79
+Глеб 95 89 92</pre>
+            <p>Прочитаем, вычислим средний балл каждого ученика и запишем результат в новый файл:</p>
+            <pre class="code-block">
+with open("scores.txt", "r") as f_in:
+    results = []
+    for line in f_in:
+        parts = line.strip().split()          # ["Анна", "85", "90", "78"]
+        name = parts[0]
+        scores = list(map(int, parts[1:]))    # [85, 90, 78]
+        avg = sum(scores) / len(scores)
+        results.append(f"{name}: {avg:.2f}")
+
+with open("averages.txt", "w") as f_out:
+    for result in results:
+        f_out.write(result + "\n")
+
+print("Результаты записаны в averages.txt")</pre>
+            <p>
+              Обратите внимание: данные читаются из одного файла (<code>f_in</code>),
+              а записываются в другой (<code>f_out</code>). Оба файла открыты через
+              <code>with</code>, поэтому они гарантированно закроются.
+            </p>
+          </section>
+
+          <section>
+            <h2>Резюме</h2>
+            <ul>
+              <li><code>open(файл, режим)</code> — открывает файл в заданном режиме</li>
+              <li>Режимы: <code>"r"</code> (чтение), <code>"w"</code> (запись), <code>"a"</code> (добавление)</li>
+              <li><code>with open(...) as f:</code> — безопасное открытие с автозакрытием</li>
+              <li><code>f.read()</code> — прочитать весь файл строкой</li>
+              <li><code>for line in f:</code> — перебор строк (экономит память)</li>
+              <li><code>f.write(строка)</code> — запись строки в файл</li>
+              <li><code>strip()</code> убирает <code>\n</code>, <code>split()</code> делит строку на части</li>
+              <li><code>int()</code> / <code>float()</code> преобразуют строку в число</li>              
+            </ul>
+            <div class="note">
+              <strong>Совет:</strong> создайте несколько текстовых файлов с разными форматами данных
+              и потренируйтесь их читать — это один из самых полезных навыков для начинающего
+              программиста.
+            </div>
+          </section>
+
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="28-try-except.html" class="prev-link">← Обработка ошибок</a>
+        <a href="final-test.html" class="next-link">Далее: Итоговый тест →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

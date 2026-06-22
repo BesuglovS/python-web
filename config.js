@@ -60,7 +60,8 @@ var LESSON_META = {
   25: { duration: 7,  complexity: 'basic' },
   26: { duration: 10, complexity: 'intermediate' },
   27: { duration: 15, complexity: 'intermediate' },
-  28: { duration: 12, complexity: 'intermediate' }
+  28: { duration: 12, complexity: 'intermediate' },
+  29: { duration: 14, complexity: 'intermediate' }
 };
 
 /** Подписи уровней сложности */
@@ -76,7 +77,7 @@ var COMPLEXITY_LABELS = {
  */
 var LESSON_QUIZZES = {
   3: [
-    { question: 'Какое имя переменной допустимо в Python?', options: ['2nd_place', 'my-var', '_count', 'class'], correct: 2, explanation: 'Имена могут начинаться с буквы или _, но не с цифры и не могут быть ключевыми словами.' },
+    { question: 'Какое имя переменной допустимо в Python?', options: ['2nd_place', 'my-var', '_count', 'class'], correct: 2, explanation: 'Имена могут начинаться с буквы или _, но не с цифры и не могут быть ключевыми словами. Нельзя использовать дефис в именах переменных. Питон принимает его за минус.' },
     { question: 'Что произойдёт при выполнении <code>x = 5; x = "hello"</code>?', options: ['Ошибка: нельзя менять тип', 'x станет строкой "hello"', 'x останется 5', 'Создастся вторая переменная'], correct: 1, explanation: 'Python использует динамическую типизацию: переменная может менять тип в любой момент.' }
   ],
   4: [
@@ -134,6 +135,13 @@ var LESSON_QUIZZES = {
   24: [
     { question: 'Как получить значение по ключу "name" из словаря d?', options: ['d.name', 'd["name"]', 'd.get("name")', 'Второй и третий варианты'], correct: 3, explanation: 'Оба способа d["name"] и d.get("name") работают. .get() безопаснее: возвращает None при отсутствии ключа.' },
     { question: 'Могут ли ключи словаря повторяться?', options: ['Да', 'Нет', 'Только если значения разные', 'Только строки'], correct: 1, explanation: 'Ключи в словаре уникальны. При повторном присваивании старое значение перезаписывается.' }
+  ],
+  29: [
+    { question: 'Какой режим нужно указать в open() для чтения файла?', options: ['"w"', '"r"', '"a"', '"rw"'], correct: 1, explanation: 'Режим "r" (read) открывает файл для чтения. Файл при этом должен существовать.' },
+    { question: 'Что делает конструкция <code>with open(...) as f:</code>?', options: ['Открывает файл в режиме только для записи', 'Автоматически закрывает файл после выхода из блока', 'Создаёт новый файл', 'Копирует файл'], correct: 1, explanation: 'with ... as гарантирует, что файл будет закрыт автоматически, даже если внутри блока произошла ошибка.' },
+    { question: 'Что вернёт <code>"  42  \\n".strip()</code>?', options: ['"  42  "', '"42"', '"42\n"', '"  42  \n"'], correct: 1, explanation: 'strip() удаляет пробельные символы (пробелы, табуляцию, \\n) с обоих концов строки.' },
+    { question: 'Дан файл с одной строкой "10 20 30 40". Как получить список чисел?', options: ['int(f.read())', '[int(x) for x in f.readline()]', 'f.read().split()', 'int(f.readline())'], correct: 1, explanation: 'Сначала читаем строку и делим её по пробелам. Каждый фрагмент превращаем в число с помощью функции int.' },
+    { question: 'Что произойдёт при попытке открыть несуществующий файл в режиме "r"?', options: ['Создастся пустой файл', 'Вызовется FileNotFoundError', 'Вернётся None', 'Программа зависнет'], correct: 1, explanation: 'Режим "r" требует, чтобы файл существовал. Если его нет — Python выбрасывает FileNotFoundError.' }
   ],
   28: [
     { question: 'Что произойдёт при выполнении <code>int("abc")</code>?', options: ['Вернёт 0', 'Вызовет ValueError', 'Вернёт None', 'Программа завершится без ошибки'], correct: 1, explanation: 'int() не может преобразовать строку "abc" в число и выбрасывает исключение ValueError.' },

@@ -4,6 +4,48 @@
  */
 
 
+// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
+
+/**
+ * Экранирует HTML-спецсимволы для безопасного вставления текста.
+ */
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+/**
+ * Отображает результат выполнения Python-кода из песочницы.
+ * @param {HTMLElement} outputEl — элемент, куда выводить результат
+ * @param {object} result — объект с полями { ok, stdout, stderr, exit_code }
+ */
+function renderSandboxResult(outputEl, result) {
+  var html = '';
+
+  if (result.stdout) {
+    html += '<div class="sb-stdout">' + escapeHtml(result.stdout) + '</div>';
+  }
+
+  if (result.stderr) {
+    html += '<div class="sb-stderr">⚠️ ' + escapeHtml(result.stderr) + '</div>';
+  }
+
+  if (!result.stdout && !result.stderr) {
+    if (result.ok) {
+      html = '<div class="sb-stdout">✅ Код выполнен без вывода</div>';
+    } else {
+      html = '<div class="sb-stderr">⚠️ Ошибка выполнения (код ' + result.exit_code + ')</div>';
+    }
+  }
+
+  outputEl.innerHTML = html;
+  outputEl.className = outputEl.className.replace(/\brunning\b/, '') + ' show';
+  if (!result.ok) {
+    outputEl.classList.add('error');
+  }
+}
+
 // === ПОДСВЕТКА СИНТАКСИСА (Highlight.js) ===
 (function () {
   document.addEventListener('DOMContentLoaded', () => {
@@ -192,19 +234,101 @@
 
       wrapper.appendChild(copyBtn);
 
+      // Делаем блок кода редактируемым
+      pre.contentEditable = true;
+      pre.spellcheck = false;
+      pre.title = 'Кликните, чтобы отредактировать код';
+
       // Кнопка «Запустить в песочнице»
       const runBtn = document.createElement('button');
       runBtn.className = 'run-btn';
       runBtn.textContent = '▶';
-      runBtn.title = 'Запустить код в онлайн-песочнице';
+      runBtn.title = 'Запустить код в локальной песочнице';
       runBtn.setAttribute('aria-label', 'Запустить код в песочнице');
 
+      // Поле ввода для input() — скрыто по умолчанию
+      const inputField = document.createElement('textarea');
+      inputField.className = 'sandbox-input';
+      inputField.placeholder = 'Введите данные для input() — каждое значение на новой строке…';
+      inputField.style.display = 'none';
+      wrapper.appendChild(inputField);
+
+      // Контейнер кнопок (Выполнить + Сброс)
+      const btnGroup = document.createElement('div');
+      btnGroup.className = 'exercise-buttons';
+      btnGroup.style.display = 'none';
+      wrapper.appendChild(btnGroup);
+
+      const executeBtn = document.createElement('button');
+      executeBtn.className = 'exercise-run-btn';
+      executeBtn.textContent = '▶ Выполнить';
+      btnGroup.appendChild(executeBtn);
+
+      const resetBtn = document.createElement('button');
+      resetBtn.className = 'exercise-reset-btn';
+      resetBtn.textContent = '✕ Сброс';
+      btnGroup.appendChild(resetBtn);
+
+      // Создаём блок вывода рядом с кодом
+      const outputDiv = document.createElement('div');
+      outputDiv.className = 'sandbox-output';
+      outputDiv.style.display = 'none';
+      wrapper.appendChild(outputDiv);
+
+      // Первый клик по ▶ — показываем поле ввода (только если есть input())
       runBtn.addEventListener('click', () => {
         const code = (pre.textContent || pre.innerText).trim();
-        // Открываем online-python.com с предзаполненным кодом
-        const encoded = encodeURIComponent(code);
-        const url = 'https://www.online-python.com/?code=' + encoded;
-        window.open(url, '_blank', 'noopener,noreferrer');
+        const hasInput = /input\s*\(/.test(code);
+
+        // Показываем группу кнопок всегда
+        btnGroup.style.display = 'flex';
+        outputDiv.style.display = 'none';
+
+        // Поле ввода — только если есть input()
+        if (hasInput) {
+          inputField.style.display = 'block';
+          inputField.focus();
+        } else {
+          inputField.style.display = 'none';
+          inputField.value = '';
+        }
+      });
+
+      // Выполнить код с данными из поля ввода
+      executeBtn.addEventListener('click', async () => {
+        const code = (pre.textContent || pre.innerText).trim();
+        const userInput = inputField.value;
+
+        outputDiv.style.display = 'block';
+        outputDiv.className = 'sandbox-output running';
+        outputDiv.innerHTML = '⏳ Выполнение...';
+
+        try {
+          const response = await fetch('sandbox/run.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, input: userInput, timeout: 5 })
+          });
+
+          if (!response.ok) {
+            throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+          }
+
+          const result = await response.json();
+          renderSandboxResult(outputDiv, result);
+        } catch (err) {
+          outputDiv.className = 'sandbox-output error';
+          outputDiv.innerHTML = '⚠️ Ошибка соединения с сервером: ' + escapeHtml(err.message);
+        }
+      });
+
+      // Сброс — скрываем поле и результат
+      resetBtn.addEventListener('click', () => {
+        inputField.style.display = 'none';
+        btnGroup.style.display = 'none';
+        outputDiv.style.display = 'none';
+        inputField.value = '';
+        outputDiv.innerHTML = '';
       });
 
       wrapper.appendChild(runBtn);
@@ -316,7 +440,7 @@
     if (page && page !== 'index.html' && page !== '') return; // только на главной
 
     const progress = getProgress();
-    const totalLessons = 28;
+    const totalLessons = 29;
 
     // Создаём индикатор прогресса, если его ещё нет
     const headerEl = document.querySelector('header');
@@ -529,6 +653,7 @@
       { num: 26, title: 'Списочные выражения', href: '26-list-comprehensions.html' },
       { num: 27, title: 'Финальный проект', href: '27-final-project.html' },
       { num: 28, title: 'Обработка ошибок', href: '28-try-except.html' },
+      { num: 29, title: 'Файлы: чтение и запись', href: '29-files.html' },
       { num: '🏆', title: 'Итоговый тест', href: 'final-test.html' }
     ];
 
@@ -722,15 +847,64 @@
       // Сохраняем исходный код
       var originalCode = textarea.value;
 
-      runBtn.addEventListener('click', function () {
+      // Поле ввода для input() — скрыто по умолчанию
+      var inputField = document.createElement('textarea');
+      inputField.className = 'exercise-input';
+      inputField.placeholder = 'Ввод данных для input() — каждое значение на новой строке…';
+      inputField.style.display = 'none';
+      inputField.style.marginTop = '8px';
+      inputField.style.width = '100%';
+      inputField.style.boxSizing = 'border-box';
+      block.insertBefore(inputField, output);
+
+      // Меняем обработчик: первый клик — показываем поле ввода (только если есть input())
+      runBtn.addEventListener('click', async function () {
+        var hasInput = /input\s*\(/.test(textarea.value);
+
+        var wasHidden = inputField.style.display === 'none';
+        if (wasHidden) {
+          // Показываем поле ввода (если есть input()), прячем предыдущий вывод
+          if (hasInput) {
+            inputField.style.display = 'block';
+            inputField.focus();
+          } else {
+            inputField.style.display = 'none';
+            inputField.value = '';
+          }
+          output.classList.remove('show', 'error');
+          output.textContent = '';
+          return; // Не выполняем код при первом нажатии
+        }
+
         var code = textarea.value;
-        // Эмуляция Python: выполняем через Skulpt или показываем псевдо-вывод
-        simulatePython(code, output);
+        var userInput = inputField.value;
+        output.className = 'exercise-output running';
+        output.innerHTML = '⏳ Выполнение...';
+
+        try {
+          const response = await fetch('sandbox/run.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, input: userInput, timeout: 5 })
+          });
+
+          if (!response.ok) {
+            throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+          }
+
+          const result = await response.json();
+          renderSandboxResult(output, result);
+        } catch (err) {
+          output.className = 'exercise-output error';
+          output.innerHTML = '⚠️ Ошибка соединения с сервером: ' + escapeHtml(err.message);
+        }
       });
 
       if (resetBtn) {
         resetBtn.addEventListener('click', function () {
           textarea.value = originalCode;
+          inputField.value = '';
+          inputField.style.display = 'none';
           output.classList.remove('show', 'error');
           output.textContent = '';
         });

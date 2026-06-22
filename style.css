@@ -880,6 +880,82 @@ section li {
 .exercise-output.error {
   color: #fca5a5;
 }
+
+/* === ПОЛЕ ВВОДА ДЛЯ input() === */
+.sandbox-input,
+.exercise-input {
+  width: 100%;
+  min-height: 60px;
+  background: #1a1a2e;
+  color: #cdd6f4;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", monospace;
+  font-size: 0.85em;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-top: 8px;
+  transition: border-color var(--transition);
+}
+.sandbox-input:focus,
+.exercise-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.sandbox-input::placeholder,
+.exercise-input::placeholder {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* === ВЫВОД ПЕСОЧНИЦЫ (sandbox) === */
+.sandbox-output {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-top: 10px;
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", monospace;
+  font-size: 0.88em;
+  min-height: 36px;
+  white-space: pre-wrap;
+  border-left: 3px solid var(--primary);
+  transition: all var(--transition);
+}
+.sandbox-output.running {
+  border-left-color: #f59e0b;
+}
+.sandbox-output.show {
+  border-left-color: #10b981;
+}
+.sandbox-output.error {
+  border-left-color: #ef4444;
+  color: #fca5a5;
+}
+.sandbox-output .sb-stdout {
+  color: #cdd6f4;
+  white-space: pre-wrap;
+}
+.sandbox-output .sb-stderr {
+  color: #fca5a5;
+  white-space: pre-wrap;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(252, 165, 165, 0.3);
+}
+
+/* Стиль для running-анимации */
+.exercise-output.running,
+.sandbox-output.running {
+  animation: pulse 1.2s ease-in-out infinite;
+  border-left-color: #f59e0b;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
 .exercise-buttons {
   display: flex;
   gap: 10px;
