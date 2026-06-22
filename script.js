@@ -46,6 +46,42 @@ function renderSandboxResult(outputEl, result) {
   }
 }
 
+/**
+ * Выполняет Python-код через песочницу (sandbox/run.php) и отображает результат.
+ * @param {HTMLElement} outputEl — элемент для вывода
+ * @param {string} code — код на Python
+ * @param {string} userInput — ввод для input()
+ */
+async function executeCode(outputEl, code, userInput) {
+  outputEl.className = 'sandbox-output running';
+  outputEl.innerHTML = '⏳ Выполнение...';
+  try {
+    const response = await fetch('sandbox/run.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code, input: userInput, timeout: 5 })
+    });
+
+    if (!response.ok) {
+      // Попробуем извлечь сообщение об ошибке из тела ответа
+      let errorMsg = 'HTTP ' + response.status + ': ' + response.statusText;
+      try {
+        const errorBody = await response.json();
+        if (errorBody && errorBody.error) {
+          errorMsg = errorBody.error;
+        }
+      } catch (_) { /* тело ответа не JSON — используем статус */ }
+      throw new Error(errorMsg);
+    }
+
+    const result = await response.json();
+    renderSandboxResult(outputEl, result);
+  } catch (err) {
+    outputEl.className = 'sandbox-output error';
+    outputEl.innerHTML = '⚠️ Ошибка: ' + escapeHtml(err.message);
+  }
+}
+
 // === ПОДСВЕТКА СИНТАКСИСА (Highlight.js) ===
 (function () {
   document.addEventListener('DOMContentLoaded', () => {
@@ -275,22 +311,25 @@ function renderSandboxResult(outputEl, result) {
       outputDiv.style.display = 'none';
       wrapper.appendChild(outputDiv);
 
-      // Первый клик по ▶ — показываем поле ввода (только если есть input())
+      // Клик по ▶ — если есть input(), показываем поле ввода и кнопки.
+      // Если input() нет — запускаем код сразу.
       runBtn.addEventListener('click', () => {
         const code = (pre.textContent || pre.innerText).trim();
         const hasInput = /input\s*\(/.test(code);
 
-        // Показываем группу кнопок всегда
-        btnGroup.style.display = 'flex';
-        outputDiv.style.display = 'none';
-
-        // Поле ввода — только если есть input()
         if (hasInput) {
+          // Показываем группу кнопок и поле ввода
+          btnGroup.style.display = 'flex';
+          outputDiv.style.display = 'none';
           inputField.style.display = 'block';
           inputField.focus();
         } else {
+          // Запускаем сразу
+          btnGroup.style.display = 'none';
           inputField.style.display = 'none';
           inputField.value = '';
+          outputDiv.style.display = 'block';
+          executeCode(outputDiv, code, '');
         }
       });
 
@@ -298,28 +337,7 @@ function renderSandboxResult(outputEl, result) {
       executeBtn.addEventListener('click', async () => {
         const code = (pre.textContent || pre.innerText).trim();
         const userInput = inputField.value;
-
-        outputDiv.style.display = 'block';
-        outputDiv.className = 'sandbox-output running';
-        outputDiv.innerHTML = '⏳ Выполнение...';
-
-        try {
-          const response = await fetch('sandbox/run.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: code, input: userInput, timeout: 5 })
-          });
-
-          if (!response.ok) {
-            throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-          }
-
-          const result = await response.json();
-          renderSandboxResult(outputDiv, result);
-        } catch (err) {
-          outputDiv.className = 'sandbox-output error';
-          outputDiv.innerHTML = '⚠️ Ошибка соединения с сервером: ' + escapeHtml(err.message);
-        }
+        executeCode(outputDiv, code, userInput);
       });
 
       // Сброс — скрываем поле и результат
@@ -857,46 +875,78 @@ function renderSandboxResult(outputEl, result) {
       inputField.style.boxSizing = 'border-box';
       block.insertBefore(inputField, output);
 
-      // Меняем обработчик: первый клик — показываем поле ввода (только если есть input())
+      // Первый клик — если есть input(), показываем поле ввода.
+      // Если input() нет — запускаем код сразу.
+      // Первый клик: если нет input() — запускаем сразу.
+      // Если есть input(): первый клик показывает поле ввода, второй — выполняет код.
       runBtn.addEventListener('click', async function () {
         var hasInput = /input\s*\(/.test(textarea.value);
 
-        var wasHidden = inputField.style.display === 'none';
-        if (wasHidden) {
-          // Показываем поле ввода (если есть input()), прячем предыдущий вывод
-          if (hasInput) {
-            inputField.style.display = 'block';
-            inputField.focus();
-          } else {
-            inputField.style.display = 'none';
-            inputField.value = '';
+        if (!hasInput) {
+          // Нет ввода — запускаем сразу
+          var code = textarea.value;
+          output.className = 'exercise-output running';
+          output.innerHTML = '⏳ Выполнение...';
+          try {
+            const response = await fetch('sandbox/run.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ code: code, input: '', timeout: 5 })
+            });
+            if (!response.ok) {
+              let errorMsg = 'HTTP ' + response.status + ': ' + response.statusText;
+              try {
+                const errorBody = await response.json();
+                if (errorBody && errorBody.error) {
+                  errorMsg = errorBody.error;
+                }
+              } catch (_) { }
+              throw new Error(errorMsg);
+            }
+            const result = await response.json();
+            renderSandboxResult(output, result);
+          } catch (err) {
+            output.className = 'exercise-output error';
+            output.innerHTML = '⚠️ Ошибка: ' + escapeHtml(err.message);
           }
-          output.classList.remove('show', 'error');
-          output.textContent = '';
-          return; // Не выполняем код при первом нажатии
+          return;
         }
 
-        var code = textarea.value;
-        var userInput = inputField.value;
-        output.className = 'exercise-output running';
-        output.innerHTML = '⏳ Выполнение...';
-
-        try {
-          const response = await fetch('sandbox/run.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: code, input: userInput, timeout: 5 })
-          });
-
-          if (!response.ok) {
-            throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+        // Есть input()
+        if (inputField.style.display === 'none') {
+          // Первый клик — показываем поле ввода
+          inputField.style.display = 'block';
+          inputField.focus();
+          output.classList.remove('show', 'error');
+          output.textContent = '';
+        } else {
+          // Второй клик — поле уже видимо, выполняем код
+          var code = textarea.value;
+          var userInput = inputField.value;
+          output.className = 'exercise-output running';
+          output.innerHTML = '⏳ Выполнение...';
+          try {
+            const response = await fetch('sandbox/run.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ code: code, input: userInput, timeout: 5 })
+            });
+            if (!response.ok) {
+              let errorMsg = 'HTTP ' + response.status + ': ' + response.statusText;
+              try {
+                const errorBody = await response.json();
+                if (errorBody && errorBody.error) {
+                  errorMsg = errorBody.error;
+                }
+              } catch (_) { }
+              throw new Error(errorMsg);
+            }
+            const result = await response.json();
+            renderSandboxResult(output, result);
+          } catch (err) {
+            output.className = 'exercise-output error';
+            output.innerHTML = '⚠️ Ошибка: ' + escapeHtml(err.message);
           }
-
-          const result = await response.json();
-          renderSandboxResult(output, result);
-        } catch (err) {
-          output.className = 'exercise-output error';
-          output.innerHTML = '⚠️ Ошибка соединения с сервером: ' + escapeHtml(err.message);
         }
       });
 
