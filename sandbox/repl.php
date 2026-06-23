@@ -52,6 +52,12 @@ if (!$data || !isset($data['code'])) {
 }
 
 $code = $data['code'];
+
+// Изолируем сессию по session_id (UUID клиента)
+$sessionId = isset($data['session_id']) ? preg_replace('/[^a-zA-Z0-9\-]/', '', $data['session_id']) : '';
+if ($sessionId !== '') {
+    $SESSION_FILE = $SCRIPTS_DIR . '/.repl_session_' . $sessionId . '.pkl';
+}
 $input = isset($data['input']) ? $data['input'] : '';
 $reset = !empty($data['reset']);
 $timeout = isset($data['timeout']) ? max(1, min(10, (int)$data['timeout'])) : 5;
@@ -260,6 +266,11 @@ builtins.input = custom_input
 # Подмена stdout/stderr
 old_stdout = sys.stdout
 old_stderr = sys.stderr
+# После загрузки из pickle __builtins__ мог стать копией, а не ссылкой на builtins.__dict__.
+# Удаляем его, чтобы Python при exec() заново подхватил текущие builtins
+# (включая подменённый input → custom_input).
+namespace.pop('__builtins__', None)
+
 sys.stdout = io.StringIO()
 sys.stderr = io.StringIO()
 
@@ -268,8 +279,11 @@ try:
     exec(code, namespace)
 except SystemExit:
     pass
-except Exception:
-    traceback.print_exc(file=sys.stderr)
+except Exception as e:
+    tb = traceback.extract_tb(sys.exc_info()[2])
+    user_frame = tb[-1] if tb else None
+    line_no = user_frame.lineno if user_frame and user_frame.filename == '<string>' else '?'
+    sys.stderr.write(f"Line {line_no}: {type(e).__name__}: {e}\n")
     exit_code = 1
 
 builtins.input = _original_input
@@ -278,6 +292,15 @@ captured_out = sys.stdout.getvalue()
 captured_err = sys.stderr.getvalue()
 sys.stdout = old_stdout
 sys.stderr = old_stderr
+
+# Ограничение размера namespace: максимум 200 ключей
+MAX_NAMESPACE_KEYS = 200
+if len(namespace) > MAX_NAMESPACE_KEYS:
+    # Удаляем лишние ключи (кроме '__builtins__'), оставляя последние 200
+    keys_to_keep = set(list(namespace.keys())[-MAX_NAMESPACE_KEYS:])
+    for k in list(namespace.keys()):
+        if k not in keys_to_keep:
+            del namespace[k]
 
 # Сохраняем состояние
 try:
@@ -313,9 +336,11 @@ $inputJson = json_encode([
 // Запускаем
 list($stdout, $stderr, $exitCode) = runPythonScript($runnerScript, $inputJson);
 
-if (!empty($stderr)) {
-    // Если что-то пошло не так в самом runner
-    $stderr = '⚠ Python error: ' . $stderr;
+// Проверяем размер pickle-файла сессии (не более 10 МБ)
+$MAX_SESSION_SIZE = 10 * 1024 * 1024; // 10 MB
+if (file_exists($SESSION_FILE) && filesize($SESSION_FILE) > $MAX_SESSION_SIZE) {
+    @unlink($SESSION_FILE);
+    $stderr = '⚠ Размер сессии превысил лимит (10 МБ). Сессия сброшена.';
 }
 
 if (empty($stdout)) {

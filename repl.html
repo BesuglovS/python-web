@@ -332,6 +332,20 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
       let currentTab = 'repl';
       let history = [];
 
+      // UUID сессии — генерируем один раз, храним в localStorage
+      function getSessionId() {
+        let id = localStorage.getItem('python-repl-session-id');
+        if (!id) {
+          id = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+          });
+          localStorage.setItem('python-repl-session-id', id);
+        }
+        return id;
+      }
+      const sessionId = getSessionId();
+
       // Загружаем историю из localStorage
       try {
         const saved = localStorage.getItem('python-repl-history');
@@ -408,7 +422,7 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           const response = await fetch('sandbox/repl.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, input: stdin, timeout: 5 })
+            body: JSON.stringify({ code, input: stdin, timeout: 5, session_id: sessionId })
           });
 
           if (!response.ok) {
@@ -477,6 +491,12 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
         history = [];
         localStorage.removeItem('python-repl-history');
         renderHistory();
+        // Сбрасываем серверную сессию (pickle-файл)
+        fetch('sandbox/repl.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: '', reset: true, session_id: sessionId })
+        }).catch(function(){});
       }
 
       async function runEditor() {
@@ -494,7 +514,7 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           const response = await fetch('sandbox/repl.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, input: stdin, timeout: 10 })
+            body: JSON.stringify({ code, input: stdin, timeout: 10, session_id: sessionId })
           });
 
           if (!response.ok) {
@@ -548,6 +568,16 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
         div.appendChild(document.createTextNode(str));
         return div.innerHTML;
       }
+
+      // При закрытии/перезагрузке страницы — очищаем серверную сессию
+      window.addEventListener('beforeunload', function() {
+        const data = JSON.stringify({
+          code: '',
+          reset: true,
+          session_id: sessionId
+        });
+        navigator.sendBeacon('sandbox/repl.php', new Blob([data], { type: 'application/json' }));
+      });
     </script>
   </body>
 </html>
