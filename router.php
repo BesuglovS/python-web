@@ -9,9 +9,12 @@ $uri = $_SERVER['REQUEST_URI'];
 $path = parse_url($uri, PHP_URL_PATH);
 
 // Если запрос к sandbox — выполняем его напрямую
-if ($path === '/sandbox/run.php') {
-    require __DIR__ . '/sandbox/run.php';
-    return true;
+if (strpos($path, '/sandbox/') === 0) {
+    $file = __DIR__ . $path;
+    if (file_exists($file) && is_file($file) && substr($file, -4) === '.php') {
+        require $file;
+        return true;
+    }
 }
 
 // Для остальных файлов — проверяем, существует ли файл
