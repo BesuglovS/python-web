@@ -171,6 +171,9 @@ errors = []
 class SafeVisitor(ast.NodeVisitor):
     def generic_visit(self, node):
         node_type = type(node).__name__
+        if node_type == "Module":
+            super().generic_visit(node)
+            return
         if node_type not in ALLOWED_NODES:
             errors.append(f"Forbidden construct: {node_type} (line~{getattr(node, 'lineno', '?')})")
         super().generic_visit(node)
