@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 29: Модуль itertools в Python — product, permutations, combinations, cycle, chain, groupby." />
+    <meta property="og:title" content="29. Модуль itertools — Python: основы" />
+    <meta property="og:description" content="Урок 29: product, permutations, combinations, cycle, chain, groupby. Функции для решения задач ЕГЭ." />
+    <meta property="og:type" content="article" />
+    <title>Модуль itertools — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="29">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>29. Модуль itertools</h1>
+        <p class="subtitle">product, permutations, combinations, cycle, chain, groupby — комбинаторные генераторы</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+
+          <section>
+            <h2>Что такое itertools?</h2>
+            <p>
+              Модуль <code>itertools</code> — это встроенная библиотека Python,
+              которая предоставляет быстрые и эффективные функции для работы с итераторами.
+              Она особенно полезна для комбинаторных задач — перебора всех возможных
+              комбинаций, перестановок, декартовых произведений.
+            </p>
+            <p>
+              Эти функции часто встречаются в задачах <strong>ЕГЭ по информатике</strong>,
+              а также в олимпиадном программировании. Вместо того чтобы писать вложенные
+              циклы вручную, можно использовать готовые функции из itertools.
+            </p>
+            <p>Подключается модуль одной строкой:</p>
+            <pre class="code-block">from itertools import product, permutations, combinations</pre>
+            <p>
+              Если нужны все функции сразу, можно импортировать весь модуль:
+            </p>
+            <pre class="code-block">import itertools</pre>
+            <div class="note">
+              <strong>Важно:</strong> все функции itertools возвращают <strong>итераторы</strong>,
+              а не списки. Чтобы получить список, нужно обернуть вызов в <code>list()</code>.
+              Итераторы экономят память, но пройти по ним можно только один раз.
+            </div>
+          </section>
+
+          <section>
+            <h2>product() — декартово произведение</h2>
+            <p>
+              Функция <code>product(*iterables, repeat=1)</code> возвращает декартово произведение
+              переданных итерируемых объектов. Проще говоря — она порождает все возможные
+              комбинации, где каждый элемент берётся из соответствующего списка.
+            </p>
+            <p>
+              <strong>Разбор ЕГЭ:</strong> именно с помощью <code>product</code> удобно
+              перебирать все возможные строки длины <code>n</code> из заданного алфавита.
+            </p>
+
+            <h3>Пример: все двузначные числа из цифр 1, 2, 3</h3>
+            <pre class="code-block">
+from itertools import product
+
+digits = [1, 2, 3]
+for combo in product(digits, repeat=2):
+    print(combo)
+
+# (1, 1)
+# (1, 2)
+# (1, 3)
+# (2, 1)
+# (2, 2)
+# (2, 3)
+# (3, 1)
+# (3, 2)
+# (3, 3)</pre>
+            <p>
+              Параметр <code>repeat=2</code> означает, что мы берём декартово произведение
+              списка <code>digits</code> самого на себя 2 раза. Всего получаем 3² = 9 комбинаций.
+            </p>
+
+            <h3>Пример: составление кода из букв и цифр</h3>
+            <p>Пусть код состоит из 3 символов: первый — буква A, B или C, второй — цифра 1 или 2, третий — буква X или Y:</p>
+            <pre class="code-block">
+from itertools import product
+
+letters = ['A', 'B', 'C']
+digits = [1, 2]
+ends = ['X', 'Y']
+
+for code in product(letters, digits, ends):
+    print(''.join(map(str, code)))
+
+# A1X  A1Y  A2X  A2Y  B1X  B1Y  B2X  B2Y  C1X  C1Y  C2X  C2Y</pre>
+            <p>
+              Всего 3 × 2 × 2 = 12 вариантов. <code>product</code> сам построит
+              все комбинации, без вложенных циклов.
+            </p>            
+          </section>
+
+          <section>
+            <h2>permutations() — все перестановки</h2>
+            <p>
+              Функция <code>permutations(iterable, r=None)</code> генерирует все
+              <strong>упорядоченные</strong> подмножества длины <code>r</code>
+              из элементов переданной последовательности. Порядок элементов <strong>важен</strong>.
+              Если <code>r</code> не указан, берётся длина всей последовательности.
+            </p>
+            <p>
+              Количество перестановок: P(n, r) = n! / (n − r)!
+            </p>
+
+            <h3>Пример: перестановки из трёх букв</h3>
+            <pre class="code-block">
+from itertools import permutations
+
+for p in permutations('ABC', 2):
+    print(''.join(p))
+
+# AB  AC  BA  BC  CA  CB</pre>
+            <p>
+              Всего 3! / (3−2)! = 6 вариантов. Порядок важен: AB и BA — разные комбинации.
+            </p>
+
+            <h3>Пример: рассадка 4 человек на 2 места</h3>
+            <pre class="code-block">
+from itertools import permutations
+
+people = ['Анна', 'Борис', 'Вика', 'Глеб']
+for perm in permutations(people, 2):
+    print(f'{perm[0]} и {perm[1]}')
+
+# Всего 4 × 3 = 12 вариантов</pre>            
+          </section>
+
+          <section>
+            <h2>combinations() — сочетания</h2>
+            <p>
+              Функция <code>combinations(iterable, r)</code> генерирует все
+              <strong>неупорядоченные</strong> подмножества длины <code>r</code>.
+              Порядок элементов <strong>не важен</strong> — комбинации (A, B) и (B, A)
+              считаются одинаковыми.
+            </p>
+            <p>
+              Количество сочетаний: C(n, r) = n! / (r! (n − r)!)
+            </p>
+
+            <pre class="code-block">
+from itertools import combinations
+
+for c in combinations('ABCD', 2):
+    print(''.join(c))
+
+# AB  AC  AD  BC  BD  CD</pre>
+            <p>
+              Всего C(4, 2) = 6 вариантов. Обратите внимание: AB есть, а BA — нет,
+              потому что порядок не важен.
+            </p>
+
+            <h3>Пример: выбор 3 учеников из 5</h3>
+            <pre class="code-block">
+from itertools import combinations
+
+students = ['Анна', 'Борис', 'Вика', 'Глеб', 'Дима']
+for team in combinations(students, 3):
+    print(', '.join(team))
+
+# Всего C(5, 3) = 10 вариантов</pre>
+
+            <div class="note">
+              <strong>Запомните разницу:</strong>
+              <ul>
+                <li><code>permutations</code> — порядок важен; (1,2) ≠ (2,1)</li>
+                <li><code>combinations</code> — порядок не важен; (1,2) = (2,1)</li>
+                <li><code>product</code> — элементы могут повторяться; каждый выбирается независимо</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h2>combinations_with_replacement()</h2>
+            <p>
+              Эта функция похожа на <code>combinations</code>, но допускает
+              <strong>повторение</strong> элементов. То есть один и тот же элемент
+              может быть выбран несколько раз.
+            </p>
+
+            <pre class="code-block">
+from itertools import combinations_with_replacement
+
+for c in combinations_with_replacement('ABC', 2):
+    print(''.join(c))
+
+# AA  AB  AC  BB  BC  CC</pre>
+            <p>
+              В обычных <code>combinations</code> не было бы AA, BB, CC.
+              Всего C(n + r − 1, r) = C(3+2−1, 2) = C(4, 2) = 6 комбинаций.
+            </p>
+          </section>
+
+          <section>
+            <h2>chain() — цепочка итераторов</h2>
+            <p>
+              <code>chain(*iterables)</code> последовательно перебирает элементы
+              из нескольких итераторов, как если бы они были одним.
+            </p>
+
+            <pre class="code-block">
+from itertools import chain
+
+list1 = [1, 2, 3]
+list2 = ['a', 'b', 'c']
+result = list(chain(list1, list2))
+print(result)  # [1, 2, 3, 'a', 'b', 'c']</pre>
+            <p>
+              Это удобно, когда нужно объединить несколько последовательностей
+              без создания нового списка.
+            </p>
+          </section>
+
+          <section>
+            <h2>cycle() — бесконечный цикл</h2>
+            <p>
+              <code>cycle(iterable)</code> бесконечно повторяет элементы переданной
+              последовательности. Используйте с осторожностью — без break цикл
+              будет выполняться вечно.
+            </p>
+
+            <pre class="code-block">
+from itertools import cycle
+
+colors = ['красный', 'синий', 'зелёный']
+counter = 0
+for color in cycle(colors):
+    print(color)
+    counter += 1
+    if counter >= 5:
+        break
+
+# красный  синий  зелёный  красный  синий</pre>
+            <p>
+              <code>cycle</code> удобен при распределении задач между
+              элементами по кругу (round-robin).
+            </p>
+          </section>
+
+          <section>
+            <h2>groupby() — группировка</h2>
+            <p>
+              <code>groupby(iterable, key=None)</code> группирует последовательные
+              одинаковые элементы. Важное условие: перед группировкой данные
+              должны быть <strong>отсортированы</strong> по тому же ключу,
+              по которому делается группировка.
+            </p>
+
+            <pre class="code-block">
+from itertools import groupby
+
+data = ['aa', 'ab', 'aa', 'aa', 'bc', 'bc', 'cd']
+data.sort()  # обязательно сортируем!
+for key, group in groupby(data):
+    print(f'{key}: {list(group)}')
+
+# 'aa': ['aa', 'aa', 'aa']
+# 'ab': ['ab']
+# 'bc': ['bc', 'bc']
+# 'cd': ['cd']</pre>
+            <p>
+              Каждая группа — это итератор, поэтому перед использованием
+              его нужно преобразовать в список.
+            </p>
+          </section>
+
+          <section>
+            <h2>Другие полезные функции</h2>
+            <table class="exceptions-table">
+              <thead>
+                <tr><th>Функция</th><th>Описание</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>count(start, step)</code></td><td>Бесконечный счётчик (start, start+step, start+2*step …)</td></tr>
+                <tr><td><code>repeat(x, times)</code></td><td>Повторяет элемент x указанное число раз</td></tr>
+                <tr><td><code>accumulate(iterable)</code></td><td>Накопленные суммы (или результаты другой бинарной операции)</td></tr>
+                <tr><td><code>compress(data, selectors)</code></td><td>Фильтрует data, оставляя элементы, где selectors истинен</td></tr>
+                <tr><td><code>dropwhile(predicate, iterable)</code></td><td>Пропускает элементы, пока истинен предикат, затем возвращает остальные</td></tr>
+                <tr><td><code>takewhile(predicate, iterable)</code></td><td>Возвращает элементы, пока истинен предикат, затем останавливается</td></tr>
+                <tr><td><code>zip_longest(*iterables)</code></td><td>Аналог zip(), но заполняет недостающие элементы fillvalue</td></tr>
+                <tr><td><code>tee(iterable, n)</code></td><td>Создаёт n независимых копий итератора</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h2>Сравнение: itertools vs вложенные циклы</h2>
+            <p>
+              Часто функции itertools позволяют заменить вложенные циклы одной строкой.
+              Сравните:
+            </p>
+
+            <h3>Перебор всех пар (i, j) для i, j от 1 до 3</h3>
+            <p>Вложенные циклы:</p>
+            <pre class="code-block">
+pairs = []
+for i in range(1, 4):
+    for j in range(1, 4):
+        pairs.append((i, j))
+
+# [(1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3)]</pre>
+            <p>С itertools:</p>
+            <pre class="code-block">
+from itertools import product
+pairs = list(product(range(1, 4), repeat=2))
+</pre>
+            <p>
+              Чем больше уровней вложенности, тем выигрышнее выглядит itertools.
+              А для комбинаторных задач (перестановки, сочетания) itertools —
+              вообще единственный разумный способ.
+            </p>
+          </section>
+
+          <section>
+            <h2>Резюме</h2>
+            <ul>
+              <li><code>product(iter1, iter2, ..., repeat=n)</code> — декартово произведение, все комбинации с повторением</li>
+              <li><code>permutations(iterable, r)</code> — все упорядоченные размещения (порядок важен)</li>
+              <li><code>combinations(iterable, r)</code> — все неупорядоченные сочетания (порядок не важен, без повторов)</li>
+              <li><code>combinations_with_replacement(iterable, r)</code> — сочетания с повторениями</li>
+              <li><code>chain(*iterables)</code> — объединение нескольких итераторов в один</li>
+              <li><code>cycle(iterable)</code> — бесконечное повторение элементов</li>
+              <li><code>groupby(iterable, key)</code> — группировка последовательных элементов</li>
+              <li>Все функции возвращают <strong>итераторы</strong> — используйте <code>list()</code> для преобразования в список</li>
+              <li>Модуль <code>itertools</code> — мощный инструмент для решения комбинаторных задач и задач ЕГЭ</li>
+            </ul>
+            <div class="note">
+              <strong>Совет:</strong> потренируйтесь вручную посчитать количество комбинаций
+              для разных значений, а потом проверьте себя с помощью itertools.
+              Это поможет лучше понять комбинаторику и сэкономит время на экзамене.
+            </div>
+          </section>
+
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="28-files.html" class="prev-link">← Файлы: чтение и запись</a>
+        <a href="30-final-project.html" class="next-link">Далее: Финальный проект →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -559,6 +559,97 @@ section li {
   grid-column: 1 / -1;
 }
 
+/* === СИСТЕМА ДОСТИЖЕНИЙ (БЕЙДЖИ) === */
+.badges-section {
+  margin-top: 24px;
+  padding: 20px 20px 12px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: background var(--transition);
+}
+.badges-section .badges-title {
+  font-size: 1.05em;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.badges-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.badge-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.88em;
+  font-weight: 600;
+  background: var(--bg-alt);
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+  transition: all var(--transition);
+  cursor: default;
+  position: relative;
+}
+.badge-item.earned {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-color: #f59e0b;
+  color: #92400e;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+  animation: badge-pop 0.4s ease-out;
+}
+.badge-item.locked {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+}
+.badge-item .badge-icon {
+  font-size: 1.3em;
+}
+.badge-item[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: var(--bg);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.82em;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+@keyframes badge-pop {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+[data-theme="dark"] .badge-item.earned {
+  background: linear-gradient(135deg, #78350f, #92400e);
+  border-color: #f59e0b;
+  color: #fde68a;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+}
+[data-theme="dark"] .badge-item.locked {
+  opacity: 0.4;
+}
+[data-theme="dark"] .badge-item[data-tooltip]:hover::after {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
 /* === КНОПКА «НАВЕРХ» === */
 .back-to-top {
   position: fixed;
@@ -1232,4 +1323,21 @@ section li {
   font-size: 0.82em;
   font-weight: 700;
   flex-shrink: 0;
+}
+
+/* ====== БЕЙДЖИ-БЛОК НА ГЛАВНОЙ ====== */
+.badges-block {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.badges-block-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
 }

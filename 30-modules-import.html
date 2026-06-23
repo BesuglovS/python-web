@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 30: Модули и import в Python — import, from...import, as, стандартная библиотека." />
+    <meta property="og:title" content="30. Модули и import — Python: основы" />
+    <meta property="og:description" content="Урок 30: import, from...import, as, обзор стандартной библиотеки Python." />
+    <meta property="og:type" content="article" />
+    <title>Модули и import — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="30">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>30. Модули и import</h1>
+        <p class="subtitle">Как подключать готовый код: import, from...import, псевдонимы, стандартная библиотека</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+
+          <section>
+            <h2>Зачем нужны модули?</h2>
+            <p>
+              Модуль в Python — это просто файл с расширением <code>.py</code>, содержащий функции, классы и переменные.
+              Вместо того чтобы писать весь код в одном файле, программисты разбивают программу на модули.
+              Это делает код:
+            </p>
+            <ul>
+              <li><strong>Переиспользуемым</strong> — один модуль можно подключить в разных программах</li>
+              <li><strong>Структурированным</strong> — каждый модуль отвечает за свою часть логики</li>
+              <li><strong>Поддерживаемым</strong> — легче находить и исправлять ошибки</li>
+            </ul>
+            <p>
+              Python поставляется с огромной <strong>стандартной библиотекой</strong> — сотнями готовых модулей
+              для работы с математикой, датами, файлами, сетью и многим другим.
+            </p>
+          </section>
+
+          <section>
+            <h2>import — подключение модуля целиком</h2>
+            <p>
+              Самый простой способ — импортировать весь модуль. После этого ко всем его функциям
+              нужно обращаться через префикс <code>имя_модуля.</code>:
+            </p>
+            <pre class="code-block">
+import math
+
+print(math.sqrt(16))    # 4.0
+print(math.pi)          # 3.141592653589793
+print(math.factorial(5)) # 120</pre>
+            <div class="note">
+              <strong>Правило:</strong> <code>import module</code> загружает модуль и создаёт пространство имён.
+              Обращаться к содержимому нужно через точку: <code>module.function()</code>.
+            </div>
+            <p>
+              Это самый безопасный способ: вы всегда видите, из какого модуля взята функция,
+              и избегаете конфликтов имён.
+            </p>
+          </section>
+
+          <section>
+            <h2>from...import — импорт конкретных имён</h2>
+            <p>
+              Если вам нужна только одна функция или переменная, можно импортировать её напрямую.
+              Тогда не нужно писать префикс модуля:
+            </p>
+            <pre class="code-block">
+from math import sqrt, pi
+
+print(sqrt(25))  # 5.0
+print(pi)        # 3.141592653589793</pre>
+            <p>
+              Можно импортировать сразу всё содержимое модуля через <code>*</code>:
+            </p>
+            <pre class="code-block">
+from math import *
+
+print(sin(0))    # 0.0
+print(cos(0))    # 1.0
+print(e)         # 2.718281828459045</pre>
+            <div class="note">
+              <strong>Осторожно!</strong> <code>from module import *</code> засоряет пространство имён.
+              Вы можете случайно переопределить встроенную функцию или переменную.
+              В production-коде так делать не рекомендуется.
+            </div>
+          </section>
+
+          <section>
+            <h2>as — псевдонимы модулей</h2>
+            <p>
+              Если имя модуля длинное, или вы хотите избежать конфликта имён,
+              используйте <code>as</code>:
+            </p>
+            <pre class="code-block">
+import numpy as np
+import matplotlib.pyplot as plt
+import itertools as it
+
+arr = np.array([1, 2, 3])
+print(arr)  # [1 2 3]
+
+for combo in it.product('AB', repeat=2):
+    print(combo)</pre>
+            <p>Общепринятые сокращения:</p>
+            <table>
+              <tr><th>Модуль</th><th>Псевдоним</th><th>Назначение</th></tr>
+              <tr><td>numpy</td><td>np</td><td>Научные вычисления</td></tr>
+              <tr><td>pandas</td><td>pd</td><td>Анализ данных</td></tr>
+              <tr><td>matplotlib.pyplot</td><td>plt</td><td>Графики</td></tr>
+              <tr><td>itertools</td><td>it</td><td>Комбинаторика</td></tr>
+            </table>
+          </section>
+
+          <section>
+            <h2>Обзор стандартной библиотеки</h2>
+            <p>
+              Python поставляется с богатым набором модулей «из коробки». Вот самые полезные:
+            </p>
+            <table>
+              <tr><th>Модуль</th><th>Назначение</th><th>Пример использования</th></tr>
+              <tr><td><code>math</code></td><td>Математические функции</td><td>sqrt, sin, cos, log, pi, e</td></tr>
+              <tr><td><code>random</code></td><td>Генерация случайных чисел</td><td>randint, choice, shuffle, random</td></tr>
+              <tr><td><code>datetime</code></td><td>Дата и время</td><td>now(), timedelta, strftime</td></tr>
+              <tr><td><code>os</code></td><td>Операционная система</td><td>Работа с путями, переменные окружения</td></tr>
+              <tr><td><code>sys</code></td><td>Системные функции</td><td>argv, exit, path</td></tr>
+              <tr><td><code>json</code></td><td>Работа с JSON</td><td>loads, dumps, load, dump</td></tr>
+              <tr><td><code>re</code></td><td>Регулярные выражения</td><td>search, findall, sub</td></tr>
+              <tr><td><code>collections</code></td><td>Дополнительные структуры данных</td><td>Counter, defaultdict, deque</td></tr>
+              <tr><td><code>pathlib</code></td><td>Современная работа с путями</td><td>Path('.').glob('*.py')</td></tr>
+              <tr><td><code>time</code></td><td>Время и задержки</td><td>sleep, time_ns</td></tr>
+            </table>
+          </section>
+
+          <section>
+            <h2>Создание собственного модуля</h2>
+            <p>
+              Любой <code>.py</code>-файл может быть модулем. Создадим файл <code>utils.py</code>:
+            </p>
+            <pre class="code-block">
+# utils.py
+def greet(name):
+    """Приветствие."""
+    return f"Привет, {name}!"
+
+def add(a, b):
+    """Сложение двух чисел."""
+    return a + b
+
+PI = 3.14159</pre>
+            <p>Теперь используем его в другом файле (в той же папке):</p>
+            <pre class="code-block">
+# main.py
+import utils
+
+print(utils.greet("Мир"))   # Привет, Мир!
+print(utils.add(3, 5))      # 8
+print(utils.PI)             # 3.14159</pre>
+            <div class="note">
+              <strong>Важно:</strong> при импорте Python выполняет весь код модуля.
+              Чтобы защитить исполняемый код от запуска при импорте, используйте
+              конструкцию <code>if __name__ == '__main__':</code>.
+            </div>
+            <pre class="code-block">
+# utils.py с защитой от запуска при импорте
+def greet(name):
+    return f"Привет, {name}!"
+
+if __name__ == '__main__':
+    # Этот код выполнится только при прямом запуске utils.py
+    print(greet("Тест"))</pre>
+          </section>
+
+          <section>
+            <h2>Итоги</h2>
+            <ul>
+              <li><code>import module</code> — импорт всего модуля (безопасно, ясно)</li>
+              <li><code>from module import name</code> — импорт конкретной функции/переменной</li>
+              <li><code>from module import *</code> — импорт всего (не рекомендуется)</li>
+              <li><code>import module as alias</code> — короткий псевдоним</li>
+              <li>Стандартная библиотека Python содержит сотни готовых модулей</li>
+              <li>Свой модуль — это просто <code>.py</code>-файл в той же папке (или в PYTHONPATH)</li>
+              <li><code>if __name__ == '__main__':</code> защищает код от выполнения при импорте</li>
+            </ul>
+          </section>
+
+          <div class="quiz-container" data-lesson="30"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

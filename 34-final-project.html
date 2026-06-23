@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 27: Финальный проект. Применяем все изученные темы на практике — игра «Угадай число» и калькулятор" />
-    <meta property="og:title" content="27. Финальный проект — Python: основы" />
-    <meta property="og:description" content="Урок 27: Финальный проект. Применяем все изученные темы на практике — игра «Угадай число» и калькулятор" />
+    <meta name="description" content="Урок 34: Финальный проект. Применяем все изученные темы на практике — игра «Угадай число» и калькулятор" />
+    <meta property="og:title" content="34. Финальный проект — Python: основы" />
+    <meta property="og:description" content="Урок 34: Финальный проект. Применяем все изученные темы на практике — игра «Угадай число» и калькулятор" />
     <meta property="og:type" content="article" />
     <title>Финальный проект — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
   </head>
-  <body data-lesson="27">
+  <body data-lesson="34">
     <div class="container">
       <header class="topic-header">
         <div id="breadcrumbs" class="breadcrumbs"></div>
-        <h1>27. Финальный проект</h1>
+        <h1>34. Финальный проект</h1>
         <p class="subtitle">Применяем все изученные темы на практике</p>
       </header>
       <div class="content-layout">
@@ -198,8 +198,159 @@ for word, count in stats["top_words"]:
 </pre>
           </section>
           <section>
+<h2>Проект 4: ToDo-приложение (на классах)</h2>
+<p>
+  Этот проект закрепляет ООП и работу с файлами. Создадим консольное приложение
+  для управления списком задач с сохранением в файл.
+</p>
+<h3>Техническое задание</h3>
+<ol>
+  <li>Класс <code>Task</code> — хранит описание задачи, статус (сделано/не сделано) и дату создания</li>
+  <li>Класс <code>TodoList</code> — хранит список задач, умеет добавлять, удалять, отмечать выполненными, показывать список</li>
+  <li>Сохранение задач в текстовый файл <code>tasks.txt</code> и загрузка при старте</li>
+  <li>Консольное меню с командами: добавить, показать, отметить, удалить, выйти</li>
+</ol>
+<h3>Код проекта</h3>
+<pre class="code-block">
+from datetime import datetime
+import os
+
+class Task:
+    """Одна задача."""
+    def __init__(self, description, done=False, created=None):
+        self.description = description
+        self.done = done
+        self.created = created if created else datetime.now()
+    
+    def mark_done(self):
+        self.done = True
+    
+    def __str__(self):
+        status = "✓" if self.done else "✗"
+        return f"[{status}] {self.description} ({self.created.strftime('%d.%m.%Y %H:%M')})"
+    
+    def to_line(self):
+        """Сериализация для сохранения в файл."""
+        return f"{self.description}|{self.done}|{self.created.isoformat()}\n"
+
+
+class TodoList:
+    """Список задач."""
+    def __init__(self, filename="tasks.txt"):
+        self.filename = filename
+        self.tasks = []
+        self.load()
+    
+    def add(self, description):
+        task = Task(description)
+        self.tasks.append(task)
+        print(f"Добавлена задача #{len(self.tasks)}: {description}")
+    
+    def show(self):
+        if not self.tasks:
+            print("Список задач пуст.")
+            return
+        for i, task in enumerate(self.tasks, 1):
+            print(f"{i}. {task}")
+    
+    def mark(self, index):
+        if 1 <= index <= len(self.tasks):
+            self.tasks[index - 1].mark_done()
+            print(f"Задача #{index} отмечена как выполненная!")
+        else:
+            print("Неверный номер задачи.")
+    
+    def delete(self, index):
+        if 1 <= index <= len(self.tasks):
+            removed = self.tasks.pop(index - 1)
+            print(f"Задача «{removed.description}» удалена.")
+        else:
+            print("Неверный номер задачи.")
+    
+    def save(self):
+        with open(self.filename, "w", encoding="utf-8") as f:
+            for task in self.tasks:
+                f.write(task.to_line())
+        print(f"Сохранено {len(self.tasks)} задач в {self.filename}")
+    
+    def load(self):
+        if not os.path.exists(self.filename):
+            return
+        with open(self.filename, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split("|")
+                if len(parts) == 3:
+                    desc, done_str, created_str = parts
+                    task = Task(
+                        description=desc,
+                        done=(done_str == "True"),
+                        created=datetime.fromisoformat(created_str)
+                    )
+                    self.tasks.append(task)
+        if self.tasks:
+            print(f"Загружено {len(self.tasks)} задач из {self.filename}")
+
+
+def main():
+    todo = TodoList()
+    while True:
+        print("\n" + "=" * 40)
+        print("📋 ToDo-приложение")
+        print("1. Показать задачи")
+        print("2. Добавить задачу")
+        print("3. Отметить как выполненную")
+        print("4. Удалить задачу")
+        print("5. Сохранить и выйти")
+        print("=" * 40)
+        
+        choice = input("Выберите действие (1-5): ").strip()
+        
+        if choice == "1":
+            todo.show()
+        elif choice == "2":
+            desc = input("Введите описание задачи: ").strip()
+            if desc:
+                todo.add(desc)
+        elif choice == "3":
+            todo.show()
+            try:
+                idx = int(input("Номер задачи для отметки: "))
+                todo.mark(idx)
+            except ValueError:
+                print("Введите число!")
+        elif choice == "4":
+            todo.show()
+            try:
+                idx = int(input("Номер задачи для удаления: "))
+                todo.delete(idx)
+            except ValueError:
+                print("Введите число!")
+        elif choice == "5":
+            todo.save()
+            print("До свидания!")
+            break
+        else:
+            print("Неверный выбор. Попробуйте 1-5.")
+
+if __name__ == "__main__":
+    main()
+</pre>
+<h3>Что демонстрирует этот проект</h3>
+<ul>
+  <li>ООП: классы <code>Task</code> и <code>TodoList</code>, конструктор <code>__init__</code></li>
+  <li>Модули: <code>datetime</code> для дат, <code>os</code> для проверки существования файла</li>
+  <li>Чтение/запись файлов с сохранением состояния между запусками</li>
+  <li>Обработка ошибок через <code>try/except</code> при вводе чисел</li>
+  <li>Словари, списки, методы строк (<code>split</code>, <code>strip</code>)</li>
+  <li>Конструкция <code>if __name__ == '__main__'</code></li>
+</ul>
+          </section>
+          <section>
 <h2>Чек-лист изученных тем</h2>
-<p>Поздравляем! Ты прошёл все 27 уроков и освоил:</p>
+<p>Поздравляем! Ты прошёл все 34 урока и освоил:</p>
 <table>
   <tr><th>#</th><th>Тема</th><th>Ключевые концепции</th></tr>
   <tr><td>1</td><td>История Python</td><td>Философия языка, области применения</td></tr>
@@ -216,10 +367,10 @@ for word, count in stats["top_words"]:
   <tr><td>12</td><td>Вложенные структуры</td><td>Условия внутри условий</td></tr>
   <tr><td>13</td><td>Приоритет операций</td><td>Порядок вычислений</td></tr>
   <tr><td>14</td><td>Создание функций</td><td>def, return, параметры</td></tr>
-  <tr><td>15</td><td>Цикл while</td><td>Цикл с предусловием</td></tr>
-  <tr><td>16</td><td>Цикл for</td><td>Перебор последовательностей</td></tr>
-  <tr><td>17</td><td>range()</td><td>Генерация числовых рядов</td></tr>
-  <tr><td>18</td><td>Функции: продвинутые</td><td>*args, **kwargs, области видимости</td></tr>
+  <tr><td>15</td><td>Функции: продвинутые</td><td>*args, **kwargs, области видимости</td></tr>
+  <tr><td>16</td><td>Цикл while</td><td>Цикл с предусловием</td></tr>
+  <tr><td>17</td><td>Цикл for</td><td>Перебор последовательностей</td></tr>
+  <tr><td>18</td><td>range()</td><td>Генерация числовых рядов</td></tr>
   <tr><td>19</td><td>break и continue</td><td>Управление потоком цикла</td></tr>
   <tr><td>20</td><td>Вложенные циклы</td><td>Циклы внутри циклов</td></tr>
   <tr><td>21</td><td>Множества</td><td>set, операции над множествами</td></tr>
@@ -228,16 +379,23 @@ for word, count in stats["top_words"]:
   <tr><td>24</td><td>Словари</td><td>dict, ключи и значения</td></tr>
   <tr><td>25</td><td>split + join</td><td>Разделение и объединение строк</td></tr>
   <tr><td>26</td><td>Списочные выражения</td><td>[x for x in ... if ...]</td></tr>
-  <tr><td>27</td><td>Финальный проект</td><td>Применение всех знаний</td></tr>
+  <tr><td>27</td><td>Обработка ошибок</td><td>try / except / finally / raise</td></tr>
+  <tr><td>28</td><td>Файлы: чтение и запись</td><td>open(), with, чтение строк</td></tr>
+  <tr><td>29</td><td>Модуль itertools</td><td>product, permutations, combinations</td></tr>
+  <tr><td>30</td><td>Модули и import</td><td>Подключение модулей, стандартная библиотека</td></tr>
+  <tr><td>31</td><td>Модули math и random</td><td>Математика, случайные числа</td></tr>
+  <tr><td>32</td><td>Модуль datetime</td><td>Даты, время, timedelta</td></tr>
+  <tr><td>33</td><td>Введение в ООП</td><td>Классы, объекты, __init__, self</td></tr>
+  <tr><td>34</td><td>Финальный проект</td><td>Применение всех знаний</td></tr>
 </table>
           </section>
           <section>
 <h2>Что дальше?</h2>
-<p>Ты освоил фундамент Python. Вот рекомендуемые следующие шаги:</p>
+<p>Ты освоил фундамент Python, включая основы ООП. Вот рекомендуемые следующие шаги:</p>
 <ul>
-  <li><strong>ООП</strong> — классы, объекты, наследование, инкапсуляция</li>
-  <li><strong>Работа с файлами</strong> — чтение и запись .txt, .csv, .json</li>
-  <li><strong>Библиотеки</strong> — requests (HTTP), Flask/Django (веб), pandas (данные)</li>
+  <li><strong>ООП: углубление</strong> — наследование, полиморфизм, декораторы @property, @staticmethod</li>
+  <li><strong>Работа с файлами</strong> — JSON, CSV, базы данных SQLite</li>
+  <li><strong>Библиотеки</strong> — requests (HTTP), Flask/Django (веб), pandas (анализ данных)</li>
   <li><strong>Алгоритмы и структуры данных</strong> — сортировки, стеки, очереди, деревья</li>
   <li><strong>Практика на задачах</strong> — решай задачи на CodeWars, LeetCode, CodinGame</li>
 </ul>
@@ -246,7 +404,8 @@ for word, count in stats["top_words"]:
         </div>
       </div>
       <footer class="topic-footer">
-        <a href="26-list-comprehensions.html" class="prev-link">← Списочные выражения</a>
+        <a href="33-oop-intro.html" class="prev-link">← Введение в ООП</a>
+        <a href="final-test.html" class="next-link">Далее: Итоговый тест →</a>
       </footer>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>

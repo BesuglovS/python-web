@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Изучайте Python с нуля — 29 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса." />
+    <meta name="description" content="Изучайте Python с нуля — 34 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса." />
     <meta property="og:title" content="Python — Основы программирования" />
-    <meta property="og:description" content="29 уроков по Python для начинающих: от переменных до чтения файлов. Бесплатно, с примерами кода." />
+    <meta property="og:description" content="34 урока по Python для начинающих: от переменных до ООП. Бесплатно, с примерами кода." />
     <meta property="og:type" content="website" />
-    <title>Основы программирования на Python — 29 уроков для начинающих</title>
+    <title>Основы программирования на Python — 34 урока для начинающих</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="manifest" href="manifest.json" />
@@ -17,10 +17,10 @@
       "@context": "https://schema.org",
       "@type": "Course",
       "name": "Python — Основы программирования",
-      "description": "Изучайте Python с нуля — 29 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса.",
+      "description": "Изучайте Python с нуля — 34 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса.",
       "provider": { "@type": "Organization", "name": "Python Web" },
       "educationalLevel": "beginner",
-      "numberOfLessons": "29",
+      "numberOfLessons": "34",
       "inLanguage": "ru",
       "hasCourseInstance": { "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }
     }
@@ -60,6 +60,24 @@
         color: var(--text-muted);
         font-size: 1.08em;
         transition: color var(--transition);
+      }
+      .repl-hero-btn {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 10px 24px;
+        background: var(--primary-gradient);
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95em;
+        transition: all var(--transition);
+        box-shadow: var(--shadow);
+      }
+      .repl-hero-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        filter: brightness(1.1);
       }
       nav {
         display: flex;
@@ -168,9 +186,15 @@
     <div class="container">
       <header>
         <h1>🐍 <span>Python</span> — основы программирования</h1>
-        <p>29 базовых тем для начинающих с примерами кода</p>
+        <p>34 базовых тем для начинающих с примерами кода</p>
         <div class="progress-bar-container"></div>
         <span class="progress-info"></span>
+        <a href="repl.html" class="repl-hero-btn">▶ Интерактивная консоль Python</a>
+        <!-- Блок достижений (badges) -->
+        <div class="badges-section" id="badgesBlock" style="display:none;">
+          <div class="badges-title">🏆 Достижения</div>
+          <div class="badges-grid" id="badgesGrid"></div>
+        </div>
       </header>
 
       <nav>
@@ -244,35 +268,7 @@
           </div>
         </div>
 
-        <!-- Раздел 3: Строки -->
-        <div class="section-group" data-section="strings">
-          <h2 class="section-title">🔤 Строки</h2>
-          <div class="section-cards">
-            <a href="09-strings-index-slice.html" class="topic-card" data-lesson="9">
-              <div class="topic-num">9</div>
-              <div class="topic-info">
-                <h2>Строки: индексация и срезы</h2>
-                <p>Индексы, [start:stop:step]</p>
-              </div>
-            </a>
-            <a href="10-string-ops.html" class="topic-card" data-lesson="10">
-              <div class="topic-num">10</div>
-              <div class="topic-info">
-                <h2>Операции над строками</h2>
-                <p>Конкатенация, умножение, методы</p>
-              </div>
-            </a>
-            <a href="25-split-join.html" class="topic-card" data-lesson="25">
-              <div class="topic-num">25</div>
-              <div class="topic-info">
-                <h2>split + join</h2>
-                <p>Разделение и объединение строк</p>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Раздел 4: Условия -->
+        <!-- Раздел 3: Условия -->
         <div class="section-group" data-section="conditions">
           <h2 class="section-title">🔀 Условия</h2>
           <div class="section-cards">
@@ -295,6 +291,34 @@
               <div class="topic-info">
                 <h2>Приоритет операций</h2>
                 <p>Порядок вычислений</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Раздел 4: Строки -->
+        <div class="section-group" data-section="strings">
+          <h2 class="section-title">🔤 Строки</h2>
+          <div class="section-cards">
+            <a href="09-strings-index-slice.html" class="topic-card" data-lesson="9">
+              <div class="topic-num">9</div>
+              <div class="topic-info">
+                <h2>Строки: индексация и срезы</h2>
+                <p>Индексы, [start:stop:step]</p>
+              </div>
+            </a>
+            <a href="10-string-ops.html" class="topic-card" data-lesson="10">
+              <div class="topic-num">10</div>
+              <div class="topic-info">
+                <h2>Операции над строками</h2>
+                <p>Конкатенация, умножение, методы</p>
+              </div>
+            </a>
+            <a href="25-split-join.html" class="topic-card" data-lesson="25">
+              <div class="topic-num">25</div>
+              <div class="topic-info">
+                <h2>split + join</h2>
+                <p>Разделение и объединение строк</p>
               </div>
             </a>
           </div>
@@ -405,12 +429,26 @@
           </div>
         </div>
 
-        <!-- Раздел 8: Файлы -->
+        <!-- Раздел 8: Обработка ошибок -->
+        <div class="section-group" data-section="errors">
+          <h2 class="section-title">⚠️ Обработка ошибок</h2>
+          <div class="section-cards">
+            <a href="27-try-except.html" class="topic-card" data-lesson="27">
+              <div class="topic-num">27</div>
+              <div class="topic-info">
+                <h2>Обработка ошибок</h2>
+                <p>try, except, finally, raise</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Раздел 9: Файлы -->
         <div class="section-group" data-section="files">
           <h2 class="section-title">📁 Файлы</h2>
           <div class="section-cards">
-            <a href="29-files.html" class="topic-card" data-lesson="29">
-              <div class="topic-num">29</div>
+            <a href="28-files.html" class="topic-card" data-lesson="28">
+              <div class="topic-num">28</div>
               <div class="topic-info">
                 <h2>Файлы: чтение и запись</h2>
                 <p>open(), with, построчное чтение, разбор чисел</p>
@@ -419,22 +457,78 @@
           </div>
         </div>
 
-        <!-- Раздел 9: Итог -->
+        <!-- Раздел 10: Модули -->
+        <div class="section-group" data-section="modules">
+          <h2 class="section-title">🧰 Модули</h2>
+          <div class="section-cards">
+            <a href="29-itertools.html" class="topic-card" data-lesson="29">
+              <div class="topic-num">29</div>
+              <div class="topic-info">
+                <h2>Модуль itertools</h2>
+                <p>product, permutations, chain, groupby и другие функции</p>
+              </div>
+            </a>
+            <a href="30-modules-import.html" class="topic-card" data-lesson="30">
+              <div class="topic-num">30</div>
+              <div class="topic-info">
+                <h2>Модули и import</h2>
+                <p>Подключение модулей, стандартная библиотека</p>
+              </div>
+            </a>
+            <a href="31-math-random.html" class="topic-card" data-lesson="31">
+              <div class="topic-num">31</div>
+              <div class="topic-info">
+                <h2>Модули math и random</h2>
+                <p>Математика, случайные числа</p>
+              </div>
+            </a>
+            <a href="32-datetime.html" class="topic-card" data-lesson="32">
+              <div class="topic-num">32</div>
+              <div class="topic-info">
+                <h2>Модуль datetime</h2>
+                <p>Даты, время, timedelta</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Раздел 11: ООП -->
+        <div class="section-group" data-section="oop">
+          <h2 class="section-title">🏗️ ООП</h2>
+          <div class="section-cards">
+            <a href="33-oop-intro.html" class="topic-card" data-lesson="33">
+              <div class="topic-num">33</div>
+              <div class="topic-info">
+                <h2>Введение в ООП</h2>
+                <p>Классы, объекты, __init__, self</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Раздел 12: Итог -->
         <div class="section-group" data-section="final">
           <h2 class="section-title">🏁 Итоги</h2>
           <div class="section-cards">
-            <a href="27-final-project.html" class="topic-card" data-lesson="27">
-              <div class="topic-num">27</div>
+            <a href="34-final-project.html" class="topic-card" data-lesson="34">
+              <div class="topic-num">34</div>
               <div class="topic-info">
                 <h2>Финальный проект</h2>
                 <p>Применяем все знания на практике</p>
               </div>
             </a>
-            <a href="28-try-except.html" class="topic-card" data-lesson="28">
-              <div class="topic-num">28</div>
+            <a href="final-test.html" class="topic-card" data-lesson="final-test">
+              <div class="topic-num" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🏆</div>
               <div class="topic-info">
-                <h2>Обработка ошибок</h2>
-                <p>try, except, finally, raise</p>
+                <h2>Итоговый тест</h2>
+                <p>Проверка знаний по всем темам</p>
+              </div>
+            </a>
+            <a href="repl.html" class="topic-card" style="border-color: var(--primary);">
+              <div class="topic-num" style="background: linear-gradient(135deg, #10b981, #059669);">▶</div>
+              <div class="topic-info">
+                <h2>Python REPL — Интерактивная консоль</h2>
+                <p>Пиши код и сразу видь результат</p>
               </div>
             </a>
           </div>

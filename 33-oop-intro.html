@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 34: Введение в ООП в Python — классы, __init__, методы, self, создание объектов." />
+    <meta property="og:title" content="34. Введение в ООП — Python: основы" />
+    <meta property="og:description" content="Урок 34: Классы, объекты, конструктор __init__, методы, self — основы объектно-ориентированного программирования." />
+    <meta property="og:type" content="article" />
+    <title>Введение в ООП — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="33">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>33. Введение в ООП</h1>
+        <p class="subtitle">Классы, объекты, конструктор __init__, методы, self — первые шаги в ООП</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+
+          <section>
+            <h2>Что такое ООП и зачем оно нужно?</h2>
+            <p>
+              <strong>ООП (объектно-ориентированное программирование)</strong> — это подход, при котором
+              программа строится из <strong>объектов</strong>, объединяющих данные и поведение.
+            </p>
+            <p>До сих пор мы писали процедурный код: функции отдельно, данные отдельно. С ростом программы это становится неудобно:</p>
+            <ul>
+              <li>Трудно отслеживать, какие данные к какой функции относятся</li>
+              <li>Легко запутаться в глобальных переменных</li>
+              <li>Код плохо переиспользуется</li>
+            </ul>
+            <p>ООП решает эти проблемы, группируя связанные данные и функции в <strong>классы</strong>.</p>
+          </section>
+
+          <section>
+            <h2>Класс и объект — в чём разница?</h2>
+            <p>
+              <strong>Класс</strong> — это чертёж, шаблон. Например, чертёж автомобиля.
+              <strong>Объект (экземпляр)</strong> — конкретная машина, созданная по этому чертежу.
+            </p>
+            <pre class="code-block">
+# Класс — чертёж
+class Car:
+    pass
+
+# Объекты — конкретные машины
+my_car = Car()
+friends_car = Car()
+
+print(type(my_car))      # <class '__main__.Car'>
+print(type(friends_car)) # <class '__main__.Car'> — оба одного класса</pre>
+            <p>
+              Ключевое слово <code>class</code> объявляет новый класс. <code>pass</code> — заглушка («ничего не делай»),
+              нужна чтобы класс был синтаксически корректным.
+            </p>
+          </section>
+
+          <section>
+            <h2>__init__ — конструктор</h2>
+            <p>
+              <code>__init__</code> — специальный метод (конструктор), который вызывается автоматически
+              при создании объекта. Он инициализирует начальное состояние объекта.
+            </p>
+            <pre class="code-block">
+class Car:
+    def __init__(self, brand, model, year):
+        """Конструктор: вызывается при Car(...)."""
+        self.brand = brand
+        self.model = model
+        self.year = year
+
+my_car = Car("Toyota", "Camry", 2020)
+
+print(my_car.brand)  # Toyota
+print(my_car.model)  # Camry
+print(my_car.year)   # 2020</pre>
+            <p>
+              Параметры <code>__init__</code>: <code>self</code> ссылается на создаваемый объект (всегда первый параметр),
+              остальные — обычные аргументы, переданные при создании.
+            </p>
+            <div class="note">
+              <strong>self</strong> — не ключевое слово, а соглашение. Можно назвать иначе, но всё сообщество
+              Python использует именно <code>self</code>. Не нарушайте традицию.
+            </div>
+          </section>
+
+          <section>
+            <h2>Методы — функции внутри класса</h2>
+            <p>
+              Обычные функции, определённые внутри класса, называются <strong>методами</strong>.
+              Они автоматически получают <code>self</code> первым аргументом.
+            </p>
+            <pre class="code-block">
+class Car:
+    def __init__(self, brand, model, year):
+        self.brand = brand
+        self.model = model
+        self.year = year
+        self.odometer = 0  # начальный пробег
+    
+    def drive(self, km):
+        """Проехать км километров."""
+        self.odometer += km
+        print(f"Проехали {km} км. Пробег: {self.odometer} км")
+    
+    def info(self):
+        """Вернуть информацию о машине."""
+        return f"{self.brand} {self.model} ({self.year})"
+
+car = Car("Honda", "Civic", 2022)
+print(car.info())     # Honda Civic (2022)
+car.drive(150)         # Проехали 150 км. Пробег: 150 км
+car.drive(80)          # Проехали 80 км. Пробег: 230 км</pre>
+          </section>
+
+          <section>
+            <h2>Атрибуты класса vs атрибуты экземпляра</h2>
+            <pre class="code-block">
+class Car:
+    wheels = 4  # атрибут КЛАССА — общий для всех
+    
+    def __init__(self, brand):
+        self.brand = brand  # атрибут ЭКЗЕМПЛЯРА — у каждого свой
+
+car1 = Car("Toyota")
+car2 = Car("Honda")
+
+print(car1.wheels, car2.wheels)  # 4 4 — общее значение
+Car.wheels = 6                   # меняем атрибут класса
+print(car1.wheels, car2.wheels)  # 6 6 — изменилось у всех
+
+print(car1.brand, car2.brand)    # Toyota Honda — у каждого своё</pre>
+            <p>
+              <strong>Правило:</strong> общие для всех машин свойства (количество колёс) — атрибуты класса.
+              Индивидуальные свойства (марка) — атрибуты экземпляра (через <code>self</code>).
+            </p>
+          </section>
+
+          <section>
+            <h2>Практический пример: класс Student</h2>
+            <pre class="code-block">
+class Student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.grades = []  # список оценок
+    
+    def add_grade(self, grade):
+        """Добавить оценку (2-5)."""
+        if 2 <= grade <= 5:
+            self.grades.append(grade)
+            print(f"Оценка {grade} добавлена для {self.name}")
+        else:
+            print(f"Ошибка: оценка {grade} недопустима. Допустимы 2-5.")
+    
+    def average(self):
+        """Средний балл."""
+        if not self.grades:
+            return 0
+        return sum(self.grades) / len(self.grades)
+    
+    def info(self):
+        """Полная информация о студенте."""
+        return f"{self.name}, {self.age} лет, средний балл: {self.average():.2f}"
+
+# Использование
+s = Student("Анна", 20)
+s.add_grade(5)
+s.add_grade(4)
+s.add_grade(5)
+s.add_grade(11)        # Ошибка: оценка 11 недопустима
+print(s.info())        # Анна, 20 лет, средний балл: 4.67</pre>
+          </section>
+
+          <section>
+            <h2>Специальные методы (dunder)</h2>
+            <p>
+              Методы с двойными подчёркиваниями (<code>__метод__</code>) называются «dunder» (double underscore).
+              Python вызывает их автоматически в определённых ситуациях.
+            </p>
+            <pre class="code-block">
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __str__(self):
+        """Вызывается при print() и str()."""
+        return f"Point({self.x}, {self.y})"
+    
+    def __repr__(self):
+        """Вызывается при repr() и в интерактивной консоли."""
+        return f"Point({self.x}, {self.y})"
+    
+    def __eq__(self, other):
+        """Вызывается при сравнении ==."""
+        if not isinstance(other, Point):
+            return False
+        return self.x == other.x and self.y == other.y
+
+p1 = Point(3, 4)
+p2 = Point(3, 4)
+p3 = Point(5, 6)
+
+print(p1)           # Point(3, 4) — работает __str__
+print(p1 == p2)     # True — работает __eq__
+print(p1 == p3)     # False</pre>
+          </section>
+
+          <section>
+            <h2>Итоги</h2>
+            <ul>
+              <li><code>class</code> — создаёт новый класс (чертёж объектов)</li>
+              <li><code>__init__(self, ...)</code> — конструктор, инициализирует объект</li>
+              <li><code>self</code> — первый параметр всех методов, ссылка на сам объект</li>
+              <li>Методы — обычные функции внутри класса, работают с данными объекта через <code>self</code></li>
+              <li>Атрибуты класса — общие для всех экземпляров</li>
+              <li>Атрибуты экземпляра (через <code>self.</code>) — у каждого свои</li>
+              <li>Специальные методы (<code>__str__</code>, <code>__eq__</code>, etc.) — встроенное поведение</li>
+              <li>ООП помогает организовать код, когда программа вырастает за пределы одного файла</li>
+            </ul>
+          </section>
+
+          <div class="quiz-container" data-lesson="33"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

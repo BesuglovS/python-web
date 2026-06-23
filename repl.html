@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="ru" data-lesson="repl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Интерактивная Python-консоль — пиши код и сразу видь результат." />
+    <title>🐍 Python REPL — Интерактивная консоль</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      [data-theme="dark"] body {
+        background: linear-gradient(135deg, #1a1030 0%, #0f0a20 100%);
+      }
+      .repl-container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 30px 20px;
+      }
+      .repl-header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+      .repl-header h1 {
+        font-size: 2em;
+        margin: 0 0 6px;
+      }
+      .repl-header p {
+        color: rgba(255, 255, 255, 0.85);
+        margin: 0 0 12px;
+      }
+      .repl-header .back-link {
+        display: inline-block;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 0.9em;
+        margin-top: 4px;
+      }
+      .repl-header .back-link:hover {
+        color: rgba(255, 255, 255, 1);
+        text-decoration: underline;
+      }
+      .repl-panel {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .repl-toolbar {
+        display: flex;
+        align-items: center;
+        padding: 10px 16px;
+        background: var(--code-bg);
+        gap: 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        flex-wrap: wrap;
+      }
+      .repl-toolbar button {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #cdd6f4;
+        border-radius: 6px;
+        padding: 6px 14px;
+        cursor: pointer;
+        font-size: 0.88em;
+        transition: all var(--transition);
+        white-space: nowrap;
+      }
+      .repl-toolbar button:hover {
+        background: rgba(255,255,255,0.2);
+        border-color: var(--primary);
+      }
+      .repl-toolbar button.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+      }
+      .repl-toolbar .repl-tabs {
+        display: flex;
+        gap: 4px;
+        margin-right: auto;
+      }
+      .repl-toolbar .repl-tab-count {
+        font-size: 0.8em;
+        color: #999;
+        margin-left: auto;
+      }
+      .repl-history {
+        max-height: 420px;
+        overflow-y: auto;
+        padding: 16px;
+        background: var(--bg-alt);
+        font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+        font-size: 0.92em;
+        line-height: 1.6;
+      }
+      .repl-entry {
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+      }
+      .repl-entry:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      .repl-input-line {
+        color: var(--primary);
+        font-weight: 500;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .repl-prompt {
+        color: #10b981;
+        margin-right: 6px;
+        user-select: none;
+      }
+      .repl-output {
+        color: var(--text);
+        white-space: pre-wrap;
+        word-break: break-word;
+        padding: 4px 0 2px 18px;
+        font-size: 0.93em;
+      }
+      .repl-error {
+        color: #ef4444;
+        white-space: pre-wrap;
+        word-break: break-word;
+        padding: 4px 0 2px 18px;
+        font-size: 0.93em;
+      }
+      .repl-input-area {
+        display: flex;
+        border-top: 1px solid var(--border);
+        align-items: stretch;
+      }
+      .repl-input-area textarea {
+        flex: 1;
+        border: none;
+        background: var(--code-bg);
+        color: #cdd6f4;
+        font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+        font-size: 0.95em;
+        padding: 14px 16px;
+        resize: vertical;
+        min-height: 60px;
+        outline: none;
+        line-height: 1.5;
+      }
+      .repl-input-area textarea::placeholder {
+        color: #666;
+      }
+      .repl-input-area .repl-run-btn {
+        background: var(--primary-gradient);
+        color: #fff;
+        border: none;
+        padding: 14px 28px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .repl-input-area .repl-run-btn:hover {
+        filter: brightness(1.1);
+      }
+      .repl-input-area .repl-run-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .repl-snippets {
+        padding: 16px;
+        background: var(--bg-alt);
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .repl-snippet {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 0.82em;
+        cursor: pointer;
+        color: var(--text);
+        transition: all var(--transition);
+        white-space: nowrap;
+      }
+      .repl-snippet:hover {
+        border-color: var(--primary);
+        background: var(--card-hover-bg);
+        transform: translateY(-1px);
+      }
+      .repl-multiline-hint {
+        font-size: 0.75em;
+        color: var(--text-muted);
+        padding: 6px 16px;
+        background: var(--bg-alt);
+        border-top: 1px solid var(--border);
+      }
+      @media (max-width: 600px) {
+        .repl-input-area {
+          flex-direction: column;
+        }
+        .repl-input-area .repl-run-btn {
+          padding: 12px;
+          width: 100%;
+        }
+        .repl-header h1 {
+          font-size: 1.4em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="repl-container">
+      <div class="repl-header">
+        <h1>🐍 Python REPL</h1>
+        <p>Пиши код и сразу видь результат — экспериментируй в реальном времени</p>
+        <a href="index.html" class="back-link">← На главную</a>
+      </div>
+
+      <div class="repl-panel">
+        <div class="repl-toolbar">
+          <div class="repl-tabs">
+            <button class="active" data-tab="repl" onclick="switchTab('repl')">💬 Интерактив</button>
+            <button data-tab="editor" onclick="switchTab('editor')">📝 Многострочный</button>
+          </div>
+          <button onclick="clearHistory()" title="Очистить историю">🗑 Очистить</button>
+          <span class="repl-tab-count" id="history-count">0 команд</span>
+        </div>
+
+        <!-- REPL Tab -->
+        <div id="tab-repl">
+          <div class="repl-history" id="repl-history">
+            <div style="color: var(--text-muted); text-align: center; padding: 30px;">
+              🐍 Введи Python-код ниже и нажми <strong>▶ Выполнить</strong><br>
+              <span style="font-size:0.85em;">Или выбери пример из списка снизу</span>
+            </div>
+          </div>
+          <div class="repl-input-area">
+            <textarea id="repl-input" placeholder="print('Hello, Python!')" rows="2"></textarea>
+            <button class="repl-run-btn" id="repl-run-btn" onclick="runRepl()">▶ Выполнить</button>
+          </div>
+          <div class="repl-multiline-hint">
+            💡 Для многострочного кода (if, for, def) используй клавишу <strong>Shift+Enter</strong> для новой строки или вкладку <strong>«Многострочный»</strong>.
+          </div>
+          <div class="repl-snippets" id="repl-snippets"></div>
+        </div>
+
+        <!-- Multi-line Editor Tab -->
+        <div id="tab-editor" style="display:none;">
+          <div class="repl-input-area" style="flex-direction: column;">
+            <textarea id="editor-input" placeholder="# Многострочный редактор — пиши целые программы
+def greet(name):
+    return f'Привет, {name}!'
+
+print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></textarea>
+            <div style="display:flex; gap:8px; padding: 10px 16px; background: var(--bg-alt);">
+              <button class="repl-run-btn" style="border-radius:8px; padding: 8px 20px; font-size:0.9em;" onclick="runEditor()">▶ Выполнить код</button>
+              <button style="background:rgba(255,255,255,0.1);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 20px;cursor:pointer;font-size:0.9em;" onclick="document.getElementById('editor-input').value='';">✕ Очистить</button>
+            </div>
+          </div>
+          <div id="editor-output" style="padding: 16px; background: var(--bg-alt); border-top: 1px solid var(--border); min-height: 40px; font-family: monospace; font-size:0.9em; white-space: pre-wrap; color: var(--text);"></div>
+          <div class="repl-snippets" id="editor-snippets"></div>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:24px; color: var(--text-muted); font-size:0.85em;">
+        Код выполняется в безопасной песочнице. Запрещены: импорт опасных модулей, работа с файлами, сеть.
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script>
+      // === REPL Logic ===
+
+      let currentTab = 'repl';
+      let history = [];
+
+      // Загружаем историю из localStorage
+      try {
+        const saved = localStorage.getItem('python-repl-history');
+        if (saved) {
+          history = JSON.parse(saved);
+          renderHistory();
+        }
+      } catch(e) {}
+
+      const SNIPPETS = [
+        { label: 'Hello World', code: "print('Hello, Python! 👋')" },
+        { label: 'Переменные', code: "x = 42\ny = 3.14\nprint(f'x = {x}, y = {y}')" },
+        { label: 'Список', code: "nums = [1, 2, 3, 4, 5]\nprint(sum(nums))\nprint([n**2 for n in nums])" },
+        { label: 'Словарь', code: "d = {'apple': 5, 'banana': 3}\nfor k, v in d.items():\n    print(f'{k}: {v}')" },
+        { label: 'Функция', code: "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n-1)\nprint(factorial(5))" },
+        { label: 'Цикл for', code: "for i in range(5):\n    print(f'Квадрат {i} = {i**2}')" },
+        { label: 'if/else', code: "age = 18\nif age >= 18:\n    print('Совершеннолетний')\nelse:\n    print('Несовершеннолетний')" },
+        { label: 'Срезы строк', code: "s = 'Python Programming'\nprint(s[:6])\nprint(s[::-1])" },
+        { label: 'Множества', code: "a = {1, 2, 3}\nb = {3, 4, 5}\nprint('Объединение:', a | b)\nprint('Пересечение:', a & b)" },
+        { label: 'Math модуль', code: "import math\nprint('Pi =', math.pi)\nprint('sqrt(144) =', math.sqrt(144))" },
+        { label: 'Random', code: "import random\nprint('Случайное число:', random.randint(1, 100))\nprint('Случайный выбор:', random.choice(['A','B','C']))" },
+        { label: 'List comprehension', code: "evens = [x for x in range(20) if x % 2 == 0]\nprint(evens)" },
+        { label: 'Try/except', code: "try:\n    result = 10 / 0\nexcept ZeroDivisionError as e:\n    print(f'Ошибка: {e}')" },
+        { label: 'Datetime', code: "from datetime import datetime, timedelta\nnow = datetime.now()\nprint(now.strftime('%d.%m.%Y %H:%M'))\ntomorrow = now + timedelta(days=1)\nprint('Завтра:', tomorrow.strftime('%d.%m.%Y'))" },
+        { label: 'itertools', code: "from itertools import combinations\nprint(list(combinations('ABCD', 2)))" },
+        { label: 'Класс', code: "class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n += 1\n        return self.n\n\nc = Counter()\nprint(c.inc())\nprint(c.inc())\nprint(c.inc())" },
+      ];
+
+      function renderSnippets() {
+        const replContainer = document.getElementById('repl-snippets');
+        const editorContainer = document.getElementById('editor-snippets');
+        const snippetHtml = SNIPPETS.map(s =>
+          '<button class="repl-snippet" onclick="loadSnippet(`' + s.code.replace(/`/g, '\\`') + '`)">' + s.label + '</button>'
+        ).join('');
+        replContainer.innerHTML = snippetHtml;
+        editorContainer.innerHTML = SNIPPETS.map(s =>
+          '<button class="repl-snippet" onclick="loadEditorSnippet(`' + s.code.replace(/`/g, '\\`') + '`)">' + s.label + '</button>'
+        ).join('');
+      }
+
+      function loadSnippet(code) {
+        document.getElementById('repl-input').value = code;
+        document.getElementById('repl-input').focus();
+      }
+
+      function loadEditorSnippet(code) {
+        document.getElementById('editor-input').value = code;
+        document.getElementById('editor-input').focus();
+      }
+
+      function switchTab(tab) {
+        currentTab = tab;
+        document.getElementById('tab-repl').style.display = tab === 'repl' ? '' : 'none';
+        document.getElementById('tab-editor').style.display = tab === 'editor' ? '' : 'none';
+        document.querySelectorAll('.repl-toolbar button[data-tab]').forEach(b => {
+          b.classList.toggle('active', b.dataset.tab === tab);
+        });
+      }
+
+      async function runRepl() {
+        const input = document.getElementById('repl-input');
+        const code = input.value.trim();
+        if (!code) return;
+
+        const btn = document.getElementById('repl-run-btn');
+        btn.disabled = true;
+        btn.textContent = '⏳ ...';
+
+        const entry = { code, output: '', error: '', time: Date.now() };
+
+        try {
+          const response = await fetch('sandbox/run.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, input: '', timeout: 5 })
+          });
+
+          if (!response.ok) {
+            let errMsg = 'HTTP ' + response.status;
+            try {
+              const errBody = await response.json();
+              if (errBody && errBody.error) errMsg = errBody.error;
+            } catch(_) {}
+            throw new Error(errMsg);
+          }
+
+          const result = await response.json();
+          entry.output = result.stdout || '';
+          entry.error = result.stderr || '';
+
+          if (!entry.output && !entry.error && result.ok) {
+            entry.output = '✅ Выполнено (нет вывода)';
+          }
+        } catch(err) {
+          entry.error = err.message;
+        }
+
+        history.push(entry);
+        if (history.length > 100) history.shift(); // Ограничение истории
+
+        try {
+          localStorage.setItem('python-repl-history', JSON.stringify(history.slice(-50)));
+        } catch(e) {}
+
+        renderHistory();
+        input.value = '';
+        input.focus();
+        btn.disabled = false;
+        btn.textContent = '▶ Выполнить';
+      }
+
+      function renderHistory() {
+        const container = document.getElementById('repl-history');
+        const countEl = document.getElementById('history-count');
+        countEl.textContent = history.length + ' команд';
+
+        if (history.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 30px;">🐍 Введи Python-код ниже и нажми <strong>▶ Выполнить</strong></div>';
+          return;
+        }
+
+        container.innerHTML = history.map((entry, i) => {
+          const prompt = '>>>';
+          let html = '<div class="repl-entry">';
+          html += '<div class="repl-input-line"><span class="repl-prompt">' + prompt + '</span>' + escapeHtml(entry.code) + '</div>';
+          if (entry.output) {
+            html += '<div class="repl-output">' + escapeHtml(entry.output) + '</div>';
+          }
+          if (entry.error) {
+            html += '<div class="repl-error">⚠️ ' + escapeHtml(entry.error) + '</div>';
+          }
+          html += '</div>';
+          return html;
+        }).join('');
+
+        // Автопрокрутка вниз
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function clearHistory() {
+        history = [];
+        localStorage.removeItem('python-repl-history');
+        renderHistory();
+      }
+
+      async function runEditor() {
+        const input = document.getElementById('editor-input');
+        const output = document.getElementById('editor-output');
+        const code = input.value.trim();
+        if (!code) return;
+
+        output.innerHTML = '⏳ Выполнение...';
+        output.style.color = 'var(--text-muted)';
+
+        try {
+          const response = await fetch('sandbox/run.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, input: '', timeout: 10 })
+          });
+
+          if (!response.ok) {
+            let errMsg = 'HTTP ' + response.status;
+            try {
+              const errBody = await response.json();
+              if (errBody && errBody.error) errMsg = errBody.error;
+            } catch(_) {}
+            throw new Error(errMsg);
+          }
+
+          const result = await response.json();
+
+          let html = '';
+          if (result.stdout) {
+            html += '<div style="color: var(--text);">' + escapeHtml(result.stdout) + '</div>';
+          }
+          if (result.stderr) {
+            html += '<div style="color: #ef4444;">⚠️ ' + escapeHtml(result.stderr) + '</div>';
+          }
+          if (!result.stdout && !result.stderr && result.ok) {
+            html = '<div style="color: #10b981;">✅ Код выполнен без вывода</div>';
+          }
+          output.innerHTML = html;
+        } catch(err) {
+          output.innerHTML = '<span style="color: #ef4444;">⚠️ ' + escapeHtml(err.message) + '</span>';
+        }
+      }
+
+      // Enter — выполнить, Shift+Enter — новая строка
+      document.addEventListener('DOMContentLoaded', () => {
+        renderSnippets();
+
+        document.getElementById('repl-input').addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            runRepl();
+          }
+        });
+
+        document.getElementById('editor-input').addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' && e.ctrlKey) {
+            e.preventDefault();
+            runEditor();
+          }
+        });
+      });
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+    </script>
+  </body>
+</html>

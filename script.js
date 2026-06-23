@@ -463,7 +463,7 @@ async function executeCode(outputEl, code, userInput) {
     if (page && page !== 'index.html' && page !== '') return; // только на главной
 
     const progress = getProgress();
-    const totalLessons = 29;
+    const totalLessons = 34;
 
     // Создаём индикатор прогресса, если его ещё нет
     const headerEl = document.querySelector('header');
@@ -674,9 +674,14 @@ async function executeCode(outputEl, code, userInput) {
       { num: 24, title: 'Словари', href: '24-dicts.html' },
       { num: 25, title: 'split + join', href: '25-split-join.html' },
       { num: 26, title: 'Списочные выражения', href: '26-list-comprehensions.html' },
-      { num: 27, title: 'Финальный проект', href: '27-final-project.html' },
-      { num: 28, title: 'Обработка ошибок', href: '28-try-except.html' },
-      { num: 29, title: 'Файлы: чтение и запись', href: '29-files.html' },
+      { num: 27, title: 'Обработка ошибок', href: '27-try-except.html' },
+      { num: 28, title: 'Файлы: чтение и запись', href: '28-files.html' },
+      { num: 29, title: 'Модуль itertools', href: '29-itertools.html' },
+      { num: 30, title: 'Модули и import', href: '30-modules-import.html' },
+      { num: 31, title: 'Модули math и random', href: '31-math-random.html' },
+      { num: 32, title: 'Модуль datetime', href: '32-datetime.html' },
+      { num: 33, title: 'Введение в ООП', href: '33-oop-intro.html' },
+      { num: 34, title: 'Финальный проект', href: '34-final-project.html' },
       { num: '🏆', title: 'Итоговый тест', href: 'final-test.html' }
     ];
 
@@ -968,135 +973,90 @@ async function executeCode(outputEl, code, userInput) {
       }
     });
 
-    /**
-     * Простейший симулятор Python (для демонстрационных упражнений).
-     * Поддерживает print(), простые арифметические операции, переменные.
-     * Для реального выполнения нужен Skulpt/Pyodide — здесь заглушка,
-     * которая даёт правдоподобный вывод для типовых упражнений.
-     */
-    function simulatePython(code, outputEl) {
-      var lines = code.replace(/\r/g, '').split('\n');
-      var result = [];
-      var vars = {};
-
-      try {
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i].trim();
-          if (!line || line.startsWith('#')) continue;
-
-          // print(...)
-          var printMatch = line.match(/^print\s*\(\s*(.+?)\s*\)\s*$/);
-          if (printMatch) {
-            var expr = printMatch[1];
-            // Простая замена переменных
-            Object.keys(vars).forEach(function (v) {
-              var re = new RegExp('\\b' + v + '\\b', 'g');
-              expr = expr.replace(re, vars[v]);
-            });
-            // Простые строки в кавычках
-            var strMatch = expr.match(/^["'](.+)["']$/);
-            if (strMatch) {
-              result.push(strMatch[1]);
-            } else if (expr.match(/^["'].*["']\s*[+]\s*["'].*["']$/)) {
-              // Конкатенация строк
-              var parts = expr.match(/["']([^"']*)["']/g);
-              if (parts) {
-                result.push(parts.map(function(p) { return p.slice(1, -1); }).join(''));
-              }
-            } else {
-              // Арифметика
-              try {
-                var safeExpr = expr.replace(/[^0-9+\-*/%.() ]/g, '');
-                var val = Function('"use strict"; return (' + (safeExpr || '0') + ')')();
-                result.push(String(val));
-              } catch (e) {
-                result.push(expr);
-              }
-            }
-            continue;
-          }
-
-          // Присваивание: var = expr
-          var assignMatch = line.match(/^(\w+)\s*=\s*(.+)$/);
-          if (assignMatch) {
-            var varName = assignMatch[1];
-            var rhs = assignMatch[2];
-            // Подставить переменные
-            Object.keys(vars).forEach(function (v) {
-              var re = new RegExp('\\b' + v + '\\b', 'g');
-              rhs = rhs.replace(re, vars[v]);
-            });
-            if (rhs.match(/^["']/)) {
-              vars[varName] = rhs.slice(1, -1);
-            } else if (rhs.match(/^(True|False)$/)) {
-              vars[varName] = rhs;
-            } else {
-              try {
-                var safeRhs = rhs.replace(/[^0-9+\-*/%.() ]/g, '');
-                vars[varName] = Function('"use strict"; return (' + (safeRhs || '0') + ')')();
-              } catch (e) {
-                vars[varName] = rhs;
-              }
-            }
-            continue;
-          }
-
-          // for i in range(...)
-          var forMatch = line.match(/^for\s+(\w+)\s+in\s+range\s*\(\s*(\d+)\s*\)\s*:\s*$/);
-          if (forMatch) {
-            var fVar = forMatch[1];
-            var fLimit = parseInt(forMatch[2], 10);
-            // Ищем тело цикла (отступы!)
-            var bodyStart = i + 1;
-            while (bodyStart < lines.length && (lines[bodyStart].match(/^    /) || lines[bodyStart].match(/^\t/))) {
-              bodyStart++;
-            }
-            // Извлекаем тело
-            var bodyLines = lines.slice(i + 1, bodyStart).map(function (l) { return l.replace(/^(    |\t)/, ''); });
-            for (var fi = 0; fi < fLimit; fi++) {
-              vars[fVar] = fi;
-              bodyLines.forEach(function (bl) {
-                var pm = bl.match(/^print\s*\(\s*(.+?)\s*\)\s*$/);
-                if (pm) {
-                  var ex = pm[1];
-                  Object.keys(vars).forEach(function (v) {
-                    var re = new RegExp('\\b' + v + '\\b', 'g');
-                    ex = ex.replace(re, vars[v]);
-                  });
-                  var sm = ex.match(/^["'](.+)["']$/);
-                  if (sm) {
-                    result.push(sm[1]);
-                  } else {
-                    try {
-                      result.push(String(Function('"use strict"; return (' + (ex.replace(/[^0-9+\-*/%.() ]/g, '') || '0') + ')')()));
-                    } catch(e2) {
-                      result.push(ex);
-                    }
-                  }
-                }
-              });
-            }
-            i = bodyStart - 1;
-            continue;
-          }
-
-          // Если ничего не поняли
-          if (/^[a-zA-Z_]/.test(line) && !/^print|^if|^for|^while|^def|^import/.test(line)) {
-            // Возможно, выражение, которое нужно вычислить как в REPL
-            try {
-              var replVal = Function('"use strict"; return (' + line + ')')();
-              result.push(String(replVal));
-            } catch(e3) { /* ignore */ }
-          }
-        }
-
-        outputEl.textContent = result.join('\n');
-        outputEl.classList.remove('error');
-        outputEl.classList.add('show');
-      } catch (err) {
-        outputEl.textContent = '⚠️ Ошибка при выполнении: ' + err.message;
-        outputEl.classList.add('show', 'error');
-      }
-    }
   })();
+})();
+
+// === СИСТЕМА ДОСТИЖЕНИЙ (BADGES) ===
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    var block = document.getElementById('badgesBlock');
+    var grid = document.getElementById('badgesGrid');
+    if (!block || !grid) return;
+
+    var TOPIC_ORDER = (typeof window.TOPIC_ORDER !== 'undefined') ? window.TOPIC_ORDER : [];
+    var BADGES = (typeof window.BADGES !== 'undefined') ? window.BADGES : [];
+    if (!TOPIC_ORDER.length || !BADGES.length) return;
+
+    // Показываем блок
+    block.style.display = '';
+
+    // Вычисляем прогресс
+    var completed = JSON.parse(localStorage.getItem('python-lessons-completed') || '{}');
+    var total = TOPIC_ORDER.length;
+    var done = 0;
+    var sectionsDone = {};
+    TOPIC_ORDER.forEach(function (filename) {
+      if (completed[filename]) {
+        done++;
+        // Определяем секцию по номеру урока
+        var lessonNum = parseInt(filename);
+        if (!isNaN(lessonNum)) {
+          // Группируем по секциям (приблизительно)
+          if (lessonNum >= 1 && lessonNum <= 2) sectionsDone['intro'] = (sectionsDone['intro'] || 0) + 1;
+          else if (lessonNum >= 3 && lessonNum <= 8) sectionsDone['basics'] = (sectionsDone['basics'] || 0) + 1;
+          else if (lessonNum >= 9 && lessonNum <= 13) sectionsDone['conditions_strings'] = (sectionsDone['conditions_strings'] || 0) + 1;
+          else if (lessonNum >= 14 && lessonNum <= 15) sectionsDone['functions'] = (sectionsDone['functions'] || 0) + 1;
+          else if (lessonNum >= 16 && lessonNum <= 20) sectionsDone['loops'] = (sectionsDone['loops'] || 0) + 1;
+          else if (lessonNum >= 21 && lessonNum <= 26) sectionsDone['data_structures'] = (sectionsDone['data_structures'] || 0) + 1;
+          else if (lessonNum >= 27 && lessonNum <= 28) sectionsDone['errors_files'] = (sectionsDone['errors_files'] || 0) + 1;
+          else if (lessonNum >= 29 && lessonNum <= 32) sectionsDone['modules'] = (sectionsDone['modules'] || 0) + 1;
+          else if (lessonNum >= 33) sectionsDone['oop_final'] = (sectionsDone['oop_final'] || 0) + 1;
+        }
+      }
+    });
+
+    var sectionNames = {
+      'intro': 'Введение',
+      'basics': 'Основы',
+      'conditions_strings': 'Условия и строки',
+      'functions': 'Функции',
+      'loops': 'Циклы',
+      'data_structures': 'Структуры данных',
+      'errors_files': 'Ошибки и файлы',
+      'modules': 'Модули',
+      'oop_final': 'ООП и финал'
+    };
+    var sectionTotals = {
+      'intro': 2,
+      'basics': 6,
+      'conditions_strings': 5,
+      'functions': 2,
+      'loops': 5,
+      'data_structures': 6,
+      'errors_files': 2,
+      'modules': 4,
+      'oop_final': 2
+    };
+
+    // Рендерим бейджи
+    BADGES.forEach(function (badge) {
+      var earned = false;
+      if (badge.id === 'first_step' && done >= 1) earned = true;
+      else if (badge.id === 'five_done' && done >= 5) earned = true;
+      else if (badge.id === 'half_course' && done >= Math.floor(total / 2)) earned = true;
+      else if (badge.id === 'all_done' && done >= total) earned = true;
+      else if (badge.id === 'perfectionist' && done >= total) earned = true;
+      else if (badge.section) {
+        var secDone = sectionsDone[badge.section] || 0;
+        var secTotal = sectionTotals[badge.section] || 5;
+        if (secDone >= secTotal) earned = true;
+      }
+
+      var span = document.createElement('span');
+      span.className = 'badge-item' + (earned ? ' earned' : ' locked');
+      span.setAttribute('data-tooltip', badge.description);
+      span.innerHTML = '<span class="badge-icon">' + badge.icon + '</span>' + badge.name;
+      grid.appendChild(span);
+    });
+  });
 })();

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 32: Модуль datetime в Python — работа с датами и временем, now(), strftime, strptime, timedelta." />
+    <meta property="og:title" content="32. Модуль datetime — Python: основы" />
+    <meta property="og:description" content="Урок 32: datetime.now(), форматирование дат (strftime), разбор строк (strptime), разница дат (timedelta)." />
+    <meta property="og:type" content="article" />
+    <title>Модуль datetime — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="32">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1>32. Модуль datetime</h1>
+        <p class="subtitle">Работа с датами и временем: сейчас, завтра, через неделю, в любом формате</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+
+          <section>
+            <h2>Зачем нужен datetime?</h2>
+            <p>
+              Модуль <code>datetime</code> — основной инструмент Python для работы с датами и временем.
+              Он входит в стандартную библиотеку и позволяет:
+            </p>
+            <ul>
+              <li>Получать текущую дату и время</li>
+              <li>Форматировать даты в любом виде</li>
+              <li>Разбирать даты из строк</li>
+              <li>Вычислять разницу между датами</li>
+              <li>Работать с часовыми поясами (через <code>zoneinfo</code> в Python 3.9+)</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Основные классы модуля datetime</h2>
+            <table>
+              <tr><th>Класс</th><th>Что хранит</th><th>Пример</th></tr>
+              <tr><td><code>date</code></td><td>Год, месяц, день</td><td>2026-06-23</td></tr>
+              <tr><td><code>time</code></td><td>Часы, минуты, секунды</td><td>14:30:00</td></tr>
+              <tr><td><code>datetime</code></td><td>Дата + время</td><td>2026-06-23 14:30:00</td></tr>
+              <tr><td><code>timedelta</code></td><td>Разница между датами</td><td>3 дня, 5 часов</td></tr>
+            </table>
+            <pre class="code-block">
+from datetime import date, time, datetime, timedelta</pre>
+          </section>
+
+          <section>
+            <h2>Получение текущей даты и времени</h2>
+            <pre class="code-block">
+from datetime import date, datetime
+
+# Только сегодняшняя дата
+today = date.today()
+print(today)  # 2026-06-23
+
+# Текущие дата и время
+now = datetime.now()
+print(now)    # 2026-06-23 14:30:15.123456
+
+# Отдельные компоненты
+print(now.year)    # 2026
+print(now.month)   # 6
+print(now.day)     # 23
+print(now.hour)    # 14
+print(now.minute)  # 30
+print(now.second)  # 15
+print(now.weekday())  # 1 (понедельник = 0, вторник = 1, ..., воскресенье = 6)
+</pre>
+          </section>
+
+          <section>
+            <h2>Создание конкретной даты</h2>
+            <pre class="code-block">
+from datetime import date, datetime, time
+
+# Конкретная дата
+d = date(2026, 12, 31)
+print(d)  # 2026-12-31
+
+# Дата и время
+dt = datetime(2026, 6, 15, 18, 30, 0)
+print(dt)  # 2026-06-15 18:30:00
+
+# Только время
+t = time(14, 30, 0)
+print(t)   # 14:30:00</pre>
+          </section>
+
+          <section>
+            <h2>strftime() — форматирование даты в строку</h2>
+            <p>
+              <code>strftime</code> (string format time) преобразует дату в строку по шаблону.
+            </p>
+            <table>
+              <tr><th>Код</th><th>Значение</th><th>Пример</th></tr>
+              <tr><td><code>%Y</code></td><td>Год (4 цифры)</td><td>2026</td></tr>
+              <tr><td><code>%m</code></td><td>Месяц (01-12)</td><td>06</td></tr>
+              <tr><td><code>%d</code></td><td>День (01-31)</td><td>23</td></tr>
+              <tr><td><code>%H</code></td><td>Часы (00-23)</td><td>14</td></tr>
+              <tr><td><code>%M</code></td><td>Минуты (00-59)</td><td>30</td></tr>
+              <tr><td><code>%S</code></td><td>Секунды (00-59)</td><td>15</td></tr>
+              <tr><td><code>%A</code></td><td>День недели (полный)</td><td>Tuesday</td></tr>
+              <tr><td><code>%a</code></td><td>День недели (сокр.)</td><td>Tue</td></tr>
+              <tr><td><code>%B</code></td><td>Месяц (полный)</td><td>June</td></tr>
+              <tr><td><code>%b</code></td><td>Месяц (сокр.)</td><td>Jun</td></tr>
+            </table>
+            <pre class="code-block">
+from datetime import datetime
+
+now = datetime.now()
+
+print(now.strftime("%d.%m.%Y"))           # 23.06.2026
+print(now.strftime("%H:%M:%S"))            # 14:30:15
+print(now.strftime("%d %B %Y года, %A"))  # 23 June 2026 года, Tuesday
+print(now.strftime("%Y-%m-%d %H:%M"))     # 2026-06-23 14:30 (ISO-формат)
+</pre>
+          </section>
+
+          <section>
+            <h2>strptime() — разбор строки в дату</h2>
+            <p>
+              <code>strptime</code> (string parse time) — обратная операция: превращает строку в объект даты.
+            </p>
+            <pre class="code-block">
+from datetime import datetime
+
+# Разбор строки в дату
+date_str = "23.06.2026"
+d = datetime.strptime(date_str, "%d.%m.%Y")
+print(d)  # 2026-06-23 00:00:00
+
+# Разбор строки с временем
+dt_str = "2026-06-23 14:30:00"
+dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+print(dt)  # 2026-06-23 14:30:00
+
+# Разбор нестандартного формата
+dt2 = datetime.strptime("23 June 2026, 2:30 PM", "%d %B %Y, %I:%M %p")
+print(dt2)  # 2026-06-23 14:30:00</pre>
+          </section>
+
+          <section>
+            <h2>timedelta — разница между датами</h2>
+            <p>
+              <code>timedelta</code> представляет промежуток времени. Можно прибавлять и вычитать из дат.
+            </p>
+            <pre class="code-block">
+from datetime import datetime, timedelta
+
+now = datetime.now()
+
+# Создание промежутка
+one_day = timedelta(days=1)
+one_week = timedelta(weeks=1)
+three_hours = timedelta(hours=3)
+complex_delta = timedelta(days=2, hours=5, minutes=30)
+
+# Арифметика с датами
+tomorrow = now + one_day
+yesterday = now - one_day
+next_week = now + one_week
+
+print(f"Сегодня: {now.date()}")
+print(f"Завтра:  {tomorrow.date()}")
+print(f"Вчера:   {yesterday.date()}")
+
+# Разница между датами
+deadline = datetime(2026, 12, 31)
+delta = deadline - now
+print(f"До Нового года осталось {delta.days} дней")
+print(f"Или {delta.total_seconds() / 3600:.1f} часов")</pre>
+          </section>
+
+          <section>
+            <h2>Практический пример: калькулятор возраста</h2>
+            <pre class="code-block">
+from datetime import datetime, date
+
+def calculate_age(birth_date_str):
+    """Считает возраст по дате рождения (формат ДД.ММ.ГГГГ)."""
+    birth = datetime.strptime(birth_date_str, "%d.%m.%Y")
+    today = date.today()
+    
+    age = today.year - birth.year
+    # Проверяем, был ли день рождения в этом году
+    if today.month < birth.month or (today.month == birth.month and today.day < birth.day):
+        age -= 1
+    
+    return age
+
+print(f"Возраст: {calculate_age('15.05.1995')} лет")
+# Пример: Возраст: 31 лет</pre>
+          </section>
+
+          <section>
+            <h2>Итоги</h2>
+            <ul>
+              <li><code>datetime.now()</code> — текущие дата и время</li>
+              <li><code>date.today()</code> — только сегодняшняя дата</li>
+              <li><code>strftime(шаблон)</code> — дата → строка по формату</li>
+              <li><code>strptime(строка, шаблон)</code> — строка → дата</li>
+              <li><code>timedelta</code> — разница между датами, арифметика с датами</li>
+              <li>Коды форматирования: <code>%Y %m %d %H %M %S</code> — основа</li>
+              <li><code>.weekday()</code> — день недели (0 = понедельник)</li>
+            </ul>
+          </section>
+
+          <div class="quiz-container" data-lesson="32"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
