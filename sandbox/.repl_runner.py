@@ -38,11 +38,6 @@ builtins.input = custom_input
 # Подмена stdout/stderr
 old_stdout = sys.stdout
 old_stderr = sys.stderr
-# После загрузки из pickle __builtins__ мог стать копией, а не ссылкой на builtins.__dict__.
-# Удаляем его, чтобы Python при exec() заново подхватил текущие builtins
-# (включая подменённый input → custom_input).
-namespace.pop('__builtins__', None)
-
 sys.stdout = io.StringIO()
 sys.stderr = io.StringIO()
 
