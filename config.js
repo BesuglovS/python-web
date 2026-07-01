@@ -11,8 +11,8 @@
 var THEORY_CONTESTS = {
   6: 7,   // Урок 6 «Операции над числами» → контест ID 7
   7: 8,   // Урок 7 «Условный оператор» → контест ID 8
-  10: 9,  // Урок 10 «Операции над строками» → контест ID 9
-  11: 10, // Урок 11 «Сложные условия» → контест ID 10
+  9: 10,  // Урок 9 «Сложные условия» → контест ID 10
+  13: 9,  // Урок 13 «Операции над строками» → контест ID 9
   14: 11, // Урок 14 «Функции» → контест ID 11
   16: 12, // Урок 16 «Цикл while» → контест ID 12
   18: 13, // Урок 18 «range()» → контест ID 13
@@ -254,8 +254,8 @@ var LESSON_QUIZZES = {
 /** Система достижений (бейджей). */
 var BADGES = [
   { id: "first_steps", name: "Первые шаги", icon: "🐣", desc: "Завершить первые 5 уроков", check: function(c) { return [1,2,3,4,5].every(function(n){return c[n];}); } },
-  { id: "condition_master", name: "Мастер условий", icon: "🔀", desc: "Пройти уроки по условиям (7-8,11-13)", check: function(c) { return [7,8,11,12,13].every(function(n){return c[n];}); } },
-  { id: "string_ninja", name: "Струнный ниндзя", icon: "🔤", desc: "Пройти уроки по строкам (9,10,25)", check: function(c) { return [9,10,25].every(function(n){return c[n];}); } },
+  { id: "condition_master", name: "Мастер условий", icon: "🔀", desc: "Пройти уроки по условиям (7-8,9-11)", check: function(c) { return [7,8,9,10,11].every(function(n){return c[n];}); } },
+  { id: "string_ninja", name: "Струнный ниндзя", icon: "🔤", desc: "Пройти уроки по строкам (12,13,25)", check: function(c) { return [12,13,25].every(function(n){return c[n];}); } },
   { id: "loop_hero", name: "Повелитель циклов", icon: "🔄", desc: "Пройти уроки по циклам (16-20)", check: function(c) { return [16,17,18,19,20].every(function(n){return c[n];}); } },
   { id: "data_wizard", name: "Хранитель данных", icon: "🗂️", desc: "Пройти уроки по структурам данных (21-24,26)", check: function(c) { return [21,22,23,24,26].every(function(n){return c[n];}); } },
   { id: "halfway", name: "Экватор", icon: "🌍", desc: "Пройти 17+ уроков (половина курса)", check: function(c) { var n=0; for(var k in c){if(c[k])n++;} return n>=17; } },
