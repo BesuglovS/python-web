@@ -1197,6 +1197,13 @@ section li {
   font-size: 0.95em;
 }
 
+/* Убираем лишние отступы у inline-кода внутри вопросов квиза */
+.quiz-question code {
+  padding: 0;
+  background: transparent;
+  color: var(--text-code);
+}
+
 /* === ГАМБУРГЕР-МЕНЮ (мобильная навигация) === */
 .hamburger-menu {
   position: fixed;
