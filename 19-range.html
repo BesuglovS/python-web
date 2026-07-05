@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 19: Функция range(): range(stop), range(start, stop), range(start, stop, step). Генерация числовых последовательностей" />
+    <meta property="og:title" content="19. range() — Python: основы" />
+    <meta property="og:description" content="Урок 19: Функция range(): range(stop), range(start, stop), range(start, stop, step). Генерация числовых последовательностей" />
+    <meta property="og:type" content="article" />
+    <title>range() — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="19">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 19</span> range()</h1>
+        <p class="subtitle">Генерация последовательностей чисел</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+            <h2>Три формы range()</h2>
+            <p><strong>range(stop)</strong> — числа от 0 до stop-1:</p>
+            <pre class="code-block">
+for i in range(5):
+    print(i, end=" ")   # 0 1 2 3 4
+</pre>
+            <p><strong>range(start, stop)</strong> — от start до stop-1:</p>
+            <pre class="code-block">
+for i in range(2, 7):
+    print(i, end=" ")   # 2 3 4 5 6
+</pre>
+            <p><strong>range(start, stop, step)</strong> — с шагом step:</p>
+            <pre class="code-block">
+for i in range(0, 10, 2):
+    print(i, end=" ")   # 0 2 4 6 8
+
+for i in range(10, 0, -2):
+    print(i, end=" ")   # 10 8 6 4 2
+</pre>
+          </section>
+          <section>
+            <h2>range() в цикле for</h2>
+            <p>Самое частое применение — повторение N раз:</p>
+            <pre class="code-block">
+for i in range(3):
+    print("Hello")  # Hello Hello Hello
+</pre>
+          </section>
+          <section>
+            <h2>Особенности range()</h2>
+            <p>range() не создаёт список, а генерирует числа на лету (экономит память):</p>
+            <pre class="code-block">
+# range — это отдельный тип
+r = range(1000000)
+print(type(r))  # <class 'range'>
+print(len(r))   # 1000000
+print(r[0])     # 0
+print(r[-1])    # 999999
+</pre>
+            <p>При необходимости range можно преобразовать в настоящий список с помощью <code>list()</code>:</p>
+            <pre class="code-block">
+nums = list(range(5))
+print(nums)     # [0, 1, 2, 3, 4]
+print(type(nums))  # <class 'list'>
+</pre>
+            <p class="note">
+              <strong>📝 Что такое list()?</strong> <code>list()</code> — это функция, которая создаёт список 
+              (коллекцию элементов) из переданной последовательности. Квадратные скобки <code>[0, 1, 2, 3, 4]</code> 
+              — это как раз внешний вид списка. Подробно списки разбираются в <a href="22-lists.html">уроке 22</a>.
+            </p>
+          </section>
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="18-for.html" class="prev-link">< Цикл for</a>
+        <a href="20-break-continue.html" class="next-link">Далее: break и continue →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

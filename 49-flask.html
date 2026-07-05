@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 49: Создание веб-приложений на Flask: маршруты, шаблоны Jinja2, обработка форм, REST API" />
+    <meta property="og:title" content="49. Веб-фреймворки: Flask — Python: основы" />
+    <meta property="og:description" content="Урок 49: Создание веб-приложений на Flask: маршруты, шаблоны Jinja2, обработка форм, REST API" />
+    <meta property="og:type" content="article" />
+    <title>Веб-фреймворки: Flask — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
+  </head>
+  <body>
+    <div id="app" data-lesson="49">
+      <header>
+        <nav>
+          <a href="index.html" class="back-link">← На главную</a>
+          <div class="nav-controls">
+            <a href="48-requests-api.html" class="prev-link">← Назад</a>
+            <span class="lesson-indicator">Урок 49 из 50</span>
+            <a href="50-git-intro.html" class="next-link">Вперёд →</a>
+          </div>
+        </nav>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </header>
+      <main>
+        <h1><span class="lesson-badge">Урок 49</span> Веб-фреймворки: Flask</h1>
+        <section>
+          <h2>Введение</h2>
+          <p>Flask — микро-фреймворк для создания веб-приложений на Python. Он минималистичен, но расширяем: через плагины добавляется работа с БД, аутентификация, админ-панель. Flask идеален для изучения основ веб-разработки и создания REST API.</p>
+          <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Установка: <code>pip install flask</code></li><li>Маршруты: <code>@app.route()</code>, переменные в URL, методы GET/POST</li><li>Шаблоны Jinja2: передача переменных, циклы, условия, наследование</li><li>Обработка форм через <code>request.form</code> и редиректы</li><li>Создание простого REST API с JSON-ответами</li></ul></div>
+        </section>
+        <section>
+          <h2>Основной материал</h2>
+          <p>Flask-приложение начинается с создания экземпляра <code>Flask(__name__)</code>. Декоратор <code>@app.route("/")</code> связывает URL с функцией-обработчиком. Параметры в URL передаются через <code><variable></code>. Шаблоны Jinja2 (папка <code>templates/</code>) используют <code>{{}</code> для вывода и <code>{%%}</code> для циклов и условий. Метод <code>render_template()</code> рендерит HTML с данными. Для REST API возвращайте словарь через <code>jsonify()</code>. Запуск: <code>flask run</code> или <code>app.run(debug=True)</code>.</p>
+          <pre><code class="language-python">from flask import Flask, render_template, request, jsonify
+
+app = Flask(__name__)
+
+# Главная страница
+@app.route('/')
+def index():
+    return render_template('index.html', title='Главная')
+
+# Маршрут с параметром
+@app.route('/user/<username>')
+def user(username):
+    return f"Профиль: {username}"
+
+# Обработка формы
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        return f"Привет, {name}!"
+    return render_template('login.html')
+
+# REST API endpoint
+@app.route('/api/items', methods=['GET'])
+def get_items():
+    items = [{"id": 1, "name": "Книга"}, {"id": 2, "name": "Ноутбук"}]
+    return jsonify(items)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+        </section>
+        <section>
+          <h2>Практика</h2>
+          <div class="task-box">
+            <p><strong>📝 Задание:</strong> Создайте Flask-приложение с тремя маршрутами: главная страница с приветствием, страница /time с текущим временем сервера (datetime), и /api/status с JSON {"status": "ok", "version": "1.0"}. Запустите и проверьте в браузере.</p>
+            <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
+          </div>
+        </section>
+        <section>
+          <h2>Ключевые выводы</h2>
+          <ul><li><code>@app.route("/")</code> — связывает URL с функцией</li><li><code>render_template()</code> — рендерит Jinja2-шаблоны с переменными</li><li><code>request.form</code> — данные из HTML-форм (POST)</li><li><code>jsonify()</code> — возвращает JSON-ответ для REST API</li><li><code>app.run(debug=True)</code> — запуск с авто-перезагрузкой</li></ul>
+        </section>
+      </main>
+      <footer>
+        <p>© Python Web — Основы программирования</p>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

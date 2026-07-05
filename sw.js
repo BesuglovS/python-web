@@ -44,7 +44,7 @@ const ASSETS_TO_CACHE = [
   './repl.html',
   './08a-type-casting.html',
   './28a-stdin.html',
-  './33a-inheritance.html',
+  './38-inheritance.html',
   './39-lambda.html',
   './40-decorators.html',
   './41-generators.html',

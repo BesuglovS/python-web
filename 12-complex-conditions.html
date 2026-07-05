@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Урок 12: Составные логические выражения, приоритет логических операторов, короткое замыкание (short-circuit)" />
+<meta property="og:title" content="12. Сложные условия — Python: основы" />
+<meta property="og:description" content="Урок 12: Составные логические выражения, приоритет логических операторов, короткое замыкание (short-circuit)" />
+    <meta property="og:type" content="article" />
+    <title>Сложные условия — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+<body data-lesson="12">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+<h1><span class="lesson-badge">Урок 12</span> Сложные условия</h1>
+        <p class="subtitle">and, or, not — логические операторы</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Логический оператор and</h2>
+        <p>and возвращает True, только если оба условия истинны:</p>
+        <pre class="code-block">
+age = 25
+has_license = True
+
+if age >= 18 and has_license:
+    print("Можно водить машину")
+
+# Таблица истинности:
+# True and True   -> True
+# True and False  -> False
+# False and True  -> False
+# False and False -> False
+</pre
+        >
+          </section>
+          <section>
+<h2>Логический оператор or</h2>
+        <p>or возвращает True, если хотя бы одно условие истинно:</p>
+        <pre class="code-block">
+is_weekend = True
+is_holiday = False
+
+if is_weekend or is_holiday:
+    print("Можно отдыхать!")
+
+# Таблица истинности:
+# True or True   -> True
+# True or False  -> True
+# False or True  -> True
+# False or False -> False
+</pre
+        >
+          </section>
+          <section>
+<h2>Логический оператор not</h2>
+        <p>not инвертирует булево значение:</p>
+        <pre class="code-block">
+is_raining = False
+if not is_raining:
+    print("Зонт не нужен")
+
+# not True  -> False
+# not False -> True
+</pre
+        >
+          </section>
+          <section>
+<h2>Сложные составные условия</h2>
+        <p>Можно комбинировать несколько операторов:</p>
+        <pre class="code-block">
+age = 20
+has_ticket = True
+is_vip = False
+
+if (age >= 18 and has_ticket) or is_vip:
+    print("Проход разрешён")
+
+# Скобки помогают задать порядок вычислений
+</pre
+        >
+          </section>
+          <section>
+<h2>Short-circuit evaluation</h2>
+        <p>
+          Python вычисляет условия слева направо и останавливается, как только
+          результат определён:
+        </p>
+        <pre class="code-block">
+# Если first() вернёт False, second() не вызовется
+if first() and second():
+    pass
+
+# Если first() вернёт True, second() не вызовется
+if first() or second():
+    pass
+</pre
+        >
+          </section>
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="11-try-except.html" class="prev-link">← Обработка исключений</a>
+        <a href="13-nested-structures.html" class="next-link">Далее: Вложенные структуры →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

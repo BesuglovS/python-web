@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 46: Аннотации типов: typing, List, Dict, Optional, Union, mypy, проверка типов в Python" />
+    <meta property="og:title" content="46. Type Hints — Python: основы" />
+    <meta property="og:description" content="Урок 46: Аннотации типов: typing, List, Dict, Optional, Union, mypy, проверка типов в Python" />
+    <meta property="og:type" content="article" />
+    <title>Type Hints — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="46">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 46</span> Type Hints</h1>
+        <p class="subtitle">Улучшаем читаемость кода с помощью аннотаций типов</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Что такое type hints?</h2>
+        <p>Аннотации типов — способ указать, какого типа аргументы ожидает функция и что она возвращает. Python <strong>не проверяет</strong> типы во время выполнения, но IDE и линтеры используют их для подсказок.</p>
+        <pre class="code-block">
+# Без аннотаций
+def greet(name, age):
+    return f"{name}, {age} лет"
+
+# С аннотациями (type hints)
+def greet(name: str, age: int) -> str:
+    return f"{name}, {age} лет"</pre>
+          </section>
+          <section>
+<h2>Основные типы</h2>
+        <pre class="code-block">
+def process(
+    name: str,           # строка
+    age: int,            # целое число
+    score: float,        # число с плавающей точкой
+    active: bool         # логическое значение
+) -> str:                # возвращает строку
+    return f"{name}: {age} лет, балл {score}, активен: {active}"
+
+# Переменные тоже можно аннотировать
+x: int = 42
+names: list[str] = ["Анна", "Борис"]
+data: dict[str, int] = {"x": 10, "y": 20}</pre>
+          </section>
+          <section>
+<h2>Сложные типы</h2>
+        <pre class="code-block">
+from typing import List, Dict, Tuple, Optional, Union
+
+# Список строк
+def get_names() -> List[str]:
+    return ["Анна", "Борис"]
+
+# Словарь: строки → числа
+def get_grades() -> Dict[str, int]:
+    return {"Анна": 95, "Борис": 82}
+
+# Кортеж из трёх элементов
+def get_point() -> Tuple[int, int, int]:
+    return (10, 20, 30)
+
+# Опциональное значение (может быть None)
+def find_user(id: int) -> Optional[str]:
+    if id == 1:
+        return "Анна"
+    return None
+
+# Один из нескольких типов
+def process(value: Union[int, str]) -> str:
+    return str(value)</pre>
+          </section>
+          <section>
+<h2>Практическая ценность</h2>
+        <ul>
+          <li>IDE (VS Code, PyCharm) показывает автодополнение и предупреждения</li>
+          <li>Код становится самодокументированным</li>
+          <li>Инструменты типа <code>mypy</code> находят ошибки до запуска</li>
+        </ul>
+        <pre class="code-block">
+# mypy найдёт ошибку:
+def double(x: int) -> int:
+    return x * 2
+
+double("hello")  # mypy: error: Argument 1 to "double" has incompatible type "str"</pre>
+        </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="45-threading-async.html" class="prev-link">← Генераторы</a>
+        <a href="47-pytest.html" class="next-link">Далее: pytest →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 18: Цикл for: итерация по последовательностям, переменная цикла, обход строк, списков, словарей" />
+    <meta property="og:title" content="18. Цикл for — Python: основы" />
+    <meta property="og:description" content="Урок 18: Цикл for: итерация по последовательностям, переменная цикла, обход строк, списков, словарей" />
+    <meta property="og:type" content="article" />
+    <title>Цикл for — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="18">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 18</span> Цикл for</h1>
+        <p class="subtitle">Перебор элементов последовательности</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Синтаксис for</h2>
+<p>Цикл <code>for</code> перебирает элементы последовательности — например, строку по символам:</p>
+<pre class="code-block">
+# Перебор строки — каждый символ по порядку
+for char in "Python":
+    print(char)  # P  y  t  h  o  n
+
+# Повторение N раз с помощью range()
+for i in range(3):
+    print("Привет")  # Привет  Привет  Привет
+</pre>
+<p>
+    Переменная цикла (в примерах — <code>char</code>, <code>i</code>)
+    принимает поочерёдно значение каждого элемента последовательности.
+    Имя переменной может быть любым — выбирайте осмысленное название.
+    Функция <code>range()</code> подробно разбирается в <a href="18-range.html">следующем уроке</a>.
+</p>
+<p class="note">
+    <strong>ℹ️ Примечание:</strong> for также умеет перебирать списки, кортежи и другие коллекции — 
+    мы познакомимся с ними в <a href="24-lists.html">уроке 21</a> (списки) и <a href="26-tuples.html">уроке 23</a> (кортежи).
+</p>
+          </section>
+          <section>
+<h2>Перебор строки посимвольно</h2>
+<p>Строка — это последовательность символов, поэтому for отлично подходит для её перебора:</p>
+<pre class="code-block">
+word = "Привет"
+for letter in word:
+    print(letter)  # П  р  и  в  е  т
+</pre>
+<p>
+    Можно также подсчитать количество определённых символов в строке:
+</p>
+<pre class="code-block">
+text = "программирование"
+count = 0
+for char in text:
+    if char == "р":
+        count += 1
+print(f"Буква 'р' встречается {count} раз(а)")  # 3
+</pre>
+          </section>
+          <section>
+<h2>for с else</h2>
+<p><code>else</code> выполняется, если цикл не был прерван <code>break</code>:</p>
+<pre class="code-block">
+# Ищем символ 'x' в строке
+text = "abcde"
+search = "x"
+for char in text:
+    if char == search:
+        print(f"Нашли '{search}'!")
+        break
+else:
+    print(f"'{search}' не найден")
+# Вывод: 'x' не найден (else выполнился, т.к. break не сработал)
+
+# Теперь с найденным символом
+for char in text:
+    if char == "c":
+        print("Нашли 'c'!")
+        break
+else:
+    print("'c' не найден")
+# Вывод: Нашли 'c'! (break сработал, else не выполнился)
+</pre>
+          </section>
+          <section>
+<h2>Переменная цикла</h2>
+<p>Переменная цикла существует и после завершения цикла:</p>
+<pre class="code-block">
+for letter in "ABC":
+    pass
+print(letter)  # C (последнее значение)
+</pre>
+<div class="note">
+    <strong>ℹ️ Замечание:</strong> В этом уроке мы перебираем строки посимвольно и используем <code>range()</code>
+    для повторения действий N раз. <code>for</code> также умеет перебирать списки,
+    кортежи и другие коллекции — они будут подробно разобраны в <a href="24-lists.html">уроке 21</a> (списки) и <a href="26-tuples.html">уроке 23</a> (кортежи).
+</div>
+          </section>
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+<a href="17-while.html" class="prev-link">< Цикл while</a>
+        <a href="19-range.html" class="next-link">Далее: range() →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -463,7 +463,7 @@ async function executeCode(outputEl, code, userInput) {
     if (page && page !== 'index.html' && page !== '') return; // только на главной
 
     const progress = getProgress();
-    const totalLessons = 34;
+    const totalLessons = 50;
 
     // Создаём индикатор прогресса, если его ещё нет
     const headerEl = document.querySelector('header');
@@ -628,10 +628,21 @@ async function executeCode(outputEl, code, userInput) {
       '<a href="' + contestUrl + '" target="_blank" rel="noopener noreferrer" style="color: #7ec8ff; font-weight: 600; text-decoration: underline;">contest.nayanovaacademy.ru</a>' +
       '</p>';
 
-    placeholder.parentNode.replaceChild(div, placeholder);
+    // Вставляем ссылку на контест после контейнера с квизом
+    // Используем setTimeout с задержкой 0, чтобы дать initQuiz() вставить quiz-container в DOM
+    setTimeout(function () {
+      var quizContainer = document.querySelector('.main-content > .quiz-container');
+      if (quizContainer) {
+        quizContainer.parentNode.insertBefore(div, quizContainer.nextSibling);
+        // Удаляем placeholder, так как ссылка вставлена после квиза
+        placeholder.remove();
+      } else {
+        // Если квиза нет — вставляем вместо placeholder (как раньше)
+        placeholder.parentNode.replaceChild(div, placeholder);
+      }
+    }, 0);
   });
 })();
-
 // === РЕГИСТРАЦИЯ SERVICE WORKER ===
 (function () {
   if ('serviceWorker' in navigator) {
@@ -648,40 +659,56 @@ async function executeCode(outputEl, code, userInput) {
   document.addEventListener('DOMContentLoaded', () => {
     // Список всех уроков (для всех страниц)
     var lessons = [
-      { num: 1, title: 'История, обзор и области применения', href: '01-history.html' },
-      { num: 2, title: 'Настройка IDE', href: '02-ide-setup.html' },
-      { num: 3, title: 'Переменные', href: '03-variables.html' },
-      { num: 4, title: 'Типы данных', href: '04-data-types.html' },
-      { num: 5, title: 'Ввод и вывод', href: '05-io.html' },
-      { num: 6, title: 'Операции над числами', href: '06-number-ops.html' },
-      { num: 7, title: 'Условный оператор + Отступы', href: '07-conditional.html' },
-      { num: 8, title: 'Булевы переменные', href: '08-booleans.html' },
-      { num: 9, title: 'Сложные условия', href: '09-complex-conditions.html' },
-      { num: 10, title: 'Вложенные структуры', href: '10-nested-structures.html' },
-      { num: 11, title: 'Приоритет операций', href: '11-priority.html' },
-      { num: 12, title: 'Строки: индексация и срезы', href: '12-strings-index-slice.html' },
-      { num: 13, title: 'Операции над строками', href: '13-string-ops.html' },
-      { num: 14, title: 'Создание простейших функций', href: '14-functions.html' },
-      { num: 15, title: 'Функции: продвинутые темы', href: '15-functions-advanced.html' },
-      { num: 16, title: 'Цикл while', href: '16-while.html' },
-      { num: 17, title: 'Цикл for', href: '17-for.html' },
-      { num: 18, title: 'range()', href: '18-range.html' },
-      { num: 19, title: 'break и continue', href: '19-break-continue.html' },
-      { num: 20, title: 'Вложенные циклы', href: '20-nested-loops.html' },
-      { num: 21, title: 'Множества', href: '21-sets.html' },
-      { num: 22, title: 'Списки', href: '22-lists.html' },
-      { num: 23, title: 'Кортежи', href: '23-tuples.html' },
-      { num: 24, title: 'Словари', href: '24-dicts.html' },
-      { num: 25, title: 'split + join', href: '25-split-join.html' },
-      { num: 26, title: 'Списочные выражения', href: '26-list-comprehensions.html' },
-      { num: 27, title: 'Обработка ошибок', href: '27-try-except.html' },
-      { num: 28, title: 'Файлы: чтение и запись', href: '28-files.html' },
-      { num: 29, title: 'Модуль itertools', href: '29-itertools.html' },
-      { num: 30, title: 'Модули и import', href: '30-modules-import.html' },
-      { num: 31, title: 'Модули math и random', href: '31-math-random.html' },
-      { num: 32, title: 'Модуль datetime', href: '32-datetime.html' },
-      { num: 33, title: 'Введение в ООП', href: '33-oop-intro.html' },
-      { num: 34, title: 'Финальный проект', href: '34-final-project.html' },
+      { num: 1,  title: 'История, обзор и области применения', href: '01-history.html' },
+      { num: 2,  title: 'Настройка IDE',                 href: '02-ide-setup.html' },
+      { num: 3,  title: 'Переменные',                     href: '03-variables.html' },
+      { num: 4,  title: 'Типы данных',                    href: '04-data-types.html' },
+      { num: 5,  title: 'Приведение типов',               href: '05-type-casting.html' },
+      { num: 6,  title: 'Ввод и вывод',                   href: '06-io.html' },
+      { num: 7,  title: 'f-строки и форматирование',      href: '07-f-strings.html' },
+      { num: 8,  title: 'Операции над числами',           href: '08-number-ops.html' },
+      { num: 9,  title: 'Булевы переменные',              href: '09-booleans.html' },
+      { num: 10, title: 'Условный оператор + Отступы',    href: '10-conditional.html' },
+      { num: 11, title: 'Обработка ошибок',               href: '11-try-except.html' },
+      { num: 12, title: 'Сложные условия',                href: '12-complex-conditions.html' },
+      { num: 13, title: 'Вложенные структуры',            href: '13-nested-structures.html' },
+      { num: 14, title: 'Строки: индексация и срезы',     href: '14-strings-index-slice.html' },
+      { num: 15, title: 'Операции над строками',          href: '15-string-ops.html' },
+      { num: 16, title: 'Регулярные выражения',           href: '16-regex.html' },
+      { num: 17, title: 'Цикл с предусловием (while)',    href: '17-while.html' },
+      { num: 18, title: 'Цикл for',                       href: '18-for.html' },
+      { num: 19, title: 'range()',                        href: '19-range.html' },
+      { num: 20, title: 'break и continue',               href: '20-break-continue.html' },
+      { num: 21, title: 'Вложенные циклы',                href: '21-nested-loops.html' },
+      { num: 22, title: 'Создание простейших функций',    href: '22-functions.html' },
+      { num: 23, title: 'Функции: продвинутые темы',      href: '23-functions-advanced.html' },
+      { num: 24, title: 'Отладка программ',               href: '24-debugging.html' },
+      { num: 25, title: 'Списки',                         href: '25-lists.html' },
+      { num: 26, title: 'Множества',                      href: '26-sets.html' },
+      { num: 27, title: 'Кортежи',                        href: '27-tuples.html' },
+      { num: 28, title: 'Словари',                        href: '28-dicts.html' },
+      { num: 29, title: 'split + join',                   href: '29-split-join.html' },
+      { num: 30, title: 'Списочные выражения',            href: '30-list-comprehensions.html' },
+      { num: 31, title: 'Lambda-функции',                 href: '31-lambda.html' },
+      { num: 32, title: 'Файлы: чтение и запись',         href: '32-files.html' },
+      { num: 33, title: 'JSON и CSV',                     href: '33-json-csv.html' },
+      { num: 34, title: 'Базы данных SQLite',             href: '34-sqlite3.html' },
+      { num: 35, title: 'Модули и import',                href: '35-modules-import.html' },
+      { num: 36, title: 'Модуль itertools',               href: '36-itertools.html' },
+      { num: 37, title: 'Виртуальные окружения и pip',    href: '37-venv-pip.html' },
+      { num: 38, title: 'Модули math и random',           href: '38-math-random.html' },
+      { num: 39, title: 'Модуль datetime',                href: '39-datetime.html' },
+      { num: 40, title: 'NumPy и Pandas',                 href: '40-numpy-pandas.html' },
+      { num: 41, title: 'Введение в ООП',                 href: '41-oop-intro.html' },
+      { num: 42, title: 'Наследование и полиморфизм',    href: '42-inheritance.html' },
+      { num: 43, title: 'Декораторы',                     href: '43-decorators.html' },
+      { num: 44, title: 'Генераторы',                     href: '44-generators.html' },
+      { num: 45, title: 'Многопоточность и asyncio',      href: '45-threading-async.html' },
+      { num: 46, title: 'Type Hints',                     href: '46-type-hints.html' },
+      { num: 47, title: 'Unit-тесты с pytest',            href: '47-pytest.html' },
+      { num: 48, title: 'Requests и API',                 href: '48-requests-api.html' },
+      { num: 49, title: 'Веб-фреймворки: Flask',          href: '49-flask.html' },
+      { num: 50, title: 'Введение в Git',                 href: '50-git-intro.html' },
       { num: '🏆', title: 'Итоговый тест', href: 'final-test.html' }
     ];
 
@@ -1005,8 +1032,8 @@ async function executeCode(outputEl, code, userInput) {
           if (lessonNum >= 1 && lessonNum <= 2) sectionsDone['intro'] = (sectionsDone['intro'] || 0) + 1;
           else if (lessonNum >= 3 && lessonNum <= 8) sectionsDone['basics'] = (sectionsDone['basics'] || 0) + 1;
           else if (lessonNum >= 9 && lessonNum <= 13) sectionsDone['conditions_strings'] = (sectionsDone['conditions_strings'] || 0) + 1;
-          else if (lessonNum >= 14 && lessonNum <= 15) sectionsDone['functions'] = (sectionsDone['functions'] || 0) + 1;
-          else if (lessonNum >= 16 && lessonNum <= 20) sectionsDone['loops'] = (sectionsDone['loops'] || 0) + 1;
+          else if (lessonNum >= 14 && lessonNum <= 18) sectionsDone['loops'] = (sectionsDone['loops'] || 0) + 1;
+          else if (lessonNum >= 19 && lessonNum <= 20) sectionsDone['functions'] = (sectionsDone['functions'] || 0) + 1;
           else if (lessonNum >= 21 && lessonNum <= 26) sectionsDone['data_structures'] = (sectionsDone['data_structures'] || 0) + 1;
           else if (lessonNum >= 27 && lessonNum <= 28) sectionsDone['errors_files'] = (sectionsDone['errors_files'] || 0) + 1;
           else if (lessonNum >= 29 && lessonNum <= 32) sectionsDone['modules'] = (sectionsDone['modules'] || 0) + 1;

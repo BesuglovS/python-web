@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 31: Анонимные функции lambda: синтаксис, использование с map(), filter(), sorted(), ограничения" />
+    <meta property="og:title" content="31. lambda-функции — Python: основы" />
+    <meta property="og:description" content="Урок 31: Анонимные функции lambda: синтаксис, использование с map(), filter(), sorted(), ограничения" />
+    <meta property="og:type" content="article" />
+    <title>lambda-функции — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="31">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 31</span> lambda-функции</h1>
+        <p class="subtitle">Анонимные однострочные функции в Python</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Что такое lambda-функция?</h2>
+        <p>
+          Lambda-функция — это короткая анонимная (безымянная) функция, которая записывается в одну строку.
+          Полезна, когда функцию нужно использовать один раз и не хочется писать отдельный <code>def</code>.
+        </p>
+        <pre class="code-block">
+# Обычная функция
+def double(x):
+    return x * 2
+
+# То же самое через lambda
+double_lambda = lambda x: x * 2
+
+print(double(5))         # 10
+print(double_lambda(5))  # 10</pre>
+        <p>
+          Синтаксис: <code>lambda аргументы: выражение</code>
+        </p>
+          </section>
+          <section>
+<h2>Основной сценарий: sort() с key</h2>
+        <p>
+          Самое частое применение lambda — сортировка по определённому критерию:
+        </p>
+        <pre class="code-block">
+# Сортировка списка кортежей по второму элементу
+students = [("Анна", 95), ("Борис", 82), ("Вика", 100)]
+students.sort(key=lambda student: student[1])
+print(students)  # [('Борис', 82), ('Анна', 95), ('Вика', 100)]
+
+# Сортировка по длине строки
+words = ["Python", "C", "Java", "JavaScript"]
+words.sort(key=lambda w: len(w))
+print(words)     # ['C', 'Java', 'Python', 'JavaScript']
+
+# Сортировка словаря по значениям
+grades = {"Анна": 85, "Борис": 92, "Вика": 78}
+sorted_items = sorted(grades.items(), key=lambda item: item[1])
+print(sorted_items)  # [('Вика', 78), ('Анна', 85), ('Борис', 92)]
+
+# Сортировка списка словарей
+users = [{"name": "Иван", "age": 30}, {"name": "Петя", "age": 25}]
+users.sort(key=lambda u: u["age"])
+print(users)  # [{'name': 'Петя', 'age': 25}, {'name': 'Иван', 'age': 30}]</pre>
+          </section>
+          <section>
+<h2>map() — применение функции к каждому элементу</h2>
+        <pre class="code-block">
+nums = [1, 2, 3, 4, 5]
+
+# Возвести в квадрат каждый элемент
+squares = list(map(lambda x: x**2, nums))
+print(squares)  # [1, 4, 9, 16, 25]
+
+# Перевести все строки в верхний регистр
+words = ["hello", "world"]
+upper_words = list(map(lambda w: w.upper(), words))
+print(upper_words)  # ['HELLO', 'WORLD']
+
+# Преобразование температур Цельсий → Фаренгейт
+celsius = [0, 10, 20, 30, 40]
+fahrenheit = list(map(lambda c: c * 9/5 + 32, celsius))
+print(fahrenheit)   # [32.0, 50.0, 68.0, 86.0, 104.0]</pre>
+          </section>
+          <section>
+<h2>filter() — отбор элементов по условию</h2>
+        <pre class="code-block">
+nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Только чётные числа
+evens = list(filter(lambda x: x % 2 == 0, nums))
+print(evens)  # [2, 4, 6, 8, 10]
+
+# Строки длиннее 5 символов
+words = ["a", "python", "is", "awesome"]
+long_words = list(filter(lambda w: len(w) > 5, words))
+print(long_words)  # ['python', 'awesome']
+
+# Положительные числа
+nums = [-3, 5, -1, 0, 8, -4]
+positives = list(filter(lambda x: x > 0, nums))
+print(positives)   # [5, 8]</pre>
+          </section>
+          <section>
+<h2>Lambda с несколькими аргументами</h2>
+        <pre class="code-block">
+# Сумма двух чисел
+add = lambda a, b: a + b
+print(add(5, 3))  # 8
+
+# Максимум из двух
+max2 = lambda a, b: a if a > b else b
+print(max2(10, 20))  # 20
+
+# Сортировка по сумме элементов кортежа
+pairs = [(1, 5), (3, 2), (2, 8)]
+pairs.sort(key=lambda p: p[0] + p[1])
+print(pairs)  # [(3, 2), (1, 5), (2, 8)]</pre>
+          </section>
+          <section>
+<h2>Когда НЕ использовать lambda</h2>
+        <div class="tip">
+          <strong>Правило:</strong> если логика занимает более одной строки или требует условий с <code>if/elif/else</code>,
+          используйте обычную функцию с <code>def</code>. Lambda — для коротких, простых выражений.
+        </div>
+        <pre class="code-block">
+# ПЛОХО: слишком сложная lambda (нечитаемо!)
+process = lambda x: x**2 if x > 0 else x**3 if x < 0 else 0
+
+# ХОРОШО: обычная функция (понятно!)
+def process(x):
+    if x > 0:
+        return x**2
+    elif x < 0:
+        return x**3
+    else:
+        return 0</pre>
+          </section>
+          <section>
+<h2>Практический пример: анализ данных</h2>
+        <pre class="code-block">
+# Данные о продажах
+sales = [
+    {"product": "Ноутбук", "price": 80000, "qty": 5},
+    {"product": "Мышь", "price": 2000, "qty": 30},
+    {"product": "Клавиатура", "price": 4000, "qty": 15},
+]
+
+# Топ товаров по выручке (price * qty)
+sales.sort(key=lambda s: s["price"] * s["qty"], reverse=True)
+for item in sales:
+    revenue = item["price"] * item["qty"]
+    print(f"{item['product']}: {revenue:,} ₽")
+
+# Вывод:
+# Ноутбук: 400,000 ₽
+# Клавиатура: 60,000 ₽
+# Мышь: 60,000 ₽</pre>
+          </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="30-list-comprehensions.html" class="prev-link">← Списочные выражения</a>
+        <a href="32-files.html" class="next-link">Далее: Файлы →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

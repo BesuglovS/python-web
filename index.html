@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Изучайте Python с нуля — 34 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса." />
+    <meta name="description" content="Изучайте Python с нуля — 50 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса." />
     <meta property="og:title" content="Python — Основы программирования" />
-    <meta property="og:description" content="34 урока по Python для начинающих: от переменных до ООП. Бесплатно, с примерами кода." />
+    <meta property="og:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
     <meta property="og:type" content="website" />
-    <title>Основы программирования на Python — 34 урока для начинающих</title>
+    <title>Основы программирования на Python — 50 уроков для начинающих</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="manifest" href="manifest.json" />
@@ -17,10 +17,10 @@
       "@context": "https://schema.org",
       "@type": "Course",
       "name": "Python — Основы программирования",
-      "description": "Изучайте Python с нуля — 34 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса.",
+      "description": "Изучайте Python с нуля — 50 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса.",
       "provider": { "@type": "Organization", "name": "Python Web" },
       "educationalLevel": "beginner",
-      "numberOfLessons": "34",
+      "numberOfLessons": "50",
       "inLanguage": "ru",
       "hasCourseInstance": { "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }
     }
@@ -186,7 +186,7 @@
     <div class="container">
       <header>
         <h1>🐍 <span>Python</span> — основы программирования</h1>
-        <p>34 базовых тем для начинающих с примерами кода</p>
+        <p>50 тем для начинающих с примерами кода</p>
         <div class="progress-bar-container"></div>
         <span class="progress-info"></span>
         <a href="repl.html" class="repl-hero-btn">▶ Интерактивная консоль Python</a>
@@ -237,15 +237,29 @@
                 <p>int, float, str, bool, NoneType</p>
               </div>
             </a>
-            <a href="05-io.html" class="topic-card" data-lesson="5">
+            <a href="05-type-casting.html" class="topic-card" data-lesson="5">
               <div class="topic-num">5</div>
+              <div class="topic-info">
+                <h2>Приведение типов</h2>
+                <p>int(), float(), str(), bool()</p>
+              </div>
+            </a>
+            <a href="06-io.html" class="topic-card" data-lesson="6">
+              <div class="topic-num">6</div>
               <div class="topic-info">
                 <h2>Ввод и вывод</h2>
                 <p>print(), input(), форматирование</p>
               </div>
             </a>
-            <a href="06-number-ops.html" class="topic-card" data-lesson="6">
-              <div class="topic-num">6</div>
+            <a href="07-f-strings.html" class="topic-card" data-lesson="7">
+              <div class="topic-num">7</div>
+              <div class="topic-info">
+                <h2>f-строки и форматирование</h2>
+                <p>f"{переменная=}", форматирование чисел</p>
+              </div>
+            </a>
+            <a href="08-number-ops.html" class="topic-card" data-lesson="8">
+              <div class="topic-num">8</div>
               <div class="topic-info">
                 <h2>Операции над числами</h2>
                 <p>+, -, *, /, //, %, **</p>
@@ -258,39 +272,39 @@
         <div class="section-group" data-section="conditions">
           <h2 class="section-title">🔀 Условия</h2>
           <div class="section-cards">
-            <a href="07-conditional.html" class="topic-card" data-lesson="7">
-              <div class="topic-num">7</div>
-              <div class="topic-info">
-                <h2>Условный оператор + Отступы</h2>
-                <p>if, elif, else, блоки кода, PEP 8</p>
-              </div>
-            </a>
-            <a href="08-booleans.html" class="topic-card" data-lesson="8">
-              <div class="topic-num">8</div>
+            <a href="09-booleans.html" class="topic-card" data-lesson="9">
+              <div class="topic-num">9</div>
               <div class="topic-info">
                 <h2>Булевы переменные</h2>
                 <p>True, False, логические операции</p>
               </div>
             </a>
-            <a href="09-complex-conditions.html" class="topic-card" data-lesson="9">
-              <div class="topic-num">9</div>
+            <a href="10-conditional.html" class="topic-card" data-lesson="10">
+              <div class="topic-num">10</div>
+              <div class="topic-info">
+                <h2>Условный оператор + Отступы</h2>
+                <p>if, elif, else, блоки кода, PEP 8</p>
+              </div>
+            </a>
+            <a href="11-try-except.html" class="topic-card" data-lesson="11">
+              <div class="topic-num">11</div>
+              <div class="topic-info">
+                <h2>Обработка ошибок</h2>
+                <p>try, except, finally, raise</p>
+              </div>
+            </a>
+            <a href="12-complex-conditions.html" class="topic-card" data-lesson="12">
+              <div class="topic-num">12</div>
               <div class="topic-info">
                 <h2>Сложные условия</h2>
                 <p>and, or, not</p>
               </div>
             </a>
-            <a href="10-nested-structures.html" class="topic-card" data-lesson="10">
-              <div class="topic-num">10</div>
+            <a href="13-nested-structures.html" class="topic-card" data-lesson="13">
+              <div class="topic-num">13</div>
               <div class="topic-info">
                 <h2>Вложенные структуры</h2>
                 <p>Условия внутри условий</p>
-              </div>
-            </a>
-            <a href="11-priority.html" class="topic-card" data-lesson="11">
-              <div class="topic-num">11</div>
-              <div class="topic-info">
-                <h2>Приоритет операций</h2>
-                <p>Порядок вычислений</p>
               </div>
             </a>
           </div>
@@ -300,88 +314,95 @@
         <div class="section-group" data-section="strings">
           <h2 class="section-title">🔤 Строки</h2>
           <div class="section-cards">
-            <a href="12-strings-index-slice.html" class="topic-card" data-lesson="12">
-              <div class="topic-num">12</div>
+            <a href="14-strings-index-slice.html" class="topic-card" data-lesson="14">
+              <div class="topic-num">14</div>
               <div class="topic-info">
                 <h2>Строки: индексация и срезы</h2>
                 <p>Индексы, [start:stop:step]</p>
               </div>
             </a>
-            <a href="13-string-ops.html" class="topic-card" data-lesson="13">
-              <div class="topic-num">13</div>
+            <a href="15-string-ops.html" class="topic-card" data-lesson="15">
+              <div class="topic-num">15</div>
               <div class="topic-info">
                 <h2>Операции над строками</h2>
                 <p>Конкатенация, умножение, методы</p>
               </div>
             </a>
-            <a href="25-split-join.html" class="topic-card" data-lesson="25">
-              <div class="topic-num">25</div>
+            <a href="16-regex.html" class="topic-card" data-lesson="16">
+              <div class="topic-num">16</div>
               <div class="topic-info">
-                <h2>split + join</h2>
-                <p>Разделение и объединение строк</p>
+                <h2>Регулярные выражения</h2>
+                <p>re: поиск, замена, группы, шаблоны</p>
               </div>
             </a>
           </div>
         </div>
 
-        <!-- Раздел 5: Функции -->
-        <div class="section-group" data-section="functions">
-          <h2 class="section-title">⚙️ Функции</h2>
-          <div class="section-cards">
-            <a href="14-functions.html" class="topic-card" data-lesson="14">
-              <div class="topic-num">14</div>
-              <div class="topic-info">
-                <h2>Создание простейших функций</h2>
-                <p>def, return, параметры</p>
-              </div>
-            </a>
-            <a href="15-functions-advanced.html" class="topic-card" data-lesson="15">
-              <div class="topic-num">15</div>
-              <div class="topic-info">
-                <h2>Функции: продвинутые темы</h2>
-                <p>args/kwargs, области видимости, аннотации</p>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Раздел 6: Циклы -->
+        <!-- Раздел 5: Циклы -->
         <div class="section-group" data-section="loops">
           <h2 class="section-title">🔄 Циклы</h2>
           <div class="section-cards">
-            <a href="16-while.html" class="topic-card" data-lesson="16">
-              <div class="topic-num">16</div>
+            <a href="17-while.html" class="topic-card" data-lesson="17">
+              <div class="topic-num">17</div>
               <div class="topic-info">
                 <h2>Цикл с предусловием</h2>
                 <p>while</p>
               </div>
             </a>
-            <a href="17-for.html" class="topic-card" data-lesson="17">
-              <div class="topic-num">17</div>
+            <a href="18-for.html" class="topic-card" data-lesson="18">
+              <div class="topic-num">18</div>
               <div class="topic-info">
                 <h2>Цикл for</h2>
                 <p>Перебор элементов</p>
               </div>
             </a>
-            <a href="18-range.html" class="topic-card" data-lesson="18">
-              <div class="topic-num">18</div>
+            <a href="19-range.html" class="topic-card" data-lesson="19">
+              <div class="topic-num">19</div>
               <div class="topic-info">
                 <h2>range()</h2>
                 <p>Генерация последовательностей</p>
               </div>
             </a>
-            <a href="19-break-continue.html" class="topic-card" data-lesson="19">
-              <div class="topic-num">19</div>
+            <a href="20-break-continue.html" class="topic-card" data-lesson="20">
+              <div class="topic-num">20</div>
               <div class="topic-info">
                 <h2>break и continue</h2>
                 <p>Прерывание и пропуск итераций</p>
               </div>
             </a>
-            <a href="20-nested-loops.html" class="topic-card" data-lesson="20">
-              <div class="topic-num">20</div>
+            <a href="21-nested-loops.html" class="topic-card" data-lesson="21">
+              <div class="topic-num">21</div>
               <div class="topic-info">
                 <h2>Вложенные циклы</h2>
                 <p>Циклы внутри циклов</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Раздел 6: Функции -->
+        <div class="section-group" data-section="functions">
+          <h2 class="section-title">⚙️ Функции</h2>
+          <div class="section-cards">
+            <a href="22-functions.html" class="topic-card" data-lesson="22">
+              <div class="topic-num">22</div>
+              <div class="topic-info">
+                <h2>Создание простейших функций</h2>
+                <p>def, return, параметры</p>
+              </div>
+            </a>
+            <a href="23-functions-advanced.html" class="topic-card" data-lesson="23">
+              <div class="topic-num">23</div>
+              <div class="topic-info">
+                <h2>Функции: продвинутые темы</h2>
+                <p>args/kwargs, области видимости, аннотации</p>
+              </div>
+            </a>
+            <a href="24-debugging.html" class="topic-card" data-lesson="24">
+              <div class="topic-num">24</div>
+              <div class="topic-info">
+                <h2>Отладка программ</h2>
+                <p>pdb, print-отладка, assert, логирование</p>
               </div>
             </a>
           </div>
@@ -391,132 +412,230 @@
         <div class="section-group" data-section="data-structures">
           <h2 class="section-title">🗂️ Структуры данных</h2>
           <div class="section-cards">
-            <a href="21-sets.html" class="topic-card" data-lesson="21">
-              <div class="topic-num">21</div>
-              <div class="topic-info">
-                <h2>Множества</h2>
-                <p>set(), операции над множествами</p>
-              </div>
-            </a>
-            <a href="22-lists.html" class="topic-card" data-lesson="22">
-              <div class="topic-num">22</div>
+            <a href="25-lists.html" class="topic-card" data-lesson="25">
+              <div class="topic-num">25</div>
               <div class="topic-info">
                 <h2>Списки</h2>
                 <p>list, методы списков</p>
               </div>
             </a>
-            <a href="23-tuples.html" class="topic-card" data-lesson="23">
-              <div class="topic-num">23</div>
+            <a href="26-sets.html" class="topic-card" data-lesson="26">
+              <div class="topic-num">26</div>
+              <div class="topic-info">
+                <h2>Множества</h2>
+                <p>set(), операции над множествами</p>
+              </div>
+            </a>
+            <a href="27-tuples.html" class="topic-card" data-lesson="27">
+              <div class="topic-num">27</div>
               <div class="topic-info">
                 <h2>Кортежи</h2>
                 <p>tuple, неизменяемые последовательности</p>
               </div>
             </a>
-            <a href="24-dicts.html" class="topic-card" data-lesson="24">
-              <div class="topic-num">24</div>
+            <a href="28-dicts.html" class="topic-card" data-lesson="28">
+              <div class="topic-num">28</div>
               <div class="topic-info">
                 <h2>Словари</h2>
                 <p>dict, ключи и значения</p>
               </div>
             </a>
-            <a href="26-list-comprehensions.html" class="topic-card" data-lesson="26">
-              <div class="topic-num">26</div>
+            <a href="29-split-join.html" class="topic-card" data-lesson="29">
+              <div class="topic-num">29</div>
+              <div class="topic-info">
+                <h2>split + join</h2>
+                <p>Разделение и объединение строк</p>
+              </div>
+            </a>
+            <a href="30-list-comprehensions.html" class="topic-card" data-lesson="30">
+              <div class="topic-num">30</div>
               <div class="topic-info">
                 <h2>Списочные выражения</h2>
                 <p>[x for x in ... if ...]</p>
               </div>
             </a>
-          </div>
-        </div>
-
-        <!-- Раздел 8: Обработка ошибок -->
-        <div class="section-group" data-section="errors">
-          <h2 class="section-title">⚠️ Обработка ошибок</h2>
-          <div class="section-cards">
-            <a href="27-try-except.html" class="topic-card" data-lesson="27">
-              <div class="topic-num">27</div>
+            <a href="31-lambda.html" class="topic-card" data-lesson="31">
+              <div class="topic-num">31</div>
               <div class="topic-info">
-                <h2>Обработка ошибок</h2>
-                <p>try, except, finally, raise</p>
+                <h2>Lambda-функции</h2>
+                <p>lambda, map(), filter(), sorted()</p>
               </div>
             </a>
           </div>
         </div>
 
-        <!-- Раздел 9: Файлы -->
+        <!-- Раздел 8: Файлы и данные -->
         <div class="section-group" data-section="files">
-          <h2 class="section-title">📁 Файлы</h2>
+          <h2 class="section-title">📁 Файлы и данные</h2>
           <div class="section-cards">
-            <a href="28-files.html" class="topic-card" data-lesson="28">
-              <div class="topic-num">28</div>
+            <a href="32-files.html" class="topic-card" data-lesson="32">
+              <div class="topic-num">32</div>
               <div class="topic-info">
                 <h2>Файлы: чтение и запись</h2>
                 <p>open(), with, построчное чтение, разбор чисел</p>
               </div>
             </a>
+            <a href="33-json-csv.html" class="topic-card" data-lesson="33">
+              <div class="topic-num">33</div>
+              <div class="topic-info">
+                <h2>JSON и CSV</h2>
+                <p>json.dump/load, csv.reader/writer</p>
+              </div>
+            </a>
+            <a href="34-sqlite3.html" class="topic-card" data-lesson="34">
+              <div class="topic-num">34</div>
+              <div class="topic-info">
+                <h2>Базы данных SQLite</h2>
+                <p>CREATE TABLE, INSERT, SELECT, параметризованные запросы</p>
+              </div>
+            </a>
           </div>
         </div>
 
-        <!-- Раздел 10: Модули -->
+        <!-- Раздел 9: Модули -->
         <div class="section-group" data-section="modules">
           <h2 class="section-title">🧰 Модули</h2>
           <div class="section-cards">
-            <a href="29-itertools.html" class="topic-card" data-lesson="29">
-              <div class="topic-num">29</div>
+            <a href="35-modules-import.html" class="topic-card" data-lesson="35">
+              <div class="topic-num">35</div>
+              <div class="topic-info">
+                <h2>Модули и import</h2>
+                <p>import, from, as, стандартная библиотека</p>
+              </div>
+            </a>
+            <a href="36-itertools.html" class="topic-card" data-lesson="36">
+              <div class="topic-num">36</div>
               <div class="topic-info">
                 <h2>Модуль itertools</h2>
                 <p>product, permutations, chain, groupby и другие функции</p>
               </div>
             </a>
-            <a href="30-modules-import.html" class="topic-card" data-lesson="30">
-              <div class="topic-num">30</div>
+            <a href="37-venv-pip.html" class="topic-card" data-lesson="37">
+              <div class="topic-num">37</div>
               <div class="topic-info">
-                <h2>Модули и import</h2>
-                <p>Подключение модулей, стандартная библиотека</p>
+                <h2>Виртуальные окружения и pip</h2>
+                <p>venv, pip install, requirements.txt</p>
               </div>
             </a>
-            <a href="31-math-random.html" class="topic-card" data-lesson="31">
-              <div class="topic-num">31</div>
+            <a href="38-math-random.html" class="topic-card" data-lesson="38">
+              <div class="topic-num">38</div>
               <div class="topic-info">
                 <h2>Модули math и random</h2>
                 <p>Математика, случайные числа</p>
               </div>
             </a>
-            <a href="32-datetime.html" class="topic-card" data-lesson="32">
-              <div class="topic-num">32</div>
+            <a href="39-datetime.html" class="topic-card" data-lesson="39">
+              <div class="topic-num">39</div>
               <div class="topic-info">
                 <h2>Модуль datetime</h2>
                 <p>Даты, время, timedelta</p>
               </div>
             </a>
+            <a href="40-numpy-pandas.html" class="topic-card" data-lesson="40">
+              <div class="topic-num">40</div>
+              <div class="topic-info">
+                <h2>NumPy и Pandas</h2>
+                <p>ndarray, DataFrame, анализ данных</p>
+              </div>
+            </a>
           </div>
         </div>
 
-        <!-- Раздел 11: ООП -->
+        <!-- Раздел 10: ООП -->
         <div class="section-group" data-section="oop">
           <h2 class="section-title">🏗️ ООП</h2>
           <div class="section-cards">
-            <a href="33-oop-intro.html" class="topic-card" data-lesson="33">
-              <div class="topic-num">33</div>
+            <a href="41-oop-intro.html" class="topic-card" data-lesson="41">
+              <div class="topic-num">41</div>
               <div class="topic-info">
                 <h2>Введение в ООП</h2>
                 <p>Классы, объекты, __init__, self</p>
               </div>
             </a>
+            <a href="42-inheritance.html" class="topic-card" data-lesson="42">
+              <div class="topic-num">42</div>
+              <div class="topic-info">
+                <h2>Наследование и полиморфизм</h2>
+                <p>class Child(Parent), super(), переопределение</p>
+              </div>
+            </a>
           </div>
         </div>
 
-        <!-- Раздел 12: Итог -->
+        <!-- Раздел 11: Продвинутые концепции -->
+        <div class="section-group" data-section="advanced">
+          <h2 class="section-title">🚀 Продвинутые концепции</h2>
+          <div class="section-cards">
+            <a href="43-decorators.html" class="topic-card" data-lesson="43">
+              <div class="topic-num">43</div>
+              <div class="topic-info">
+                <h2>Декораторы</h2>
+                <p>@decorator, wraps, кастомные декораторы</p>
+              </div>
+            </a>
+            <a href="44-generators.html" class="topic-card" data-lesson="44">
+              <div class="topic-num">44</div>
+              <div class="topic-info">
+                <h2>Генераторы</h2>
+                <p>yield, ленивые вычисления, generator expressions</p>
+              </div>
+            </a>
+            <a href="45-threading-async.html" class="topic-card" data-lesson="45">
+              <div class="topic-num">45</div>
+              <div class="topic-info">
+                <h2>Многопоточность и asyncio</h2>
+                <p>threading, multiprocessing, async/await</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Раздел 12: Инструменты и экосистема -->
+        <div class="section-group" data-section="tools">
+          <h2 class="section-title">🛠️ Инструменты и экосистема</h2>
+          <div class="section-cards">
+            <a href="46-type-hints.html" class="topic-card" data-lesson="46">
+              <div class="topic-num">46</div>
+              <div class="topic-info">
+                <h2>Type Hints</h2>
+                <p>Аннотации типов, mypy</p>
+              </div>
+            </a>
+            <a href="47-pytest.html" class="topic-card" data-lesson="47">
+              <div class="topic-num">47</div>
+              <div class="topic-info">
+                <h2>Unit-тесты с pytest</h2>
+                <p>assert, parametrize, проверка исключений</p>
+              </div>
+            </a>
+            <a href="48-requests-api.html" class="topic-card" data-lesson="48">
+              <div class="topic-num">48</div>
+              <div class="topic-info">
+                <h2>Requests и API</h2>
+                <p>GET, POST, работа с JSON-сервисами</p>
+              </div>
+            </a>
+            <a href="49-flask.html" class="topic-card" data-lesson="49">
+              <div class="topic-num">49</div>
+              <div class="topic-info">
+                <h2>Веб-фреймворки: Flask</h2>
+                <p>Маршруты, шаблоны Jinja2, обработка форм, REST API</p>
+              </div>
+            </a>
+            <a href="50-git-intro.html" class="topic-card" data-lesson="50">
+              <div class="topic-num">50</div>
+              <div class="topic-info">
+                <h2>Введение в Git</h2>
+                <p>Коммиты, ветки, GitHub, .gitignore</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Раздел 13: Итог -->
         <div class="section-group" data-section="final">
           <h2 class="section-title">🏁 Итоги</h2>
           <div class="section-cards">
-            <a href="34-final-project.html" class="topic-card" data-lesson="34">
-              <div class="topic-num">34</div>
-              <div class="topic-info">
-                <h2>Финальный проект</h2>
-                <p>Применяем все знания на практике</p>
-              </div>
-            </a>
             <a href="final-test.html" class="topic-card" data-lesson="final-test">
               <div class="topic-num" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🏆</div>
               <div class="topic-info">

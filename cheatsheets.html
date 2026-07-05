@@ -108,7 +108,7 @@
 
   <!-- 2. Основы -->
   <section class="cheat-section" id="s2">
-    <h2>📚 2. Основы Python (уроки 3–6)</h2>
+    <h2>📚 2. Основы Python (уроки 3–7)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Переменные</h4>
@@ -145,7 +145,7 @@ round(3.14, 1)  # 3.1</pre>
 
   <!-- 3. Приведение типов -->
   <section class="cheat-section" id="s3">
-    <h2>🔄 3. Приведение типов (урок 8a)</h2>
+    <h2>🔄 3. Приведение типов (урок 5)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Явное приведение</h4>
@@ -167,7 +167,7 @@ f"x={x}"       # строковое</pre>
 
   <!-- 4. Условия -->
   <section class="cheat-section" id="s4">
-    <h2>🔀 4. Условия (уроки 7–8, 11–13)</h2>
+    <h2>🔀 4. Условия (уроки 8–9, 11–12)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>if / elif / else</h4>
@@ -201,7 +201,7 @@ in / not in     # вхождение</pre>
 
   <!-- 5. Строки -->
   <section class="cheat-section" id="s5">
-    <h2>🔤 5. Строки (уроки 9–10, 25)</h2>
+    <h2>🔤 5. Строки (уроки 13–15, 28)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Индексация и срезы</h4>
@@ -238,7 +238,7 @@ f"{x=}"           # x=42</pre>
 
   <!-- 6. Функции -->
   <section class="cheat-section" id="s6">
-    <h2>⚙️ 6. Функции (уроки 14–15)</h2>
+    <h2>⚙️ 6. Функции (уроки 21–23)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Создание</h4>
@@ -326,7 +326,7 @@ for a, b in zip(A, B):
 
   <!-- 8. Структуры данных -->
   <section class="cheat-section" id="s8">
-    <h2>🗂️ 8. Структуры данных (уроки 21–24, 26)</h2>
+    <h2>🗂️ 8. Структуры данных (уроки 24–27, 29)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Список (list) — изменяемый</h4>
@@ -381,7 +381,7 @@ lst[:]              # копия</pre>
 
   <!-- 9. Ошибки -->
   <section class="cheat-section" id="s9">
-    <h2>⚠️ 9. Обработка ошибок (урок 27)</h2>
+    <h2>⚠️ 9. Обработка ошибок (урок 30)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>try / except / finally</h4>
@@ -406,7 +406,7 @@ raise  # повторно в except</pre>
 
   <!-- 10. Файлы -->
   <section class="cheat-section" id="s10">
-    <h2>📁 10. Файлы (уроки 28, 28a)</h2>
+    <h2>📁 10. Файлы (уроки 31–32)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Чтение</h4>
@@ -426,23 +426,31 @@ with open("f.txt", "a") as f:
     f.write("append\n")</pre>
       </div>
       <div class="cheat-item">
-        <h4>Нестандартный ввод</h4>
-        <pre>import sys
-data = sys.stdin.read()
-for line in sys.stdin:
-    print(line, end="")</pre>
+        <h4>JSON</h4>
+        <pre>import json
+with open("data.json", "r") as f:
+    data = json.load(f)
+with open("out.json", "w") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+# Строки: json.loads(s) / json.dumps(obj)</pre>
       </div>
       <div class="cheat-item">
-        <h4>Разбор файла с числами</h4>
-        <pre>with open("nums.txt") as f:
-    nums = [int(x) for x in f.read().split()]</pre>
+        <h4>CSV</h4>
+        <pre>import csv
+with open("data.csv", "r") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
+with open("out.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Name", "Age"])</pre>
       </div>
     </div>
   </section>
 
   <!-- 11. Модули -->
   <section class="cheat-section" id="s11">
-    <h2>🧰 11. Модули (уроки 29–32)</h2>
+    <h2>🧰 11. Модули (уроки 33–36)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Импорт</h4>
@@ -505,7 +513,7 @@ if __name__ == "__main__":
 
   <!-- 12. ООП -->
   <section class="cheat-section" id="s12">
-    <h2>🏗️ 12. ООП (уроки 33, 33a)</h2>
+    <h2>🏗️ 12. ООП (уроки 37–38)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Класс и объект</h4>
@@ -546,7 +554,7 @@ __secret  # name mangling → _Cls__secret
 
   <!-- 13. Продвинутые -->
   <section class="cheat-section" id="s13">
-    <h2>🚀 13. Продвинутые темы (уроки 39–41)</h2>
+    <h2>🚀 13. Продвинутые темы (уроки 23, 40–50)</h2>
     <div class="cheat-grid">
       <div class="cheat-item">
         <h4>Lambda-функции</h4>

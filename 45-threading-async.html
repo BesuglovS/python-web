@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 45: Параллельное выполнение в Python: потоки threading, процессы multiprocessing и асинхронность asyncio/await" />
+    <meta property="og:title" content="45. Многопоточность и asyncio — Python: основы" />
+    <meta property="og:description" content="Урок 45: Параллельное выполнение в Python: потоки threading, процессы multiprocessing и асинхронность asyncio/await" />
+    <meta property="og:type" content="article" />
+    <title>Многопоточность и asyncio — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
+  </head>
+  <body>
+    <div id="app" data-lesson="45">
+      <header>
+        <nav>
+          <a href="index.html" class="back-link">← На главную</a>
+          <div class="nav-controls">
+            <a href="44-generators.html" class="prev-link">← Назад</a>
+            <span class="lesson-indicator">Урок 45 из 50</span>
+            <a href="46-type-hints.html" class="next-link">Вперёд →</a>
+          </div>
+        </nav>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </header>
+      <main>
+        <h1><span class="lesson-badge">Урок 45</span> Многопоточность и asyncio</h1>
+        <section>
+          <h2>Введение</h2>
+          <p>Когда программа выполняет задачи, которые можно делать параллельно (загрузка файлов, запросы к API, обработка данных), на помощь приходят многопоточность и асинхронность. Python предлагает три подхода: <code>threading</code> для I/O-задач, <code>multiprocessing</code> для CPU-задач и <code>asyncio</code> для асинхронного кода.</p>
+          <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Модуль <code>threading</code>: запуск функций в отдельных потоках</li><li>GIL в Python и когда потоки реально параллельны</li><li><code>ThreadPoolExecutor</code> из <code>concurrent.futures</code></li><li>Асинхронность: <code>async def</code>, <code>await</code>, <code>asyncio.gather()</code></li><li>Сравнение threading, multiprocessing и asyncio — что и когда использовать</li></ul></div>
+        </section>
+        <section>
+          <h2>Основной материал</h2>
+          <p><code>threading.Thread</code> запускает функцию в отдельном потоке — полезно для I/O-задач (сеть, файлы), где программа ждёт ответа. GIL (Global Interpreter Lock) ограничивает параллельность CPU-задач в потоках — для них используйте <code>multiprocessing</code>. <code>concurrent.futures</code> предоставляет удобные пулы потоков и процессов. <code>asyncio</code> — современный асинхронный подход с event loop: функции <code>async def</code> и оператор <code>await</code> не блокируют выполнение других задач.</p>
+          <pre><code class="language-python">import threading
+import time
+import asyncio
+
+# === threading ===
+def download(file_name):
+    print(f"Скачиваю {file_name}...")
+    time.sleep(2)  # имитация загрузки
+    print(f"{file_name} скачан!")
+
+threads = []
+for f in ["a.txt", "b.txt", "c.txt"]:
+    t = threading.Thread(target=download, args=(f,))
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()
+print("Все файлы скачаны!")
+
+# === asyncio ===
+async def fetch(url):
+    print(f"Запрос к {url}...")
+    await asyncio.sleep(1)  # асинхронное ожидание
+    print(f"Ответ от {url}")
+    return f"Данные от {url}"
+
+async def main():
+    tasks = [fetch("api/1"), fetch("api/2"), fetch("api/3")]
+    results = await asyncio.gather(*tasks)
+    print(results)
+
+# asyncio.run(main()) — запуск в одиночном режиме</code></pre>
+        </section>
+        <section>
+          <h2>Практика</h2>
+          <div class="task-box">
+            <p><strong>📝 Задание:</strong> Напишите программу, которая параллельно (через threading) вычисляет факториалы чисел 5, 10, 15, 20. Затем перепишите то же самое через concurrent.futures.ThreadPoolExecutor. Сравните время выполнения с последовательным вариантом.</p>
+            <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
+          </div>
+        </section>
+        <section>
+          <h2>Ключевые выводы</h2>
+          <ul><li><code>threading</code> — для I/O-задач (сеть, файлы), не для CPU из-за GIL</li><li><code>multiprocessing</code> — для CPU-задач, обходит GIL</li><li><code>concurrent.futures</code> — удобные пулы потоков/процессов</li><li><code>async/await</code> — асинхронный код с event loop для высоконагруженных сетевых приложений</li><li><code>asyncio.gather()</code> — параллельный запуск нескольких корутин</li></ul>
+        </section>
+      </main>
+      <footer>
+        <p>© Python Web — Основы программирования</p>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

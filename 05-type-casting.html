@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 5: Преобразование типов в Python: int(), float(), str(), bool(), неявное и явное приведение" />
+    <meta property="og:title" content="5. Приведение типов — Python: основы" />
+    <meta property="og:description" content="Урок 5: Преобразование типов в Python: int(), float(), str(), bool(), неявное и явное приведение" />
+    <meta property="og:type" content="article" />
+    <title>Приведение типов — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="5">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 5</span> Приведение типов</h1>
+        <p class="subtitle">int(), float(), str(), bool() — преобразование данных из одного типа в другой</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Зачем нужно приведение типов?</h2>
+        <p>
+          Когда вы получаете данные от пользователя через <code>input()</code>, они всегда приходят в виде строки (<code>str</code>).
+          Чтобы выполнять математические операции, строку нужно преобразовать в число.
+        </p>
+        <pre class="code-block">
+age_str = input("Сколько вам лет? ")   # пользователь ввёл "25"
+age = int(age_str)                      # теперь age = 25 (int)
+print("Через год будет:", age + 1)      # 26</pre>
+        <div class="tip">
+          <strong>Правило:</strong> <code>input()</code> всегда возвращает строку. Если нужны вычисления — приводите к числу!
+        </div>
+          </section>
+          <section>
+<h2>Основные функции приведения</h2>
+        <table>
+          <tr><th>Функция</th><th>Назначение</th><th>Пример</th></tr>
+          <tr><td><code>int(x)</code></td><td>Преобразует в целое число</td><td><code>int("42") → 42</code></td></tr>
+          <tr><td><code>float(x)</code></td><td>Преобразует в число с плавающей точкой</td><td><code>float("3.14") → 3.14</code></td></tr>
+          <tr><td><code>str(x)</code></td><td>Преобразует в строку</td><td><code>str(42) → "42"</code></td></tr>
+          <tr><td><code>bool(x)</code></td><td>Преобразует в логическое значение</td><td><code>bool(0) → False</code></td></tr>
+        </table>
+          </section>
+          <section>
+<h2>int() — преобразование в целое число</h2>
+        <pre class="code-block">
+print(int("100"))      # 100
+print(int(3.99))       # 3 (дробная часть отбрасывается, НЕ округляется!)
+print(int("-42"))      # -42
+
+# Ошибка при нечисловой строке:
+# int("hello")  → ValueError</pre>
+          </section>
+          <section>
+<h2>float() — преобразование в дробное число</h2>
+        <pre class="code-block">
+print(float("3.14"))   # 3.14
+print(float(10))       # 10.0
+print(float("5"))      # 5.0</pre>
+          </section>
+          <section>
+<h2>str() — преобразование в строку</h2>
+        <pre class="code-block">
+print(str(42))         # "42"
+print(str(3.14))       # "3.14"
+print(str(True))       # "True"
+
+# Полезно для склеивания чисел со строками:
+age = 25
+print("Мне " + str(age) + " лет.")   # Мне 25 лет.
+# Без str() будет TypeError!</pre>
+          </section>
+          <section>
+<h2>bool() — преобразование в логическое значение</h2>
+        <pre class="code-block">
+print(bool(1))         # True
+print(bool(0))         # False
+print(bool(""))        # False (пустая строка)
+print(bool("hello"))   # True  (непустая строка)
+print(bool([]))        # False (пустой список)
+print(bool([1, 2]))    # True  (непустой список)</pre>
+          <div class="tip">
+            <strong>Запомните:</strong> «Пустые» значения (<code>0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>, <code>None</code>) приводятся к <code>False</code>. Всё остальное — к <code>True</code>.
+          </div>
+          </section>
+          <section>
+<h2>Практический пример: калькулятор</h2>
+        <pre class="code-block">
+a = float(input("Введите первое число: "))
+b = float(input("Введите второе число: "))
+
+print("Сумма:", a + b)
+print("Разность:", a - b)
+print("Произведение:", a * b)
+print("Частное:", a / b if b != 0 else "на ноль делить нельзя")</pre>
+          </section>
+          <section>
+<h2>Частые ошибки</h2>
+        <ul>
+          <li><code>int("3.14")</code> — <strong>ValueError</strong>: строка с точкой не может быть int. Сначала <code>float()</code>, потом <code>int()</code>.</li>
+          <li><code>"Мне " + 25 + " лет"</code> — <strong>TypeError</strong>: нельзя складывать строку и число. Используйте <code>str(25)</code>.</li>
+          <li><code>int(input())</code> без проверки — если пользователь введёт буквы, программа упадёт. Используйте <code>try/except</code> (будет в уроке 10).</li>
+        </ul>
+          </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="04-data-types.html" class="prev-link">← Типы данных</a>
+        <a href="06-io.html" class="next-link">Далее: Ввод и вывод →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

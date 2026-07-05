@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 27: Кортежи tuple: неизменяемые последовательности, распаковка, использование как ключей словаря" />
+    <meta property="og:title" content="27. Кортежи — Python: основы" />
+    <meta property="og:description" content="Урок 27: Кортежи tuple: неизменяемые последовательности, распаковка, использование как ключей словаря" />
+    <meta property="og:type" content="article" />
+    <title>Кортежи — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="27">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 27</span> Кортежи</h1>
+        <p class="subtitle">tuple, неизменяемые последовательности</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Создание кортежей</h2>
+<p>Кортеж — неизменяемая упорядоченная коллекция:</p>
+<pre class="code-block">
+# Через круглые скобки
+point = (3, 4)
+colors = ("red", "green", "blue")
+
+# Без скобок (кортеж создаётся запятыми)
+point = 3, 4
+
+# Кортеж из одного элемента
+single = (1,)  # запятая обязательна!
+
+# Через функцию tuple()
+nums = tuple([1, 2, 3])  # (1, 2, 3)
+</pre>
+          </section>
+          <section>
+<h2>Неизменяемость</h2>
+<p>Кортеж нельзя изменить после создания:</p>
+<pre class="code-block">
+point = (3, 4)
+print(point[0])   # 3
+print(point[1])   # 4
+
+# point[0] = 10  # Ошибка! TypeError
+
+# Но если кортеж содержит список, список можно изменить
+mixed = (1, [2, 3])
+mixed[1].append(4)  # (1, [2, 3, 4])
+</pre>
+          </section>
+          <section>
+<h2>Распаковка кортежей</h2>
+<p>Кортежи удобно распаковывать в переменные:</p>
+<pre class="code-block">
+point = (3, 4)
+x, y = point
+print(x)  # 3
+print(y)  # 4
+
+# Обмен значений через кортеж
+a, b = 1, 2
+a, b = b, a
+print(a, b)  # 2 1
+
+# Методы кортежа
+print(point.count(3))  # 1
+print(point.index(4))  # 1
+</pre>
+          </section>
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+<a href="26-sets.html" class="prev-link">< Списки (list)</a>
+        <a href="28-dicts.html" class="next-link">Далее: Словари →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

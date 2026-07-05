@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 33: Работа с форматами JSON и CSV: модули json и csv, сериализация и десериализация данных" />
+    <meta property="og:title" content="33. JSON и CSV — Python: основы" />
+    <meta property="og:description" content="Урок 33: Работа с форматами JSON и CSV: модули json и csv, сериализация и десериализация данных" />
+    <meta property="og:type" content="article" />
+    <title>JSON и CSV — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="33">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 33</span> JSON и CSV</h1>
+        <p class="subtitle">Чтение и запись структурированных данных в популярных форматах</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>JSON — JavaScript Object Notation</h2>
+        <p>
+          JSON — самый популярный формат обмена данными. В Python данные преобразуются между объектами Python и JSON-строками:
+        </p>
+        <table>
+          <tr><th>Python</th><th>JSON</th></tr>
+          <tr><td><code>dict</code></td><td>object</td></tr>
+          <tr><td><code>list</code>, <code>tuple</code></td><td>array</td></tr>
+          <tr><td><code>str</code></td><td>string</td></tr>
+          <tr><td><code>int</code>, <code>float</code></td><td>number</td></tr>
+          <tr><td><code>True</code>, <code>False</code></td><td><code>true</code>, <code>false</code></td></tr>
+          <tr><td><code>None</code></td><td><code>null</code></td></tr>
+        </table>
+          </section>
+          <section>
+<h2>Чтение JSON из файла</h2>
+        <pre class="code-block">
+import json
+
+with open("data.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+print(data["name"])          # доступ как к обычному словарю
+print(data["hobbies"][0])    # доступ к спискам внутри</pre>
+        <p>Пример содержимого <code>data.json</code>:</p>
+        <pre class="code-block">
+{
+    "name": "Максим",
+    "age": 25,
+    "hobbies": ["Python", "шахматы", "бег"],
+    "active": true
+}</pre>
+          </section>
+          <section>
+<h2>Запись в JSON</h2>
+        <pre class="code-block">
+import json
+
+data = {
+    "name": "Максим",
+    "age": 25,
+    "hobbies": ["Python", "шахматы", "бег"],
+    "active": True
+}
+
+with open("output.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=4)
+
+print("Файл сохранён!")</pre>
+        <div class="tip">
+          <strong>Параметры <code>json.dump()</code>:</strong><br>
+          <code>ensure_ascii=False</code> — сохраняет кириллицу как есть<br>
+          <code>indent=4</code> — красивое форматирование с отступами
+        </div>
+          </section>
+          <section>
+<h2>JSON-строка ↔ Python-объект</h2>
+        <pre class="code-block">
+import json
+
+# Из строки JSON в Python
+json_str = '{"name": "Анна", "score": 95}'
+data = json.loads(json_str)
+print(data["name"])          # Анна
+print(type(data))            # <class 'dict'>
+
+# Из Python в строку JSON
+person = {"name": "Борис", "age": 30}
+json_str = json.dumps(person, ensure_ascii=False)
+print(json_str)              # {"name": "Борис", "age": 30}</pre>
+        <p>
+          <code>load</code>/<code>dump</code> — работа с <strong>файлами</strong> (<code>f</code> — file)<br>
+          <code>loads</code>/<code>dumps</code> — работа со <strong>строками</strong> (<code>s</code> — string)
+        </p>
+          </section>
+          <section>
+<h2>CSV — Comma-Separated Values</h2>
+        <p>
+          CSV — простой текстовый формат для табличных данных (строки и столбцы). Отлично открывается в Excel.
+        </p>
+        <p>Пример <code>students.csv</code>:</p>
+        <pre class="code-block">
+name,age,grade
+Анна,20,5
+Борис,21,4
+Вика,19,5</pre>
+          </section>
+          <section>
+<h2>Чтение CSV</h2>
+        <pre class="code-block">
+import csv
+
+with open("students.csv", "r", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(f"{row['name']}: {row['age']} лет, оценка {row['grade']}")
+
+# Вывод:
+# Анна: 20 лет, оценка 5
+# Борис: 21 лет, оценка 4
+# Вика: 19 лет, оценка 5</pre>
+        <p><code>DictReader</code> читает каждую строку как словарь, где ключи — названия столбцов.</p>
+          </section>
+          <section>
+<h2>Запись CSV</h2>
+        <pre class="code-block">
+import csv
+
+data = [
+    {"name": "Анна", "age": 20, "grade": 5},
+    {"name": "Борис", "age": 21, "grade": 4},
+    {"name": "Вика", "age": 19, "grade": 5},
+]
+
+with open("output.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["name", "age", "grade"])
+    writer.writeheader()      # записать заголовки столбцов
+    writer.writerows(data)    # записать все строки
+
+print("CSV сохранён!")</pre>
+        <div class="tip">
+          <strong>Важно:</strong> всегда указывайте <code>newline=""</code> при открытии CSV-файлов на Windows — иначе появятся лишние пустые строки.
+        </div>
+          </section>
+          <section>
+<h2>Практический пример: конвертер JSON → CSV</h2>
+        <pre class="code-block">
+import json, csv
+
+# Читаем список пользователей из JSON
+with open("users.json", "r", encoding="utf-8") as f:
+    users = json.load(f)
+
+# Сохраняем в CSV (только нужные поля)
+with open("users.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["name", "email", "age"])
+    writer.writeheader()
+    for user in users:
+        writer.writerow({
+            "name": user["name"],
+            "email": user["email"],
+            "age": user["age"]
+        })
+
+print("Конвертация завершена!")</pre>
+        </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="32-files.html" class="prev-link">← Файлы</a>
+        <a href="34-sqlite3.html" class="next-link">Далее: Модули и import →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

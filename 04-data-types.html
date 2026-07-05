@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 4: Типы данных. int, float, str, bool, NoneType, type(), isinstance()" />
+    <meta name="description" content="Урок 4: Основные типы данных в Python: int, float, str, bool, type(), isinstance()" />
     <meta property="og:title" content="4. Типы данных — Python: основы" />
-    <meta property="og:description" content="Урок 4: Типы данных. int, float, str, bool, NoneType, type(), isinstance()" />
+    <meta property="og:description" content="Урок 4: Основные типы данных в Python: int, float, str, bool, type(), isinstance()" />
     <meta property="og:type" content="article" />
     <title>Типы данных — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
@@ -16,7 +16,7 @@
     <div class="container">
       <header class="topic-header">
         <div id="breadcrumbs" class="breadcrumbs"></div>
-        <h1>4. Типы данных</h1>
+        <h1><span class="lesson-badge">Урок 4</span> Типы данных</h1>
         <p class="subtitle">int, float, str, bool, NoneType, type(), isinstance()</p>
       </header>
       <div class="content-layout">
@@ -95,15 +95,13 @@ print(float("3"))      # 3.0  (float допускает целое в строк
 </pre>
 
 <h3>Преобразование в bool</h3>
-<p>Любое значение можно превратить в <code>bool</code>. Правило простое: «пустые» значения дают <code>False</code>, всё остальное — <code>True</code>.</p>
+<p>Любое значение можно превратить в <code>bool</code>. Правило простое: «пустые» значения дают <code>False</code>, всё остальное — <code>True</code>. Подробнее о truthy и falsy значениях — в уроке 8.</p>
 <pre class="code-block">
 print(bool(1))         # True
 print(bool(0))         # False   (ноль — «пустое» число)
 print(bool(-5))        # True
 print(bool(""))        # False   (пустая строка)
 print(bool("text"))    # True    (непустая строка)
-print(bool([]))        # False   (пустой список)
-print(bool([1, 2]))    # True
 print(bool(None))      # False
 </pre>
 
@@ -118,24 +116,21 @@ print(False * 10)      # 0
           </section>
           <section>
 <h2>Изменяемые и неизменяемые типы</h2>
-<p>Неизменяемые (immutable): int, float, str, bool, tuple, frozenset</p>
-<p>Изменяемые (mutable): list, dict, set</p>
+<p>Одни типы можно изменять после создания (изменяемые), другие — нет (неизменяемые):</p>
+<p>Неизменяемые (immutable): int, float, str, bool</p>
+<p>Изменяемые (mutable) мы изучим позже — к ним относятся list, dict, set и другие коллекции.</p>
 <pre class="code-block">
 # Строки неизменяемы
 s = "hello"
 # s[0] = "H"  # Ошибка! Нельзя изменить символ
 s = "H" + s[1:]  # Нужно создать новую строку
-
-# Списки изменяемы
-lst = [1, 2, 3]
-lst[0] = 10  # Работает!
 </pre>
           </section>
         </div>
       </div>
       <footer class="topic-footer">
-<a href="03-variables.html" class="prev-link">< Назад</a>
-        <a href="05-io.html" class="next-link">Далее: ></a>
+        <a href="03-variables.html" class="prev-link">← Переменные</a>
+        <a href="05-type-casting.html" class="next-link">Далее: Приведение типов →</a>
       </footer>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>

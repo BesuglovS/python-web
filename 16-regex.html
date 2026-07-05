@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 16: Регулярные выражения в Python: модуль re, поиск, замена, извлечение данных из текста" />
+    <meta property="og:title" content="16. Регулярные выражения — Python: основы" />
+    <meta property="og:description" content="Урок 16: Регулярные выражения в Python: модуль re, поиск, замена, извлечение данных из текста" />
+    <meta property="og:type" content="article" />
+    <title>Регулярные выражения — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
+  </head>
+  <body>
+    <div id="app" data-lesson="16">
+      <header>
+        <nav>
+          <a href="index.html" class="back-link">← На главную</a>
+          <div class="nav-controls">
+            <a href="15-string-ops.html" class="prev-link">← Назад</a>
+            <span class="lesson-indicator">Урок 16 из 50</span>
+            <a href="17-while.html" class="next-link">Вперёд →</a>
+          </div>
+        </nav>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </header>
+      <main>
+        <h1><span class="lesson-badge">Урок 16</span> Регулярные выражения</h1>
+        <section>
+          <h2>Введение</h2>
+          <p>Регулярные выражения (regex) — мощный инструмент для поиска и обработки текста по шаблону. Модуль <code>re</code> в Python предоставляет полный набор функций для работы с регулярными выражениями.</p>
+          <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Что такое регулярные выражения и зачем они нужны</li><li>Основные метасимволы: <code>.</code>, <code>^</code>, <code>$</code>, <code>*</code>, <code>+</code>, <code>?</code>, <code>[]</code></li><li>Функции <code>re.search()</code>, <code>re.match()</code>, <code>re.findall()</code></li><li>Замена через <code>re.sub()</code> и группы захвата <code>()</code></li><li>Компиляция шаблонов <code>re.compile()</code> и флаги <code>re.IGNORECASE</code></li></ul></div>
+        </section>
+        <section>
+          <h2>Основной материал</h2>
+          <p>Регулярные выражения позволяют описывать шаблоны текста с помощью специального синтаксиса. Метасимвол <code>.</code> соответствует любому символу, <code>\d</code> — цифре, <code>\w</code> — букве или цифре, <code>\s</code> — пробельному символу. Квантификаторы <code>*</code> (0+), <code>+</code> (1+), <code>?</code> (0 или 1) и <code>{n,m}</code> (от n до m) управляют повторениями. Группы <code>()</code> захватывают части совпадения. Флаги как <code>re.IGNORECASE</code> и <code>re.MULTILINE</code> меняют поведение поиска. <code>re.compile()</code> ускоряет многократное использование одного шаблона.</p>
+          <pre><code class="language-python">import re
+
+text = "Email: user@example.com, Phone: +7(999)123-45-67"
+
+# Поиск email
+email = re.search(r'[\w.-]+@[\w.-]+\.\w+', text)
+print(email.group())  # user@example.com
+
+# Поиск всех цифр
+digits = re.findall(r'\d+', text)
+print(digits)  # ['7', '999', '123', '45', '67']
+
+# Замена с группами
+phone_pattern = r'\+(\d)\((\d{3})\)(\d{3})-(\d{2})-(\d{2})'
+formatted = re.sub(phone_pattern, r'+\1 (\2) \3-\4-\5', text)
+print(formatted)  # +7 (999) 123-45-67
+
+# Компиляция шаблона
+pattern = re.compile(r'\b[A-Z][a-z]+\b')  # слова с большой буквы
+print(pattern.findall("Hello World from Python"))  # ['Hello', 'World', 'Python']</code></pre>
+        </section>
+        <section>
+          <h2>Практика</h2>
+          <div class="task-box">
+            <p><strong>📝 Задание:</strong> Напишите регулярное выражение для проверки корректности пароля: минимум 8 символов, хотя бы одна заглавная буква, одна строчная, одна цифра и один спецсимвол из набора @#$%^&*. Проверьте на нескольких примерах.</p>
+            <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
+          </div>
+        </section>
+        <section>
+          <h2>Ключевые выводы</h2>
+          <ul><li><code>re.search()</code> — первое совпадение, <code>re.findall()</code> — все совпадения</li><li><code>re.sub()</code> — замена по шаблону с группами захвата <code>()</code></li><li>Метасимволы <code>\d \w \s . ^ $ * + ? [] {}</code> — основа regex</li><li><code>re.compile()</code> ускоряет многократный поиск</li><li>Флаги <code>re.I</code>, <code>re.M</code>, <code>re.S</code> изменяют поведение</li></ul>
+        </section>
+      </main>
+      <footer>
+        <p>© Python Web — Основы программирования</p>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

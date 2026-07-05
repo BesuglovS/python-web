@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 28: Словари dict: пары ключ-значение, методы keys(), values(), items(), get(), создание и обход" />
+    <meta property="og:title" content="28. Словари — Python: основы" />
+    <meta property="og:description" content="Урок 28: Словари dict: пары ключ-значение, методы keys(), values(), items(), get(), создание и обход" />
+    <meta property="og:type" content="article" />
+    <title>Словари — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="28">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 28</span> Словари</h1>
+        <p class="subtitle">dict, ключи и значения, методы</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Создание словаря</h2>
+<p>Словарь — упорядоченная коллекция пар ключ-значение (начиная с Python 3.7 порядок вставки сохраняется):</p>
+<pre class="code-block">
+# Через фигурные скобки
+student = {
+    "name": "Иван",
+    "age": 20,
+    "city": "Москва"
+}
+
+# Через функцию dict()
+person = dict(name="Анна", age=25, city="СПб")
+
+# Пустой словарь
+empty = {}
+empty = dict()
+</pre>
+          </section>
+          <section>
+<h2>Доступ к элементам</h2>
+<p>Получение и изменение значений:</p>
+<pre class="code-block">
+student = {"name": "Иван", "age": 20}
+
+# Через ключ
+print(student["name"])   # "Иван"
+
+# Через get() — безопасно (не вызывает ошибку)
+print(student.get("age"))     # 20
+print(student.get("grade"))   # None
+print(student.get("grade", "Нет"))  # "Нет" (значение по умолчанию)
+
+# Изменение
+student["age"] = 21
+student["grade"] = 5  # добавление нового ключа
+</pre>
+          </section>
+          <section>
+<h2>Методы словарей</h2>
+<p>Основные методы:</p>
+<pre class="code-block">
+d = {"a": 1, "b": 2, "c": 3}
+
+print(d.keys())    # dict_keys(["a", "b", "c"])
+print(d.values())  # dict_values([1, 2, 3])
+print(d.items())   # dict_items([("a", 1), ("b", 2), ("c", 3)])
+
+# Обновление
+d.update({"b": 20, "d": 4})  # {"a": 1, "b": 20, "c": 3, "d": 4}
+
+# Удаление
+val = d.pop("a")     # удаляет и возвращает значение
+last = d.popitem()   # удаляет и возвращает последнюю пару
+d.clear()            # очищает словарь
+
+# Проверка наличия ключа
+print("a" in d)  # True/False
+</pre>
+          </section>
+          <section>
+<h2>Перебор словаря</h2>
+<p>Итерация по словарю:</p>
+<pre class="code-block">
+d = {"a": 1, "b": 2, "c": 3}
+
+# По ключам
+for key in d:
+    print(key, d[key])
+
+# По парам
+for key, value in d.items():
+    print(f"{key}: {value}")
+
+# Только значения
+for value in d.values():
+    print(value)
+</pre>
+          </section>
+          <div id="contest-link-placeholder"></div>
+        </div>
+      </div>
+      <footer class="topic-footer">
+<a href="27-tuples.html" class="prev-link">< Кортежи (tuple)</a>
+        <a href="29-split-join.html" class="next-link">Далее: split() и join() →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

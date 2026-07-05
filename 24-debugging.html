@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 24: Методы отладки: print(), pdb, модуль logging. Как находить и исправлять ошибки в коде" />
+    <meta property="og:title" content="24. Отладка — Python: основы" />
+    <meta property="og:description" content="Урок 24: Методы отладки: print(), pdb, модуль logging. Как находить и исправлять ошибки в коде" />
+    <meta property="og:type" content="article" />
+    <title>Отладка — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="24">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 24</span> Отладка</h1>
+        <p class="subtitle">print(), pdb, логирование — как находить и исправлять ошибки в коде</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Зачем нужна отладка?</h2>
+        <p>
+          Даже опытные программисты пишут код с ошибками. Умение быстро находить и исправлять ошибки — один из важнейших навыков разработчика.
+        </p>
+        <div class="tip">
+          <strong>Виды ошибок:</strong>
+          <ul>
+            <li><strong>Синтаксические</strong> — пропущенные скобки, двоеточия, неверные отступы</li>
+            <li><strong>Логические</strong> — программа работает, но выдаёт неверный результат</li>
+            <li><strong>Исключения (runtime)</strong> — ошибки во время выполнения: деление на ноль, неверный тип данных</li>
+          </ul>
+        </div>
+          </section>
+          <section>
+<h2>Отладка с помощью print()</h2>
+        <p>
+          Самый простой и часто используемый способ — вывод промежуточных значений:
+        </p>
+        <pre class="code-block">
+def calculate_total(prices, discount):
+    print(f"DEBUG: prices = {prices}")        # смотрим входные данные
+    total = sum(prices)
+    print(f"DEBUG: total = {total}")           # промежуточный результат
+    final = total * (1 - discount)
+    print(f"DEBUG: final = {final}")           # итог
+    return final
+
+result = calculate_total([100, 200, 300], 0.1)
+print(f"Результат: {result}")</pre>
+        <div class="tip">
+          <strong>Совет:</strong> используйте префикс <code>DEBUG:</code> или <code>>>></code>, чтобы легко отличить отладочный вывод от основного и быстро удалить его потом.
+        </div>
+          </section>
+          <section>
+<h2>f-строки для отладки (Python 3.8+)</h2>
+        <p>
+          Специальный синтаксис <code>{var=}</code> выводит имя переменной и её значение:
+        </p>
+        <pre class="code-block">
+name = "Анна"
+age = 25
+print(f"{name=} {age=}")   # name='Анна' age=25
+
+x = 10
+y = 20
+print(f"{x + y = }")       # x + y = 30</pre>
+          </section>
+          <section>
+<h2>Встроенный отладчик pdb</h2>
+        <p>
+          Python включает интерактивный отладчик <code>pdb</code>. Он позволяет выполнять код по шагам, просматривать значения переменных и находить ошибки.
+        </p>
+        <pre class="code-block">
+import pdb
+
+def buggy_function(a, b):
+    result = a / b
+    return result
+
+# Устанавливаем точку останова
+pdb.set_trace()  # выполнение остановится здесь
+x = 10
+y = 0
+print(buggy_function(x, y))</pre>
+        <p>Основные команды pdb:</p>
+        <table>
+          <tr><th>Команда</th><th>Действие</th></tr>
+          <tr><td><code>n</code> (next)</td><td>Выполнить следующую строку</td></tr>
+          <tr><td><code>s</code> (step)</td><td>Зайти внутрь функции</td></tr>
+          <tr><td><code>c</code> (continue)</td><td>Продолжить выполнение</td></tr>
+          <tr><td><code>p переменная</code></td><td>Вывести значение переменной</td></tr>
+          <tr><td><code>l</code> (list)</td><td>Показать текущий участок кода</td></tr>
+          <tr><td><code>q</code> (quit)</td><td>Выйти из отладчика</td></tr>
+        </table>
+          </section>
+          <section>
+<h2>Модуль logging</h2>
+        <p>
+          <code>logging</code> — более продвинутый способ отслеживания работы программы. В отличие от <code>print()</code>, позволяет настраивать уровни важности сообщений и выводить их в файл.
+        </p>
+        <pre class="code-block">
+import logging
+
+# Настройка: уровень INFO и выше, запись в файл
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    filename='app.log'
+)
+
+def divide(a, b):
+    logging.info(f"divide({a}, {b}) вызвана")
+    if b == 0:
+        logging.error("Деление на ноль!")
+        return None
+    result = a / b
+    logging.debug(f"Результат: {result}")
+    return result
+
+print(divide(10, 2))   # 5.0
+print(divide(10, 0))   # None</pre>
+        <p>Уровни логирования (по возрастанию):</p>
+        <ul>
+          <li><code>DEBUG</code> — подробная отладочная информация</li>
+          <li><code>INFO</code> — общая информация о работе программы</li>
+          <li><code>WARNING</code> — предупреждения</li>
+          <li><code>ERROR</code> — ошибки</li>
+          <li><code>CRITICAL</code> — критические ошибки</li>
+        </ul>
+          </section>
+          <section>
+<h2>Практические советы</h2>
+        <ul>
+          <li><strong>Читайте сообщения об ошибках внимательно</strong> — Python указывает файл, строку и тип ошибки</li>
+          <li><strong>Проверяйте входные данные</strong> — ошибка часто не там, где программа упала, а там, откуда пришли некорректные данные</li>
+          <li><strong>Упрощайте</strong> — если не можете найти ошибку в большом коде, выделите проблемный участок и проверьте его отдельно</li>
+          <li><strong>Используйте метод резиновой уточки (rubber duck)</strong> — объясняя код вслух, вы часто сами находите ошибку</li>
+          <li><strong>Git</strong> — делайте коммиты после каждой работающей версии, чтобы можно было откатиться</li>
+        </ul>
+          </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="23-functions-advanced.html" class="prev-link">← Продвинутые функции</a>
+        <a href="25-lists.html" class="next-link">Далее: Списки →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

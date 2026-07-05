@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 40: Введение в анализ данных: NumPy-массивы и Pandas DataFrame. Установка, основные операции, работа с таблицами" />
+    <meta property="og:title" content="40. NumPy и Pandas — Python: основы" />
+    <meta property="og:description" content="Урок 40: Введение в анализ данных: NumPy-массивы и Pandas DataFrame. Установка, основные операции, работа с таблицами" />
+    <meta property="og:type" content="article" />
+    <title>NumPy и Pandas — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
+  </head>
+  <body>
+    <div id="app" data-lesson="40">
+      <header>
+        <nav>
+          <a href="index.html" class="back-link">← На главную</a>
+          <div class="nav-controls">
+            <a href="39-datetime.html" class="prev-link">← Назад</a>
+            <span class="lesson-indicator">Урок 40 из 50</span>
+            <a href="41-oop-intro.html" class="next-link">Вперёд →</a>
+          </div>
+        </nav>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </header>
+      <main>
+        <h1><span class="lesson-badge">Урок 40</span> NumPy и Pandas</h1>
+        <section>
+          <h2>Введение</h2>
+          <p>NumPy и Pandas — фундаментальные библиотеки для анализа данных в Python. NumPy предоставляет эффективные многомерные массивы и математические операции. Pandas строится поверх NumPy и предлагает удобные структуры Series и DataFrame для работы с табличными данными.</p>
+          <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Установка через <code>pip install numpy pandas</code></li><li>NumPy-массивы: создание, индексация, срезы, broadcasting</li><li>Базовые операции: <code>np.mean()</code>, <code>np.sum()</code>, <code>np.reshape()</code></li><li>Pandas: <code>Series</code>, <code>DataFrame</code>, чтение CSV/Excel</li><li>Фильтрация, группировка и агрегация данных в Pandas</li></ul></div>
+        </section>
+        <section>
+          <h2>Основной материал</h2>
+          <p>NumPy-массивы (<code>ndarray</code>) — основа научных вычислений. Они быстрее списков Python и поддерживают векторизованные операции: сложение, умножение применяются ко всем элементам без циклов. Pandas DataFrame — это таблица с именованными столбцами, похожая на Excel или SQL-таблицу. Метод <code>read_csv()</code> загружает данные из файла, <code>head()</code> показывает первые строки. Фильтрация через булевы маски, группировка через <code>groupby()</code> — основные инструменты аналитика.</p>
+          <pre><code class="language-python">import numpy as np
+import pandas as pd
+
+# NumPy: создание массива
+arr = np.array([1, 2, 3, 4, 5])
+print("Среднее:", np.mean(arr))  # 3.0
+print("Станд. откл:", np.std(arr))
+
+# NumPy: матричные операции
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+print("Сумма по столбцам:", matrix.sum(axis=0))  # [12, 15, 18]
+
+# Pandas: создание DataFrame
+data = {
+    'Имя': ['Анна', 'Борис', 'Вика', 'Глеб'],
+    'Возраст': [22, 35, 28, 31],
+    'Город': ['Москва', 'Питер', 'Казань', 'Москва']
+}
+df = pd.DataFrame(data)
+print(df[df['Возраст'] > 25])  # фильтрация
+
+# Чтение CSV (пример)
+# df = pd.read_csv('data.csv')
+# print(df.groupby('Город')['Возраст'].mean())</code></pre>
+        </section>
+        <section>
+          <h2>Практика</h2>
+          <div class="task-box">
+            <p><strong>📝 Задание:</strong> Установите NumPy и Pandas. Создайте DataFrame из словаря с данными о 6 товарах (название, цена, количество, категория). Вычислите общую стоимость каждого товара (цена × количество). Отфильтруйте товары дороже 500 руб. и сгруппируйте по категориям, посчитав сумму общей стоимости.</p>
+            <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
+          </div>
+        </section>
+        <section>
+          <h2>Ключевые выводы</h2>
+          <ul><li>NumPy <code>ndarray</code> — быстрые массивы с векторизованными операциями</li><li>Pandas <code>DataFrame</code> — таблица с именованными столбцами и индексами</li><li><code>pd.read_csv()</code>, <code>pd.read_excel()</code> — загрузка данных из файлов</li><li>Фильтрация: <code>df[df["столбец"] > значение]</code>, группировка: <code>df.groupby()</code></li><li>Установка: <code>pip install numpy pandas</code></li></ul>
+        </section>
+      </main>
+      <footer>
+        <p>© Python Web — Основы программирования</p>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

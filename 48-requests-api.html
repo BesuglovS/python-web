@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 48: Работа с HTTP и API: библиотека requests, GET/POST запросы, заголовки, JSON-ответы, статус-коды" />
+    <meta property="og:title" content="48. Requests + API — Python: основы" />
+    <meta property="og:description" content="Урок 48: Работа с HTTP и API: библиотека requests, GET/POST запросы, заголовки, JSON-ответы, статус-коды" />
+    <meta property="og:type" content="article" />
+    <title>Requests + API — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="48">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 48</span> Requests + API</h1>
+        <p class="subtitle">Взаимодействие с веб-сервисами через HTTP</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          <section>
+<h2>Что такое API?</h2>
+        <p>API (Application Programming Interface) — способ взаимодействия программ друг с другом через HTTP-запросы. Библиотека <code>requests</code> — стандарт для отправки таких запросов в Python.</p>
+        <pre class="code-block">
+# Установка
+pip install requests</pre>
+          </section>
+          <section>
+<h2>GET-запрос — получение данных</h2>
+        <pre class="code-block">
+import requests
+
+# Получить список пользователей с JSON-API
+response = requests.get("https://jsonplaceholder.typicode.com/users")
+
+print(response.status_code)  # 200 = успех
+users = response.json()       # парсим JSON в список словарей
+
+for user in users:
+    print(f"{user['name']} — {user['email']}")
+
+# Вывод:
+# Leanne Graham — Sincere@april.biz
+# Ervin Howell — Shanna@melissa.tv
+# ...</pre>
+          </section>
+          <section>
+<h2>Параметры GET-запроса</h2>
+        <pre class="code-block">
+import requests
+
+# Параметры через params (автоматически добавляются к URL)
+response = requests.get(
+    "https://jsonplaceholder.typicode.com/posts",
+    params={"userId": 1, "_limit": 5}  # ?userId=1&_limit=5
+)
+
+posts = response.json()
+for post in posts:
+    print(post["title"])</pre>
+          </section>
+          <section>
+<h2>POST-запрос — отправка данных</h2>
+        <pre class="code-block">
+import requests
+
+new_post = {
+    "title": "Мой первый пост",
+    "body": "Привет, мир! Это тестовый пост.",
+    "userId": 1
+}
+
+response = requests.post(
+    "https://jsonplaceholder.typicode.com/posts",
+    json=new_post
+)
+
+print(response.status_code)  # 201 = создано
+print(response.json()["id"])  # 101</pre>
+          </section>
+          <section>
+<h2>Обработка ошибок</h2>
+        <pre class="code-block">
+import requests
+
+try:
+    response = requests.get("https://api.example.com/data", timeout=5)
+    response.raise_for_status()   # выбросит исключение при ошибке 4xx/5xx
+    data = response.json()
+except requests.exceptions.Timeout:
+    print("Сервер не ответил за 5 секунд")
+except requests.exceptions.HTTPError as e:
+    print(f"Ошибка HTTP: {e}")
+except requests.exceptions.ConnectionError:
+    print("Не удалось подключиться к серверу")
+else:
+    print("Данные получены успешно!")</pre>
+          </section>
+          <section>
+<h2>Практический пример: погода через API</h2>
+        <pre class="code-block">
+import requests
+
+API_KEY = "ваш_ключ"  # возьмите на openweathermap.org
+city = "Москва"
+
+response = requests.get(
+    "https://api.openweathermap.org/data/2.5/weather",
+    params={
+        "q": city,
+        "appid": API_KEY,
+        "units": "metric",
+        "lang": "ru"
+    }
+)
+
+if response.status_code == 200:
+    data = response.json()
+    temp = data["main"]["temp"]
+    desc = data["weather"][0]["description"]
+    print(f"Погода в {city}: {temp}°C, {desc}")
+else:
+    print(f"Ошибка: {response.status_code}")</pre>
+        </section>
+        </div>
+      </div>
+      <footer class="topic-footer">
+        <a href="47-pytest.html" class="prev-link">← pytest</a>
+        <a href="49-flask.html" class="next-link">Далее: Git →</a>
+      </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
