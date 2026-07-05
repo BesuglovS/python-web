@@ -1,273 +1,79 @@
 <!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Урок 50: Основы Git: init, add, commit, push, pull, clone, branch, merge. Система контроля версий для разработчика" />
-  <title>Git — Python: основы</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <style>
-    body { background: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    [data-theme="dark"] body { background: #1a1a2e; }
-    .container { max-width: 960px; margin: 0 auto; padding: 30px 20px; }
-    .lesson-card {
-      background: var(--card-bg); border-radius: 16px; padding: 32px 36px;
-      margin-bottom: 24px; box-shadow: var(--shadow);
-    }
-    .lesson-card h1 { color: var(--primary); font-size: 1.8em; margin: 0 0 8px; }
-    .lesson-card h2 { color: var(--text); font-size: 1.25em; margin: 28px 0 10px; border-bottom: 2px solid var(--border); padding-bottom: 6px; }
-    .lesson-card h3 { color: var(--primary); font-size: 1.05em; margin: 20px 0 8px; }
-    .lesson-card p { line-height: 1.7; color: var(--text); margin: 0 0 12px; }
-    .lesson-card ul, .lesson-card ol { margin: 0 0 14px; padding-left: 22px; color: var(--text); line-height: 1.7; }
-    .lesson-card li { margin-bottom: 4px; }
-    .lesson-card code {
-      background: rgba(102, 126, 234, 0.12); padding: 2px 7px; border-radius: 4px;
-      font-size: 0.9em; color: #e83e8c;
-    }
-    .lesson-card pre {
-      background: #1e1e2e; color: #cdd6f4; border-radius: 10px; padding: 16px 20px;
-      margin: 10px 0 16px; font-size: 0.88em; overflow-x: auto; line-height: 1.6;
-    }
-    [data-theme="dark"] .lesson-card code { background: rgba(102,126,234,0.2); color: #f5a97f; }
-    [data-theme="dark"] .lesson-card pre { background: #11111b; color: #cdd6f4; }
-    .tip {
-      background: rgba(102, 126, 234, 0.08); border-left: 4px solid var(--primary);
-      padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0;
-      color: var(--text); font-size: 0.93em;
-    }
-    .tip strong { color: var(--primary); }
-    .nav-links { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .nav-links a {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 20px; background: var(--primary-gradient); color: #fff;
-      text-decoration: none; border-radius: 10px; font-weight: 600;
-      transition: all 0.2s; font-size: 0.93em;
-    }
-    .nav-links a:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); filter: brightness(1.1); }
-    .nav-links a.back { background: var(--bg-alt); color: var(--text); border: 1px solid var(--border); }
-    .nav-links a.back:hover { background: var(--card-hover-bg); filter: none; }
-    .toc { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
-    .toc a { background: var(--bg-alt); padding: 5px 12px; border-radius: 18px; text-decoration: none; color: var(--text); font-size: 0.85em; border: 1px solid var(--border); }
-    .toc a:hover { border-color: var(--primary); background: var(--card-hover-bg); }
-    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
-    .badge-intermediate { background: #10b98120; color: #10b981; }
-  </style>
-</head>
-<body>
-<div class="container">
-  <div class="nav-links">
-    <a href="index.html" class="back">← На главную</a>
-    <span style="color: var(--text-muted); font-size: 0.9em;">Урок 50 из 50</span>
-    <a href="45-requests-api.html" class="back">← Предыдущий</a>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Урок 50: Введение в Git: инициализация репозитория, коммиты, ветки, слияние, работа с удалённым репозиторием на GitHub" />
+    <meta property="og:title" content="50. Git: введение — Python: основы" />
+    <meta property="og:description" content="Урок 50: Введение в Git: инициализация репозитория, коммиты, ветки, слияние, работа с удалённым репозиторием на GitHub" />
+    <meta property="og:type" content="article" />
+    <title>Git: введение — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+  </head>
+  <body data-lesson="50">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок 50</span> Git: введение</h1>
+        <p class="subtitle">Система контроля версий: репозиторий, коммиты, ветки, GitHub</p>
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
 
-  <main class="lesson-card" data-lesson="50">
-    <span class="badge badge-intermediate">📗 Средний</span>
-    <span style="margin-left:8px;color:var(--text-muted);font-size:0.85em;">⏱ ~12 мин</span>
-    <h1><span class="lesson-badge">Урок 50</span> Git</h1>
-    <p>Git — это система контроля версий, которая отслеживает изменения в коде и позволяет работать над проектом команде. Практически все современные проекты на Python используют Git.</p>
+          <section>
+            <h2>Введение</h2>
+            <p>Git — самая популярная система контроля версий. Она отслеживает изменения в коде, позволяет возвращаться к любым версиям, работать над разными функциями параллельно (ветки) и сотрудничать с другими разработчиками через GitHub (или GitLab, Bitbucket).</p>
+            <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Установка и <code>git init</code> — инициализация репозитория</li><li>Основные команды: <code>git add</code>, <code>git commit</code>, <code>git status</code>, <code>git log</code></li><li>Ветки: <code>git branch</code>, <code>git checkout</code>, <code>git merge</code></li><li><code>.gitignore</code> — что не нужно отслеживать</li><li>Работа с удалённым репозиторием: <code>git push</code>, <code>git pull</code></li></ul></div>
+          </section>
 
-    <nav class="toc">
-      <strong style="color:var(--text-muted);margin-right:4px;">📑</strong>
-      <a href="#why">Зачем нужен Git?</a>
-      <a href="#install">Установка</a>
-      <a href="#config">Настройка</a>
-      <a href="#basics">Основные команды</a>
-      <a href="#branches">Ветки</a>
-      <a href="#remote">GitHub</a>
-      <a href="#ignore">.gitignore</a>
-      <a href="#practice">Практика</a>
-    </nav>
-
-    <h2 id="why">📌 Зачем нужен Git?</h2>
-    <ul>
-      <li><strong>История изменений</strong> — можно вернуться к любой предыдущей версии кода.</li>
-      <li><strong>Параллельная работа</strong> — несколько человек могут работать над проектом одновременно через ветки.</li>
-      <li><strong>Резервное копирование</strong> — код хранится не только локально, но и на сервере (GitHub, GitLab).</li>
-      <li><strong>Код-ревью</strong> — через Pull Request можно обсуждать изменения перед их принятием.</li>
-    </ul>
-
-    <h2 id="install">🔧 Установка Git</h2>
-    <ol>
-      <li>Скачать с <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com</a></li>
-      <li>Установить, принимая настройки по умолчанию.</li>
-      <li>Проверить установку:</li>
-    </ol>
-    <pre>git --version
-# git version 2.44.0</pre>
-
-    <h2 id="config">⚙️ Настройка Git</h2>
-    <p>После установки нужно указать имя и email — они будут подписывать каждый коммит:</p>
-    <pre>git config --global user.name "Твоё Имя"
-git config --global user.email "your@email.com"
-
-# Проверить настройки
-git config --list</pre>
-
-    <h2 id="basics">📦 Основные команды</h2>
-
-    <h3>Создание репозитория</h3>
-    <pre># Создать новый репозиторий в текущей папке
+          <section>
+            <h2>Основной материал</h2>
+            <p>Работа с Git начинается с <code>git init</code> в папке проекта. После изменений файлы подготавливаются к коммиту через <code>git add</code> (индексация), затем <code>git commit -m "сообщение"</code> фиксирует состояние. <code>git status</code> показывает текущее состояние, <code>git log</code> — историю коммитов. Ветки (<code>git branch feature</code>) изолируют разработку, <code>git merge</code> объединяет изменения. Удалённые репозитории подключаются через <code>git remote add origin URL</code>, <code>git push</code> отправляет изменения, <code>git pull</code> забирает новые.</p>
+            <pre><code class="language-bash"># Инициализация репозитория
 git init
 
-# Клонировать существующий репозиторий
-git clone https://github.com/user/repo.git</pre>
+# Добавление файлов и коммит
+git add *.py
+git commit -m "Добавлены файлы проекта"
 
-    <h3>Сохранение изменений (коммит)</h3>
-    <pre># Проверить состояние файлов
-git status
+# Работа с ветками
+git branch feature-auth     # создание ветки
+git checkout feature-auth   # переключение на ветку
+# или одной командой: git checkout -b feature-auth
 
-# Добавить файлы в индекс (staging area)
-git add index.html       # один файл
-git add .                # все файлы
-git add *.py             # по маске
+# Слияние веток
+git checkout main
+git merge feature-auth      # объединение feature-auth в main
 
-# Создать коммит
-git commit -m "Добавил главную страницу"
-
-# Просмотр истории коммитов
-git log
-git log --oneline        # краткий формат</pre>
-
-    <h3>Отмена изменений</h3>
-    <pre># Отменить изменения в файле (до git add)
-git checkout -- file.py
-
-# Убрать файл из индекса (после git add)
-git reset HEAD file.py
-
-# Отменить последний коммит (оставив изменения)
-git reset --soft HEAD~1
-
-# Отменить последний коммит (удалив изменения)
-git reset --hard HEAD~1</pre>
-
-    <div class="tip">
-      <strong>💡 Совет:</strong> Всегда проверяй <code>git status</code> перед коммитом, чтобы убедиться, что добавляешь нужные файлы.
-    </div>
-
-    <h2 id="branches">🌿 Ветки (branches)</h2>
-    <p>Ветки позволяют разрабатывать новые функции изолированно, не затрагивая основной код.</p>
-    <pre># Просмотр веток
-git branch                # локальные
-git branch -a             # все (включая удалённые)
-
-# Создать новую ветку
-git branch feature-login
-
-# Переключиться на ветку
-git checkout feature-login
-# или (новая команда)
-git switch feature-login
-
-# Создать и сразу переключиться
-git checkout -b feature-signup
-
-# Слить ветку в текущую
-git merge feature-login
-
-# Удалить ветку
-git branch -d feature-login</pre>
-
-    <div class="tip">
-      <strong>💡 Популярный workflow (Git Flow):</strong><br>
-      <code>main</code> — стабильная версия<br>
-      <code>develop</code> — ветка разработки<br>
-      <code>feature/xxx</code> — новые фичи<br>
-      <code>bugfix/xxx</code> — исправления
-    </div>
-
-    <h2 id="remote">🌐 GitHub и удалённые репозитории</h2>
-    <p>GitHub — это облачный сервис для хранения Git-репозиториев. Позволяет делиться кодом и работать в команде.</p>
-
-    <h3>Связывание с удалённым репозиторием</h3>
-    <pre># Добавить удалённый репозиторий
+# Работа с GitHub
 git remote add origin https://github.com/user/repo.git
+git push -u origin main     # первая отправка
+git pull                     # получение изменений с сервера</code></pre>
+          </section>
 
-# Просмотр удалённых репозиториев
-git remote -v</pre>
+          <section>
+            <h2>Практика</h2>
+            <div class="task-box">
+              <p><strong>📝 Задание:</strong> Создайте локальный Git-репозиторий для папки с вашими кодами. Сделайте первый коммит. Создайте ветку <code>practice</code>, внесите изменения и добавьте новый файл. Слейте ветку practice в main. Посмотрите историю через <code>git log --oneline --graph</code>.</p>
+              <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
+            </div>
+          </section>
 
-    <h3>Отправка и получение изменений</h3>
-    <pre># Отправить коммиты на сервер
-git push origin main
-
-# Получить изменения с сервера
-git pull origin main
-
-# Получить список веток с сервера
-git fetch</pre>
-
-    <h3>Pull Request (PR)</h3>
-    <ol>
-      <li>Создаёшь ветку, делаешь изменения, коммитишь.</li>
-      <li>Пушишь ветку на GitHub: <code>git push origin my-feature</code></li>
-      <li>На сайте GitHub создаёшь Pull Request.</li>
-      <li>Коллеги просматривают код, оставляют комментарии.</li>
-      <li>После одобрения PR сливается (merge) в основную ветку.</li>
-    </ol>
-
-    <h2 id="ignore">🚫 .gitignore</h2>
-    <p>Файл <code>.gitignore</code> указывает, какие файлы и папки Git должен игнорировать.</p>
-    <pre># Пример .gitignore для Python проекта
-__pycache__/
-*.pyc
-*.pyo
-.env
-venv/
-.vscode/
-*.log
-.DS_Store
-node_modules/</pre>
-    <p>Правила синтаксиса:</p>
-    <ul>
-      <li><code>*.pyc</code> — все файлы с расширением <code>.pyc</code></li>
-      <li><code>venv/</code> — папка <code>venv</code> и всё её содержимое</li>
-      <li><code>!important.txt</code> — исключение (не игнорировать)</li>
-      <li><code>#</code> — комментарий</li>
-    </ul>
-
-    <h2 id="practice">✍️ Практическое задание</h2>
-    <ol>
-      <li>Установи Git (если ещё не установлен).</li>
-      <li>Настрой <code>user.name</code> и <code>user.email</code>.</li>
-      <li>Создай папку <code>my-python-project</code> и инициализируй в ней репозиторий (<code>git init</code>).</li>
-      <li>Создай файл <code>main.py</code> с кодом <code>print("Hello, Git!")</code>.</li>
-      <li>Сделай коммит.</li>
-      <li>Создай ветку <code>feature-greeting</code>.</li>
-      <li>В этой ветке измени <code>main.py</code>, добавив функцию <code>greet(name)</code>.</li>
-      <li>Сделай коммит и слей ветку обратно в <code>main</code> (или <code>master</code>).</li>
-      <li>Создай файл <code>.gitignore</code> и добавь в него <code>*.log</code>.</li>
-    </ol>
-
-    <div class="tip">
-      <strong>🎉 Поздравляем!</strong> Ты прошёл последний урок курса. Теперь ты знаешь Git — один из главных инструментов разработчика. Дальше — практика, собственные проекты и постоянное развитие!
+          <section>
+            <h2>Ключевые выводы</h2>
+            <ul><li><code>git init</code> — создаёт новый репозиторий в текущей папке</li><li><code>git add</code> → <code>git commit</code> — стандартный цикл работы</li><li>Ветки (<code>branch</code>) позволяют работать над функциями изолированно</li><li><code>git merge</code> объединяет изменения из разных веток</li><li><code>.gitignore</code> исключает служебные файлы из репозитория</li><li><code>git push</code> / <code>git pull</code> — синхронизация с GitHub</li></ul>
+          </section></div>
+      </div>
+      <footer class="topic-footer">
+        <a href="49-flask.html" class="prev-link">← Веб-фреймворки: Flask</a>
+        <a href="index.html" class="next-link">На главную →</a>
+      </footer>
     </div>
-  </main>
-
-  <div class="nav-links" style="margin-top: 24px;">
-    <a href="index.html" class="back">← На главную</a>
-    <a href="45-requests-api.html" class="back">← Предыдущий урок</a>
-  </div>
-</div>
-
-<script src="config.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var c = document.querySelector('.lesson-card[data-lesson]');
-    if (c) {
-      var n = c.getAttribute('data-lesson');
-      if (typeof THEORY_CONTESTS !== 'undefined' && THEORY_CONTESTS[n]) {
-        var btn = document.createElement('a');
-        btn.href = CONTEST_BASE_URL + THEORY_CONTESTS[n];
-        btn.target = '_blank'; btn.rel = 'noopener';
-        btn.textContent = '🏆 Пройти задания';
-        btn.style.cssText = 'display:inline-block;margin:16px 0;padding:12px 24px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;text-decoration:none;border-radius:10px;font-weight:600;';
-        c.insertBefore(btn, c.firstChild.nextSibling.nextSibling);
-      }
-    }
-  });
-</script>
-<script src="script.js"></script>
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
