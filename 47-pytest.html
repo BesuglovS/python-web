@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 47: Тестирование с pytest: функции test_*, assert, фикстуры, параметризация, покрытие кода" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="assert, parametrize, проверка исключений" />
     <meta property="og:title" content="47. pytest — Python: основы" />
-    <meta property="og:description" content="Урок 47: Тестирование с pytest: функции test_*, assert, фикстуры, параметризация, покрытие кода" />
+    <meta property="og:description" content="assert, parametrize, проверка исключений" />
     <meta property="og:type" content="article" />
     <title>pytest — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="47">
     <div class="container">
@@ -18,18 +19,15 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 47</span> pytest</h1>
         <p class="subtitle">Проверяем, что код работает правильно</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Зачем нужны тесты?</h2>
-        <p>Тесты автоматически проверяют, что ваш код работает правильно. Особенно важно при изменениях: тесты сразу покажут, если что-то сломалось.</p>
-          </section>
-          <section>
+          <h2>Зачем нужны тесты?</h2>
+<p>Тесты автоматически проверяют, что ваш код работает правильно. Особенно важно при изменениях: тесты сразу покажут, если что-то сломалось.</p>
 <h2>Установка и первый тест</h2>
-        <pre class="code-block">
-# Установка
+<pre><code class="language-python"># Установка
 pip install pytest
 
 # Файл: mycode.py
@@ -46,22 +44,20 @@ def test_double_zero():
     assert double(0) == 0
 
 def test_double_negative():
-    assert double(-3) == -6</pre>
-        <pre class="code-block">
-# Запуск тестов в терминале:
+    assert double(-3) == -6
+</code></pre>
+<pre><code class="language-python"># Запуск тестов в терминале:
 pytest test_mycode.py
 
 # Результат:
-# 3 passed in 0.01s</pre>
-          </section>
-          <section>
+# 3 passed in 0.01s
+</code></pre>
 <h2>Полезные проверки</h2>
-        <pre class="code-block">
-import pytest
+<pre><code class="language-python">import pytest
 
 def divide(a, b):
     if b == 0:
-        raise ValueError("Деление на ноль!")
+        raise ValueError(&quot;Деление на ноль!&quot;)
     return a / b
 
 def test_divide_normal():
@@ -73,28 +69,27 @@ def test_divide_by_zero():
         divide(10, 0)
 
 def test_float_comparison():
-    assert divide(1, 3) == pytest.approx(0.33333, rel=1e-3)</pre>
-          </section>
-          <section>
+    assert divide(1, 3) == pytest.approx(0.33333, rel=1e-3)
+</code></pre>
 <h2>Параметризованные тесты</h2>
-        <pre class="code-block">
-@pytest.mark.parametrize("a, b, expected", [
+<pre><code class="language-python">@pytest.mark.parametrize(&quot;a, b, expected&quot;, [
     (2, 3, 6),
     (-1, 5, -5),
     (0, 100, 0),
     (7, 7, 49),
 ])
 def test_multiply(a, b, expected):
-    assert a * b == expected</pre>
-          </section>
+    assert a * b == expected
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
         <a href="46-type-hints.html" class="prev-link">← Type Hints</a>
-        <a href="48-requests-api.html" class="next-link">Далее: Requests + API →</a>
+        <a href="48-requests-api.html" class="next-link">Далее: Requests и API →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

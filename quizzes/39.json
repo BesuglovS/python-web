@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что вернёт <code>datetime.now()</code>?",
+    "options": [
+      "Только текущую дату",
+      "Только текущее время",
+      "Текущие дату и время",
+      "Строку с датой"
+    ],
+    "correct": 2,
+    "explanation": "datetime.now() возвращает объект datetime с текущими датой и временем."
+  },
+  {
+    "question": "Как превратить дату в строку формата «ДД.ММ.ГГГГ»?",
+    "options": [
+      "date.toString()",
+      "date.strftime(\"%d.%m.%Y\")",
+      "date.strptime(\"%d.%m.%Y\")",
+      "date.format()"
+    ],
+    "correct": 1,
+    "explanation": "strftime (string format time) форматирует дату в строку по шаблону. %d — день, %m — месяц, %Y — год."
+  },
+  {
+    "question": "Что делает <code>timedelta(days=1)</code>?",
+    "options": [
+      "Создаёт дату завтрашнего дня",
+      "Создаёт промежуток в 1 день для арифметики с датами",
+      "Изменяет текущую дату",
+      "Форматирует дату"
+    ],
+    "correct": 1,
+    "explanation": "timedelta представляет разницу во времени. Её можно прибавлять к датам и вычитать из них."
+  },
+  {
+    "question": "Как получить текущую дату без времени?",
+    "options": [
+      "datetime.now()",
+      "date.today()",
+      "time.now()",
+      "datetime.date()"
+    ],
+    "correct": 1,
+    "explanation": "date.today() возвращает объект date с текущей датой (без времени)."
+  },
+  {
+    "question": "Что выведет код?<br><code>d = date(2024, 12, 31)<br>print(d.weekday())</code>",
+    "options": [
+      "31",
+      "1",
+      "5 — так как 31.12.2024 — вторник (индекс 1)",
+      "2024"
+    ],
+    "correct": 1,
+    "explanation": "weekday() возвращает день недели: 0 — понедельник, 1 — вторник и т.д. 31.12.2024 — вторник = 1."
+  },
+  {
+    "question": "Что такое strptime?",
+    "options": [
+      "Форматирование даты в строку",
+      "Парсинг строки в дату по формату",
+      "Форматирование времени",
+      "Создание даты"
+    ],
+    "correct": 1,
+    "explanation": "strptime (string parse time) преобразует строку в объект datetime по заданному формату."
+  },
+  {
+    "question": "Что выведет код?<br><code>from datetime import timedelta<br>d = timedelta(hours=2, minutes=30)<br>print(d)</code>",
+    "options": [
+      "2:30:00",
+      "2.5",
+      "150",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "timedelta выводится как \"days, HH:MM:SS\". 2 часа 30 минут = \"2:30:00\"."
+  },
+  {
+    "question": "Как получить разницу между двумя датами?",
+    "options": [
+      "date1 - date2",
+      "date1 + date2",
+      "difference(date1, date2)",
+      "date1.compare(date2)"
+    ],
+    "correct": 0,
+    "explanation": "Вычитание двух дат возвращает объект timedelta: delta = date1 - date2."
+  },
+  {
+    "question": "Что такое ISO формат даты?",
+    "options": [
+      "ДД.ММ.ГГГГ",
+      "ГГГГ-ММ-ДД",
+      "ММ/ДД/ГГГГ",
+      "ДД/ММ/ГГ"
+    ],
+    "correct": 1,
+    "explanation": "ISO 8601: ГГГГ-ММ-ДД (например, 2024-12-31). В Python метод .isoformat() возвращает дату в этом формате."
+  },
+  {
+    "question": "Как вывести только текущее время?",
+    "options": [
+      "datetime.now().date()",
+      "datetime.now().time()",
+      "time.today()",
+      "datetime.time()"
+    ],
+    "correct": 1,
+    "explanation": "datetime.now() возвращает дату и время. .time() извлекает только временную часть."
+  }
+]

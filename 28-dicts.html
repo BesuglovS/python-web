@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 28: Словари dict: пары ключ-значение, методы keys(), values(), items(), get(), создание и обход" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="dict, ключи и значения" />
     <meta property="og:title" content="28. Словари — Python: основы" />
-    <meta property="og:description" content="Урок 28: Словари dict: пары ключ-значение, методы keys(), values(), items(), get(), создание и обход" />
+    <meta property="og:description" content="dict, ключи и значения" />
     <meta property="og:type" content="article" />
     <title>Словари — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="28">
     <div class="container">
@@ -18,75 +19,65 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 28</span> Словари</h1>
         <p class="subtitle">dict, ключи и значения, методы</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~15 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Создание словаря</h2>
+          <h2>Создание словаря</h2>
 <p>Словарь — упорядоченная коллекция пар ключ-значение (начиная с Python 3.7 порядок вставки сохраняется):</p>
-<pre class="code-block">
-# Через фигурные скобки
+<pre><code class="language-python"># Через фигурные скобки
 student = {
-    "name": "Иван",
-    "age": 20,
-    "city": "Москва"
+    &quot;name&quot;: &quot;Иван&quot;,
+    &quot;age&quot;: 20,
+    &quot;city&quot;: &quot;Москва&quot;
 }
 
 # Через функцию dict()
-person = dict(name="Анна", age=25, city="СПб")
+person = dict(name=&quot;Анна&quot;, age=25, city=&quot;СПб&quot;)
 
 # Пустой словарь
 empty = {}
 empty = dict()
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Доступ к элементам</h2>
 <p>Получение и изменение значений:</p>
-<pre class="code-block">
-student = {"name": "Иван", "age": 20}
+<pre><code class="language-python">student = {&quot;name&quot;: &quot;Иван&quot;, &quot;age&quot;: 20}
 
 # Через ключ
-print(student["name"])   # "Иван"
+print(student[&quot;name&quot;])   # &quot;Иван&quot;
 
 # Через get() — безопасно (не вызывает ошибку)
-print(student.get("age"))     # 20
-print(student.get("grade"))   # None
-print(student.get("grade", "Нет"))  # "Нет" (значение по умолчанию)
+print(student.get(&quot;age&quot;))     # 20
+print(student.get(&quot;grade&quot;))   # None
+print(student.get(&quot;grade&quot;, &quot;Нет&quot;))  # &quot;Нет&quot; (значение по умолчанию)
 
 # Изменение
-student["age"] = 21
-student["grade"] = 5  # добавление нового ключа
-</pre>
-          </section>
-          <section>
+student[&quot;age&quot;] = 21
+student[&quot;grade&quot;] = 5  # добавление нового ключа
+</code></pre>
 <h2>Методы словарей</h2>
 <p>Основные методы:</p>
-<pre class="code-block">
-d = {"a": 1, "b": 2, "c": 3}
+<pre><code class="language-python">d = {&quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: 3}
 
-print(d.keys())    # dict_keys(["a", "b", "c"])
+print(d.keys())    # dict_keys([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;])
 print(d.values())  # dict_values([1, 2, 3])
-print(d.items())   # dict_items([("a", 1), ("b", 2), ("c", 3)])
+print(d.items())   # dict_items([(&quot;a&quot;, 1), (&quot;b&quot;, 2), (&quot;c&quot;, 3)])
 
 # Обновление
-d.update({"b": 20, "d": 4})  # {"a": 1, "b": 20, "c": 3, "d": 4}
+d.update({&quot;b&quot;: 20, &quot;d&quot;: 4})  # {&quot;a&quot;: 1, &quot;b&quot;: 20, &quot;c&quot;: 3, &quot;d&quot;: 4}
 
 # Удаление
-val = d.pop("a")     # удаляет и возвращает значение
+val = d.pop(&quot;a&quot;)     # удаляет и возвращает значение
 last = d.popitem()   # удаляет и возвращает последнюю пару
 d.clear()            # очищает словарь
 
 # Проверка наличия ключа
-print("a" in d)  # True/False
-</pre>
-          </section>
-          <section>
+print(&quot;a&quot; in d)  # True/False
+</code></pre>
 <h2>Перебор словаря</h2>
 <p>Итерация по словарю:</p>
-<pre class="code-block">
-d = {"a": 1, "b": 2, "c": 3}
+<pre><code class="language-python">d = {&quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: 3}
 
 # По ключам
 for key in d:
@@ -94,22 +85,21 @@ for key in d:
 
 # По парам
 for key, value in d.items():
-    print(f"{key}: {value}")
+    print(f&quot;{key}: {value}&quot;)
 
 # Только значения
 for value in d.values():
     print(value)
-</pre>
-          </section>
-          <div id="contest-link-placeholder"></div>
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-<a href="27-tuples.html" class="prev-link">< Кортежи (tuple)</a>
-        <a href="29-split-join.html" class="next-link">Далее: split() и join() →</a>
+        <a href="27-tuples.html" class="prev-link">← Кортежи</a>
+        <a href="29-split-join.html" class="next-link">Далее: split + join →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

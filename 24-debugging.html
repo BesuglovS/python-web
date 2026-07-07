@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 24: Методы отладки: print(), pdb, модуль logging. Как находить и исправлять ошибки в коде" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="pdb, print-отладка, assert, логирование" />
     <meta property="og:title" content="24. Отладка — Python: основы" />
-    <meta property="og:description" content="Урок 24: Методы отладки: print(), pdb, модуль logging. Как находить и исправлять ошибки в коде" />
+    <meta property="og:description" content="pdb, print-отладка, assert, логирование" />
     <meta property="og:type" content="article" />
     <title>Отладка — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="24">
     <div class="container">
@@ -18,65 +19,50 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 24</span> Отладка</h1>
         <p class="subtitle">print(), pdb, логирование — как находить и исправлять ошибки в коде</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Зачем нужна отладка?</h2>
-        <p>
-          Даже опытные программисты пишут код с ошибками. Умение быстро находить и исправлять ошибки — один из важнейших навыков разработчика.
-        </p>
-        <div class="tip">
-          <strong>Виды ошибок:</strong>
-          <ul>
-            <li><strong>Синтаксические</strong> — пропущенные скобки, двоеточия, неверные отступы</li>
-            <li><strong>Логические</strong> — программа работает, но выдаёт неверный результат</li>
-            <li><strong>Исключения (runtime)</strong> — ошибки во время выполнения: деление на ноль, неверный тип данных</li>
-          </ul>
-        </div>
-          </section>
-          <section>
+          <h2>Зачем нужна отладка?</h2>
+<p>Даже опытные программисты пишут код с ошибками. Умение быстро находить и исправлять ошибки — один из важнейших навыков разработчика.</p>
+<blockquote>
+<p><strong>💡 Совет:</strong> <strong>Виды ошибок:</strong></p>
+</blockquote>
+<ul>
+<li><strong>Синтаксические</strong> — пропущенные скобки, двоеточия, неверные отступы</li>
+<li><strong>Логические</strong> — программа работает, но выдаёт неверный результат</li>
+<li><strong>Исключения (runtime)</strong> — ошибки во время выполнения: деление на ноль, неверный тип данных</li>
+</ul>
 <h2>Отладка с помощью print()</h2>
-        <p>
-          Самый простой и часто используемый способ — вывод промежуточных значений:
-        </p>
-        <pre class="code-block">
-def calculate_total(prices, discount):
-    print(f"DEBUG: prices = {prices}")        # смотрим входные данные
+<p>Самый простой и часто используемый способ — вывод промежуточных значений:</p>
+<pre><code class="language-python">def calculate_total(prices, discount):
+    print(f&quot;DEBUG: prices = {prices}&quot;)        # смотрим входные данные
     total = sum(prices)
-    print(f"DEBUG: total = {total}")           # промежуточный результат
+    print(f&quot;DEBUG: total = {total}&quot;)           # промежуточный результат
     final = total * (1 - discount)
-    print(f"DEBUG: final = {final}")           # итог
+    print(f&quot;DEBUG: final = {final}&quot;)           # итог
     return final
 
 result = calculate_total([100, 200, 300], 0.1)
-print(f"Результат: {result}")</pre>
-        <div class="tip">
-          <strong>Совет:</strong> используйте префикс <code>DEBUG:</code> или <code>>>></code>, чтобы легко отличить отладочный вывод от основного и быстро удалить его потом.
-        </div>
-          </section>
-          <section>
+print(f&quot;Результат: {result}&quot;)
+</code></pre>
+<blockquote>
+<p><strong>💡 Совет:</strong> <strong>Совет:</strong> используйте префикс <code>DEBUG:</code> или <code>&gt;&gt;&gt;</code>, чтобы легко отличить отладочный вывод от основного и быстро удалить его потом.</p>
+</blockquote>
 <h2>f-строки для отладки (Python 3.8+)</h2>
-        <p>
-          Специальный синтаксис <code>{var=}</code> выводит имя переменной и её значение:
-        </p>
-        <pre class="code-block">
-name = "Анна"
+<p>Специальный синтаксис <code>{var=}</code> выводит имя переменной и её значение:</p>
+<pre><code class="language-python">name = &quot;Анна&quot;
 age = 25
-print(f"{name=} {age=}")   # name='Анна' age=25
+print(f&quot;{name=} {age=}&quot;)   # name='Анна' age=25
 
 x = 10
 y = 20
-print(f"{x + y = }")       # x + y = 30</pre>
-          </section>
-          <section>
+print(f&quot;{x + y = }&quot;)       # x + y = 30
+</code></pre>
 <h2>Встроенный отладчик pdb</h2>
-        <p>
-          Python включает интерактивный отладчик <code>pdb</code>. Он позволяет выполнять код по шагам, просматривать значения переменных и находить ошибки.
-        </p>
-        <pre class="code-block">
-import pdb
+<p>Python включает интерактивный отладчик <code>pdb</code>. Он позволяет выполнять код по шагам, просматривать значения переменных и находить ошибки.</p>
+<pre><code class="language-python">import pdb
 
 def buggy_function(a, b):
     result = a / b
@@ -86,25 +72,13 @@ def buggy_function(a, b):
 pdb.set_trace()  # выполнение остановится здесь
 x = 10
 y = 0
-print(buggy_function(x, y))</pre>
-        <p>Основные команды pdb:</p>
-        <table>
-          <tr><th>Команда</th><th>Действие</th></tr>
-          <tr><td><code>n</code> (next)</td><td>Выполнить следующую строку</td></tr>
-          <tr><td><code>s</code> (step)</td><td>Зайти внутрь функции</td></tr>
-          <tr><td><code>c</code> (continue)</td><td>Продолжить выполнение</td></tr>
-          <tr><td><code>p переменная</code></td><td>Вывести значение переменной</td></tr>
-          <tr><td><code>l</code> (list)</td><td>Показать текущий участок кода</td></tr>
-          <tr><td><code>q</code> (quit)</td><td>Выйти из отладчика</td></tr>
-        </table>
-          </section>
-          <section>
+print(buggy_function(x, y))
+</code></pre>
+<p>Основные команды pdb:</p>
+<table><tbody><tr><th>Команда</th><th>Действие</th></tr><tr><td><code>n</code> (next)</td><td>Выполнить следующую строку</td></tr><tr><td><code>s</code> (step)</td><td>Зайти внутрь функции</td></tr><tr><td><code>c</code> (continue)</td><td>Продолжить выполнение</td></tr><tr><td><code>p переменная</code></td><td>Вывести значение переменной</td></tr><tr><td><code>l</code> (list)</td><td>Показать текущий участок кода</td></tr><tr><td><code>q</code> (quit)</td><td>Выйти из отладчика</td></tr></tbody></table>
 <h2>Модуль logging</h2>
-        <p>
-          <code>logging</code> — более продвинутый способ отслеживания работы программы. В отличие от <code>print()</code>, позволяет настраивать уровни важности сообщений и выводить их в файл.
-        </p>
-        <pre class="code-block">
-import logging
+<p><code>logging</code> — более продвинутый способ отслеживания работы программы. В отличие от <code>print()</code>, позволяет настраивать уровни важности сообщений и выводить их в файл.</p>
+<pre><code class="language-python">import logging
 
 # Настройка: уровень INFO и выше, запись в файл
 logging.basicConfig(
@@ -114,43 +88,42 @@ logging.basicConfig(
 )
 
 def divide(a, b):
-    logging.info(f"divide({a}, {b}) вызвана")
+    logging.info(f&quot;divide({a}, {b}) вызвана&quot;)
     if b == 0:
-        logging.error("Деление на ноль!")
+        logging.error(&quot;Деление на ноль!&quot;)
         return None
     result = a / b
-    logging.debug(f"Результат: {result}")
+    logging.debug(f&quot;Результат: {result}&quot;)
     return result
 
 print(divide(10, 2))   # 5.0
-print(divide(10, 0))   # None</pre>
-        <p>Уровни логирования (по возрастанию):</p>
-        <ul>
-          <li><code>DEBUG</code> — подробная отладочная информация</li>
-          <li><code>INFO</code> — общая информация о работе программы</li>
-          <li><code>WARNING</code> — предупреждения</li>
-          <li><code>ERROR</code> — ошибки</li>
-          <li><code>CRITICAL</code> — критические ошибки</li>
-        </ul>
-          </section>
-          <section>
+print(divide(10, 0))   # None
+</code></pre>
+<p>Уровни логирования (по возрастанию):</p>
+<ul>
+<li><code>DEBUG</code> — подробная отладочная информация</li>
+<li><code>INFO</code> — общая информация о работе программы</li>
+<li><code>WARNING</code> — предупреждения</li>
+<li><code>ERROR</code> — ошибки</li>
+<li><code>CRITICAL</code> — критические ошибки</li>
+</ul>
 <h2>Практические советы</h2>
-        <ul>
-          <li><strong>Читайте сообщения об ошибках внимательно</strong> — Python указывает файл, строку и тип ошибки</li>
-          <li><strong>Проверяйте входные данные</strong> — ошибка часто не там, где программа упала, а там, откуда пришли некорректные данные</li>
-          <li><strong>Упрощайте</strong> — если не можете найти ошибку в большом коде, выделите проблемный участок и проверьте его отдельно</li>
-          <li><strong>Используйте метод резиновой уточки (rubber duck)</strong> — объясняя код вслух, вы часто сами находите ошибку</li>
-          <li><strong>Git</strong> — делайте коммиты после каждой работающей версии, чтобы можно было откатиться</li>
-        </ul>
-          </section>
+<ul>
+<li><strong>Читайте сообщения об ошибках внимательно</strong> — Python указывает файл, строку и тип ошибки</li>
+<li><strong>Проверяйте входные данные</strong> — ошибка часто не там, где программа упала, а там, откуда пришли некорректные данные</li>
+<li><strong>Упрощайте</strong> — если не можете найти ошибку в большом коде, выделите проблемный участок и проверьте его отдельно</li>
+<li><strong>Используйте метод резиновой уточки (rubber duck)</strong> — объясняя код вслух, вы часто сами находите ошибку</li>
+<li><strong>Git</strong> — делайте коммиты после каждой работающей версии, чтобы можно было откатиться</li>
+</ul>
+
         </div>
       </div>
       <footer class="topic-footer">
-        <a href="23-functions-advanced.html" class="prev-link">← Продвинутые функции</a>
+        <a href="23-functions-advanced.html" class="prev-link">← Функции: продвинутые темы</a>
         <a href="25-lists.html" class="next-link">Далее: Списки →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 29: Методы split() и join(): разбиение строк в списки и объединение списков в строки" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="Разделение и объединение строк" />
     <meta property="og:title" content="29. split() и join() — Python: основы" />
-    <meta property="og:description" content="Урок 29: Методы split() и join(): разбиение строк в списки и объединение списков в строки" />
+    <meta property="og:description" content="Разделение и объединение строк" />
     <meta property="og:type" content="article" />
     <title>split() и join() — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="29">
     <div class="container">
@@ -18,69 +19,61 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 29</span> split() и join()</h1>
         <p class="subtitle">Разделение и объединение строк</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~8 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>split() — разделение строки</h2>
+          <h2>split() — разделение строки</h2>
 <p>split() разбивает строку на список подстрок:</p>
-<pre class="code-block">
-text = "яблоко банан вишня"
+<pre><code class="language-python">text = &quot;яблоко банан вишня&quot;
 words = text.split()
-print(words)  # ["яблоко", "банан", "вишня"]
+print(words)  # [&quot;яблоко&quot;, &quot;банан&quot;, &quot;вишня&quot;]
 
 # С указанием разделителя
-csv = "1,2,3,4,5"
-nums = csv.split(",")
-print(nums)  # ["1", "2", "3", "4", "5"]
+csv = &quot;1,2,3,4,5&quot;
+nums = csv.split(&quot;,&quot;)
+print(nums)  # [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;]
 
 # Ограничение количества разбиений
-data = "a-b-c-d"
-print(data.split("-", 2))  # ["a", "b", "c-d"]
-</pre>
-          </section>
-          <section>
+data = &quot;a-b-c-d&quot;
+print(data.split(&quot;-&quot;, 2))  # [&quot;a&quot;, &quot;b&quot;, &quot;c-d&quot;]
+</code></pre>
 <h2>join() — объединение в строку</h2>
 <p>join() объединяет список строк через разделитель:</p>
-<pre class="code-block">
-words = ["Python", "это", "здорово"]
-sentence = " ".join(words)
-print(sentence)  # "Python это здорово"
+<pre><code class="language-python">words = [&quot;Python&quot;, &quot;это&quot;, &quot;здорово&quot;]
+sentence = &quot; &quot;.join(words)
+print(sentence)  # &quot;Python это здорово&quot;
 
 # Другие разделители
-print("-".join(["1", "2", "3"]))  # "1-2-3"
-print(", ".join(["a", "b", "c"]))  # "a, b, c"
+print(&quot;-&quot;.join([&quot;1&quot;, &quot;2&quot;, &quot;3&quot;]))  # &quot;1-2-3&quot;
+print(&quot;, &quot;.join([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]))  # &quot;a, b, c&quot;
 
 # join() работает только со строками!
 nums = [1, 2, 3]
-# ", ".join(nums)  # Ошибка!
-print(", ".join(map(str, nums)))  # "1, 2, 3"
-</pre>
-          </section>
-          <section>
+# &quot;, &quot;.join(nums)  # Ошибка!
+print(&quot;, &quot;.join(map(str, nums)))  # &quot;1, 2, 3&quot;
+</code></pre>
 <h2>Практический пример</h2>
 <p>Парсинг и форматирование данных:</p>
-<pre class="code-block">
-data = "Иван,25,Москва"
-fields = data.split(",")
+<pre><code class="language-python">data = &quot;Иван,25,Москва&quot;
+fields = data.split(&quot;,&quot;)
 name, age, city = fields
-print(f"{name} из {city}, возраст {age}")
+print(f&quot;{name} из {city}, возраст {age}&quot;)
 
 # Обратно в строку
-new_data = ";".join(fields)
-print(new_data)  # "Иван;25;Москва"
-</pre>
-          </section>
-          <div id="contest-link-placeholder"></div>
+new_data = &quot;;&quot;.join(fields)
+print(new_data)  # &quot;Иван;25;Москва&quot;
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-<a href="28-dicts.html" class="prev-link">< Словари (dict)</a>
+        <a href="28-dicts.html" class="prev-link">← Словари</a>
         <a href="30-list-comprehensions.html" class="next-link">Далее: Списочные выражения →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

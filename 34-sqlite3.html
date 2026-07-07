@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 34: Работа с базами данных SQLite: модуль sqlite3, создание таблиц, CRUD-операции, SELECT-запросы" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="CREATE TABLE, INSERT, SELECT, параметризованные запросы" />
     <meta property="og:title" content="34. Базы данных SQLite — Python: основы" />
-    <meta property="og:description" content="Урок 34: Работа с базами данных SQLite: модуль sqlite3, создание таблиц, CRUD-операции, SELECT-запросы" />
+    <meta property="og:description" content="CREATE TABLE, INSERT, SELECT, параметризованные запросы" />
     <meta property="og:type" content="article" />
     <title>Базы данных SQLite — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="34">
     <div class="container">
@@ -18,28 +19,31 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 34</span> Базы данных SQLite</h1>
         <p class="subtitle">Подключение, CRUD-операции, параметризованные запросы, транзакции</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~15 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-
-          <section>
-            <h2>Введение</h2>
-            <p>SQLite — легковесная реляционная база данных, которая хранится в одном файле. Модуль <code>sqlite3</code> входит в стандартную библиотеку Python и позволяет выполнять SQL-запросы без установки сервера баз данных.</p>
-            <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Подключение к базе данных <code>sqlite3.connect()</code> и создание курсора</li><li>Создание таблиц через <code>CREATE TABLE</code> с типами данных</li><li>CRUD-операции: <code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code></li><li>Параметризованные запросы и защита от SQL-инъекций</li><li>Транзакции: <code>commit()</code> и <code>rollback()</code></li></ul></div>
-          </section>
-
-          <section>
-            <h2>Основной материал</h2>
-            <p>Работа с SQLite начинается с подключения к файлу базы данных через <code>sqlite3.connect()</code>. Курсор (<code>cursor()</code>) выполняет SQL-запросы методом <code>execute()</code>. Для вставки данных всегда используйте параметризованные запросы с <code>?</code> — это защищает от SQL-инъекций. После изменений данных вызывайте <code>commit()</code> для сохранения. Контекстный менеджер <code>with</code> автоматически управляет транзакциями.</p>
-            <pre><code class="language-python">import sqlite3
+          <h2>Введение</h2>
+<p>SQLite — легковесная реляционная база данных, которая хранится в одном файле. Модуль <code>sqlite3</code> входит в стандартную библиотеку Python и позволяет выполнять SQL-запросы без установки сервера баз данных.</p>
+<p><strong>📌 На этом уроке вы узнаете:</strong></p>
+<ul>
+<li>Подключение к базе данных <code>sqlite3.connect()</code> и создание курсора</li>
+<li>Создание таблиц через <code>CREATE TABLE</code> с типами данных</li>
+<li>CRUD-операции: <code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code></li>
+<li>Параметризованные запросы и защита от SQL-инъекций</li>
+<li>Транзакции: <code>commit()</code> и <code>rollback()</code></li>
+</ul>
+<h2>Основной материал</h2>
+<p>Работа с SQLite начинается с подключения к файлу базы данных через <code>sqlite3.connect()</code>. Курсор (<code>cursor()</code>) выполняет SQL-запросы методом <code>execute()</code>. Для вставки данных всегда используйте параметризованные запросы с <code>?</code> — это защищает от SQL-инъекций. После изменений данных вызывайте <code>commit()</code> для сохранения. Контекстный менеджер <code>with</code> автоматически управляет транзакциями.</p>
+<pre><code class="language-python">import sqlite3
 
 # Подключение к БД (создаст файл, если нет)
 conn = sqlite3.connect('library.db')
 cur = conn.cursor()
 
 # Создание таблицы
-cur.execute("""
+cur.execute(&quot;&quot;&quot;
     CREATE TABLE IF NOT EXISTS books (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
@@ -47,43 +51,40 @@ cur.execute("""
         year INTEGER,
         read INTEGER DEFAULT 0
     )
-""")
+&quot;&quot;&quot;)
 
 # INSERT — добавление записей
 cur.execute(
-    "INSERT INTO books (title, author, year) VALUES (?, ?, ?)",
-    ("Мастер и Маргарита", "М. Булгаков", 1966)
+    &quot;INSERT INTO books (title, author, year) VALUES (?, ?, ?)&quot;,
+    (&quot;Мастер и Маргарита&quot;, &quot;М. Булгаков&quot;, 1966)
 )
 conn.commit()
 
 # SELECT — чтение данных
-cur.execute("SELECT title, author FROM books WHERE year > 1900")
+cur.execute(&quot;SELECT title, author FROM books WHERE year &gt; 1900&quot;)
 for row in cur.fetchall():
-    print(f"{row[0]} — {row[1]}")
+    print(f&quot;{row[0]} — {row[1]}&quot;)
 
 # UPDATE — обновление
-cur.execute("UPDATE books SET read = 1 WHERE title = ?", ("Мастер и Маргарита",))
+cur.execute(&quot;UPDATE books SET read = 1 WHERE title = ?&quot;, (&quot;Мастер и Маргарита&quot;,))
 conn.commit()
 
 # DELETE — удаление
-cur.execute("DELETE FROM books WHERE year < ?", (1800,))
+cur.execute(&quot;DELETE FROM books WHERE year &lt; ?&quot;, (1800,))
 conn.commit()
 
-conn.close()</code></pre>
-          </section>
-
-          <section>
-            <h2>Практика</h2>
-            <div class="task-box">
-              <p><strong>📝 Задание:</strong> Создайте базу данных "students.db" с таблицей students (id, name, grade, age). Добавьте 5 студентов. Напишите запрос для отбора студентов с grade > 4 и возрастом < 20. Выведите результат в консоль.</p>
-              <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
-            </div>
-          </section>
-
-          <section>
-            <h2>Ключевые выводы</h2>
-            <ul><li><code>sqlite3.connect()</code> — подключение к файлу БД, <code>cursor()</code> — выполнение SQL</li><li>Параметризованные запросы с <code>?</code> защищают от SQL-инъекций</li><li>После <code>INSERT/UPDATE/DELETE</code> обязателен <code>commit()</code></li><li>Контекстный менеджер <code>with sqlite3.connect()</code> упрощает работу</li><li><code>fetchone()</code>, <code>fetchall()</code> — получение результатов SELECT</li></ul>
-          </section>
+conn.close()
+</code></pre>
+<h2>Практика</h2>
+<p><strong>📝 Задание:</strong> Создайте базу данных &quot;students.db&quot; с таблицей students (id, name, grade, age). Добавьте 5 студентов. Напишите запрос для отбора студентов с grade &gt; 4 и возрастом &lt; 20. Выведите результат в консоль.</p>
+<h2>Ключевые выводы</h2>
+<ul>
+<li><code>sqlite3.connect()</code> — подключение к файлу БД, <code>cursor()</code> — выполнение SQL</li>
+<li>Параметризованные запросы с <code>?</code> защищают от SQL-инъекций</li>
+<li>После <code>INSERT/UPDATE/DELETE</code> обязателен <code>commit()</code></li>
+<li>Контекстный менеджер <code>with sqlite3.connect()</code> упрощает работу</li>
+<li><code>fetchone()</code>, <code>fetchall()</code> — получение результатов SELECT</li>
+</ul>
 
         </div>
       </div>
@@ -92,7 +93,7 @@ conn.close()</code></pre>
         <a href="35-modules-import.html" class="next-link">Далее: Модули и import →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

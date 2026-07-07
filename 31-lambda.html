@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 31: Анонимные функции lambda: синтаксис, использование с map(), filter(), sorted(), ограничения" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="lambda, map(), filter(), sorted()" />
     <meta property="og:title" content="31. lambda-функции — Python: основы" />
-    <meta property="og:description" content="Урок 31: Анонимные функции lambda: синтаксис, использование с map(), filter(), sorted(), ограничения" />
+    <meta property="og:description" content="lambda, map(), filter(), sorted()" />
     <meta property="og:type" content="article" />
     <title>lambda-функции — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="31">
     <div class="container">
@@ -18,18 +19,14 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 31</span> lambda-функции</h1>
         <p class="subtitle">Анонимные однострочные функции в Python</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Что такое lambda-функция?</h2>
-        <p>
-          Lambda-функция — это короткая анонимная (безымянная) функция, которая записывается в одну строку.
-          Полезна, когда функцию нужно использовать один раз и не хочется писать отдельный <code>def</code>.
-        </p>
-        <pre class="code-block">
-# Обычная функция
+          <h2>Что такое lambda-функция?</h2>
+<p>Lambda-функция — это короткая анонимная (безымянная) функция, которая записывается в одну строку. Полезна, когда функцию нужно использовать один раз и не хочется писать отдельный <code>def</code>.</p>
+<pre><code class="language-python"># Обычная функция
 def double(x):
     return x * 2
 
@@ -37,139 +34,123 @@ def double(x):
 double_lambda = lambda x: x * 2
 
 print(double(5))         # 10
-print(double_lambda(5))  # 10</pre>
-        <p>
-          Синтаксис: <code>lambda аргументы: выражение</code>
-        </p>
-          </section>
-          <section>
+print(double_lambda(5))  # 10
+</code></pre>
+<p>Синтаксис: <code>lambda аргументы: выражение</code></p>
 <h2>Основной сценарий: sort() с key</h2>
-        <p>
-          Самое частое применение lambda — сортировка по определённому критерию:
-        </p>
-        <pre class="code-block">
-# Сортировка списка кортежей по второму элементу
-students = [("Анна", 95), ("Борис", 82), ("Вика", 100)]
+<p>Самое частое применение lambda — сортировка по определённому критерию:</p>
+<pre><code class="language-python"># Сортировка списка кортежей по второму элементу
+students = [(&quot;Анна&quot;, 95), (&quot;Борис&quot;, 82), (&quot;Вика&quot;, 100)]
 students.sort(key=lambda student: student[1])
 print(students)  # [('Борис', 82), ('Анна', 95), ('Вика', 100)]
 
 # Сортировка по длине строки
-words = ["Python", "C", "Java", "JavaScript"]
+words = [&quot;Python&quot;, &quot;C&quot;, &quot;Java&quot;, &quot;JavaScript&quot;]
 words.sort(key=lambda w: len(w))
 print(words)     # ['C', 'Java', 'Python', 'JavaScript']
 
 # Сортировка словаря по значениям
-grades = {"Анна": 85, "Борис": 92, "Вика": 78}
+grades = {&quot;Анна&quot;: 85, &quot;Борис&quot;: 92, &quot;Вика&quot;: 78}
 sorted_items = sorted(grades.items(), key=lambda item: item[1])
 print(sorted_items)  # [('Вика', 78), ('Анна', 85), ('Борис', 92)]
 
 # Сортировка списка словарей
-users = [{"name": "Иван", "age": 30}, {"name": "Петя", "age": 25}]
-users.sort(key=lambda u: u["age"])
-print(users)  # [{'name': 'Петя', 'age': 25}, {'name': 'Иван', 'age': 30}]</pre>
-          </section>
-          <section>
+users = [{&quot;name&quot;: &quot;Иван&quot;, &quot;age&quot;: 30}, {&quot;name&quot;: &quot;Петя&quot;, &quot;age&quot;: 25}]
+users.sort(key=lambda u: u[&quot;age&quot;])
+print(users)  # [{'name': 'Петя', 'age': 25}, {'name': 'Иван', 'age': 30}]
+</code></pre>
 <h2>map() — применение функции к каждому элементу</h2>
-        <pre class="code-block">
-nums = [1, 2, 3, 4, 5]
+<pre><code class="language-python">nums = [1, 2, 3, 4, 5]
 
 # Возвести в квадрат каждый элемент
 squares = list(map(lambda x: x**2, nums))
 print(squares)  # [1, 4, 9, 16, 25]
 
 # Перевести все строки в верхний регистр
-words = ["hello", "world"]
+words = [&quot;hello&quot;, &quot;world&quot;]
 upper_words = list(map(lambda w: w.upper(), words))
 print(upper_words)  # ['HELLO', 'WORLD']
 
 # Преобразование температур Цельсий → Фаренгейт
 celsius = [0, 10, 20, 30, 40]
 fahrenheit = list(map(lambda c: c * 9/5 + 32, celsius))
-print(fahrenheit)   # [32.0, 50.0, 68.0, 86.0, 104.0]</pre>
-          </section>
-          <section>
+print(fahrenheit)   # [32.0, 50.0, 68.0, 86.0, 104.0]
+</code></pre>
 <h2>filter() — отбор элементов по условию</h2>
-        <pre class="code-block">
-nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+<pre><code class="language-python">nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 # Только чётные числа
 evens = list(filter(lambda x: x % 2 == 0, nums))
 print(evens)  # [2, 4, 6, 8, 10]
 
 # Строки длиннее 5 символов
-words = ["a", "python", "is", "awesome"]
-long_words = list(filter(lambda w: len(w) > 5, words))
+words = [&quot;a&quot;, &quot;python&quot;, &quot;is&quot;, &quot;awesome&quot;]
+long_words = list(filter(lambda w: len(w) &gt; 5, words))
 print(long_words)  # ['python', 'awesome']
 
 # Положительные числа
 nums = [-3, 5, -1, 0, 8, -4]
-positives = list(filter(lambda x: x > 0, nums))
-print(positives)   # [5, 8]</pre>
-          </section>
-          <section>
+positives = list(filter(lambda x: x &gt; 0, nums))
+print(positives)   # [5, 8]
+</code></pre>
 <h2>Lambda с несколькими аргументами</h2>
-        <pre class="code-block">
-# Сумма двух чисел
+<pre><code class="language-python"># Сумма двух чисел
 add = lambda a, b: a + b
 print(add(5, 3))  # 8
 
 # Максимум из двух
-max2 = lambda a, b: a if a > b else b
+max2 = lambda a, b: a if a &gt; b else b
 print(max2(10, 20))  # 20
 
 # Сортировка по сумме элементов кортежа
 pairs = [(1, 5), (3, 2), (2, 8)]
 pairs.sort(key=lambda p: p[0] + p[1])
-print(pairs)  # [(3, 2), (1, 5), (2, 8)]</pre>
-          </section>
-          <section>
+print(pairs)  # [(3, 2), (1, 5), (2, 8)]
+</code></pre>
 <h2>Когда НЕ использовать lambda</h2>
-        <div class="tip">
-          <strong>Правило:</strong> если логика занимает более одной строки или требует условий с <code>if/elif/else</code>,
-          используйте обычную функцию с <code>def</code>. Lambda — для коротких, простых выражений.
-        </div>
-        <pre class="code-block">
-# ПЛОХО: слишком сложная lambda (нечитаемо!)
-process = lambda x: x**2 if x > 0 else x**3 if x < 0 else 0
+<blockquote>
+<p><strong>💡 Совет:</strong> <strong>Правило:</strong> если логика занимает более одной строки или требует условий с <code>if/elif/else</code>, используйте обычную функцию с <code>def</code>. Lambda — для коротких, простых выражений.</p>
+</blockquote>
+<pre><code class="language-python"># ПЛОХО: слишком сложная lambda (нечитаемо!)
+process = lambda x: x**2 if x &gt; 0 else x**3 if x &lt; 0 else 0
 
 # ХОРОШО: обычная функция (понятно!)
 def process(x):
-    if x > 0:
+    if x &gt; 0:
         return x**2
-    elif x < 0:
+    elif x &lt; 0:
         return x**3
     else:
-        return 0</pre>
-          </section>
-          <section>
+        return 0
+</code></pre>
 <h2>Практический пример: анализ данных</h2>
-        <pre class="code-block">
-# Данные о продажах
+<pre><code class="language-python"># Данные о продажах
 sales = [
-    {"product": "Ноутбук", "price": 80000, "qty": 5},
-    {"product": "Мышь", "price": 2000, "qty": 30},
-    {"product": "Клавиатура", "price": 4000, "qty": 15},
+    {&quot;product&quot;: &quot;Ноутбук&quot;, &quot;price&quot;: 80000, &quot;qty&quot;: 5},
+    {&quot;product&quot;: &quot;Мышь&quot;, &quot;price&quot;: 2000, &quot;qty&quot;: 30},
+    {&quot;product&quot;: &quot;Клавиатура&quot;, &quot;price&quot;: 4000, &quot;qty&quot;: 15},
 ]
 
 # Топ товаров по выручке (price * qty)
-sales.sort(key=lambda s: s["price"] * s["qty"], reverse=True)
+sales.sort(key=lambda s: s[&quot;price&quot;] * s[&quot;qty&quot;], reverse=True)
 for item in sales:
-    revenue = item["price"] * item["qty"]
-    print(f"{item['product']}: {revenue:,} ₽")
+    revenue = item[&quot;price&quot;] * item[&quot;qty&quot;]
+    print(f&quot;{item['product']}: {revenue:,} ₽&quot;)
 
 # Вывод:
 # Ноутбук: 400,000 ₽
 # Клавиатура: 60,000 ₽
-# Мышь: 60,000 ₽</pre>
-          </section>
+# Мышь: 60,000 ₽
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
         <a href="30-list-comprehensions.html" class="prev-link">← Списочные выражения</a>
-        <a href="32-files.html" class="next-link">Далее: Файлы →</a>
+        <a href="32-files.html" class="next-link">Далее: Файлы: чтение и запись →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

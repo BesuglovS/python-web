@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 26: Множества set: создание, операции над множествами (объединение, пересечение, разность), методы add(), remove()" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="set(), операции над множествами" />
     <meta property="og:title" content="26. Множества — Python: основы" />
-    <meta property="og:description" content="Урок 26: Множества set: создание, операции над множествами (объединение, пересечение, разность), методы add(), remove()" />
+    <meta property="og:description" content="set(), операции над множествами" />
     <meta property="og:type" content="article" />
     <title>Множества — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="26">
     <div class="container">
@@ -18,42 +19,35 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 26</span> Множества</h1>
         <p class="subtitle">set(), операции над множествами</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~10 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-            <h2>Создание множества</h2>
-            <p>Множество — неупорядоченная коллекция уникальных элементов:</p>
-            <pre class="code-block">
-# Через фигурные скобки
-fruits = {"яблоко", "банан", "вишня"}
+          <h2>Создание множества</h2>
+<p>Множество — неупорядоченная коллекция уникальных элементов:</p>
+<pre><code class="language-python"># Через фигурные скобки
+fruits = {&quot;яблоко&quot;, &quot;банан&quot;, &quot;вишня&quot;}
 
 # Через функцию set() — можно передать любой итерируемый объект (например, список)
 numbers = set([1, 2, 2, 3, 3, 3])  # {1, 2, 3}
 
 # Пустое множество (не {} — это словарь!)
 empty = set()
-</pre>
-          </section>
-          <section>
-            <h2>Операции над множествами</h2>
-            <p>Математические операции:</p>
-            <pre class="code-block">
-a = {1, 2, 3, 4}
+</code></pre>
+<h2>Операции над множествами</h2>
+<p>Математические операции:</p>
+<pre><code class="language-python">a = {1, 2, 3, 4}
 b = {3, 4, 5, 6}
 
 print(a | b)   # {1, 2, 3, 4, 5, 6} — объединение
-print(a & b)   # {3, 4} — пересечение
+print(a &amp; b)   # {3, 4} — пересечение
 print(a - b)   # {1, 2} — разность
 print(a ^ b)   # {1, 2, 5, 6} — симметрическая разность
-</pre>
-          </section>
-          <section>
-            <h2>Методы множеств</h2>
-            <p>Основные методы:</p>
-            <pre class="code-block">
-s = {1, 2, 3}
+</code></pre>
+<h2>Методы множеств</h2>
+<p>Основные методы:</p>
+<pre><code class="language-python">s = {1, 2, 3}
 s.add(4)          # {1, 2, 3, 4}
 s.remove(2)       # {1, 3, 4} — ошибка, если нет
 s.discard(10)     # {1, 3, 4} — без ошибки
@@ -61,17 +55,16 @@ s.pop()           # удаляет и возвращает случайный э
 s.clear()         # set() — очищает множество
 
 print(3 in s)     # True — проверка вхождения
-</pre>
-          </section>
-          <div id="contest-link-placeholder"></div>
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-        <a href="25-lists.html" class="prev-link">< Списки (list)</a>
+        <a href="25-lists.html" class="prev-link">← Списки</a>
         <a href="27-tuples.html" class="next-link">Далее: Кортежи →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

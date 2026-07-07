@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое виртуальное окружение (venv)?",
+    "options": [
+      "Папка с проектом",
+      "Изолированная среда для проекта с собственными пакетами",
+      "Режим отладки",
+      "Облачное хранилище"
+    ],
+    "correct": 1,
+    "explanation": "Виртуальное окружение изолирует зависимости проекта, чтобы библиотеки разных проектов не конфликтовали."
+  },
+  {
+    "question": "Какая команда создаёт виртуальное окружение?",
+    "options": [
+      "python venv myenv",
+      "python -m venv myenv",
+      "venv create myenv",
+      "python create venv"
+    ],
+    "correct": 1,
+    "explanation": "python -m venv myenv создаёт виртуальное окружение в папке myenv."
+  },
+  {
+    "question": "Как активировать виртуальное окружение на Windows?",
+    "options": [
+      "myenv/activate",
+      "myenv\\Scripts\\activate",
+      "activate myenv",
+      "venv activate"
+    ],
+    "correct": 1,
+    "explanation": "На Windows активация: myenv\\Scripts\\activate. На Linux/Mac: source myenv/bin/activate."
+  },
+  {
+    "question": "Что такое pip?",
+    "options": [
+      "Язык программирования",
+      "Менеджер пакетов Python",
+      "Среда разработки",
+      "База данных"
+    ],
+    "correct": 1,
+    "explanation": "pip (Package Installer for Python) — стандартный менеджер пакетов для установки сторонних библиотек."
+  },
+  {
+    "question": "Какая команда устанавливает пакет?",
+    "options": [
+      "pip install numpy",
+      "pip add numpy",
+      "pip get numpy",
+      "python install numpy"
+    ],
+    "correct": 0,
+    "explanation": "pip install numpy устанавливает библиотеку numpy и её зависимости."
+  },
+  {
+    "question": "Какая команда показывает установленные пакеты?",
+    "options": [
+      "pip list",
+      "pip show",
+      "pip packages",
+      "pip installed"
+    ],
+    "correct": 0,
+    "explanation": "pip list выводит список всех установленных пакетов с их версиями."
+  },
+  {
+    "question": "Что такое requirements.txt?",
+    "options": [
+      "Файл с описанием ошибок",
+      "Файл со списком зависимостей проекта",
+      "Исходный код",
+      "README-файл"
+    ],
+    "correct": 1,
+    "explanation": "requirements.txt — текстовый файл, перечисляющий все необходимые библиотеки. Устанавливаются командой pip install -r requirements.txt."
+  },
+  {
+    "question": "Какая команда создаёт requirements.txt?",
+    "options": [
+      "pip freeze > requirements.txt",
+      "pip list > requirements.txt",
+      "pip save requirements.txt",
+      "pip export requirements.txt"
+    ],
+    "correct": 0,
+    "explanation": "pip freeze выводит список установленных пакетов в формате, подходящем для requirements.txt."
+  },
+  {
+    "question": "Как удалить пакет через pip?",
+    "options": [
+      "pip remove numpy",
+      "pip uninstall numpy",
+      "pip delete numpy",
+      "pip drop numpy"
+    ],
+    "correct": 1,
+    "explanation": "pip uninstall numpy удаляет указанный пакет."
+  },
+  {
+    "question": "Что такое PyPI?",
+    "options": [
+      "Среда разработки Python",
+      "Python Package Index — репозиторий пакетов Python",
+      "Формат файлов Python",
+      "Инструмент отладки"
+    ],
+    "correct": 1,
+    "explanation": "PyPI (Python Package Index) — официальный репозиторий сторонних пакетов Python, откуда pip загружает библиотеки."
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Какой тип у значения <code>3.14</code>?",
+    "options": [
+      "int",
+      "float",
+      "str",
+      "bool"
+    ],
+    "correct": 1,
+    "explanation": "Числа с десятичной точкой имеют тип float (числа с плавающей точкой)."
+  },
+  {
+    "question": "Что вернёт <code>type(\"42\")</code>?",
+    "options": [
+      "int",
+      "float",
+      "str",
+      "bool"
+    ],
+    "correct": 2,
+    "explanation": "Значение в кавычках — это строка (str), даже если внутри цифры."
+  },
+  {
+    "question": "Что вернёт <code>type(True)</code>?",
+    "options": [
+      "int",
+      "str",
+      "bool",
+      "NoneType"
+    ],
+    "correct": 2,
+    "explanation": "True и False имеют тип bool (булевый тип данных)."
+  },
+  {
+    "question": "Какой тип имеет значение <code>None</code> в Python?",
+    "options": [
+      "int",
+      "str",
+      "NoneType",
+      "bool"
+    ],
+    "correct": 2,
+    "explanation": "None имеет тип NoneType и обозначает отсутствие значения."
+  },
+  {
+    "question": "Что вернёт <code>isinstance(10, int)</code>?",
+    "options": [
+      "True",
+      "False",
+      "None",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "isinstance проверяет, принадлежит ли значение указанному типу. 10 — это int, поэтому True."
+  },
+  {
+    "question": "Что вернёт <code>int(3.99)</code>?",
+    "options": [
+      "4",
+      "3",
+      "3.99",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "int() отсекает дробную часть (не округляет!). int(3.99) = 3, не 4."
+  },
+  {
+    "question": "Что вернёт <code>float(\"3.14\")</code>?",
+    "options": [
+      "\"3.14\"",
+      "3",
+      "3.14",
+      "Ошибка"
+    ],
+    "correct": 2,
+    "explanation": "float() преобразует строку в число с плавающей точкой. float(\"3.14\") = 3.14."
+  },
+  {
+    "question": "Что произойдёт при выполнении <code>int(\"abc\")</code>?",
+    "options": [
+      "Вернётся 0",
+      "Вызовется ValueError",
+      "Вернётся None",
+      "Создастся переменная"
+    ],
+    "correct": 1,
+    "explanation": "int() не может преобразовать строку \"abc\" в число и выбрасывает исключение ValueError."
+  },
+  {
+    "question": "Какие значения преобразуются в False через bool()?",
+    "options": [
+      "Только False",
+      "0, \"\", [], None, False",
+      "Только 0",
+      "Любые числа"
+    ],
+    "correct": 1,
+    "explanation": "bool() возвращает False для пустых и нулевых значений: 0, 0.0, \"\", [], None и т.д."
+  },
+  {
+    "question": "Какая функция используется для определения типа данных в Python?",
+    "options": [
+      "typeof()",
+      "type()",
+      "gettype()",
+      "isinstance()"
+    ],
+    "correct": 1,
+    "explanation": "type() возвращает тип данных значения. isinstance() проверяет принадлежность к типу."
+  }
+]

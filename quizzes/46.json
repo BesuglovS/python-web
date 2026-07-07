@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое type hint (подсказка типа) в Python?",
+    "options": [
+      "Обязательное объявление типа",
+      "Аннотация типа для читаемости кода (не проверяется интерпретатором)",
+      "Тип данных функции",
+      "Имя переменной"
+    ],
+    "correct": 1,
+    "explanation": "Type hints — необязательные аннотации, улучшающие читаемость и помогающие IDE и линтерам."
+  },
+  {
+    "question": "Как указать тип параметра функции?",
+    "options": [
+      "def func(x: int):",
+      "def func(int x):",
+      "def func(x :: int):",
+      "def func(x as int):"
+    ],
+    "correct": 0,
+    "explanation": "Аннотация типа параметра: def func(x: int): — x должен быть int (но это не проверяется)."
+  },
+  {
+    "question": "Как указать тип возвращаемого значения функции?",
+    "options": [
+      "def func() -> int:",
+      "def func() : int",
+      "def func() returns int:",
+      "def func() => int:"
+    ],
+    "correct": 0,
+    "explanation": "Стрелка -> указывает тип возвращаемого значения: def func() -> int:."
+  },
+  {
+    "question": "Какой модуль содержит типы для аннотаций (List, Dict, Optional)?",
+    "options": [
+      "typing",
+      "types",
+      "annotations",
+      "hints"
+    ],
+    "correct": 0,
+    "explanation": "Модуль typing содержит List, Dict, Optional, Union и другие типы для аннотаций."
+  },
+  {
+    "question": "Что означает Optional[int]?",
+    "options": [
+      "int или None",
+      "Необязательный int",
+      "int по умолчанию",
+      "Список int"
+    ],
+    "correct": 0,
+    "explanation": "Optional[int] эквивалентно Union[int, None] — переменная может быть int или None."
+  },
+  {
+    "question": "Как аннотировать переменную?",
+    "options": [
+      "x: int = 5",
+      "int x = 5",
+      "x :: int = 5",
+      "x = int(5)"
+    ],
+    "correct": 0,
+    "explanation": "Аннотация переменной: имя: тип = значение. Например: x: int = 5."
+  },
+  {
+    "question": "Что такое Union[int, str]?",
+    "options": [
+      "Тип, который может быть int или str",
+      "Объединение int и str",
+      "Список int и str",
+      "Кортеж int и str"
+    ],
+    "correct": 0,
+    "explanation": "Union[int, str] означает, что значение может быть либо int, либо str."
+  },
+  {
+    "question": "Что такое Any в typing?",
+    "options": [
+      "Любой тип данных",
+      "Пустой тип",
+      "Тип None",
+      "Тип объекта"
+    ],
+    "correct": 0,
+    "explanation": "Any — специальный тип, который означает «любой тип». Используется, когда тип не важен."
+  },
+  {
+    "question": "Как аннотировать список целых чисел?",
+    "options": [
+      "List[int]",
+      "[int]",
+      "list(int)",
+      "int[]"
+    ],
+    "correct": 0,
+    "explanation": "List[int] из модуля typing означает список, содержащий целые числа."
+  },
+  {
+    "question": "Проверяет ли Python type hints во время выполнения?",
+    "options": [
+      "Да",
+      "Нет, type hints игнорируются интерпретатором",
+      "Только в Python 3.10+",
+      "Только для функций"
+    ],
+    "correct": 1,
+    "explanation": "Type hints — это аннотации для разработчиков и внешних инструментов (mypy). Python не проверяет их во время выполнения."
+  }
+]

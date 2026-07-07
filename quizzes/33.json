@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое JSON?",
+    "options": [
+      "Язык программирования",
+      "Формат обмена данными (JavaScript Object Notation)",
+      "База данных",
+      "Библиотека Python"
+    ],
+    "correct": 1,
+    "explanation": "JSON (JavaScript Object Notation) — это лёгкий формат обмена данными, основанный на синтаксисе JavaScript."
+  },
+  {
+    "question": "Какой модуль Python используется для работы с JSON?",
+    "options": [
+      "json",
+      "csv",
+      "xml",
+      "pickle"
+    ],
+    "correct": 0,
+    "explanation": "Модуль json предоставляет функции для кодирования и декодирования данных в формат JSON."
+  },
+  {
+    "question": "Что делает функция json.dumps()?",
+    "options": [
+      "Загружает JSON из файла",
+      "Преобразует Python-объект в JSON-строку",
+      "Парсит JSON-строку",
+      "Сохраняет JSON в файл"
+    ],
+    "correct": 1,
+    "explanation": "json.dumps() (dump string) сериализует Python-объект в строку формата JSON."
+  },
+  {
+    "question": "Что делает функция json.loads()?",
+    "options": [
+      "Преобразует Python-объект в JSON",
+      "Парсит JSON-строку в Python-объект",
+      "Загружает JSON из файла",
+      "Сохраняет данные в JSON"
+    ],
+    "correct": 1,
+    "explanation": "json.loads() (load string) десериализует JSON-строку в Python-объект (словарь, список и т.д.)."
+  },
+  {
+    "question": "Какой тип данных Python соответствует JSON-массиву?",
+    "options": [
+      "Кортеж",
+      "Список",
+      "Множество",
+      "Словарь"
+    ],
+    "correct": 1,
+    "explanation": "JSON-массиву (в квадратных скобках) соответствует список (list) в Python."
+  },
+  {
+    "question": "Какой тип данных Python соответствует JSON-объекту?",
+    "options": [
+      "Список",
+      "Словарь",
+      "Кортеж",
+      "Строка"
+    ],
+    "correct": 1,
+    "explanation": "JSON-объекту (в фигурных скобках) соответствует словарь (dict) в Python."
+  },
+  {
+    "question": "Что такое CSV?",
+    "options": [
+      "Формат с разделителями-запятыми (Comma-Separated Values)",
+      "Язык запросов",
+      "Тип базы данных",
+      "Библиотека Python"
+    ],
+    "correct": 0,
+    "explanation": "CSV — это формат представления табличных данных, где значения разделяются запятыми."
+  },
+  {
+    "question": "Какой модуль Python используется для работы с CSV?",
+    "options": [
+      "csv",
+      "json",
+      "excel",
+      "table"
+    ],
+    "correct": 0,
+    "explanation": "Модуль csv предоставляет классы для чтения и записи данных в формате CSV."
+  },
+  {
+    "question": "Что делает csv.reader()?",
+    "options": [
+      "Записывает данные в CSV",
+      "Создаёт объект для чтения CSV-файла построчно",
+      "Преобразует CSV в JSON",
+      "Сортирует CSV-данные"
+    ],
+    "correct": 1,
+    "explanation": "csv.reader() возвращает итератор, который построчно читает CSV-файл, возвращая каждую строку как список."
+  },
+  {
+    "question": "Как записать список списков в CSV-файл?",
+    "options": [
+      "csv.write(data)",
+      "csv.writer().writerows(data)",
+      "csv.save(data)",
+      "csv.dump(data)"
+    ],
+    "correct": 1,
+    "explanation": "csv.writer().writerows(data) записывает несколько строк (каждая строка — список) в CSV-файл."
+  }
+]

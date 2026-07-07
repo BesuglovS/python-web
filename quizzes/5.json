@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Как преобразовать строку \"123\" в целое число?",
+    "options": [
+      "int(\"123\")",
+      "str(123)",
+      "\"123\" + 0",
+      "integer(\"123\")"
+    ],
+    "correct": 0,
+    "explanation": "int(\"123\") преобразует строку в целое число 123."
+  },
+  {
+    "question": "Что вернёт <code>float(\"3.14\")</code>?",
+    "options": [
+      "\"3.14\"",
+      "3",
+      "3.14",
+      "Ошибка"
+    ],
+    "correct": 2,
+    "explanation": "float() преобразует строку в число с плавающей точкой. float(\"3.14\") = 3.14."
+  },
+  {
+    "question": "Что произойдёт при выполнении <code>int(\"abc\")</code>?",
+    "options": [
+      "Вернётся 0",
+      "Вызовется ValueError",
+      "Вернётся None",
+      "Создастся переменная"
+    ],
+    "correct": 1,
+    "explanation": "int() не может преобразовать строку \"abc\" в число и выбрасывает исключение ValueError."
+  },
+  {
+    "question": "Как проверить, является ли число целым?",
+    "options": [
+      "type(x) == int",
+      "isint(x)",
+      "x.is_integer()",
+      "x % 1 == 0"
+    ],
+    "correct": 0,
+    "explanation": "type(x) == int проверяет, имеет ли переменная тип int."
+  },
+  {
+    "question": "Что вернёт <code>str(42)</code>?",
+    "options": [
+      "42",
+      "\"42\"",
+      "int",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "str() преобразует число в строку: str(42) = \"42\"."
+  },
+  {
+    "question": "Что вернёт <code>bool(1)</code>?",
+    "options": [
+      "True",
+      "False",
+      "1",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "bool() преобразует значение в булев тип. Любое ненулевое число преобразуется в True."
+  },
+  {
+    "question": "Что вернёт <code>bool(0)</code>?",
+    "options": [
+      "True",
+      "False",
+      "0",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "0 (ноль) преобразуется в False при приведении к булевому типу."
+  },
+  {
+    "question": "Какой тип данных будет у результата деления <code>10 / 3</code>?",
+    "options": [
+      "int",
+      "float",
+      "str",
+      "bool"
+    ],
+    "correct": 1,
+    "explanation": "Оператор / в Python всегда возвращает float, даже если числа целые."
+  },
+  {
+    "question": "Что вернёт <code>type(True)</code>?",
+    "options": [
+      "int",
+      "str",
+      "bool",
+      "NoneType"
+    ],
+    "correct": 2,
+    "explanation": "True и False имеют тип bool (булевый тип данных)."
+  },
+  {
+    "question": "Какие значения преобразуются в False через bool()?",
+    "options": [
+      "Только False",
+      "0, \"\", [], None, False",
+      "Только 0",
+      "Любые числа"
+    ],
+    "correct": 1,
+    "explanation": "bool() возвращает False для пустых и нулевых значений: 0, 0.0, \"\", [], None и т.д."
+  }
+]

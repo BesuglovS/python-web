@@ -1,0 +1,101 @@
+[
+  {
+    "question": "Что вернёт <code>\"hello\".upper()</code>?",
+    "options": [
+      "Hello",
+      "HELLO",
+      "hello",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "Метод .upper() преобразует все буквы в верхний регистр."
+  },
+  {
+    "question": "Как объединить строки \"a\" и \"b\"?",
+    "options": [
+      "\"a\" + \"b\"",
+      "\"a\" & \"b\"",
+      "concat(\"a\", \"b\")",
+      "\"a\" . \"b\""
+    ],
+    "correct": 0,
+    "explanation": "В Python строки объединяются оператором + (конкатенация)."
+  },
+  {
+    "question": "Что выведет: <code>print(\"Ha\" * 3)</code>?",
+    "options": [
+      "HaHaHa",
+      "Ha Ha Ha",
+      "Ha3",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "Оператор * повторяет строку указанное количество раз: \"Ha\" * 3 = \"HaHaHa\"."
+  },
+  {
+    "question": "Какая escape-последовательность обозначает символ новой строки?",
+    "options": [
+      "\\n",
+      "\\t",
+      "\\r",
+      "\\b"
+    ],
+    "correct": 0,
+    "explanation": "\\n — escape-последовательность для перехода на новую строку (newline)."
+  },
+  {
+    "question": "Что выведет: <code>print(\"C:\\\\Users\\\\Name\")</code>?",
+    "options": [
+      "C:\\Users\\Name",
+      "C:\\\\Users\\\\Name",
+      "C:UsersName",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "\\\\ — экранирование обратной косой черты. Каждая пара \\\\ даёт один \\ в выводе."
+  },
+  {
+    "question": "Что делает метод .strip() в Python?",
+    "options": [
+      "Разделяет строку",
+      "Удаляет пробельные символы с начала и конца строки",
+      "Переворачивает строку",
+      "Заменяет пробелы"
+    ],
+    "correct": 1,
+    "explanation": "strip() удаляет пробелы, табуляцию и символы новой строки с обоих концов строки."
+  },
+  {
+    "question": "Что выведет: <code>print(\"Hello\".replace(\"l\", \"7\"))</code>?",
+    "options": [
+      "Hello",
+      "He77o",
+      "He7lo",
+      "Hello7"
+    ],
+    "correct": 1,
+    "explanation": "replace(old, new) заменяет все вхождения подстроки old на new: \"l\" → \"7\", результат \"He77o\"."
+  },
+  {
+    "question": "Что вернёт <code>\"Hello World\".find(\"World\")</code>?",
+    "options": [
+      "5",
+      "6",
+      "0",
+      "-1"
+    ],
+    "correct": 1,
+    "explanation": ".find() возвращает индекс первого вхождения подстроки. \"World\" начинается с индекса 6."
+  },
+  {
+    "question": "Что выведет: <code>print(len(\"Hello, World!\"))</code>?",
+    "options": [
+      "12",
+      "13",
+      "14",
+      "15"
+    ],
+    "correct": 1,
+    "explanation": "len() считает все символы, включая пробел и знаки препинания. \"Hello, World!\" — 13 символов."
+  }
+]

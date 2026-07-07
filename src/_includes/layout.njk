@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="{% if description %}{{ description }}{% elif subtitle %}Урок {{ lesson }}: {{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
+    <meta property="og:title" content="{{ lesson }}. {{ title }} — Python: основы" />
+    <meta property="og:description" content="{% if description %}{{ description }}{% elif subtitle %}{{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
+    <meta property="og:type" content="article" />
+    <title>{{ title }} — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
+  </head>
+  <body data-lesson="{{ lesson }}">
+    <div class="container">
+      <header class="topic-header">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
+        <h1><span class="lesson-badge">Урок {{ lesson }}</span> {{ title }}</h1>
+        {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
+        {% if duration %}<div class="lesson-meta-info"><span class="meta-duration">⏱ ~{{ duration }} мин чтения</span>{% if complexity %}<span class="meta-sep">·</span> <span class="meta-complexity" data-level="{{ complexity }}">{% if complexity == "beginner" %}🚀 Начальный{% elif complexity == "basic" %}📘 Базовый{% elif complexity == "intermediate" %}📗 Средний{% elif complexity == "advanced" %}📙 Продвинутый{% else %}{{ complexity }}{% endif %}</span>{% endif %}</div>{% endif %}
+      </header>
+      <div class="content-layout">
+        <aside id="toc"></aside>
+        <div class="main-content">
+          {{ content | safe }}
+        </div>
+      </div>
+      <footer class="topic-footer">
+        {% if prevUrl %}<a href="{{ prevUrl }}" class="prev-link">← {{ prevTitle }}</a>{% endif %}
+        {% if nextUrl %}<a href="{{ nextUrl }}" class="next-link">Далее: {{ nextTitle }} →</a>{% endif %}
+      </footer>
+    </div>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

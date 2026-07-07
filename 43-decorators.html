@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 43: Декораторы функций: @decorator, замыкания, functools.wraps, параметризованные декораторы" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="@decorator, wraps, кастомные декораторы" />
     <meta property="og:title" content="43. Декораторы — Python: основы" />
-    <meta property="og:description" content="Урок 43: Декораторы функций: @decorator, замыкания, functools.wraps, параметризованные декораторы" />
+    <meta property="og:description" content="@decorator, wraps, кастомные декораторы" />
     <meta property="og:type" content="article" />
     <title>Декораторы — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="43">
     <div class="container">
@@ -18,43 +19,40 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 43</span> Декораторы</h1>
         <p class="subtitle">Модификация поведения функций без изменения их кода</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Что такое декоратор?</h2>
-        <p>Декоратор — это функция, которая принимает другую функцию и расширяет её поведение, не изменяя исходный код.</p>
-        <pre class="code-block">
-def my_decorator(func):
+          <h2>Что такое декоратор?</h2>
+<p>Декоратор — это функция, которая принимает другую функцию и расширяет её поведение, не изменяя исходный код.</p>
+<pre><code class="language-python">def my_decorator(func):
     def wrapper():
-        print("Что-то ДО функции")
+        print(&quot;Что-то ДО функции&quot;)
         func()
-        print("Что-то ПОСЛЕ функции")
+        print(&quot;Что-то ПОСЛЕ функции&quot;)
     return wrapper
 
 @my_decorator
 def say_hello():
-    print("Привет!")
+    print(&quot;Привет!&quot;)
 
 say_hello()
 # Вывод:
 # Что-то ДО функции
 # Привет!
-# Что-то ПОСЛЕ функции</pre>
-        <p>Синтаксис <code>@имя_декоратора</code> — это сокращение для <code>say_hello = my_decorator(say_hello)</code>.</p>
-          </section>
-          <section>
+# Что-то ПОСЛЕ функции
+</code></pre>
+<p>Синтаксис <code>@имя_декоратора</code> — это сокращение для <code>say_hello = my_decorator(say_hello)</code>.</p>
 <h2>Декоратор для измерения времени</h2>
-        <pre class="code-block">
-import time
+<pre><code class="language-python">import time
 
 def timer(func):
     def wrapper(*args, **kwargs):
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
-        print(f"{func.__name__} выполнялась {end - start:.4f} сек")
+        print(f&quot;{func.__name__} выполнялась {end - start:.4f} сек&quot;)
         return result
     return wrapper
 
@@ -64,78 +62,73 @@ def slow_function():
     return total
 
 slow_function()
-# slow_function выполнялась 0.1234 сек</pre>
-          </section>
-          <section>
+# slow_function выполнялась 0.1234 сек
+</code></pre>
 <h2>Декоратор с аргументами</h2>
-        <pre class="code-block">
-def repeat(n):
+<pre><code class="language-python">def repeat(n):
     def decorator(func):
         def wrapper(*args, **kwargs):
-            for _ in range(n):
-                func(*args, **kwargs)
+  for _ in range(n):
+      func(*args, **kwargs)
         return wrapper
     return decorator
 
 @repeat(3)
 def greet(name):
-    print(f"Привет, {name}!")
+    print(f&quot;Привет, {name}!&quot;)
 
-greet("Мир")
+greet(&quot;Мир&quot;)
 # Привет, Мир!
 # Привет, Мир!
-# Привет, Мир!</pre>
-          </section>
-          <section>
+# Привет, Мир!
+</code></pre>
 <h2>Сохранение метаданных: @wraps</h2>
-        <pre class="code-block">
-from functools import wraps
+<pre><code class="language-python">from functools import wraps
 
 def logger(func):
     @wraps(func)   # сохраняет __name__ и __doc__
     def wrapper(*args, **kwargs):
-        print(f"Вызов {func.__name__}({args}, {kwargs})")
+        print(f&quot;Вызов {func.__name__}({args}, {kwargs})&quot;)
         return func(*args, **kwargs)
     return wrapper
 
 @logger
 def add(a, b):
-    """Складывает два числа."""
+    &quot;&quot;&quot;Складывает два числа.&quot;&quot;&quot;
     return a + b
 
 print(add(3, 5))         # Вызов add((3, 5), {})  /  8
-print(add.__name__)      # add (без @wraps было бы "wrapper")
-print(add.__doc__)       # Складывает два числа.</pre>
-          </section>
-          <section>
+print(add.__name__)      # add (без @wraps было бы &quot;wrapper&quot;)
+print(add.__doc__)       # Складывает два числа.
+</code></pre>
 <h2>Практические примеры</h2>
-        <pre class="code-block">
-# Кэширование результатов
+<pre><code class="language-python"># Кэширование результатов
 def cache(func):
     memo = {}
     @wraps(func)
     def wrapper(*args):
         if args not in memo:
-            memo[args] = func(*args)
+  memo[args] = func(*args)
         return memo[args]
     return wrapper
 
 @cache
 def fibonacci(n):
-    if n < 2:
+    if n &lt; 2:
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)
 
-print(fibonacci(100))  # работает мгновенно!</pre>
-          </section>
+print(fibonacci(100))  # работает мгновенно!
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-        <a href="42-inheritance.html" class="prev-link">← Наследование</a>
+        <a href="42-inheritance.html" class="prev-link">← Наследование и полиморфизм</a>
         <a href="44-generators.html" class="next-link">Далее: Генераторы →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

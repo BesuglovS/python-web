@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что вернёт <code>\"Python\"[0]</code>?",
+    "options": [
+      "P",
+      "y",
+      "n",
+      "Python"
+    ],
+    "correct": 0,
+    "explanation": "Индексация начинается с 0. Первый символ строки — P."
+  },
+  {
+    "question": "Что вернёт <code>\"Python\"[1:4]</code>?",
+    "options": [
+      "Pyt",
+      "yth",
+      "ytho",
+      "Py"
+    ],
+    "correct": 1,
+    "explanation": "Срез [1:4] берёт символы с индексом 1, 2, 3 (не включая 4) — \"yth\"."
+  },
+  {
+    "question": "Какой индекс у последнего символа строки \"Python\"?",
+    "options": [
+      "5",
+      "6",
+      "-1",
+      "И 5, и -1"
+    ],
+    "correct": 3,
+    "explanation": "Длина строки 6, последний индекс: 5 (с начала) или -1 (с конца). Оба варианта корректны."
+  },
+  {
+    "question": "Что вернёт <code>\"Python\"[-1]</code>?",
+    "options": [
+      "P",
+      "y",
+      "n",
+      "ошибка"
+    ],
+    "correct": 2,
+    "explanation": "Отрицательные индексы идут с конца строки. -1 — последний символ \"n\"."
+  },
+  {
+    "question": "Что вернёт <code>\"Python\"[::2]</code>?",
+    "options": [
+      "Pto",
+      "Pyt",
+      "yhn",
+      "Python"
+    ],
+    "correct": 0,
+    "explanation": "Шаг 2: символы с индексами 0, 2, 4 — \"P\", \"t\", \"o\". Результат \"Pto\"."
+  },
+  {
+    "question": "Что вернёт <code>\"Python\"[:3]</code>?",
+    "options": [
+      "Pyt",
+      "yth",
+      "Pyth",
+      "Python"
+    ],
+    "correct": 0,
+    "explanation": "s[:3] — от начала до индекса 3 (невключительно): индексы 0, 1, 2 — \"Pyt\"."
+  },
+  {
+    "question": "Что вернёт <code>\"Python\"[3:]</code>?",
+    "options": [
+      "Pyt",
+      "hon",
+      "ytho",
+      "Python"
+    ],
+    "correct": 1,
+    "explanation": "s[3:] — от индекса 3 до конца: символы с индексами 3, 4, 5 — \"hon\"."
+  },
+  {
+    "question": "Что вернёт <code>\"Python\"[-3:]</code>?",
+    "options": [
+      "hon",
+      "Pyt",
+      "yth",
+      "ton"
+    ],
+    "correct": 0,
+    "explanation": "s[-3:] — последние 3 символа: \"hon\"."
+  },
+  {
+    "question": "Что произойдёт при обращении <code>\"Python\"[10]</code>?",
+    "options": [
+      "Вернётся None",
+      "Вызовется IndexError",
+      "Вернётся пустая строка",
+      "Вернётся пробел"
+    ],
+    "correct": 1,
+    "explanation": "Индекс 10 выходит за пределы строки (длина 6), Python вызывает IndexError: string index out of range."
+  },
+  {
+    "question": "Что вернёт <code>\"Python\"[::-1]</code>?",
+    "options": [
+      "Python",
+      "nohtyP",
+      "Pyt",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "Шаг -1 разворачивает строку: \"nohtyP\"."
+  }
+]

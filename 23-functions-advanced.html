@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 23: *args и **kwargs, значения по умолчанию, аннотации типов, документация функций (docstrings)" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="args/kwargs, области видимости, аннотации" />
     <meta property="og:title" content="23. Продвинутые функции — Python: основы" />
-    <meta property="og:description" content="Урок 23: *args и **kwargs, значения по умолчанию, аннотации типов, документация функций (docstrings)" />
+    <meta property="og:description" content="args/kwargs, области видимости, аннотации" />
     <meta property="og:type" content="article" />
     <title>Продвинутые функции — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="23">
     <div class="container">
@@ -18,16 +19,15 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 23</span> Продвинутые функции</h1>
         <p class="subtitle">*args, **kwargs, области видимости, аннотации типов</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~15 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-            <h2>*args — произвольное количество аргументов</h2>
-            <p><code>*args</code> позволяет передать любое количество позиционных аргументов. Внутри функции это кортеж:</p>
-            <pre class="code-block">
-def sum_all(*args):
-    """Суммирует все переданные числа."""
+          <h2>*args — произвольное количество аргументов</h2>
+<p><code>*args</code> позволяет передать любое количество позиционных аргументов. Внутри функции это кортеж:</p>
+<pre><code class="language-python">def sum_all(*args):
+    &quot;&quot;&quot;Суммирует все переданные числа.&quot;&quot;&quot;
     total = 0
     for num in args:
         total += num
@@ -36,45 +36,36 @@ def sum_all(*args):
 print(sum_all(1, 2, 3))       # 6
 print(sum_all(10, 20, 30, 40)) # 100
 print(sum_all())               # 0
-</pre>
-          </section>
-          <section>
-            <h2>**kwargs — именованные аргументы</h2>
-            <p><code>**kwargs</code> собирает все переданные именованные аргументы в словарь:</p>
-            <pre class="code-block">
-def describe_person(**kwargs):
-    """Выводит информацию о человеке."""
+</code></pre>
+<h2>**kwargs — именованные аргументы</h2>
+<p><code>**kwargs</code> собирает все переданные именованные аргументы в словарь:</p>
+<pre><code class="language-python">def describe_person(**kwargs):
+    &quot;&quot;&quot;Выводит информацию о человеке.&quot;&quot;&quot;
     for key, value in kwargs.items():
-        print(f"{key}: {value}")
+        print(f&quot;{key}: {value}&quot;)
 
-describe_person(name="Анна", age=25, city="Москва")
+describe_person(name=&quot;Анна&quot;, age=25, city=&quot;Москва&quot;)
 # name: Анна
 # age: 25
 # city: Москва
-</pre>
-          </section>
-          <section>
-            <h2>Комбинирование *args и **kwargs</h2>
-            <p>Можно использовать оба одновременно. Порядок обязателен: обычные параметры, затем *args, затем **kwargs:</p>
-            <pre class="code-block">
-def full_info(title, *args, **kwargs):
-    print(f"Заголовок: {title}")
+</code></pre>
+<h2>Комбинирование *args и **kwargs</h2>
+<p>Можно использовать оба одновременно. Порядок обязателен: обычные параметры, затем *args, затем **kwargs:</p>
+<pre><code class="language-python">def full_info(title, *args, **kwargs):
+    print(f&quot;Заголовок: {title}&quot;)
     if args:
-        print(f"Позиционные: {args}")
+        print(f&quot;Позиционные: {args}&quot;)
     if kwargs:
-        print(f"Именованные: {kwargs}")
+        print(f&quot;Именованные: {kwargs}&quot;)
 
-full_info("Отчёт", 100, 200, status="OK", user="admin")
+full_info(&quot;Отчёт&quot;, 100, 200, status=&quot;OK&quot;, user=&quot;admin&quot;)
 # Заголовок: Отчёт
 # Позиционные: (100, 200)
 # Именованные: {'status': 'OK', 'user': 'admin'}
-</pre>
-          </section>
-          <section>
-            <h2>Области видимости: global и nonlocal</h2>
-            <p>Переменные внутри функции локальны. <code>global</code> разрешает изменять глобальную переменную, <code>nonlocal</code> — переменную из внешней функции:</p>
-            <pre class="code-block">
-# global — изменение глобальной переменной
+</code></pre>
+<h2>Области видимости: global и nonlocal</h2>
+<p>Переменные внутри функции локальны. <code>global</code> разрешает изменять глобальную переменную, <code>nonlocal</code> — переменную из внешней функции:</p>
+<pre><code class="language-python"># global — изменение глобальной переменной
 counter = 0
 
 def increment():
@@ -95,35 +86,33 @@ def outer():
     print(x)  # 15
 
 outer()
-</pre>
-          </section>
-          <section>
-            <h2>Аннотации типов</h2>
-            <p>Начиная с Python 3.5, можно указывать ожидаемые типы параметров и возвращаемого значения. Это помогает читать код и использовать автодополнение в IDE:</p>
-            <pre class="code-block">
-def add(a: int, b: int) -> int:
-    """Складывает два целых числа."""
+</code></pre>
+<h2>Аннотации типов</h2>
+<p>Начиная с Python 3.5, можно указывать ожидаемые типы параметров и возвращаемого значения. Это помогает читать код и использовать автодополнение в IDE:</p>
+<pre><code class="language-python">def add(a: int, b: int) -&gt; int:
+    &quot;&quot;&quot;Складывает два целых числа.&quot;&quot;&quot;
     return a + b
 
-def greet(name: str, times: int = 1) -> None:
-    """Приветствует указанное количество раз."""
+def greet(name: str, times: int = 1) -&gt; None:
+    &quot;&quot;&quot;Приветствует указанное количество раз.&quot;&quot;&quot;
     for _ in range(times):
-        print(f"Привет, {name}!")
+        print(f&quot;Привет, {name}!&quot;)
 
 result: int = add(5, 3)   # Аннотация переменной
-greet("Анна", 3)           # Аннотации не проверяются во время выполнения
-</pre>
-            <div class="note"><strong>Важно:</strong> аннотации типов не проверяются интерпретатором. Для проверки используйте инструменты вроде <code>mypy</code>.</div>
-          </section>
-          <div id="contest-link-placeholder"></div>
+greet(&quot;Анна&quot;, 3)           # Аннотации не проверяются во время выполнения
+</code></pre>
+<blockquote>
+<p><strong>⚠️ Важно:</strong> <strong>Важно:</strong> аннотации типов не проверяются интерпретатором. Для проверки используйте инструменты вроде <code>mypy</code>.</p>
+</blockquote>
+
         </div>
       </div>
       <footer class="topic-footer">
-        <a href="22-functions.html" class="prev-link">← Функции</a>
-        <a href="24-debugging.html" class="next-link">Далее: Отладка →</a>
+        <a href="22-functions.html" class="prev-link">← Создание простейших функций</a>
+        <a href="24-debugging.html" class="next-link">Далее: Отладка программ →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

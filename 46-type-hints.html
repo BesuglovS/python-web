@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 46: Аннотации типов: typing, List, Dict, Optional, Union, mypy, проверка типов в Python" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="Аннотации типов, mypy" />
     <meta property="og:title" content="46. Type Hints — Python: основы" />
-    <meta property="og:description" content="Урок 46: Аннотации типов: typing, List, Dict, Optional, Union, mypy, проверка типов в Python" />
+    <meta property="og:description" content="Аннотации типов, mypy" />
     <meta property="og:type" content="article" />
     <title>Type Hints — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="46">
     <div class="container">
@@ -18,87 +19,81 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 46</span> Type Hints</h1>
         <p class="subtitle">Улучшаем читаемость кода с помощью аннотаций типов</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~10 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Что такое type hints?</h2>
-        <p>Аннотации типов — способ указать, какого типа аргументы ожидает функция и что она возвращает. Python <strong>не проверяет</strong> типы во время выполнения, но IDE и линтеры используют их для подсказок.</p>
-        <pre class="code-block">
-# Без аннотаций
+          <h2>Что такое type hints?</h2>
+<p>Аннотации типов — способ указать, какого типа аргументы ожидает функция и что она возвращает. Python <strong>не проверяет</strong> типы во время выполнения, но IDE и линтеры используют их для подсказок.</p>
+<pre><code class="language-python"># Без аннотаций
 def greet(name, age):
-    return f"{name}, {age} лет"
+    return f&quot;{name}, {age} лет&quot;
 
 # С аннотациями (type hints)
-def greet(name: str, age: int) -> str:
-    return f"{name}, {age} лет"</pre>
-          </section>
-          <section>
+def greet(name: str, age: int) -&gt; str:
+    return f&quot;{name}, {age} лет&quot;
+</code></pre>
 <h2>Основные типы</h2>
-        <pre class="code-block">
-def process(
+<pre><code class="language-python">def process(
     name: str,           # строка
     age: int,            # целое число
     score: float,        # число с плавающей точкой
     active: bool         # логическое значение
-) -> str:                # возвращает строку
-    return f"{name}: {age} лет, балл {score}, активен: {active}"
+) -&gt; str:                # возвращает строку
+    return f&quot;{name}: {age} лет, балл {score}, активен: {active}&quot;
 
 # Переменные тоже можно аннотировать
 x: int = 42
-names: list[str] = ["Анна", "Борис"]
-data: dict[str, int] = {"x": 10, "y": 20}</pre>
-          </section>
-          <section>
+names: list[str] = [&quot;Анна&quot;, &quot;Борис&quot;]
+data: dict[str, int] = {&quot;x&quot;: 10, &quot;y&quot;: 20}
+</code></pre>
 <h2>Сложные типы</h2>
-        <pre class="code-block">
-from typing import List, Dict, Tuple, Optional, Union
+<pre><code class="language-python">from typing import List, Dict, Tuple, Optional, Union
 
 # Список строк
-def get_names() -> List[str]:
-    return ["Анна", "Борис"]
+def get_names() -&gt; List[str]:
+    return [&quot;Анна&quot;, &quot;Борис&quot;]
 
 # Словарь: строки → числа
-def get_grades() -> Dict[str, int]:
-    return {"Анна": 95, "Борис": 82}
+def get_grades() -&gt; Dict[str, int]:
+    return {&quot;Анна&quot;: 95, &quot;Борис&quot;: 82}
 
 # Кортеж из трёх элементов
-def get_point() -> Tuple[int, int, int]:
+def get_point() -&gt; Tuple[int, int, int]:
     return (10, 20, 30)
 
 # Опциональное значение (может быть None)
-def find_user(id: int) -> Optional[str]:
+def find_user(id: int) -&gt; Optional[str]:
     if id == 1:
-        return "Анна"
+        return &quot;Анна&quot;
     return None
 
 # Один из нескольких типов
-def process(value: Union[int, str]) -> str:
-    return str(value)</pre>
-          </section>
-          <section>
+def process(value: Union[int, str]) -&gt; str:
+    return str(value)
+</code></pre>
 <h2>Практическая ценность</h2>
-        <ul>
-          <li>IDE (VS Code, PyCharm) показывает автодополнение и предупреждения</li>
-          <li>Код становится самодокументированным</li>
-          <li>Инструменты типа <code>mypy</code> находят ошибки до запуска</li>
-        </ul>
-        <pre class="code-block">
-# mypy найдёт ошибку:
-def double(x: int) -> int:
+<ul>
+<li>IDE (VS Code, PyCharm) показывает автодополнение и предупреждения</li>
+<li>Код становится самодокументированным</li>
+<li>Инструменты типа <code>mypy</code> находят ошибки до запуска</li>
+</ul>
+<pre><code class="language-python"># mypy найдёт ошибку:
+def double(x: int) -&gt; int:
     return x * 2
 
-double("hello")  # mypy: error: Argument 1 to "double" has incompatible type "str"</pre>
-        </section>
+double(&quot;hello&quot;)  # mypy: error: Argument 1 to &quot;double&quot; has incompatible type &quot;str&quot;
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
         <a href="45-threading-async.html" class="prev-link">← Многопоточность и asyncio</a>
-        <a href="47-pytest.html" class="next-link">Далее: pytest →</a>
+        <a href="47-pytest.html" class="next-link">Далее: Unit-тесты с pytest →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

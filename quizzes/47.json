@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое pytest?",
+    "options": [
+      "Фреймворк для тестирования Python-кода",
+      "Среда разработки",
+      "База данных",
+      "Веб-сервер"
+    ],
+    "correct": 0,
+    "explanation": "pytest — это популярный фреймворк для написания и запуска тестов в Python."
+  },
+  {
+    "question": "Какой командой запускаются тесты pytest?",
+    "options": [
+      "python test",
+      "pytest",
+      "python run tests",
+      "test pytest"
+    ],
+    "correct": 1,
+    "explanation": "Команда pytest в терминале автоматически находит и запускает все тесты в проекте."
+  },
+  {
+    "question": "Как должна называться тестовая функция в pytest?",
+    "options": [
+      "Должна начинаться с test_",
+      "Может иметь любое имя",
+      "Должна заканчиваться на _test",
+      "Должна содержать слово test"
+    ],
+    "correct": 0,
+    "explanation": "pytest автоматически находит функции, начинающиеся с test_. Например: test_addition()."
+  },
+  {
+    "question": "Что делает assert в тесте?",
+    "options": [
+      "Проверяет условие и вызывает AssertionError, если оно ложно",
+      "Выводит сообщение",
+      "Завершает тест",
+      "Создаёт отчёт"
+    ],
+    "correct": 0,
+    "explanation": "assert условие — встроенная проверка. Если условие ложно, тест падает с AssertionError."
+  },
+  {
+    "question": "Что такое фикстура (fixture) в pytest?",
+    "options": [
+      "Функция для подготовки данных перед тестом",
+      "Сам тест",
+      "Отчёт о тестировании",
+      "Ошибка в тесте"
+    ],
+    "correct": 0,
+    "explanation": "Фикстура — это функция с декоратором @pytest.fixture, которая подготавливает данные или окружение для тестов."
+  },
+  {
+    "question": "Как параметризовать тест в pytest?",
+    "options": [
+      "@pytest.mark.parametrize",
+      "@pytest.parametrize",
+      "@pytest.params",
+      "@pytest.parameterize"
+    ],
+    "correct": 0,
+    "explanation": "@pytest.mark.parametrize(\"arg\", values) позволяет запустить один тест с разными наборами данных."
+  },
+  {
+    "question": "Что такое conftest.py?",
+    "options": [
+      "Файл с общими фикстурами для всех тестов в директории",
+      "Файл с тестами",
+      "Конфигурационный файл",
+      "Файл с настройками pytest"
+    ],
+    "correct": 0,
+    "explanation": "conftest.py содержит фикстуры, которые автоматически доступны всем тестам в той же директории."
+  },
+  {
+    "question": "Как проверить, что код вызывает исключение?",
+    "options": [
+      "pytest.raises(ValueError)",
+      "pytest.expect(ValueError)",
+      "pytest.catch(ValueError)",
+      "pytest.exception(ValueError)"
+    ],
+    "correct": 0,
+    "explanation": "with pytest.raises(ValueError): проверяет, что внутри блока возникает исключение ValueError."
+  },
+  {
+    "question": "Что делает флаг -v при запуске pytest?",
+    "options": [
+      "Тихий режим",
+      "Подробный вывод (verbose)",
+      "Пропуск тестов",
+      "Ускорение тестов"
+    ],
+    "correct": 1,
+    "explanation": "pytest -v (verbose) выводит подробную информацию о каждом тесте: пройден/упал."
+  },
+  {
+    "question": "Как пропустить тест в pytest?",
+    "options": [
+      "@pytest.mark.skip",
+      "@pytest.skip",
+      "@pytest.ignore",
+      "@pytest.pass"
+    ],
+    "correct": 0,
+    "explanation": "@pytest.mark.skip пропускает тест. @pytest.mark.skipif(condition) пропускает при выполнении условия."
+  }
+]

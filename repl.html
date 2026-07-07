@@ -3,404 +3,123 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Интерактивная Python-консоль — пиши код и сразу видь результат." />
     <title>🐍 Python REPL — Интерактивная консоль</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
-    <style>
-      body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-      }
-      [data-theme="dark"] body {
-        background: linear-gradient(135deg, #1a1030 0%, #0f0a20 100%);
-      }
-      .repl-container {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 30px 20px;
-      }
-      .repl-header {
-        text-align: center;
-        margin-bottom: 28px;
-      }
-      .repl-header h1 {
-        font-size: 2em;
-        margin: 0 0 6px;
-      }
-      .repl-header p {
-        color: rgba(255, 255, 255, 0.85);
-        margin: 0 0 12px;
-      }
-      .repl-header .back-link {
-        display: inline-block;
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        font-size: 0.9em;
-        margin-top: 4px;
-      }
-      .repl-header .back-link:hover {
-        color: rgba(255, 255, 255, 1);
-        text-decoration: underline;
-      }
-      .repl-panel {
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow-lg);
-        overflow: hidden;
-        border: 1px solid var(--border);
-      }
-      .repl-toolbar {
-        display: flex;
-        align-items: center;
-        padding: 10px 16px;
-        background: var(--code-bg);
-        gap: 10px;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        flex-wrap: wrap;
-      }
-      .repl-toolbar button {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.15);
-        color: #cdd6f4;
-        border-radius: 6px;
-        padding: 6px 14px;
-        cursor: pointer;
-        font-size: 0.88em;
-        transition: all var(--transition);
-        white-space: nowrap;
-      }
-      .repl-toolbar button:hover {
-        background: rgba(255,255,255,0.2);
-        border-color: var(--primary);
-      }
-      .repl-toolbar button.active {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: #fff;
-      }
-      .repl-toolbar .repl-tabs {
-        display: flex;
-        gap: 4px;
-        margin-right: auto;
-      }
-      .repl-toolbar .repl-tab-count {
-        font-size: 0.8em;
-        color: #999;
-        margin-left: auto;
-      }
-      .repl-history {
-        max-height: 280px;
-        overflow-y: auto;
-        padding: 12px 16px;
-        background: var(--bg-alt);
-        font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
-        font-size: 0.92em;
-        line-height: 1.6;
-      }
-      .repl-entry {
-        margin-bottom: 10px;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 8px;
-      }
-      .repl-entry:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-      }
-      .repl-input-line {
-        color: var(--primary);
-        font-weight: 500;
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-      .repl-prompt {
-        color: #10b981;
-        margin-right: 6px;
-        user-select: none;
-      }
-      .repl-output {
-        color: var(--text);
-        white-space: pre-wrap;
-        word-break: break-word;
-        padding: 4px 0 2px 18px;
-        font-size: 0.93em;
-      }
-      .repl-error {
-        color: #ef4444;
-        white-space: pre-wrap;
-        word-break: break-word;
-        padding: 4px 0 2px 18px;
-        font-size: 0.93em;
-      }
-      .repl-input-area {
-        display: flex;
-        flex-direction: column;
-        border-top: 1px solid var(--border);
-        align-items: stretch;
-      }
-      .repl-input-area textarea {
-        flex: 1;
-        border: none;
-        background: var(--code-bg);
-        color: #cdd6f4;
-        font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
-        font-size: 0.95em;
-        padding: 14px 16px;
-        resize: vertical;
-        min-height: 60px;
-        outline: none;
-        line-height: 1.5;
-      }
-      .repl-input-area textarea::placeholder {
-        color: #666;
-      }
-      .repl-input-area .repl-run-btn {
-        background: var(--primary-gradient);
-        color: #fff;
-        border: none;
-        padding: 14px 28px;
-        font-size: 1em;
-        cursor: pointer;
-        transition: all var(--transition);
-        font-weight: 600;
-        white-space: nowrap;
-      }
-      .repl-input-area .repl-run-btn:hover {
-        filter: brightness(1.1);
-      }
-      .repl-input-area .repl-run-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-      .repl-snippets {
-        padding: 16px;
-        background: var(--bg-alt);
-        border-top: 1px solid var(--border);
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .repl-snippet {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 6px 12px;
-        font-size: 0.82em;
-        cursor: pointer;
-        color: var(--text);
-        transition: all var(--transition);
-        white-space: nowrap;
-      }
-      .repl-snippet:hover {
-        border-color: var(--primary);
-        background: var(--card-hover-bg);
-        transform: translateY(-1px);
-      }
-      .repl-stdin-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 16px;
-        background: var(--code-bg);
-        border-top: 1px solid var(--border);
-      }
-      .repl-stdin-label {
-        color: var(--text-muted);
-        font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
-        font-size: 0.85em;
-        user-select: none;
-        white-space: nowrap;
-      }
-      .repl-stdin-row textarea {
-        flex: 1;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 4px;
-        color: #cdd6f4;
-        font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
-        font-size: 0.9em;
-        padding: 6px 10px;
-        outline: none;
-        min-width: 0;
-        min-height: 30px;
-        max-height: 120px;
-        resize: vertical;
-        line-height: 1.4;
-        transition: border-color 0.2s;
-      }
-      .repl-stdin-row textarea:focus {
-        border-color: var(--primary);
-      }
-      .repl-stdin-row textarea::placeholder {
-        color: #555;
-      }
-      .repl-multiline-hint {
-        font-size: 0.75em;
-        color: var(--text-muted);
-        padding: 6px 16px;
-        background: var(--bg-alt);
-        border-top: 1px solid var(--border);
-      }
-      @media (max-width: 600px) {
-        .repl-input-area {
-          flex-direction: column;
-        }
-        .repl-input-area .repl-run-btn {
-          padding: 12px;
-          width: 100%;
-        }
-        .repl-header h1 {
-          font-size: 1.4em;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
-  <body>
-    <div class="repl-container">
+  <body class="repl-page">
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5ZWEHXWYF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-Q5ZWEHXWYF');
+    </script>
+
+    <div class="container repl-container">
       <div class="repl-header">
         <h1>🐍 Python REPL</h1>
-        <p>Пиши код и сразу видь результат — экспериментируй в реальном времени</p>
-        <a href="index.html" class="back-link">← На главную</a>
+        <p>Интерактивная консоль — вводи Python-код и сразу смотри результат</p>
+        <a class="back-link" href="index.html">← На главную</a>
       </div>
 
-      <div class="repl-panel">
+      <div class="repl-panel" id="repl-panel">
         <div class="repl-toolbar">
           <div class="repl-tabs">
-            <button class="active" data-tab="repl" onclick="switchTab('repl')">💬 Интерактив</button>
-            <button data-tab="editor" onclick="switchTab('editor')">📝 Многострочный</button>
+            <button data-tab="repl" class="active">🐍 REPL</button>
+            <button data-tab="editor">📝 Многострочный редактор</button>
           </div>
-          <button onclick="clearHistory()" title="Очистить историю">🗑 Очистить</button>
           <span class="repl-tab-count" id="history-count">0 команд</span>
+          <button onclick="clearHistory()">🗑 Очистить</button>
         </div>
 
-        <!-- REPL Tab -->
+        <!-- Панель REPL -->
         <div id="tab-repl">
           <div class="repl-history" id="repl-history">
-            <div style="color: var(--text-muted); text-align: center; padding: 0 30px;">
-              🐍 Введи Python-код ниже и нажми <strong>▶ Выполнить</strong><br>
-              <span style="font-size:0.85em;">Или выбери пример из списка снизу</span>
-            </div>
+            <div style="color: var(--text-muted); text-align: center; padding: 0 30px;">🐍 Введи Python-код ниже и нажми <strong>▶ Выполнить</strong></div>
           </div>
+          <div class="repl-snippets" id="repl-snippets"></div>
           <div class="repl-input-area">
-            <textarea id="repl-input" placeholder="print('Hello, Python!')" rows="4"></textarea>
+            <textarea id="repl-input" rows="3" placeholder="print('Привет, мир!')" autofocus></textarea>
             <div class="repl-stdin-row">
-              <span class="repl-stdin-label">stdin:</span>
-              <textarea id="repl-stdin" placeholder="Ввод для input()... (несколько строк — Shift+Enter)" rows="5"></textarea>
-              <button class="repl-run-btn" id="repl-run-btn" onclick="runRepl()">▶ Выполнить</button>
+              <label for="repl-stdin" class="repl-stdin-label">📥 input():</label>
+              <textarea id="repl-stdin" placeholder="Ввод для input() — каждое значение на новой строке"></textarea>
+              <button id="repl-run-btn" class="repl-run-btn" onclick="runRepl()">▶ Выполнить</button>
             </div>
           </div>
           <div class="repl-multiline-hint">
-            💡 Для многострочного кода (if, for, def) используй клавишу <strong>Shift+Enter</strong> для новой строки или вкладку <strong>«Многострочный»</strong>.
+            <strong>Enter</strong> — выполнить код &nbsp;|&nbsp; <strong>Shift+Enter</strong> — новая строка
           </div>
-          <div class="repl-snippets" id="repl-snippets"></div>
         </div>
 
-        <!-- Multi-line Editor Tab -->
-        <div id="tab-editor" style="display:none;">
-          <div class="repl-input-area" style="flex-direction: column;">
-            <textarea id="editor-input" placeholder="# Многострочный редактор — пиши целые программы
-def greet(name):
-    return f'Привет, {name}!'
-
-print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></textarea>
+        <!-- Панель многострочного редактора -->
+        <div id="tab-editor" style="display: none;">
+          <div class="repl-input-area">
+            <textarea id="editor-input" rows="10" placeholder="print('Hello')\nfor i in range(5):\n    print(i)" style="font-size: 0.92em;"></textarea>
             <div class="repl-stdin-row">
-              <span class="repl-stdin-label">stdin:</span>
-              <textarea id="editor-stdin" placeholder="Ввод для input()... (несколько строк — Shift+Enter)" rows="5"></textarea>
-            </div>
-            <div style="display:flex; gap:8px; padding: 10px 16px; background: var(--bg-alt);">
-              <button class="repl-run-btn" style="border-radius:8px; padding: 8px 20px; font-size:0.9em;" onclick="runEditor()">▶ Выполнить код</button>
-              <button style="background:rgba(255,255,255,0.1);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 20px;cursor:pointer;font-size:0.9em;" onclick="document.getElementById('editor-input').value='';">✕ Очистить</button>
+              <label for="editor-stdin" class="repl-stdin-label">📥 input():</label>
+              <textarea id="editor-stdin" placeholder="Ввод для input() — каждое значение на новой строке"></textarea>
+              <button id="editor-run-btn" class="repl-run-btn" onclick="runEditor()">▶ Выполнить</button>
             </div>
           </div>
-          <div id="editor-output" style="padding: 16px; background: var(--bg-alt); border-top: 1px solid var(--border); min-height: 40px; font-family: monospace; font-size:0.9em; white-space: pre-wrap; color: var(--text);"></div>
-          <div class="repl-snippets" id="editor-snippets"></div>
+          <div id="editor-output" style="padding: 12px 16px; font-family: 'Consolas', 'Fira Code', 'Courier New', monospace; font-size: 0.92em; min-height: 48px; background: var(--bg-alt); border-top: 1px solid var(--border);"></div>
+          <div class="repl-multiline-hint">
+            <strong>Ctrl+Enter</strong> — выполнить код
+          </div>
         </div>
-      </div>
-
-      <div style="text-align:center; margin-top:24px; color: var(--text-muted); font-size:0.85em;">
-        Код выполняется в безопасной песочнице. Запрещены: импорт опасных модулей, работа с файлами, сеть.
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-    <script src="config.js"></script>
-    <script src="script.js"></script>
     <script>
-      // === REPL Logic ===
+      // REPL — глобальный скоуп для обратной совместимости с inline-обработчиками onclick
+      const sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
-      let currentTab = 'repl';
       let history = [];
-
-      // UUID сессии — генерируем один раз, храним в localStorage
-      function getSessionId() {
-        let id = localStorage.getItem('python-repl-session-id');
-        if (!id) {
-          id = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-          });
-          localStorage.setItem('python-repl-session-id', id);
-        }
-        return id;
-      }
-      const sessionId = getSessionId();
-
-      // Загружаем историю из localStorage
       try {
         const saved = localStorage.getItem('python-repl-history');
         if (saved) {
           history = JSON.parse(saved);
-          renderHistory();
         }
       } catch(e) {}
 
-      const SNIPPETS = [
-        { label: 'Hello World', code: "print('Hello, Python! 👋')" },
-        { label: 'Переменные', code: "x = 42\ny = 3.14\nprint(f'x = {x}, y = {y}')" },
-        { label: 'Список', code: "nums = [1, 2, 3, 4, 5]\nprint(sum(nums))\nprint([n**2 for n in nums])" },
-        { label: 'Словарь', code: "d = {'apple': 5, 'banana': 3}\nfor k, v in d.items():\n    print(f'{k}: {v}')" },
-        { label: 'Функция', code: "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n-1)\nprint(factorial(5))" },
-        { label: 'Цикл for', code: "for i in range(5):\n    print(f'Квадрат {i} = {i**2}')" },
-        { label: 'if/else', code: "age = 18\nif age >= 18:\n    print('Совершеннолетний')\nelse:\n    print('Несовершеннолетний')" },
-        { label: 'Срезы строк', code: "s = 'Python Programming'\nprint(s[:6])\nprint(s[::-1])" },
-        { label: 'Множества', code: "a = {1, 2, 3}\nb = {3, 4, 5}\nprint('Объединение:', a | b)\nprint('Пересечение:', a & b)" },
-        { label: 'Math модуль', code: "import math\nprint('Pi =', math.pi)\nprint('sqrt(144) =', math.sqrt(144))" },
-        { label: 'Random', code: "import random\nprint('Случайное число:', random.randint(1, 100))\nprint('Случайный выбор:', random.choice(['A','B','C']))" },
-        { label: 'List comprehension', code: "evens = [x for x in range(20) if x % 2 == 0]\nprint(evens)" },
-        { label: 'Try/except', code: "try:\n    result = 10 / 0\nexcept ZeroDivisionError as e:\n    print(f'Ошибка: {e}')" },
-        { label: 'Datetime', code: "from datetime import datetime, timedelta\nnow = datetime.now()\nprint(now.strftime('%d.%m.%Y %H:%M'))\ntomorrow = now + timedelta(days=1)\nprint('Завтра:', tomorrow.strftime('%d.%m.%Y'))" },
-        { label: 'itertools', code: "from itertools import combinations\nprint(list(combinations('ABCD', 2)))" },
-        { label: 'Класс', code: "class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n += 1\n        return self.n\n\nc = Counter()\nprint(c.inc())\nprint(c.inc())\nprint(c.inc())" },
-      ];
+      let currentTab = 'repl';
 
       function renderSnippets() {
-        const replContainer = document.getElementById('repl-snippets');
-        const editorContainer = document.getElementById('editor-snippets');
-        const snippetHtml = SNIPPETS.map(s =>
-          '<button class="repl-snippet" onclick="loadSnippet(`' + s.code.replace(/`/g, '\\`') + '`)">' + s.label + '</button>'
-        ).join('');
-        replContainer.innerHTML = snippetHtml;
-        editorContainer.innerHTML = SNIPPETS.map(s =>
-          '<button class="repl-snippet" onclick="loadEditorSnippet(`' + s.code.replace(/`/g, '\\`') + '`)">' + s.label + '</button>'
-        ).join('');
+        const snippets = [
+          { label: 'print()', code: 'print("Привет, мир!")' },
+          { label: 'range()', code: 'for i in range(5):\n    print(i, end=" ")' },
+          { label: 'sorted()', code: 'numbers = [3, 1, 4, 1, 5, 9]\nprint(sorted(numbers))\nprint(sorted(numbers, reverse=True))' },
+          { label: 'lambda', code: 'square = lambda x: x**2\nprint(square(7))' },
+          { label: 'list comp', code: 'squares = [x**2 for x in range(10)]\nprint(squares)' },
+          { label: 'dict', code: 'd = {"a": 1, "b": 2}\nfor k, v in d.items():\n    print(k, "→", v)' },
+          { label: 'zip', code: 'names = ["Аня", "Боря"]\nages = [16, 17]\nfor n, a in zip(names, ages):\n    print(f"{n} — {a}")' }
+        ];
+        const container = document.getElementById('repl-snippets');
+        let html = '';
+        snippets.forEach(function(s) {
+          html += '<button class="repl-snippet" onclick="document.getElementById(\'repl-input\').value = \'' + s.code.replace(/'/g, "\\'").replace(/\n/g, '\\n') + '\'; document.getElementById(\'repl-input\').focus();">' + s.label + '</button>';
+        });
+        container.innerHTML = html;
       }
 
-      function loadSnippet(code) {
-        document.getElementById('repl-input').value = code;
-        document.getElementById('repl-input').focus();
-      }
-
-      function loadEditorSnippet(code) {
-        document.getElementById('editor-input').value = code;
-        document.getElementById('editor-input').focus();
-      }
+      document.querySelectorAll('.repl-toolbar button[data-tab]').forEach(function(b) {
+        b.addEventListener('click', function() {
+          switchTab(b.dataset.tab);
+        });
+      });
 
       function switchTab(tab) {
         currentTab = tab;
         document.getElementById('tab-repl').style.display = tab === 'repl' ? '' : 'none';
         document.getElementById('tab-editor').style.display = tab === 'editor' ? '' : 'none';
-        document.querySelectorAll('.repl-toolbar button[data-tab]').forEach(b => {
+        document.querySelectorAll('.repl-toolbar button[data-tab]').forEach(function(b) {
           b.classList.toggle('active', b.dataset.tab === tab);
         });
       }
@@ -410,11 +129,13 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
         const code = input.value.trim();
         if (!code) return;
 
+        // === U6: ИНДИКАТОР ВЫПОЛНЕНИЯ (СПИННЕР) ===
         const btn = document.getElementById('repl-run-btn');
         btn.disabled = true;
-        btn.textContent = '⏳ ...';
+        btn.classList.add('running');
+        btn.textContent = '⏳ Выполняется...';
 
-        const entry = { code, output: '', error: '', time: Date.now() };
+        const entry = { code: code, output: '', error: '', time: Date.now() };
 
         try {
           const stdinEl = document.getElementById('repl-stdin');
@@ -422,7 +143,7 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           const response = await fetch('sandbox/repl.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, input: stdin, timeout: 5, session_id: sessionId })
+            body: JSON.stringify({ code: code, input: stdin, timeout: 5, session_id: sessionId })
           });
 
           if (!response.ok) {
@@ -443,10 +164,15 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           }
         } catch(err) {
           entry.error = err.message;
+        } finally {
+          // Сброс спиннера
+          btn.disabled = false;
+          btn.classList.remove('running');
+          btn.textContent = '▶ Выполнить';
         }
 
         history.push(entry);
-        if (history.length > 100) history.shift(); // Ограничение истории
+        if (history.length > 100) history.shift();
 
         try {
           localStorage.setItem('python-repl-history', JSON.stringify(history.slice(-50)));
@@ -455,8 +181,6 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
         renderHistory();
         input.value = '';
         input.focus();
-        btn.disabled = false;
-        btn.textContent = '▶ Выполнить';
       }
 
       function renderHistory() {
@@ -469,7 +193,7 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           return;
         }
 
-        container.innerHTML = history.map((entry, i) => {
+        container.innerHTML = history.map(function(entry) {
           const prompt = '>>>';
           let html = '<div class="repl-entry">';
           html += '<div class="repl-input-line"><span class="repl-prompt">' + prompt + '</span>' + escapeHtml(entry.code) + '</div>';
@@ -483,7 +207,6 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           return html;
         }).join('');
 
-        // Автопрокрутка вниз
         container.scrollTop = container.scrollHeight;
       }
 
@@ -491,7 +214,6 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
         history = [];
         localStorage.removeItem('python-repl-history');
         renderHistory();
-        // Сбрасываем серверную сессию (pickle-файл)
         fetch('sandbox/repl.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -505,6 +227,13 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
         const code = input.value.trim();
         if (!code) return;
 
+        // === U6: ИНДИКАТОР ВЫПОЛНЕНИЯ (СПИННЕР) ===
+        const btn = document.getElementById('editor-run-btn');
+        if (btn) {
+          btn.classList.add('running');
+          btn.textContent = '⏳ Выполняется...';
+        }
+
         output.innerHTML = '⏳ Выполнение...';
         output.style.color = 'var(--text-muted)';
 
@@ -514,7 +243,7 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           const response = await fetch('sandbox/repl.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, input: stdin, timeout: 10, session_id: sessionId })
+            body: JSON.stringify({ code: code, input: stdin, timeout: 10, session_id: sessionId })
           });
 
           if (!response.ok) {
@@ -541,11 +270,16 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
           output.innerHTML = html;
         } catch(err) {
           output.innerHTML = '<span style="color: #ef4444;">⚠️ ' + escapeHtml(err.message) + '</span>';
+        } finally {
+          // Сброс спиннера
+          if (btn) {
+            btn.classList.remove('running');
+            btn.textContent = '▶ Выполнить';
+          }
         }
       }
 
-      // Enter — выполнить, Shift+Enter — новая строка
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', function() {
         renderSnippets();
 
         document.getElementById('repl-input').addEventListener('keydown', function(e) {
@@ -563,12 +297,7 @@ print(greet('Мир'))" rows="12" style="width:100%; box-sizing:border-box;"></t
         });
       });
 
-      function escapeHtml(str) {
-        var div = document.createElement('div');
-        div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
-      }
-
+      // escapeHtml определена глобально в script.js → window.escapeHtml
       // При закрытии/перезагрузке страницы — очищаем серверную сессию
       window.addEventListener('beforeunload', function() {
         const data = JSON.stringify({

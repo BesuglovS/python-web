@@ -1,8 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Изучайте Python с нуля — 50 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса." />
     <meta property="og:title" content="Python — Основы программирования" />
     <meta property="og:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
@@ -19,11 +20,11 @@
     <title>Основы программирования на Python — 50 уроков для начинающих</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="apple-touch-icon" href="favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <meta name="theme-color" content="#667eea" />
     <link rel="manifest" href="manifest.json" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -37,166 +38,10 @@
       "hasCourseInstance": { "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }
     }
     </script>
-    <style>
-      body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-      }
-      [data-theme="dark"] body {
-        background: linear-gradient(135deg, #1a1030 0%, #0f0a20 100%);
-      }
-      .container {
-        max-width: 1040px;
-        margin: 0 auto;
-        padding: 40px 20px;
-      }
-      header {
-        text-align: center;
-        padding: 50px 30px 36px;
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        margin-bottom: 32px;
-        box-shadow: var(--shadow-lg);
-        transition: background var(--transition), box-shadow var(--transition);
-      }
-      header h1 {
-        font-size: 2.4em;
-        color: var(--text);
-        margin-bottom: 8px;
-        transition: color var(--transition);
-      }
-      header h1 span {
-        color: var(--primary);
-      }
-      header p {
-        color: var(--text-muted);
-        font-size: 1.08em;
-        transition: color var(--transition);
-      }
-      .repl-hero-btn {
-        display: inline-block;
-        margin-top: 16px;
-        padding: 10px 24px;
-        background: var(--primary-gradient);
-        color: #fff;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.95em;
-        transition: all var(--transition);
-        box-shadow: var(--shadow);
-      }
-      .repl-hero-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-        filter: brightness(1.1);
-      }
-      nav {
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-      }
-      .section-group {
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        padding: 20px 24px 16px;
-        box-shadow: var(--shadow);
-        transition: background var(--transition);
-        border: 1px solid transparent;
-      }
-      .section-title {
-        font-size: 1.15em;
-        color: var(--primary);
-        margin: 0 0 14px 4px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid var(--border);
-        transition: color var(--transition), border-color var(--transition);
-      }
-      .section-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-        gap: 12px;
-      }
-      .topic-card {
-        background: var(--bg-alt);
-        border-radius: 12px;
-        padding: 18px 22px;
-        text-decoration: none;
-        color: var(--text);
-        transition: all var(--transition);
-        box-shadow: var(--shadow-sm);
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        border: 1px solid var(--border);
-        position: relative;
-      }
-      .topic-card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-lg);
-        background: var(--card-hover-bg);
-        border-color: var(--primary);
-      }
-      .topic-num {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.05em;
-        flex-shrink: 0;
-        transition: all var(--transition);
-      }
-      .topic-card.completed .topic-num,
-      .topic-num.completed-num {
-        background: linear-gradient(135deg, #10b981, #059669);
-      }
-      .topic-card.completed {
-        border-left: 4px solid #10b981;
-      }
-      .topic-info h2 {
-        font-size: 1.02em;
-        margin-bottom: 3px;
-        color: var(--text);
-        transition: color var(--transition);
-      }
-      .topic-info p {
-        font-size: 0.83em;
-        color: var(--text-muted);
-        transition: color var(--transition);
-      }
-      footer {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.7);
-        margin-top: 40px;
-        padding: 20px;
-        font-size: 0.9em;
-      }
-      .progress-bar-container {
-        max-width: 400px;
-        margin: 14px auto 6px;
-      }
-      .progress-info {
-        display: block;
-        text-align: center;
-        margin-top: 4px;
-      }
-      .search-container {
-        margin-bottom: 24px;
-      }
-      @media (max-width: 480px) {
-        header h1 { font-size: 1.5em; }
-        .section-cards { grid-template-columns: 1fr; }
-      }
-    </style>
   </head>
-  <body>
-    <div class="container">
-      <header>
+  <body class="index-page">
+    <div class="container index-container">
+      <header class="index-header">
         <h1>🐍 <span>Python</span> — основы программирования</h1>
         <p>50 тем для начинающих с примерами кода</p>
         <div class="progress-bar-container"></div>
@@ -209,15 +54,549 @@
         </div>
       </header>
 
-      <nav>
-        <!-- Навигация генерируется динамически из lessons.json -->
+      <nav class="index-nav">
+        
+        <div class="section-group" data-section="intro" id="section-intro">
+          <h2 class="section-title">📖 Введение</h2>
+          <div class="section-cards">
+            
+            <a href="01-history.html" class="topic-card" data-lesson="1">
+              <div class="topic-num">1</div>
+              <div class="topic-info">
+                <h2>История, обзор и области применения</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+            <a href="02-ide-setup.html" class="topic-card" data-lesson="2">
+              <div class="topic-num">2</div>
+              <div class="topic-info">
+                <h2>Настройка IDE: IDLE, VS Code и PyCharm</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="basics" id="section-basics">
+          <h2 class="section-title">📚 Основы Python</h2>
+          <div class="section-cards">
+            
+            <a href="03-variables.html" class="topic-card" data-lesson="3">
+              <div class="topic-num">3</div>
+              <div class="topic-info">
+                <h2>Переменные</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+            <a href="04-data-types.html" class="topic-card" data-lesson="4">
+              <div class="topic-num">4</div>
+              <div class="topic-info">
+                <h2>Типы данных</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+            <a href="05-type-casting.html" class="topic-card" data-lesson="5">
+              <div class="topic-num">5</div>
+              <div class="topic-info">
+                <h2>Приведение типов</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+            <a href="06-io.html" class="topic-card" data-lesson="6">
+              <div class="topic-num">6</div>
+              <div class="topic-info">
+                <h2>Ввод и вывод</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+            <a href="07-f-strings.html" class="topic-card" data-lesson="7">
+              <div class="topic-num">7</div>
+              <div class="topic-info">
+                <h2>f-строки и форматирование</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+            <a href="08-number-ops.html" class="topic-card" data-lesson="8">
+              <div class="topic-num">8</div>
+              <div class="topic-info">
+                <h2>Операции над числами</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="conditions" id="section-conditions">
+          <h2 class="section-title">🔀 Условия</h2>
+          <div class="section-cards">
+            
+            <a href="09-booleans.html" class="topic-card" data-lesson="9">
+              <div class="topic-num">9</div>
+              <div class="topic-info">
+                <h2>Булевы переменные</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+              </div>
+            </a>
+            
+            <a href="10-conditional.html" class="topic-card" data-lesson="10">
+              <div class="topic-num">10</div>
+              <div class="topic-info">
+                <h2>Условный оператор + Отступы</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="11-try-except.html" class="topic-card" data-lesson="11">
+              <div class="topic-num">11</div>
+              <div class="topic-info">
+                <h2>Обработка ошибок</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="12-complex-conditions.html" class="topic-card" data-lesson="12">
+              <div class="topic-num">12</div>
+              <div class="topic-info">
+                <h2>Сложные условия</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="13-nested-structures.html" class="topic-card" data-lesson="13">
+              <div class="topic-num">13</div>
+              <div class="topic-info">
+                <h2>Вложенные структуры</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="strings" id="section-strings">
+          <h2 class="section-title">🔤 Строки</h2>
+          <div class="section-cards">
+            
+            <a href="14-strings-index-slice.html" class="topic-card" data-lesson="14">
+              <div class="topic-num">14</div>
+              <div class="topic-info">
+                <h2>Строки: индексация и срезы</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="15-string-ops.html" class="topic-card" data-lesson="15">
+              <div class="topic-num">15</div>
+              <div class="topic-info">
+                <h2>Операции над строками</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="16-regex.html" class="topic-card" data-lesson="16">
+              <div class="topic-num">16</div>
+              <div class="topic-info">
+                <h2>Регулярные выражения</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="loops" id="section-loops">
+          <h2 class="section-title">🔄 Циклы</h2>
+          <div class="section-cards">
+            
+            <a href="17-while.html" class="topic-card" data-lesson="17">
+              <div class="topic-num">17</div>
+              <div class="topic-info">
+                <h2>Цикл с предусловием</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="18-for.html" class="topic-card" data-lesson="18">
+              <div class="topic-num">18</div>
+              <div class="topic-info">
+                <h2>Цикл for</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="19-range.html" class="topic-card" data-lesson="19">
+              <div class="topic-num">19</div>
+              <div class="topic-info">
+                <h2>range()</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="20-break-continue.html" class="topic-card" data-lesson="20">
+              <div class="topic-num">20</div>
+              <div class="topic-info">
+                <h2>break и continue</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="21-nested-loops.html" class="topic-card" data-lesson="21">
+              <div class="topic-num">21</div>
+              <div class="topic-info">
+                <h2>Вложенные циклы</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="functions" id="section-functions">
+          <h2 class="section-title">⚙️ Функции</h2>
+          <div class="section-cards">
+            
+            <a href="22-functions.html" class="topic-card" data-lesson="22">
+              <div class="topic-num">22</div>
+              <div class="topic-info">
+                <h2>Создание простейших функций</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="23-functions-advanced.html" class="topic-card" data-lesson="23">
+              <div class="topic-num">23</div>
+              <div class="topic-info">
+                <h2>Функции: продвинутые темы</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="24-debugging.html" class="topic-card" data-lesson="24">
+              <div class="topic-num">24</div>
+              <div class="topic-info">
+                <h2>Отладка программ</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="data-structures" id="section-data-structures">
+          <h2 class="section-title">🗂️ Структуры данных</h2>
+          <div class="section-cards">
+            
+            <a href="25-lists.html" class="topic-card" data-lesson="25">
+              <div class="topic-num">25</div>
+              <div class="topic-info">
+                <h2>Списки</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="26-sets.html" class="topic-card" data-lesson="26">
+              <div class="topic-num">26</div>
+              <div class="topic-info">
+                <h2>Множества</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="27-tuples.html" class="topic-card" data-lesson="27">
+              <div class="topic-num">27</div>
+              <div class="topic-info">
+                <h2>Кортежи</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="28-dicts.html" class="topic-card" data-lesson="28">
+              <div class="topic-num">28</div>
+              <div class="topic-info">
+                <h2>Словари</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="29-split-join.html" class="topic-card" data-lesson="29">
+              <div class="topic-num">29</div>
+              <div class="topic-info">
+                <h2>split + join</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="30-list-comprehensions.html" class="topic-card" data-lesson="30">
+              <div class="topic-num">30</div>
+              <div class="topic-info">
+                <h2>Списочные выражения</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="31-lambda.html" class="topic-card" data-lesson="31">
+              <div class="topic-num">31</div>
+              <div class="topic-info">
+                <h2>Lambda-функции</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="files" id="section-files">
+          <h2 class="section-title">📁 Файлы и данные</h2>
+          <div class="section-cards">
+            
+            <a href="32-files.html" class="topic-card" data-lesson="32">
+              <div class="topic-num">32</div>
+              <div class="topic-info">
+                <h2>Файлы: чтение и запись</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="33-json-csv.html" class="topic-card" data-lesson="33">
+              <div class="topic-num">33</div>
+              <div class="topic-info">
+                <h2>JSON и CSV</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="34-sqlite3.html" class="topic-card" data-lesson="34">
+              <div class="topic-num">34</div>
+              <div class="topic-info">
+                <h2>Базы данных SQLite</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="modules" id="section-modules">
+          <h2 class="section-title">🧰 Модули</h2>
+          <div class="section-cards">
+            
+            <a href="35-modules-import.html" class="topic-card" data-lesson="35">
+              <div class="topic-num">35</div>
+              <div class="topic-info">
+                <h2>Модули и import</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="36-itertools.html" class="topic-card" data-lesson="36">
+              <div class="topic-num">36</div>
+              <div class="topic-info">
+                <h2>Модуль itertools</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="37-venv-pip.html" class="topic-card" data-lesson="37">
+              <div class="topic-num">37</div>
+              <div class="topic-info">
+                <h2>Виртуальные окружения и pip</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="38-math-random.html" class="topic-card" data-lesson="38">
+              <div class="topic-num">38</div>
+              <div class="topic-info">
+                <h2>Модули math и random</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="39-datetime.html" class="topic-card" data-lesson="39">
+              <div class="topic-num">39</div>
+              <div class="topic-info">
+                <h2>Модуль datetime</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="40-numpy-pandas.html" class="topic-card" data-lesson="40">
+              <div class="topic-num">40</div>
+              <div class="topic-info">
+                <h2>NumPy и Pandas</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="oop" id="section-oop">
+          <h2 class="section-title">🏗️ ООП</h2>
+          <div class="section-cards">
+            
+            <a href="41-oop-intro.html" class="topic-card" data-lesson="41">
+              <div class="topic-num">41</div>
+              <div class="topic-info">
+                <h2>Введение в ООП</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="42-inheritance.html" class="topic-card" data-lesson="42">
+              <div class="topic-num">42</div>
+              <div class="topic-info">
+                <h2>Наследование и полиморфизм</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="advanced" id="section-advanced">
+          <h2 class="section-title">🚀 Продвинутые концепции</h2>
+          <div class="section-cards">
+            
+            <a href="43-decorators.html" class="topic-card" data-lesson="43">
+              <div class="topic-num">43</div>
+              <div class="topic-info">
+                <h2>Декораторы</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="44-generators.html" class="topic-card" data-lesson="44">
+              <div class="topic-num">44</div>
+              <div class="topic-info">
+                <h2>Генераторы</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="45-threading-async.html" class="topic-card" data-lesson="45">
+              <div class="topic-num">45</div>
+              <div class="topic-info">
+                <h2>Многопоточность и asyncio</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="4">📙 Продвинутый</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+        <div class="section-group" data-section="tools" id="section-tools">
+          <h2 class="section-title">🛠️ Инструменты и экосистема</h2>
+          <div class="section-cards">
+            
+            <a href="46-type-hints.html" class="topic-card" data-lesson="46">
+              <div class="topic-num">46</div>
+              <div class="topic-info">
+                <h2>Type Hints</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+            <a href="47-pytest.html" class="topic-card" data-lesson="47">
+              <div class="topic-num">47</div>
+              <div class="topic-info">
+                <h2>Unit-тесты с pytest</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="48-requests-api.html" class="topic-card" data-lesson="48">
+              <div class="topic-num">48</div>
+              <div class="topic-info">
+                <h2>Requests и API</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="49-flask.html" class="topic-card" data-lesson="49">
+              <div class="topic-num">49</div>
+              <div class="topic-info">
+                <h2>Веб-фреймворки: Flask</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="3">📗 Средний</span></div>
+              </div>
+            </a>
+            
+            <a href="50-git-intro.html" class="topic-card" data-lesson="50">
+              <div class="topic-num">50</div>
+              <div class="topic-info">
+                <h2>Введение в Git</h2>
+                <p></p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
       </nav>
-      <footer>
+      <footer class="index-footer">
         Создано для изучения основ Python. Все примеры можно запустить в интерпретаторе.
       </footer>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

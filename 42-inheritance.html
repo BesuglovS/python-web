@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 42: Наследование классов: extends, super(), переопределение методов, множественное наследование, MRO" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="class Child(Parent), super(), переопределение" />
     <meta property="og:title" content="42. Наследование — Python: основы" />
-    <meta property="og:description" content="Урок 42: Наследование классов: extends, super(), переопределение методов, множественное наследование, MRO" />
+    <meta property="og:description" content="class Child(Parent), super(), переопределение" />
     <meta property="og:type" content="article" />
     <title>Наследование — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="42">
     <div class="container">
@@ -18,54 +19,45 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 42</span> Наследование</h1>
         <p class="subtitle">super(), переопределение методов, полиморфизм</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~15 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Что такое наследование?</h2>
-        <p>
-          Наследование позволяет создавать новый класс на основе существующего.
-          Дочерний класс получает все атрибуты и методы родительского и может добавлять свои или изменять существующие.
-        </p>
-        <pre class="code-block">
-# Родительский класс
+          <h2>Что такое наследование?</h2>
+<p>Наследование позволяет создавать новый класс на основе существующего. Дочерний класс получает все атрибуты и методы родительского и может добавлять свои или изменять существующие.</p>
+<pre><code class="language-python"># Родительский класс
 class Animal:
     def __init__(self, name):
         self.name = name
 
     def speak(self):
-        return "???"
+        return &quot;???&quot;
 
 # Дочерний класс (наследует от Animal)
 class Dog(Animal):
     def speak(self):
-        return f"{self.name} говорит: Гав!"
+        return f&quot;{self.name} говорит: Гав!&quot;
 
 class Cat(Animal):
     def speak(self):
-        return f"{self.name} говорит: Мяу!"
+        return f&quot;{self.name} говорит: Мяу!&quot;
 
-dog = Dog("Шарик")
-cat = Cat("Мурка")
+dog = Dog(&quot;Шарик&quot;)
+cat = Cat(&quot;Мурка&quot;)
 print(dog.speak())  # Шарик говорит: Гав!
-print(cat.speak())  # Мурка говорит: Мяу!</pre>
-        <p>Синтаксис: <code>class Дочерний(Родительский):</code></p>
-          </section>
-          <section>
+print(cat.speak())  # Мурка говорит: Мяу!
+</code></pre>
+<p>Синтаксис: <code>class Дочерний(Родительский):</code></p>
 <h2>super() — вызов родительского метода</h2>
-        <p>
-          <code>super()</code> позволяет вызвать метод родительского класса из дочернего.
-          Особенно важно для <code>__init__</code>:
-        </p>
-        <pre class="code-block">
-class Person:
+<p><code>super()</code> позволяет вызвать метод родительского класса из дочернего. Особенно важно для <code>__init__</code>:</p>
+<pre><code class="language-python">class Person:
     def __init__(self, name, age):
         self.name = name
         self.age = age
 
     def info(self):
-        return f"{self.name}, {self.age} лет"
+        return f&quot;{self.name}, {self.age} лет&quot;
 
 class Student(Person):
     def __init__(self, name, age, group):
@@ -74,23 +66,19 @@ class Student(Person):
 
     def info(self):
         base_info = super().info()     # вызываем info() родителя
-        return f"{base_info}, группа {self.group}"
+        return f&quot;{base_info}, группа {self.group}&quot;
 
-student = Student("Анна", 20, "П-101")
-print(student.info())  # Анна, 20 лет, группа П-101</pre>
-          </section>
-          <section>
+student = Student(&quot;Анна&quot;, 20, &quot;П-101&quot;)
+print(student.info())  # Анна, 20 лет, группа П-101
+</code></pre>
 <h2>Переопределение методов (override)</h2>
-        <p>
-          Если метод дочернего класса имеет то же имя, что и метод родителя, — он <strong>переопределяет</strong> его:
-        </p>
-        <pre class="code-block">
-class Shape:
+<p>Если метод дочернего класса имеет то же имя, что и метод родителя, — он <strong>переопределяет</strong> его:</p>
+<pre><code class="language-python">class Shape:
     def area(self):
         return 0
 
     def describe(self):
-        return f"Фигура с площадью {self.area()}"
+        return f&quot;Фигура с площадью {self.area()}&quot;
 
 class Rectangle(Shape):
     def __init__(self, width, height):
@@ -113,18 +101,12 @@ for shape in shapes:
 
 # Вывод:
 # Фигура с площадью 50
-# Фигура с площадью 153.93791</pre>
-          </section>
-          <section>
+# Фигура с площадью 153.93791
+</code></pre>
 <h2>Полиморфизм</h2>
-        <p>
-          Полиморфизм («много форм») — возможность использовать объекты разных классов через единый интерфейс.
-          В примере выше <code>rectangle.describe()</code> и <code>circle.describe()</code> работают одинаково,
-          хотя внутри вызывают разные <code>area()</code>. Это и есть полиморфизм.
-        </p>
-        <pre class="code-block">
-# Все животные умеют speak(), но каждый по-своему
-animals = [Dog("Бобик"), Cat("Мурзик"), Dog("Рекс")]
+<p>Полиморфизм («много форм») — возможность использовать объекты разных классов через единый интерфейс. В примере выше <code>rectangle.describe()</code> и <code>circle.describe()</code> работают одинаково, хотя внутри вызывают разные <code>area()</code>. Это и есть полиморфизм.</p>
+<pre><code class="language-python"># Все животные умеют speak(), но каждый по-своему
+animals = [Dog(&quot;Бобик&quot;), Cat(&quot;Мурзик&quot;), Dog(&quot;Рекс&quot;)]
 
 for animal in animals:
     print(animal.speak())
@@ -132,38 +114,32 @@ for animal in animals:
 # Вывод:
 # Бобик говорит: Гав!
 # Мурзик говорит: Мяу!
-# Рекс говорит: Гав!</pre>
-          </section>
-          <section>
+# Рекс говорит: Гав!
+</code></pre>
 <h2>Множественное наследование</h2>
-        <p>
-          Python поддерживает наследование от нескольких классов одновременно:
-        </p>
-        <pre class="code-block">
-class Flyer:
+<p>Python поддерживает наследование от нескольких классов одновременно:</p>
+<pre><code class="language-python">class Flyer:
     def fly(self):
-        return "Я лечу!"
+        return &quot;Я лечу!&quot;
 
 class Swimmer:
     def swim(self):
-        return "Я плыву!"
+        return &quot;Я плыву!&quot;
 
 class Duck(Flyer, Swimmer):
     def speak(self):
-        return "Кря!"
+        return &quot;Кря!&quot;
 
 duck = Duck()
 print(duck.fly())    # Я лечу!
 print(duck.swim())   # Я плыву!
-print(duck.speak())  # Кря!</pre>
-        <div class="tip">
-          <strong>MRO (Method Resolution Order):</strong> Python ищет методы слева направо по цепочке наследования.
-        </div>
-          </section>
-          <section>
+print(duck.speak())  # Кря!
+</code></pre>
+<blockquote>
+<p><strong>💡 Совет:</strong> <strong>MRO (Method Resolution Order):</strong> Python ищет методы слева направо по цепочке наследования.</p>
+</blockquote>
 <h2>isinstance() и issubclass()</h2>
-        <pre class="code-block">
-class Animal:
+<pre><code class="language-python">class Animal:
     pass
 
 class Dog(Animal):
@@ -176,12 +152,10 @@ print(isinstance(dog, Animal))    # True (т.к. Dog наследует от Ani
 print(isinstance(42, Animal))     # False
 
 print(issubclass(Dog, Animal))    # True
-print(issubclass(Animal, Dog))    # False</pre>
-          </section>
-          <section>
+print(issubclass(Animal, Dog))    # False
+</code></pre>
 <h2>Практический пример: система сотрудников</h2>
-        <pre class="code-block">
-class Employee:
+<pre><code class="language-python">class Employee:
     def __init__(self, name, salary):
         self.name = name
         self.salary = salary
@@ -205,27 +179,28 @@ class Developer(Employee):
         return self.salary * 0.15 + 10000  # надбавка за язык
 
 staff = [
-    Employee("Иван", 50000),
-    Manager("Петя", 80000),
-    Developer("Анна", 100000, "Python"),
+    Employee(&quot;Иван&quot;, 50000),
+    Manager(&quot;Петя&quot;, 80000),
+    Developer(&quot;Анна&quot;, 100000, &quot;Python&quot;),
 ]
 
 for person in staff:
-    print(f"{person.name}: {person.get_total():,.0f} ₽")
+    print(f&quot;{person.name}: {person.get_total():,.0f} ₽&quot;)
 
 # Вывод:
 # Иван: 55,000 ₽
 # Петя: 96,000 ₽
-# Анна: 125,000 ₽</pre>
-          </section>
+# Анна: 125,000 ₽
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-        <a href="41-oop-intro.html" class="prev-link">← ООП: введение</a>
+        <a href="41-oop-intro.html" class="prev-link">← Введение в ООП</a>
         <a href="43-decorators.html" class="next-link">Далее: Декораторы →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

@@ -1,0 +1,15 @@
+{
+  "name": "python-web",
+  "version": "1.0.0",
+  "description": "Курс по изучению программирования на Python",
+  "private": true,
+  "scripts": {
+    "convert": "node convert-lessons.js",
+    "build": "npx @11ty/eleventy",
+    "watch": "npx @11ty/eleventy --serve",
+    "old-build": "node build.js",
+    "old-watch": "node build.js --watch"
+  },
+  "author": "",
+  "license": "MIT"
+}

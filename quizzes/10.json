@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Сколько пробелов рекомендуется для отступа по PEP 8?",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "Tab"
+    ],
+    "correct": 2,
+    "explanation": "PEP 8 рекомендует 4 пробела на каждый уровень отступа."
+  },
+  {
+    "question": "Что выведет код?<br><code>x = 10<br>if x > 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"A\")<br>elif x > 8:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"B\")</code>",
+    "options": [
+      "A",
+      "B",
+      "A и B",
+      "Ничего"
+    ],
+    "correct": 0,
+    "explanation": "Условия проверяются сверху вниз. Первое истинное условие (x > 5) выполняется, остальные пропускаются."
+  },
+  {
+    "question": "Какой оператор проверяет равенство в Python?",
+    "options": [
+      "=",
+      "==",
+      "!=",
+      "==="
+    ],
+    "correct": 1,
+    "explanation": "== — оператор сравнения на равенство. = — это оператор присваивания."
+  },
+  {
+    "question": "Что выведет код?<br><code>age = 16<br>if age >= 18:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Взрослый\")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Ребёнок\")</code>",
+    "options": [
+      "Взрослый",
+      "Ребёнок",
+      "Ничего",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "Условие age >= 18 ложно (16 >= 18 — False), поэтому выполняется блок else: выводится «Ребёнок»."
+  },
+  {
+    "question": "Что делает тернарный оператор в Python?",
+    "options": [
+      "Позволяет записать if-else в одну строку",
+      "Создаёт три условия",
+      "Заменяет цикл",
+      "Прерывает программу"
+    ],
+    "correct": 0,
+    "explanation": "Тернарный оператор: value_if_true if condition else value_if_false. Позволяет компактно записать ветвление."
+  },
+  {
+    "question": "Что выведет код?<br><code>x = 5<br>if x < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"A\")<br>elif x < 7:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"B\")<br>elif x < 10:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"C\")</code>",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "x < 3 — False. x < 7 — True, выполняется print(\"B\"), остальные elif пропускаются."
+  },
+  {
+    "question": "Как Python определяет блоки кода?",
+    "options": [
+      "Фигурными скобками {}",
+      "Ключевыми словами begin/end",
+      "Отступами (пробелами)",
+      "Квадратными скобками []"
+    ],
+    "correct": 2,
+    "explanation": "В отличие от многих языков, Python использует отступы (пробелы) для определения блоков кода. Стандарт — 4 пробела."
+  },
+  {
+    "question": "Что выведет код?<br><code>print(\"A\") if 5 > 3 else print(\"B\")</code>",
+    "options": [
+      "A",
+      "B",
+      "A и B",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "Тернарный оператор: 5 > 3 — True, поэтому выполняется print(\"A\")."
+  },
+  {
+    "question": "Какая ошибка возникнет при неправильном отступе?",
+    "options": [
+      "SyntaxError",
+      "IndentationError",
+      "TypeError",
+      "ValueError"
+    ],
+    "correct": 1,
+    "explanation": "Неправильные отступы вызывают IndentationError — подтип SyntaxError."
+  },
+  {
+    "question": "Что выведет код?<br><code>score = 75<br>if score >= 90:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"5\")<br>elif score >= 75:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"4\")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"3\")</code>",
+    "options": [
+      "5",
+      "4",
+      "3",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "75 >= 90 — False. 75 >= 75 — True, выводится \"4\". else не выполняется."
+  }
+]

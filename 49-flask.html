@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 49: Создание веб-приложений на Flask: маршруты, шаблоны Jinja2, обработка форм, REST API" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="Маршруты, шаблоны Jinja2, обработка форм, REST API" />
     <meta property="og:title" content="49. Веб-фреймворки: Flask — Python: основы" />
-    <meta property="og:description" content="Урок 49: Создание веб-приложений на Flask: маршруты, шаблоны Jinja2, обработка форм, REST API" />
+    <meta property="og:description" content="Маршруты, шаблоны Jinja2, обработка форм, REST API" />
     <meta property="og:type" content="article" />
     <title>Веб-фреймворки: Flask — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="49">
     <div class="container">
@@ -18,21 +19,24 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 49</span> Веб-фреймворки: Flask</h1>
         <p class="subtitle">Микро-фреймворк для веб-приложений: маршруты, шаблоны, API</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~15 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-
-          <section>
-            <h2>Введение</h2>
-            <p>Flask — микро-фреймворк для создания веб-приложений на Python. Он минималистичен, но расширяем: через плагины добавляется работа с БД, аутентификация, админ-панель. Flask идеален для изучения основ веб-разработки и создания REST API.</p>
-            <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Установка: <code>pip install flask</code></li><li>Маршруты: <code>@app.route()</code>, переменные в URL, методы GET/POST</li><li>Шаблоны Jinja2: передача переменных, циклы, условия, наследование</li><li>Обработка форм через <code>request.form</code> и редиректы</li><li>Создание простого REST API с JSON-ответами</li></ul></div>
-          </section>
-
-          <section>
-            <h2>Основной материал</h2>
-            <p>Flask-приложение начинается с создания экземпляра <code>Flask(__name__)</code>. Декоратор <code>@app.route("/")</code> связывает URL с функцией-обработчиком. Параметры в URL передаются через <code><variable></code>. Шаблоны Jinja2 (папка <code>templates/</code>) используют <code>{{ }}</code> для вывода и <code>{% %}</code> для циклов и условий. Метод <code>render_template()</code> рендерит HTML с данными. Для REST API возвращайте словарь через <code>jsonify()</code>. Запуск: <code>flask run</code> или <code>app.run(debug=True)</code>.</p>
-            <pre><code class="language-python">from flask import Flask, render_template, request, jsonify
+          <h2>Введение</h2>
+<p>Flask — микро-фреймворк для создания веб-приложений на Python. Он минималистичен, но расширяем: через плагины добавляется работа с БД, аутентификация, админ-панель. Flask идеален для изучения основ веб-разработки и создания REST API.</p>
+<p><strong>📌 На этом уроке вы узнаете:</strong></p>
+<ul>
+<li>Установка: <code>pip install flask</code></li>
+<li>Маршруты: <code>@app.route()</code>, переменные в URL, методы GET/POST</li>
+<li>Шаблоны Jinja2: передача переменных, циклы, условия, наследование</li>
+<li>Обработка форм через <code>request.form</code> и редиректы</li>
+<li>Создание простого REST API с JSON-ответами</li>
+</ul>
+<h2>Основной материал</h2>
+<p>Flask-приложение начинается с создания экземпляра <code>Flask(__name__)</code>. Декоратор <code>@app.route(&quot;/&quot;)</code> связывает URL с функцией-обработчиком. Параметры в URL передаются через . Шаблоны Jinja2 (папка <code>templates/</code>) используют <code>{{ }}</code> для вывода и <code>{% %}</code> для циклов и условий. Метод <code>render_template()</code> рендерит HTML с данными. Для REST API возвращайте словарь через <code>jsonify()</code>. Запуск: <code>flask run</code> или <code>app.run(debug=True)</code>.</p>
+<pre><code class="language-python">from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -42,47 +46,46 @@ def index():
     return render_template('index.html', title='Главная')
 
 # Маршрут с параметром
-@app.route('/user/<username>')
+@app.route('/user/')
 def user(username):
-    return f"Профиль: {username}"
+    return f&quot;Профиль: {username}&quot;
 
 # Обработка формы
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         name = request.form.get('name')
-        return f"Привет, {name}!"
+        return f&quot;Привет, {name}!&quot;
     return render_template('login.html')
 
 # REST API endpoint
 @app.route('/api/items', methods=['GET'])
 def get_items():
-    items = [{"id": 1, "name": "Книга"}, {"id": 2, "name": "Ноутбук"}]
+    items = [{&quot;id&quot;: 1, &quot;name&quot;: &quot;Книга&quot;}, {&quot;id&quot;: 2, &quot;name&quot;: &quot;Ноутбук&quot;}]
     return jsonify(items)
 
 if __name__ == '__main__':
-    app.run(debug=True)</code></pre>
-          </section>
+    app.run(debug=True)
+</code></pre>
+<h2>Практика</h2>
+<p><strong>📝 Задание:</strong> Создайте Flask-приложение с тремя маршрутами: главная страница с приветствием, страница /time с текущим временем сервера (datetime), и /api/status с JSON {&quot;status&quot;: &quot;ok&quot;, &quot;version&quot;: &quot;1.0&quot;}. Запустите и проверьте в браузере.</p>
+<h2>Ключевые выводы</h2>
+<ul>
+<li><code>@app.route(&quot;/&quot;)</code> — связывает URL с функцией</li>
+<li><code>render_template()</code> — рендерит Jinja2-шаблоны с переменными</li>
+<li><code>request.form</code> — данные из HTML-форм (POST)</li>
+<li><code>jsonify()</code> — возвращает JSON-ответ для REST API</li>
+<li><code>app.run(debug=True)</code> — запуск с авто-перезагрузкой</li>
+</ul>
 
-          <section>
-            <h2>Практика</h2>
-            <div class="task-box">
-              <p><strong>📝 Задание:</strong> Создайте Flask-приложение с тремя маршрутами: главная страница с приветствием, страница /time с текущим временем сервера (datetime), и /api/status с JSON {"status": "ok", "version": "1.0"}. Запустите и проверьте в браузере.</p>
-              <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
-            </div>
-          </section>
-
-          <section>
-            <h2>Ключевые выводы</h2>
-            <ul><li><code>@app.route("/")</code> — связывает URL с функцией</li><li><code>render_template()</code> — рендерит Jinja2-шаблоны с переменными</li><li><code>request.form</code> — данные из HTML-форм (POST)</li><li><code>jsonify()</code> — возвращает JSON-ответ для REST API</li><li><code>app.run(debug=True)</code> — запуск с авто-перезагрузкой</li></ul>
-          </section></div>
+        </div>
       </div>
       <footer class="topic-footer">
-        <a href="48-requests-api.html" class="prev-link">← API-запросы</a>
-        <a href="50-git-intro.html" class="next-link">Далее: Git: введение →</a>
+        <a href="48-requests-api.html" class="prev-link">← Requests и API</a>
+        <a href="50-git-intro.html" class="next-link">Далее: Введение в Git →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

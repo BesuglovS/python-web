@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Когда <code>x > 0 and x < 10</code> истинно?",
+    "options": [
+      "x = -5",
+      "x = 0",
+      "x = 5",
+      "x = 15"
+    ],
+    "correct": 2,
+    "explanation": "Оба условия должны быть истинны: 5 > 0 и 5 < 10 — верно."
+  },
+  {
+    "question": "Что выведет <code>3 > 5 or 8 > 6</code>?",
+    "options": [
+      "True",
+      "False",
+      "3",
+      "8"
+    ],
+    "correct": 0,
+    "explanation": "or возвращает True, если хотя бы один операнд истинен. 8 > 6 — True."
+  },
+  {
+    "question": "Что выведет: <code>print(not (10 > 5))</code>?",
+    "options": [
+      "True",
+      "False",
+      "10",
+      "5"
+    ],
+    "correct": 1,
+    "explanation": "10 > 5 = True. not True = False."
+  },
+  {
+    "question": "Что выведет: <code>print(False or False or True)</code>?",
+    "options": [
+      "True",
+      "False",
+      "Ошибка",
+      "None"
+    ],
+    "correct": 0,
+    "explanation": "Цепочка or: False or False = False, False or True = True."
+  },
+  {
+    "question": "Что выведет: <code>print(True and True and False)</code>?",
+    "options": [
+      "True",
+      "False",
+      "None",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "Цепочка and: True and True = True, True and False = False."
+  },
+  {
+    "question": "Какое условие проверяет, что число находится в диапазоне от 1 до 100 включительно?",
+    "options": [
+      "x > 1 and x < 100",
+      "x >= 1 and x <= 100",
+      "x > 0 and x < 101",
+      "x == 1..100"
+    ],
+    "correct": 1,
+    "explanation": "Для включения границ используются >= и <=: x >= 1 and x <= 100."
+  },
+  {
+    "question": "Что выведет: <code>print(not (True and False))</code>?",
+    "options": [
+      "True",
+      "False",
+      "None",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "True and False = False. not False = True."
+  },
+  {
+    "question": "Сколько существует комбинаций для двух булевых значений с оператором and?",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "1"
+    ],
+    "correct": 2,
+    "explanation": "Два операнда, каждый может быть True или False: 2 × 2 = 4 комбинации. Только одна (True and True) даёт True."
+  },
+  {
+    "question": "Что выведет: <code>print(5 > 3 and 2 < 4 or 1 > 10)</code>?",
+    "options": [
+      "True",
+      "False",
+      "Ошибка",
+      "None"
+    ],
+    "correct": 0,
+    "explanation": "Сначала and: 5 > 3 = True, 2 < 4 = True, True and True = True. Затем or: True or False = True."
+  },
+  {
+    "question": "Как проверить, что число НЕ находится в диапазоне от 0 до 10?",
+    "options": [
+      "x < 0 or x > 10",
+      "x < 0 and x > 10",
+      "not (x >= 0 and x <= 10)",
+      "Оба варианта: x < 0 or x > 10 и not (x >= 0 and x <= 10)"
+    ],
+    "correct": 3,
+    "explanation": "Оба выражения эквивалентны по законам де Моргана: not (A and B) = not A or not B."
+  }
+]

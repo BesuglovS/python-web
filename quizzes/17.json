@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Сколько раз выполнится тело цикла?<br><code>i = 0<br>while i < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1</code>",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "Бесконечно"
+    ],
+    "correct": 1,
+    "explanation": "Цикл выполнится для i = 0, 1, 2 — три итерации. При i = 3 условие i < 3 ложно."
+  },
+  {
+    "question": "Что делает <code>break</code> внутри while?",
+    "options": [
+      "Пропускает итерацию",
+      "Завершает цикл",
+      "Начинает заново",
+      "Ничего"
+    ],
+    "correct": 1,
+    "explanation": "break немедленно прерывает выполнение цикла."
+  },
+  {
+    "question": "Что такое бесконечный цикл?",
+    "options": [
+      "Цикл, который выполняется 100 раз",
+      "Цикл, условие которого всегда True",
+      "Цикл без тела",
+      "Ошибка в коде"
+    ],
+    "correct": 1,
+    "explanation": "Бесконечный цикл возникает, когда условие while никогда не становится False."
+  },
+  {
+    "question": "Когда выполняется блок else в цикле while?",
+    "options": [
+      "Когда срабатывает break",
+      "Когда условие становится False (нормальное завершение)",
+      "Всегда",
+      "Никогда"
+    ],
+    "correct": 1,
+    "explanation": "Блок else выполняется только при нормальном завершении цикла (когда условие стало False). Если сработал break — else пропускается."
+  },
+  {
+    "question": "Что выведет код?<br><code>count = 5<br>while count > 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(count, end=\" \")<br>&nbsp;&nbsp;&nbsp;&nbsp;count -= 1</code>",
+    "options": [
+      "5 4 3 2 1",
+      "1 2 3 4 5",
+      "5 4 3 2 1 0",
+      "0 1 2 3 4 5"
+    ],
+    "correct": 0,
+    "explanation": "Цикл выполняется пока count > 0: 5, 4, 3, 2, 1. При count = 0 цикл завершается."
+  },
+  {
+    "question": "Какой тип цикла гарантирует выполнение тела хотя бы один раз?",
+    "options": [
+      "while",
+      "for",
+      "do-while",
+      "Ни один из циклов Python"
+    ],
+    "correct": 3,
+    "explanation": "В Python нет цикла do-while. while и for проверяют условие перед первой итерацией."
+  },
+  {
+    "question": "Что выведет код?<br><code>x = 10<br>while x > 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;if x == 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x, end=\" \")<br>&nbsp;&nbsp;&nbsp;&nbsp;x -= 1</code>",
+    "options": [
+      "10 9 8 7 6 5",
+      "10 9 8 7 6",
+      "10 9 8 7 6 5 4 3 2 1",
+      "5"
+    ],
+    "correct": 1,
+    "explanation": "Цикл выводит 10, 9, 8, 7, 6. Когда x становится 5, срабатывает break и цикл завершается."
+  },
+  {
+    "question": "Что выведет код?<br><code>i = 0<br>while i < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 2:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code>",
+    "options": [
+      "1 2 3",
+      "1 3",
+      "2",
+      "1 2"
+    ],
+    "correct": 1,
+    "explanation": "При i = 2 срабатывает continue, итерация прерывается, print(2) не выполняется. Вывод: 1 и 3."
+  },
+  {
+    "question": "Что выведет код?<br><code>n = 0<br>while n < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;n += 1<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Готово\")</code>",
+    "options": [
+      "Ошибка",
+      "Готово",
+      "1 2 3",
+      "1 2 3 Готово"
+    ],
+    "correct": 1,
+    "explanation": "Цикл завершается нормально (break не использовался), поэтому выполняется else: выводится \"Готово\"."
+  },
+  {
+    "question": "Что такое итерация?",
+    "options": [
+      "Одно выполнение тела цикла",
+      "Переменная цикла",
+      "Условие цикла",
+      "Завершение цикла"
+    ],
+    "correct": 0,
+    "explanation": "Итерация — это одно выполнение тела цикла. Цикл состоит из нескольких итераций."
+  }
+]

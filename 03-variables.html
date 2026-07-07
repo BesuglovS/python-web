@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 3: Переменные в Python: именование, присваивание, динамическая типизация, PEP 8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="Объявление, присваивание, имена" />
     <meta property="og:title" content="3. Переменные — Python: основы" />
-    <meta property="og:description" content="Урок 3: Переменные в Python: именование, присваивание, динамическая типизация, PEP 8" />
+    <meta property="og:description" content="Объявление, присваивание, имена" />
     <meta property="og:type" content="article" />
     <title>Переменные — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="3">
     <div class="container">
@@ -18,67 +19,45 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 3</span> Переменные</h1>
         <p class="subtitle">Объявление, присваивание, соглашения об именах</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~10 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Что такое переменная?</h2>
-        <p>
-          Переменная — это имя для области памяти, в которой хранятся данные. В
-          Python переменная создаётся в момент первого присваивания:
-        </p>
-        <pre class="code-block">
-name = "Анна"
+          <h2>Что такое переменная?</h2>
+<p>Переменная — это имя для области памяти, в которой хранятся данные. В Python переменная создаётся в момент первого присваивания:</p>
+<pre><code class="language-python">name = &quot;Анна&quot;
 age = 25
-pi = 3.14159</pre
-        >
-        <p>
-          Тип переменной определяется автоматически (динамическая типизация):
-        </p>
-        <pre class="code-block">
-x = 10        # int
-x = "hello"   # теперь str
-x = 3.14      # теперь float</pre
-        >
-          </section>
-          <section>
+pi = 3.14159
+</code></pre>
+<p>Тип переменной определяется автоматически (динамическая типизация):</p>
+<pre><code class="language-python">x = 10        # int
+x = &quot;hello&quot;   # теперь str
+x = 3.14      # теперь float
+</code></pre>
 <h2>Правила именования</h2>
-        <ul>
-          <li>
-            Имя может содержать буквы, цифры и символ подчёркивания
-            <code>_</code>
-          </li>
-          <li>Не может начинаться с цифры</li>
-          <li>Регистр имеет значение: <code>age</code> ? <code>Age</code></li>
-          <li>
-            Нельзя использовать ключевые слова Python (<code>if</code>,
-            <code>for</code>, <code>while</code> и др.)
-          </li>
-        </ul>
-        <div class="tip">
-          <strong>PEP 8 — стиль:</strong> используйте
-          <code>snake_case</code> для переменных: <code>user_name</code>,
-          <code>total_count</code>.
-        </div>
-          </section>
-          <section>
+<ul>
+<li>Имя может содержать буквы, цифры и символ подчёркивания <code>_</code></li>
+<li>Не может начинаться с цифры</li>
+<li>Регистр имеет значение: <code>age</code> ? <code>Age</code></li>
+<li>Нельзя использовать ключевые слова Python (<code>if</code>, <code>for</code>, <code>while</code> и др.)</li>
+</ul>
+<blockquote>
+<p><strong>💡 Совет:</strong> <strong>PEP 8 — стиль:</strong> используйте <code>snake_case</code> для переменных: <code>user_name</code>, <code>total_count</code>.</p>
+</blockquote>
 <h2>Множественное присваивание</h2>
-        <pre class="code-block">
-a, b, c = 1, 2, 3
-a = b = c = 0     # всем трём присвоится 0</pre
-        >
-          </section>
+<pre><code class="language-python">a, b, c = 1, 2, 3
+a = b = c = 0     # всем трём присвоится 0
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-<a href="02-ide-setup.html" class="prev-link"
-          >< Настройка IDE: VS Code и PyCharm</a
-        >
+        <a href="02-ide-setup.html" class="prev-link">← Настройка IDE: IDLE, VS Code и PyCharm</a>
         <a href="04-data-types.html" class="next-link">Далее: Типы данных →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

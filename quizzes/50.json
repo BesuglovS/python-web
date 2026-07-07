@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое Git?",
+    "options": [
+      "Среда разработки",
+      "Система контроля версий",
+      "Язык программирования",
+      "База данных"
+    ],
+    "correct": 1,
+    "explanation": "Git — это распределённая система контроля версий, отслеживающая изменения в файлах."
+  },
+  {
+    "question": "Какая команда инициализирует Git-репозиторий?",
+    "options": [
+      "git start",
+      "git init",
+      "git create",
+      "git new"
+    ],
+    "correct": 1,
+    "explanation": "git init создаёт новый Git-репозиторий в текущей директории (папку .git)."
+  },
+  {
+    "question": "Какая команда добавляет файлы в индекс (staging)?",
+    "options": [
+      "git add file.py",
+      "git stage file.py",
+      "git include file.py",
+      "git put file.py"
+    ],
+    "correct": 0,
+    "explanation": "git add file.py добавляет файл в staging area (индекс) для следующего коммита."
+  },
+  {
+    "question": "Какая команда создаёт коммит?",
+    "options": [
+      "git commit -m \"сообщение\"",
+      "git save -m \"сообщение\"",
+      "git push -m \"сообщение\"",
+      "git snapshot -m \"сообщение\""
+    ],
+    "correct": 0,
+    "explanation": "git commit -m \"message\" создаёт коммит с указанным сообщением."
+  },
+  {
+    "question": "Какая команда показывает историю коммитов?",
+    "options": [
+      "git history",
+      "git log",
+      "git show",
+      "git list"
+    ],
+    "correct": 1,
+    "explanation": "git log выводит историю коммитов с хешами, авторами, датами и сообщениями."
+  },
+  {
+    "question": "Какая команда отправляет изменения на удалённый репозиторий?",
+    "options": [
+      "git send",
+      "git push",
+      "git upload",
+      "git sync"
+    ],
+    "correct": 1,
+    "explanation": "git push отправляет локальные коммиты в удалённый репозиторий."
+  },
+  {
+    "question": "Какая команда загружает изменения из удалённого репозитория?",
+    "options": [
+      "git pull",
+      "git fetch",
+      "git download",
+      "git sync"
+    ],
+    "correct": 0,
+    "explanation": "git pull загружает изменения из удалённого репозитория и сливает их с текущей веткой."
+  },
+  {
+    "question": "Что такое ветка (branch) в Git?",
+    "options": [
+      "Копия репозитория",
+      "Отдельная линия разработки",
+      "Файл с настройками",
+      "Удалённый репозиторий"
+    ],
+    "correct": 1,
+    "explanation": "Ветка — это независимая линия разработки, позволяющая работать над разными функциями параллельно."
+  },
+  {
+    "question": "Какая команда создаёт новую ветку?",
+    "options": [
+      "git branch new-feature",
+      "git create-branch new-feature",
+      "git new branch new-feature",
+      "git branch -c new-feature"
+    ],
+    "correct": 0,
+    "explanation": "git branch name создаёт новую ветку. git checkout -b name создаёт и переключается на неё."
+  },
+  {
+    "question": "Что такое .gitignore?",
+    "options": [
+      "Файл со списком игнорируемых Git-ом файлов и папок",
+      "Файл с настройками Git",
+      "Файл с описанием проекта",
+      "Файл с паролями"
+    ],
+    "correct": 0,
+    "explanation": ".gitignore содержит шаблоны файлов и папок, которые Git должен игнорировать (например, __pycache__, .env)."
+  }
+]

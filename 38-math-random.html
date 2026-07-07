@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 38: Модули math и random: математические функции, генерация случайных чисел, выбор из последовательности" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="Математика, случайные числа" />
     <meta property="og:title" content="38. math и random — Python: основы" />
-    <meta property="og:description" content="Урок 38: Модули math и random: математические функции, генерация случайных чисел, выбор из последовательности" />
+    <meta property="og:description" content="Математика, случайные числа" />
     <meta property="og:type" content="article" />
     <title>math и random — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="38">
     <div class="container">
@@ -18,52 +19,35 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 38</span> math и random</h1>
         <p class="subtitle">Математические вычисления и генерация случайных чисел</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~10 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-
-          <section>
-            <h2>Модуль math — математика в Python</h2>
-            <p>
-              Модуль <code>math</code> предоставляет доступ к основным математическим функциям и константам.
-              Это стандартный модуль — устанавливать ничего не нужно.
-            </p>
-            <pre class="code-block">
-import math</pre>
-          </section>
-
-          <section>
-            <h2>Константы</h2>
-            <pre class="code-block">
-import math
+          <h2>Модуль math — математика в Python</h2>
+<p>Модуль <code>math</code> предоставляет доступ к основным математическим функциям и константам. Это стандартный модуль — устанавливать ничего не нужно.</p>
+<pre><code class="language-python">import math
+</code></pre>
+<h2>Константы</h2>
+<pre><code class="language-python">import math
 
 print(math.pi)   # 3.141592653589793 — число π
 print(math.e)    # 2.718281828459045 — число Эйлера (e)
 print(math.tau)  # 6.283185307179586 — τ = 2π
 print(math.inf)  # бесконечность
-print(math.nan)  # не число (Not a Number)</pre>
-          </section>
-
-          <section>
-            <h2>Округление</h2>
-            <table>
-              <tr><th>Функция</th><th>Описание</th><th>Пример</th></tr>
-              <tr><td><code>ceil(x)</code></td><td>Округление вверх</td><td>math.ceil(3.1) → 4</td></tr>
-              <tr><td><code>floor(x)</code></td><td>Округление вниз</td><td>math.floor(3.9) → 3</td></tr>
-              <tr><td><code>trunc(x)</code></td><td>Отбрасывание дробной части</td><td>math.trunc(-3.9) → -3</td></tr>
-            </table>
-            <pre class="code-block">
+print(math.nan)  # не число (Not a Number)
+</code></pre>
+<h2>Округление</h2>
+<table><tbody><tr><th>Функция</th><th>Описание</th><th>Пример</th></tr><tr><td><code>ceil(x)</code></td><td>Округление вверх</td><td>math.ceil(3.1) → 4</td></tr><tr><td><code>floor(x)</code></td><td>Округление вниз</td><td>math.floor(3.9) → 3</td></tr><tr><td><code>trunc(x)</code></td><td>Отбрасывание дробной части</td><td>math.trunc(-3.9) → -3</td></tr></tbody></table>
+```python
 import math
-
-print(math.ceil(3.1))    # 4
+<p>print(math.ceil(3.1))    # 4
 print(math.floor(3.9))   # 3
-print(math.trunc(-3.9))  # -3</pre>
-          </section>
+print(math.trunc(-3.9))  # -3</p>
+<pre><code>
+## Корни, степени, логарифмы
 
-          <section>
-            <h2>Корни, степени, логарифмы</h2>
-            <pre class="code-block">
+```python
 import math
 
 # Квадратный корень
@@ -82,16 +66,11 @@ print(math.log10(100))    # 2.0
 print(math.log2(8))       # 3.0
 
 # Экспонента: e^x
-print(math.exp(2))        # 7.38905609893065</pre>
-          </section>
-
-          <section>
-            <h2>Тригонометрия</h2>
-            <p>
-              <strong>Важно:</strong> все тригонометрические функции работают с <strong>радианами</strong>, а не с градусами!
-            </p>
-            <pre class="code-block">
-import math
+print(math.exp(2))        # 7.38905609893065
+</code></pre>
+<h2>Тригонометрия</h2>
+<p><strong>Важно:</strong> все тригонометрические функции работают с <strong>радианами</strong>, а не с градусами!</p>
+<pre><code class="language-python">import math
 
 # sin, cos, tan принимают угол в радианах
 print(math.sin(math.pi / 2))   # 1.0 — синус 90°
@@ -107,27 +86,17 @@ print(math.asin(1))            # 1.57079... — arcsin(1) = π/2
 print(math.atan2(1, 1))        # 0.78539... — угол вектора (1, 1) в радианах
 
 # Гипотенуза: sqrt(x² + y²)
-print(math.hypot(3, 4))        # 5.0</pre>
-          </section>
-
-          <section>
-            <h2>Модуль random — случайные числа</h2>
-            <p>
-              Модуль <code>random</code> генерирует псевдослучайные числа. Отлично подходит для игр, симуляций,
-              случайного выбора.
-            </p>
-            <pre class="code-block">
-import random</pre>
-            <div class="note">
-              <strong>Важно:</strong> для криптографических целей используйте модуль <code>secrets</code>,
-              а не <code>random</code>. <code>random</code> не обеспечивает криптографическую стойкость.
-            </div>
-          </section>
-
-          <section>
-            <h2>random.randint() и random.randrange()</h2>
-            <pre class="code-block">
-import random
+print(math.hypot(3, 4))        # 5.0
+</code></pre>
+<h2>Модуль random — случайные числа</h2>
+<p>Модуль <code>random</code> генерирует псевдослучайные числа. Отлично подходит для игр, симуляций, случайного выбора.</p>
+<pre><code class="language-python">import random
+</code></pre>
+<blockquote>
+<p><strong>⚠️ Важно:</strong> <strong>Важно:</strong> для криптографических целей используйте модуль <code>secrets</code>, а не <code>random</code>. <code>random</code> не обеспечивает криптографическую стойкость.</p>
+</blockquote>
+<h2>random.randint() и random.randrange()</h2>
+<pre><code class="language-python">import random
 
 # Случайное целое от a до b ВКЛЮЧИТЕЛЬНО
 print(random.randint(1, 10))     # например, 7
@@ -136,13 +105,10 @@ print(random.randint(1, 10))     # например, 7
 print(random.randrange(0, 100, 5))  # например, 45 (одно из 0, 5, 10, ..., 95)
 
 # Случайное число от 0.0 до 1.0 (не включая 1.0)
-print(random.random())           # например, 0.723459...</pre>
-          </section>
-
-          <section>
-            <h2>random.choice() и random.choices()</h2>
-            <pre class="code-block">
-import random
+print(random.random())           # например, 0.723459...
+</code></pre>
+<h2>random.choice() и random.choices()</h2>
+<pre><code class="language-python">import random
 
 fruits = ['яблоко', 'банан', 'апельсин', 'груша']
 
@@ -153,76 +119,50 @@ print(random.choice(fruits))     # например, апельсин
 print(random.choices(fruits, k=3))  # ['яблоко', 'яблоко', 'груша']
 
 # Несколько случайных элементов БЕЗ возвращения (без повторов)
-print(random.sample(fruits, k=2))   # ['банан', 'груша']</pre>
-          </section>
-
-          <section>
-            <h2>random.shuffle() — перемешивание</h2>
-            <p>
-              <code>shuffle</code> перемешивает список <strong>на месте</strong> (изменяет исходный список).
-            </p>
-            <pre class="code-block">
-import random
+print(random.sample(fruits, k=2))   # ['банан', 'груша']
+</code></pre>
+<h2>random.shuffle() — перемешивание</h2>
+<p><code>shuffle</code> перемешивает список <strong>на месте</strong> (изменяет исходный список).</p>
+<pre><code class="language-python">import random
 
 cards = ['A', 'K', 'Q', 'J', '10', '9']
 random.shuffle(cards)
-print(cards)  # ['Q', 'A', '9', 'K', '10', 'J'] — случайный порядок</pre>
-          </section>
-
-          <section>
-            <h2>random.seed() — воспроизводимость</h2>
-            <p>
-              Для отладки или повторяемых экспериментов можно зафиксировать «зерно» генератора:
-            </p>
-            <pre class="code-block">
-import random
+print(cards)  # ['Q', 'A', '9', 'K', '10', 'J'] — случайный порядок
+</code></pre>
+<h2>random.seed() — воспроизводимость</h2>
+<p>Для отладки или повторяемых экспериментов можно зафиксировать «зерно» генератора:</p>
+<pre><code class="language-python">import random
 
 random.seed(42)
 print(random.randint(1, 100))  # всегда 82
 
 random.seed(42)
-print(random.randint(1, 100))  # снова 82 — последовательность повторяется</pre>
-          </section>
-
-          <section>
-            <h2>Практический пример: генератор паролей</h2>
-            <pre class="code-block">
-import random
+print(random.randint(1, 100))  # снова 82 — последовательность повторяется
+</code></pre>
+<h2>Практический пример: генератор паролей</h2>
+<pre><code class="language-python">import random
 import string
 
 def generate_password(length=12):
-    """Генерирует случайный пароль заданной длины."""
-    chars = string.ascii_letters + string.digits + "!@#$%&*"
+    &quot;&quot;&quot;Генерирует случайный пароль заданной длины.&quot;&quot;&quot;
+    chars = string.ascii_letters + string.digits + &quot;!@#$%&amp;*&quot;
     password = ''.join(random.choices(chars, k=length))
     return password
 
 print(generate_password(16))
-# Пример вывода: aB3#xK9!mN2&qW5p</pre>
-          </section>
+# Пример вывода: aB3#xK9!mN2&amp;qW5p
+</code></pre>
+<h2>Итоги</h2>
+<table><tbody><tr><th>Модуль</th><th>Функция</th><th>Назначение</th></tr><tr><td>math</td><td><code>sqrt(x)</code></td><td>Квадратный корень</td></tr><tr><td>math</td><td><code>ceil/floor/trunc</code></td><td>Округление</td></tr><tr><td>math</td><td><code>sin/cos/tan</code></td><td>Тригонометрия (в радианах)</td></tr><tr><td>math</td><td><code>log/log10/log2</code></td><td>Логарифмы</td></tr><tr><td>math</td><td><code>pi, e, tau</code></td><td>Математические константы</td></tr><tr><td>random</td><td><code>randint(a, b)</code></td><td>Случайное целое [a, b]</td></tr><tr><td>random</td><td><code>choice(seq)</code></td><td>Случайный элемент</td></tr><tr><td>random</td><td><code>shuffle(list)</code></td><td>Перемешивание на месте</td></tr><tr><td>random</td><td><code>sample(seq, k)</code></td><td>k уникальных элементов</td></tr><tr><td>random</td><td><code>seed(n)</code></td><td>Фиксация зерна для повторяемости</td></tr></tbody></table>
 
-          <section>
-            <h2>Итоги</h2>
-            <table>
-              <tr><th>Модуль</th><th>Функция</th><th>Назначение</th></tr>
-              <tr><td>math</td><td><code>sqrt(x)</code></td><td>Квадратный корень</td></tr>
-              <tr><td>math</td><td><code>ceil/floor/trunc</code></td><td>Округление</td></tr>
-              <tr><td>math</td><td><code>sin/cos/tan</code></td><td>Тригонометрия (в радианах)</td></tr>
-              <tr><td>math</td><td><code>log/log10/log2</code></td><td>Логарифмы</td></tr>
-              <tr><td>math</td><td><code>pi, e, tau</code></td><td>Математические константы</td></tr>
-              <tr><td>random</td><td><code>randint(a, b)</code></td><td>Случайное целое [a, b]</td></tr>
-              <tr><td>random</td><td><code>choice(seq)</code></td><td>Случайный элемент</td></tr>
-              <tr><td>random</td><td><code>shuffle(list)</code></td><td>Перемешивание на месте</td></tr>
-              <tr><td>random</td><td><code>sample(seq, k)</code></td><td>k уникальных элементов</td></tr>
-              <tr><td>random</td><td><code>seed(n)</code></td><td>Фиксация зерна для повторяемости</td></tr>
-            </table>
-          </section></div>
+        </div>
       </div>
       <footer class="topic-footer">
-        <a href="37-venv-pip.html" class="prev-link">← venv и pip</a>
-        <a href="39-datetime.html" class="next-link">Далее: Дата и время →</a>
+        <a href="37-venv-pip.html" class="prev-link">← Виртуальные окружения и pip</a>
+        <a href="39-datetime.html" class="next-link">Далее: Модуль datetime →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

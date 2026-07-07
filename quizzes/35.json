@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое модуль в Python?",
+    "options": [
+      "Файл с расширением .py, содержащий код",
+      "Папка с файлами",
+      "Библиотека на C",
+      "Встроенная функция"
+    ],
+    "correct": 0,
+    "explanation": "Модуль — это любой файл .py, содержащий определения функций, классов и переменных."
+  },
+  {
+    "question": "Какая команда импортирует модуль?",
+    "options": [
+      "include math",
+      "import math",
+      "using math",
+      "require math"
+    ],
+    "correct": 1,
+    "explanation": "Для подключения модуля в Python используется ключевое слово import: import math."
+  },
+  {
+    "question": "Что делает <code>from math import sqrt</code>?",
+    "options": [
+      "Импортирует весь модуль math",
+      "Импортирует только функцию sqrt, можно вызывать без префикса math.",
+      "Удаляет модуль math",
+      "Переименовывает sqrt"
+    ],
+    "correct": 1,
+    "explanation": "from ... import ... импортирует конкретное имя. После этого sqrt() можно использовать напрямую, без math.sqrt()."
+  },
+  {
+    "question": "Что делает <code>import math as m</code>?",
+    "options": [
+      "Импортирует модуль m",
+      "Импортирует math под псевдонимом m",
+      "Объединяет два модуля",
+      "Вызывает ошибку"
+    ],
+    "correct": 1,
+    "explanation": "Ключевое слово as создаёт псевдоним. После этого можно писать m.sqrt(25) вместо math.sqrt(25)."
+  },
+  {
+    "question": "Как импортировать только функции sin и cos из модуля math?",
+    "options": [
+      "import sin, cos",
+      "from math import sin, cos",
+      "import math.sin, math.cos",
+      "include math.sin, math.cos"
+    ],
+    "correct": 1,
+    "explanation": "from math import sin, cos импортирует только указанные функции напрямую в текущее пространство имён."
+  },
+  {
+    "question": "Что произойдёт при конфликте имён после from module import *?",
+    "options": [
+      "Ошибка",
+      "Импорт перезапишет существующие имена",
+      "Создастся копия",
+      "Ничего"
+    ],
+    "correct": 1,
+    "explanation": "from module import * может перезаписать уже существующие имена. Рекомендуется избегать такого импорта."
+  },
+  {
+    "question": "Как узнать, какие имена содержит модуль?",
+    "options": [
+      "module.info()",
+      "module.contents()",
+      "dir(module)",
+      "help(module)"
+    ],
+    "correct": 2,
+    "explanation": "dir(module) возвращает список всех имён, определённых в модуле."
+  },
+  {
+    "question": "Как проверить, установлен ли модуль в Python?",
+    "options": [
+      "import имя_модуля — если нет, будет ModuleNotFoundError",
+      "check модуль",
+      "module.exists()",
+      "python check module"
+    ],
+    "correct": 0,
+    "explanation": "Попытка импорта: если модуль не установлен, возникнет ModuleNotFoundError."
+  },
+  {
+    "question": "Что такое __name__ в Python?",
+    "options": [
+      "Имя файла",
+      "Специальная переменная, равная \"__main__\" при запуске файла как главного",
+      "Имя функции",
+      "Название модуля"
+    ],
+    "correct": 1,
+    "explanation": "При запуске файла __name__ = \"__main__\". При импорте — имя модуля. Используется для защиты кода: if __name__ == \"__main__\":"
+  },
+  {
+    "question": "Что такое пакет (package) в Python?",
+    "options": [
+      "Один файл .py",
+      "Папка с файлом __init__.py, содержащая модули",
+      "Архив с кодом",
+      "База данных"
+    ],
+    "correct": 1,
+    "explanation": "Пакет — это папка, содержащая модули и файл __init__.py (может быть пустым), который делает папку импортируемой."
+  }
+]

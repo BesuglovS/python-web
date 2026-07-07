@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что перебирает <code>for x in \"abc\"</code>?",
+    "options": [
+      "Индексы 0, 1, 2",
+      "Символы a, b, c",
+      "Буквы A, B, C",
+      "Числа 97, 98, 99"
+    ],
+    "correct": 1,
+    "explanation": "Цикл for перебирает элементы последовательности напрямую — отдельные символы строки."
+  },
+  {
+    "question": "Что выведет <code>for i in [10, 20, 30]: print(i)</code>?",
+    "options": [
+      "0 1 2",
+      "10 20 30",
+      "[10, 20, 30]",
+      "0, 1, 2"
+    ],
+    "correct": 1,
+    "explanation": "for перебирает значения списка: сначала 10, потом 20, потом 30."
+  },
+  {
+    "question": "Когда выполняется блок else в цикле for?",
+    "options": [
+      "Когда срабатывает break",
+      "Когда цикл завершился нормально (без break)",
+      "Всегда",
+      "Никогда"
+    ],
+    "correct": 1,
+    "explanation": "Блок else в for выполняется только при нормальном завершении цикла. Если был break — else не выполняется."
+  },
+  {
+    "question": "Что выведет код?<br><code>total = 0<br>for n in [1, 2, 3, 4, 5]:<br>&nbsp;&nbsp;&nbsp;&nbsp;total += n<br>print(total)</code>",
+    "options": [
+      "15",
+      "10",
+      "12345",
+      "5"
+    ],
+    "correct": 0,
+    "explanation": "Цикл суммирует элементы списка: 1 + 2 + 3 + 4 + 5 = 15."
+  },
+  {
+    "question": "Что выведет код?<br><code>for char in \"Python\":<br>&nbsp;&nbsp;&nbsp;&nbsp;if char == \"t\":<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>&nbsp;&nbsp;&nbsp;&nbsp;print(char, end=\"\")</code>",
+    "options": [
+      "Pyt",
+      "Py",
+      "Python",
+      "P"
+    ],
+    "correct": 1,
+    "explanation": "Цикл выводит \"P\", \"y\". При char = \"t\" срабатывает break и цикл завершается."
+  },
+  {
+    "question": "Что выведет код?<br><code>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 2:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</code>",
+    "options": [
+      "0 1 2 3 4",
+      "0 1 3 4",
+      "2",
+      "0 1 2"
+    ],
+    "correct": 1,
+    "explanation": "При i = 2 срабатывает continue, print(2) пропускается. Вывод: 0 1 3 4."
+  },
+  {
+    "question": "Какая переменная-счётчик чаще всего используется в циклах for?",
+    "options": [
+      "i",
+      "x",
+      "counter",
+      "n"
+    ],
+    "correct": 0,
+    "explanation": "По традиции в циклах for чаще всего используются i, j, k в качестве переменных-счётчиков."
+  },
+  {
+    "question": "Что выведет код?<br><code>for i in \"ab\":<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in \"12\":<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(i + j, end=\" \")</code>",
+    "options": [
+      "a b 1 2",
+      "a1 a2 b1 b2",
+      "ab 12",
+      "a1 b2"
+    ],
+    "correct": 1,
+    "explanation": "Внешний цикл: a, b. Для каждого внутренний: 1, 2. Комбинации: \"a1\", \"a2\", \"b1\", \"b2\"."
+  },
+  {
+    "question": "Что выведет код?<br><code>for i in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"конец\")</code>",
+    "options": [
+      "0 1 2",
+      "0 1 2 конец",
+      "конец",
+      "0 1 2 3 конец"
+    ],
+    "correct": 1,
+    "explanation": "Цикл выводит 0, 1, 2. Завершается нормально, выполняется else: выводится \"конец\"."
+  },
+  {
+    "question": "Что такое итерируемый объект?",
+    "options": [
+      "Объект, который можно изменять",
+      "Объект, по элементам которого можно проходить в цикле",
+      "Объект с числовыми индексами",
+      "Только списки"
+    ],
+    "correct": 1,
+    "explanation": "Итерируемый объект (iterable) — это объект, который можно перебирать в цикле for: строки, списки, кортежи, словари и т.д."
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Чему равно <code>True and False</code>?",
+    "options": [
+      "True",
+      "False",
+      "None",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "and возвращает True только если оба операнда истинны."
+  },
+  {
+    "question": "Чему равно <code>not (5 > 3)</code>?",
+    "options": [
+      "True",
+      "False",
+      "5",
+      "3"
+    ],
+    "correct": 1,
+    "explanation": "5 > 3 — True, оператор not инвертирует результат в False."
+  },
+  {
+    "question": "Чему равно <code>True + 1</code>?",
+    "options": [
+      "1",
+      "2",
+      "True",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "bool — подтип int. True == 1, поэтому True + 1 = 2."
+  },
+  {
+    "question": "Чему равно <code>False * 5</code>?",
+    "options": [
+      "False",
+      "5",
+      "0",
+      "Ошибка"
+    ],
+    "correct": 2,
+    "explanation": "False == 0, поэтому False * 5 = 0."
+  },
+  {
+    "question": "Какое значение bool() вернёт как False?",
+    "options": [
+      "1",
+      "\"False\"",
+      "0",
+      "100"
+    ],
+    "correct": 2,
+    "explanation": "0 (ноль) — falsy значение. Все ненулевые числа и непустые строки — truthy."
+  },
+  {
+    "question": "Какое значение bool() вернёт как True?",
+    "options": [
+      "0",
+      "\"\"",
+      "None",
+      "\"text\""
+    ],
+    "correct": 3,
+    "explanation": "Непустые строки — truthy. bool(\"text\") = True. Пустая строка, 0 и None — falsy."
+  },
+  {
+    "question": "Чему равно <code>True or False</code>?",
+    "options": [
+      "True",
+      "False",
+      "None",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "or возвращает True, если хотя бы один операнд истинен. True or любой = True."
+  },
+  {
+    "question": "Чему равно <code>not not True</code>?",
+    "options": [
+      "False",
+      "True",
+      "None",
+      "Ошибка"
+    ],
+    "correct": 1,
+    "explanation": "not True = False; not False = True. Двойное отрицание возвращает исходное значение."
+  },
+  {
+    "question": "Что выведет: <code>print(True and False or True)</code>?",
+    "options": [
+      "True",
+      "False",
+      "None",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "Приоритет: and выше or. True and False = False. False or True = True."
+  },
+  {
+    "question": "Чему равно <code>bool(0.0)</code>?",
+    "options": [
+      "True",
+      "False",
+      "None",
+      "0.0"
+    ],
+    "correct": 1,
+    "explanation": "0.0 — falsy значение. bool(0.0) = False. Любое ненулевое число с плавающей точкой — truthy."
+  }
+]

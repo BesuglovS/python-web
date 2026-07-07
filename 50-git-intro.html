@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 50: Введение в Git: инициализация репозитория, коммиты, ветки, слияние, работа с удалённым репозиторием на GitHub" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="Коммиты, ветки, GitHub, .gitignore" />
     <meta property="og:title" content="50. Git: введение — Python: основы" />
-    <meta property="og:description" content="Урок 50: Введение в Git: инициализация репозитория, коммиты, ветки, слияние, работа с удалённым репозиторием на GitHub" />
+    <meta property="og:description" content="Коммиты, ветки, GitHub, .gitignore" />
     <meta property="og:type" content="article" />
     <title>Git: введение — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="50">
     <div class="container">
@@ -18,26 +19,29 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 50</span> Git: введение</h1>
         <p class="subtitle">Система контроля версий: репозиторий, коммиты, ветки, GitHub</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-
-          <section>
-            <h2>Введение</h2>
-            <p>Git — самая популярная система контроля версий. Она отслеживает изменения в коде, позволяет возвращаться к любым версиям, работать над разными функциями параллельно (ветки) и сотрудничать с другими разработчиками через GitHub (или GitLab, Bitbucket).</p>
-            <div class="info-box"><strong>📌 На этом уроке вы узнаете:</strong><ul><li>Установка и <code>git init</code> — инициализация репозитория</li><li>Основные команды: <code>git add</code>, <code>git commit</code>, <code>git status</code>, <code>git log</code></li><li>Ветки: <code>git branch</code>, <code>git checkout</code>, <code>git merge</code></li><li><code>.gitignore</code> — что не нужно отслеживать</li><li>Работа с удалённым репозиторием: <code>git push</code>, <code>git pull</code></li></ul></div>
-          </section>
-
-          <section>
-            <h2>Основной материал</h2>
-            <p>Работа с Git начинается с <code>git init</code> в папке проекта. После изменений файлы подготавливаются к коммиту через <code>git add</code> (индексация), затем <code>git commit -m "сообщение"</code> фиксирует состояние. <code>git status</code> показывает текущее состояние, <code>git log</code> — историю коммитов. Ветки (<code>git branch feature</code>) изолируют разработку, <code>git merge</code> объединяет изменения. Удалённые репозитории подключаются через <code>git remote add origin URL</code>, <code>git push</code> отправляет изменения, <code>git pull</code> забирает новые.</p>
-            <pre><code class="language-bash"># Инициализация репозитория
+          <h2>Введение</h2>
+<p>Git — самая популярная система контроля версий. Она отслеживает изменения в коде, позволяет возвращаться к любым версиям, работать над разными функциями параллельно (ветки) и сотрудничать с другими разработчиками через GitHub (или GitLab, Bitbucket).</p>
+<p><strong>📌 На этом уроке вы узнаете:</strong></p>
+<ul>
+<li>Установка и <code>git init</code> — инициализация репозитория</li>
+<li>Основные команды: <code>git add</code>, <code>git commit</code>, <code>git status</code>, <code>git log</code></li>
+<li>Ветки: <code>git branch</code>, <code>git checkout</code>, <code>git merge</code></li>
+<li><code>.gitignore</code> — что не нужно отслеживать</li>
+<li>Работа с удалённым репозиторием: <code>git push</code>, <code>git pull</code></li>
+</ul>
+<h2>Основной материал</h2>
+<p>Работа с Git начинается с <code>git init</code> в папке проекта. После изменений файлы подготавливаются к коммиту через <code>git add</code> (индексация), затем <code>git commit -m &quot;сообщение&quot;</code> фиксирует состояние. <code>git status</code> показывает текущее состояние, <code>git log</code> — историю коммитов. Ветки (<code>git branch feature</code>) изолируют разработку, <code>git merge</code> объединяет изменения. Удалённые репозитории подключаются через <code>git remote add origin URL</code>, <code>git push</code> отправляет изменения, <code>git pull</code> забирает новые.</p>
+<pre><code class="language-bash"># Инициализация репозитория
 git init
 
 # Добавление файлов и коммит
 git add *.py
-git commit -m "Добавлены файлы проекта"
+git commit -m &quot;Добавлены файлы проекта&quot;
 
 # Работа с ветками
 git branch feature-auth     # создание ветки
@@ -51,28 +55,28 @@ git merge feature-auth      # объединение feature-auth в main
 # Работа с GitHub
 git remote add origin https://github.com/user/repo.git
 git push -u origin main     # первая отправка
-git pull                     # получение изменений с сервера</code></pre>
-          </section>
+git pull                     # получение изменений с сервера
+</code></pre>
+<h2>Практика</h2>
+<p><strong>📝 Задание:</strong> Создайте локальный Git-репозиторий для папки с вашими кодами. Сделайте первый коммит. Создайте ветку <code>practice</code>, внесите изменения и добавьте новый файл. Слейте ветку practice в main. Посмотрите историю через <code>git log --oneline --graph</code>.</p>
+<h2>Ключевые выводы</h2>
+<ul>
+<li><code>git init</code> — создаёт новый репозиторий в текущей папке</li>
+<li><code>git add</code> → <code>git commit</code> — стандартный цикл работы</li>
+<li>Ветки (<code>branch</code>) позволяют работать над функциями изолированно</li>
+<li><code>git merge</code> объединяет изменения из разных веток</li>
+<li><code>.gitignore</code> исключает служебные файлы из репозитория</li>
+<li><code>git push</code> / <code>git pull</code> — синхронизация с GitHub</li>
+</ul>
 
-          <section>
-            <h2>Практика</h2>
-            <div class="task-box">
-              <p><strong>📝 Задание:</strong> Создайте локальный Git-репозиторий для папки с вашими кодами. Сделайте первый коммит. Создайте ветку <code>practice</code>, внесите изменения и добавьте новый файл. Слейте ветку practice в main. Посмотрите историю через <code>git log --oneline --graph</code>.</p>
-              <div class="repl-link"><a href="repl.html" target="_blank">Открыть REPL для выполнения →</a></div>
-            </div>
-          </section>
-
-          <section>
-            <h2>Ключевые выводы</h2>
-            <ul><li><code>git init</code> — создаёт новый репозиторий в текущей папке</li><li><code>git add</code> → <code>git commit</code> — стандартный цикл работы</li><li>Ветки (<code>branch</code>) позволяют работать над функциями изолированно</li><li><code>git merge</code> объединяет изменения из разных веток</li><li><code>.gitignore</code> исключает служебные файлы из репозитория</li><li><code>git push</code> / <code>git pull</code> — синхронизация с GitHub</li></ul>
-          </section></div>
+        </div>
       </div>
       <footer class="topic-footer">
         <a href="49-flask.html" class="prev-link">← Веб-фреймворки: Flask</a>
-        <a href="index.html" class="next-link">На главную →</a>
+        
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

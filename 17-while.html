@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 17: Цикл while: синтаксис, условие продолжения, бесконечные циклы, счётчики, флаги" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="while" />
     <meta property="og:title" content="17. Цикл while — Python: основы" />
-    <meta property="og:description" content="Урок 17: Цикл while: синтаксис, условие продолжения, бесконечные циклы, счётчики, флаги" />
+    <meta property="og:description" content="while" />
     <meta property="og:type" content="article" />
     <title>Цикл while — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="17">
     <div class="container">
@@ -18,17 +19,16 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 17</span> Цикл while</h1>
         <p class="subtitle">while — повторение пока условие истинно</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~10 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Синтаксис while</h2>
+          <h2>Синтаксис while</h2>
 <p>while выполняет блок кода, пока условие истинно:</p>
-<pre class="code-block">
-count = 0
-while count < 5:
-    print(f"Счёт: {count}")
+<pre><code class="language-python">count = 0
+while count &lt; 5:
+    print(f&quot;Счёт: {count}&quot;)
     count += 1
 
 # Вывод:
@@ -37,54 +37,44 @@ while count < 5:
 # Счёт: 2
 # Счёт: 3
 # Счёт: 4
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Бесконечный цикл</h2>
 <p>Если условие всегда истинно — цикл бесконечен. Используйте break для выхода:</p>
-<pre class="code-block">
-while True:
-    cmd = input("Введите команду: ")
-    if cmd == "exit":
+<pre><code class="language-python">while True:
+    cmd = input(&quot;Введите команду: &quot;)
+    if cmd == &quot;exit&quot;:
         break
-    print(f"Вы ввели: {cmd}")
-</pre>
-          </section>
-          <section>
+    print(f&quot;Вы ввели: {cmd}&quot;)
+</code></pre>
 <h2>while с else</h2>
 <p>Блок else выполняется, если цикл завершился нормально (без break):</p>
-<pre class="code-block">
-num = 0
-while num < 3:
+<pre><code class="language-python">num = 0
+while num &lt; 3:
     print(num)
     num += 1
 else:
-    print("Цикл завершён")
+    print(&quot;Цикл завершён&quot;)
 
-# Вывод: 0 1 2 "Цикл завершён"
-</pre>
-          </section>
-          <section>
+# Вывод: 0 1 2 &quot;Цикл завершён&quot;
+</code></pre>
 <h2>Пример: сумма чисел до нуля</h2>
 <p>Пользователь вводит числа, суммируем их до тех пор, пока не введёт 0:</p>
-<pre class="code-block">
-total = 0
-num = int(input("Число: "))
+<pre><code class="language-python">total = 0
+num = int(input(&quot;Число: &quot;))
 while num != 0:
     total += num
-    num = int(input("Число: "))
-print(f"Сумма: {total}")
-</pre>
-          </section>
-          <div id="contest-link-placeholder"></div>
+    num = int(input(&quot;Число: &quot;))
+print(f&quot;Сумма: {total}&quot;)
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-<a href="16-regex.html" class="prev-link">< Операции над строками</a>
+        <a href="16-regex.html" class="prev-link">← Регулярные выражения</a>
         <a href="18-for.html" class="next-link">Далее: Цикл for →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

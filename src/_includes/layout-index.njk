@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="{% if description %}{{ description }}{% else %}Изучайте Python с нуля — 50 интерактивных уроков с примерами кода.{% endif %}" />
+    <meta property="og:title" content="Python — Основы программирования" />
+    <meta property="og:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://python.nayanovaacademy.ru/" />
+    <meta property="og:image" content="https://python.nayanovaacademy.ru/favicon.png" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Python — Основы программирования" />
+    <meta name="twitter:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
+    <meta name="twitter:image" content="https://python.nayanovaacademy.ru/favicon.png" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://python.nayanovaacademy.ru/" />
+    <title>Основы программирования на Python — 50 уроков для начинающих</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <meta name="theme-color" content="#667eea" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Python — Основы программирования",
+      "description": "Изучайте Python с нуля — 50 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса.",
+      "provider": { "@type": "Organization", "name": "Python Web" },
+      "educationalLevel": "beginner",
+      "numberOfLessons": "50",
+      "inLanguage": "ru",
+      "hasCourseInstance": { "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }
+    }
+    </script>
+  </head>
+  <body class="index-page">
+    <div class="container index-container">
+      <header class="index-header">
+        <h1>🐍 <span>Python</span> — основы программирования</h1>
+        <p>50 тем для начинающих с примерами кода</p>
+        <div class="progress-bar-container"></div>
+        <span class="progress-info"></span>
+        <a href="repl.html" class="repl-hero-btn">▶ Интерактивная консоль Python</a>
+        <!-- Блок достижений (badges) -->
+        <div class="badges-section" id="badgesBlock" style="display:none;">
+          <div class="badges-title">🏆 Достижения</div>
+          <div class="badges-grid" id="badgesGrid"></div>
+        </div>
+      </header>
+
+      <nav class="index-nav">
+        {% for section in collections.sections %}
+        <div class="section-group" data-section="{{ section.id }}" id="section-{{ section.id }}">
+          <h2 class="section-title">{{ section.title }}</h2>
+          <div class="section-cards">
+            {% for lesson in section.lessons %}
+            <a href="{{ lesson.url }}" class="topic-card" data-lesson="{{ lesson.num }}">
+              <div class="topic-num">{{ lesson.num }}</div>
+              <div class="topic-info">
+                <h2>{{ lesson.title }}</h2>
+                <p>{{ lesson.subtitle }}</p>
+                {% if lesson.duration %}<div class="topic-meta"><span class="meta-duration">⏱ {{ lesson.duration }} мин</span> · <span class="meta-complexity" data-level="{{ lesson.complexity }}">{{ lesson.complexity }}</span></div>{% endif %}
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </nav>
+      <footer class="index-footer">
+        Создано для изучения основ Python. Все примеры можно запустить в интерпретаторе.
+      </footer>
+    </div>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

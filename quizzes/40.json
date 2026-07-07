@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое NumPy?",
+    "options": [
+      "Библиотека для работы с многомерными массивами и матрицами",
+      "Фреймворк для веб-разработки",
+      "База данных",
+      "Среда разработки"
+    ],
+    "correct": 0,
+    "explanation": "NumPy — это библиотека для научных вычислений, предоставляющая многомерные массивы и функции для работы с ними."
+  },
+  {
+    "question": "Как создать массив NumPy из списка?",
+    "options": [
+      "np.array([1, 2, 3])",
+      "np.list([1, 2, 3])",
+      "np.create([1, 2, 3])",
+      "np.fromlist([1, 2, 3])"
+    ],
+    "correct": 0,
+    "explanation": "np.array() создаёт массив NumPy из списка или другого итерируемого объекта."
+  },
+  {
+    "question": "Что такое Pandas?",
+    "options": [
+      "Библиотека для анализа и обработки данных",
+      "База данных",
+      "Веб-фреймворк",
+      "Графическая библиотека"
+    ],
+    "correct": 0,
+    "explanation": "Pandas — это библиотека для анализа данных, предоставляющая структуры DataFrame и Series."
+  },
+  {
+    "question": "Как создать DataFrame в Pandas?",
+    "options": [
+      "pd.DataFrame(data)",
+      "pd.Table(data)",
+      "pd.Series(data)",
+      "pd.data(data)"
+    ],
+    "correct": 0,
+    "explanation": "pd.DataFrame(data) создаёт таблицу (DataFrame) из словаря, списка или другого источника."
+  },
+  {
+    "question": "Как прочитать CSV-файл в Pandas?",
+    "options": [
+      "pd.read_csv(\"file.csv\")",
+      "pd.load_csv(\"file.csv\")",
+      "pd.open_csv(\"file.csv\")",
+      "pd.import_csv(\"file.csv\")"
+    ],
+    "correct": 0,
+    "explanation": "pd.read_csv() читает CSV-файл и возвращает DataFrame."
+  },
+  {
+    "question": "Что такое Series в Pandas?",
+    "options": [
+      "Двумерная таблица",
+      "Одномерный массив с индексами",
+      "Трёхмерный массив",
+      "База данных"
+    ],
+    "correct": 1,
+    "explanation": "Series — это одномерная структура данных, похожая на список, но с метками-индексами."
+  },
+  {
+    "question": "Как получить первые 5 строк DataFrame?",
+    "options": [
+      "df.head()",
+      "df.first()",
+      "df.top()",
+      "df.begin()"
+    ],
+    "correct": 0,
+    "explanation": "df.head() возвращает первые 5 строк (по умолчанию) DataFrame для быстрого просмотра."
+  },
+  {
+    "question": "Как выбрать столбец \"name\" из DataFrame?",
+    "options": [
+      "df[\"name\"]",
+      "df.name",
+      "Оба варианта работают",
+      "df.get(\"name\")"
+    ],
+    "correct": 2,
+    "explanation": "В Pandas можно обращаться к столбцу как df[\"name\"] или df.name (если имя без пробелов)."
+  },
+  {
+    "question": "Какая команда устанавливает NumPy?",
+    "options": [
+      "pip install numpy",
+      "pip install np",
+      "python add numpy",
+      "numpy install"
+    ],
+    "correct": 0,
+    "explanation": "pip install numpy устанавливает библиотеку NumPy."
+  },
+  {
+    "question": "Какой атрибут массива NumPy показывает его размерность?",
+    "options": [
+      "array.size",
+      "array.shape",
+      "array.dim",
+      "array.length"
+    ],
+    "correct": 1,
+    "explanation": "array.shape возвращает кортеж с размерностями массива, например (3, 4) для матрицы 3×4."
+  }
+]

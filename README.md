@@ -75,7 +75,85 @@
 4. **Переходите** по ссылкам «Назад» и «Далее» внизу каждой страницы для последовательного изучения.
 5. **Используйте** встроенную консоль Python (`repl.html`) для экспериментов с кодом прямо в браузере.
 
-Никакой сервер или сборка не требуются — сайт работает полностью на стороне клиента.
+## 🔧 Для разработчиков: сборка и форматы файлов
+
+Проект использует генератор статики **[Eleventy (11ty) v3](https://www.11ty.dev/)** для сборки HTML из Markdown-файлов.
+
+### Установка
+
+```bash
+cd python-web
+npm install
+```
+
+Зависимости: `@11ty/eleventy`, `luxon`, `markdown-it`.
+
+### Сборка
+
+```bash
+npm run build       # однократная сборка
+npm run watch       # сборка с автоперезагрузкой при изменениях (http://localhost:8080)
+```
+
+### Форматы файлов
+
+| Роль | Формат | Расположение |
+|------|--------|--------------|
+| **Исходники уроков** | Markdown (.md) | `src/*.md` |
+| **Шаблон урока** | Nunjucks (.njk) | `src/_includes/layout.njk` |
+| **Шаблон главной** | Nunjucks (.njk) | `src/_includes/layout-index.njk` + `src/index.njk` |
+| **Данные курса** | JavaScript (.js) | `src/_data/lessonsData.js` (генерируется из `lessons.json`) |
+| **Собранные HTML** | HTML (.html) | Корень `python-web/` (перезаписываются при сборке) |
+
+### Структура Markdown-урока
+
+Каждый файл в `src/*.md` должен иметь **front matter** с метаданными:
+
+```markdown
+---
+layout: "layout.njk"
+lesson: 25
+title: "Списки"
+subtitle: "list, методы списков"
+duration: 15
+section: 5
+complexity: 2
+prev: "24-debugging.html"
+prevTitle: "Отладка программ"
+next: "26-sets.html"
+nextTitle: "Множества"
+---
+
+## Создание списков
+Список — упорядоченная изменяемая коллекция:
+
+## Индексация и срезы
+...
+```
+
+**Поля front matter:**
+- `layout` — подключаемый шаблон (всегда `layout.njk`)
+- `lesson` — номер урока (1–50)
+- `title` — название
+- `subtitle` — подзаголовок (meta description)
+- `duration` — примерное время чтения в минутах (отображается как «⏱ ~X мин чтения»)
+- `section` — номер раздела (1–12)
+- `complexity` — уровень сложности (1–3)
+- `prev` / `prevTitle` — ссылка на предыдущий урок
+- `next` / `nextTitle` — ссылка на следующий урок
+
+### Цикл редактирования контента
+
+1. Отредактировать Markdown-файл в `src/` (например, `src/25-lists.md`)
+2. Выполнить `npm run build` для генерации HTML
+3. Для разработки: `npm run watch` — автоматическая пересборка при сохранении
+4. Результат в корне: `25-lists.html`
+
+### Процедура деплоя
+
+См. раздел [🚀 Деплой](#-деплой) ниже.
+
+Никакой сервер или сборка не требуются для просмотра — готовые HTML-файлы работают полностью на стороне клиента.
 
 ## 🎯 Цель проекта
 
@@ -137,6 +215,77 @@ python-web/
 - **PWA / Офлайн** — сайт работает без интернета после первого посещения
 - **Визуальные блоки** — заметки (note), советы (tip) и предупреждения (warning)
 - **SEO** — мета-теги Open Graph и структурированные данные (JSON-LD)
+
+## 🚀 Деплой
+
+### Локальная сборка перед деплоем
+
+```bash
+cd python-web
+npm install
+npm run build
+```
+
+Результат: 51 HTML-файл (index + 50 уроков) в корне `python-web/`, готовых к загрузке на сервер.
+
+### Что отправлять на сервер
+
+Всё содержимое папки `python-web/`, **кроме**:
+- `node_modules/` — зависимости сборки
+- `src/` — исходные Markdown-файлы
+- `convert-lessons.js`, `.eleventy.js`, `package.json` — инструменты сборки
+- `ANALYSIS.md` — внутренняя документация
+
+**Важно:** `lessons.json`, `quizzes/` и `sandbox/` — обязательны на проде, они используются клиентским JS и PHP-песочницей.
+
+### Требования к серверу
+
+| Компонент | Требование |
+|-----------|------------|
+| Веб-сервер | Apache 2.4+ или Nginx 1.18+ |
+| PHP | **7.4+** (для `sandbox/run.php`) |
+| Python | **3.10+** (песочница выполняет код пользователя) |
+
+### Варианты деплоя
+
+**VPS / выделенный сервер:**
+```bash
+rsync -avz --delete \
+  --exclude='node_modules' --exclude='src' --exclude='.git' \
+  --exclude='convert-lessons.js' --exclude='ANALYSIS.md' \
+  --exclude='package.json' --exclude='package-lock.json' \
+  ./python-web/ user@server:/var/www/python-web/
+```
+→ Apache/Nginx VirtualHost + Certbot для HTTPS
+
+**Обычный хостинг (Reg.ru, Timeweb, Beget):**
+Собрать локально → загрузить всё через FTP в корень сайта. PHP работает из коробки.
+
+**Статический хостинг (Netlify/Vercel):**
+Статическую часть деплоить на Netlify, `sandbox/run.php` вынести на отдельный хостинг с PHP. В `script.js` заменить URL песочницы на абсолютный.
+
+### Безопасность песочницы
+
+```ini
+; php.ini — рекомендуемые ограничения
+open_basedir = /var/www/python-web/sandbox:/tmp
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen
+max_execution_time = 10
+post_max_size = 100K
+```
+
+### Проверка после деплоя
+
+```bash
+curl -I https://python.nayanovaacademy.ru/
+curl -X POST https://python.nayanovaacademy.ru/sandbox/run.php \
+  -d '{"code":"print(42)","timeout":5}'
+# → {"ok":true,"stdout":"42","stderr":"","exit_code":0}
+```
+
+### Цикл обновления контента
+
+Редактирование Markdown в `src/` → `npm run build` → деплой собранных HTML на сервер.
 
 ## 📝 Требования
 

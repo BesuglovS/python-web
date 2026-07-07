@@ -7,122 +7,522 @@
       "id": "intro",
       "title": "📖 Введение",
       "lessons": [
-        { "num": 1,  "file": "01-history.html",            "title": "История, обзор и области применения",        "desc": "История Python, философия, ключевые особенности",     "duration": 10, "complexity": 1, "badge": "historian" },
-        { "num": 2,  "file": "02-ide-setup.html",           "title": "Настройка IDE: IDLE, VS Code и PyCharm",     "desc": "Запуск в IDLE, установка, создание проекта",           "duration": 8,  "complexity": 1, "badge": "ide_pioneer" }
+        {
+          "num": 1,
+          "file": "01-history.html",
+          "title": "История, обзор и области применения",
+          "desc": "История Python, философия, ключевые особенности",
+          "duration": 10,
+          "complexity": "beginner",
+          "badge": "historian"
+        },
+        {
+          "num": 2,
+          "file": "02-ide-setup.html",
+          "title": "Настройка IDE: IDLE, VS Code и PyCharm",
+          "desc": "Запуск в IDLE, установка, создание проекта",
+          "duration": 8,
+          "complexity": "beginner",
+          "badge": "ide_pioneer"
+        }
       ]
     },
     {
       "id": "basics",
       "title": "📚 Основы Python",
       "lessons": [
-        { "num": 3,  "file": "03-variables.html",           "title": "Переменные",                                  "desc": "Объявление, присваивание, имена",                     "duration": 10, "complexity": 1, "badge": "var_master" },
-        { "num": 4,  "file": "04-data-types.html",          "title": "Типы данных",                                 "desc": "int, float, str, bool, NoneType",                     "duration": 12, "complexity": 1, "badge": "type_explorer" },
-        { "num": 5,  "file": "05-type-casting.html",        "title": "Приведение типов",                            "desc": "int(), float(), str(), bool()",                       "duration": 8,  "complexity": 1, "badge": "caster" },
-        { "num": 6,  "file": "06-io.html",                  "title": "Ввод и вывод",                                "desc": "print(), input(), форматирование",                    "duration": 10, "complexity": 1, "badge": "io_master" },
-        { "num": 7,  "file": "07-f-strings.html",           "title": "f-строки и форматирование",                   "desc": "f\"{переменная=}\", форматирование чисел",             "duration": 10, "complexity": 1, "badge": "fstring_guru" },
-        { "num": 8,  "file": "08-number-ops.html",          "title": "Операции над числами",                        "desc": "+, -, *, /, //, %, **",                              "duration": 10, "complexity": 1, "badge": "math_wiz" }
+        {
+          "num": 3,
+          "file": "03-variables.html",
+          "title": "Переменные",
+          "desc": "Объявление, присваивание, имена",
+          "duration": 10,
+          "complexity": "beginner",
+          "badge": "var_master"
+        },
+        {
+          "num": 4,
+          "file": "04-data-types.html",
+          "title": "Типы данных",
+          "desc": "int, float, str, bool, NoneType",
+          "duration": 12,
+          "complexity": "beginner",
+          "badge": "type_explorer"
+        },
+        {
+          "num": 5,
+          "file": "05-type-casting.html",
+          "title": "Приведение типов",
+          "desc": "int(), float(), str(), bool()",
+          "duration": 8,
+          "complexity": "beginner",
+          "badge": "caster"
+        },
+        {
+          "num": 6,
+          "file": "06-io.html",
+          "title": "Ввод и вывод",
+          "desc": "print(), input(), форматирование",
+          "duration": 10,
+          "complexity": "beginner",
+          "badge": "io_master"
+        },
+        {
+          "num": 7,
+          "file": "07-f-strings.html",
+          "title": "f-строки и форматирование",
+          "desc": "f\"{переменная=}\", форматирование чисел",
+          "duration": 10,
+          "complexity": "beginner",
+          "badge": "fstring_guru"
+        },
+        {
+          "num": 8,
+          "file": "08-number-ops.html",
+          "title": "Операции над числами",
+          "desc": "+, -, *, /, //, %, **",
+          "duration": 10,
+          "complexity": "beginner",
+          "badge": "math_wiz"
+        }
       ]
     },
     {
       "id": "conditions",
       "title": "🔀 Условия",
       "lessons": [
-        { "num": 9,  "file": "09-booleans.html",            "title": "Булевы переменные",                           "desc": "True, False, логические операции",                    "duration": 8,  "complexity": 1, "badge": "bool_master" },
-        { "num": 10, "file": "10-conditional.html",         "title": "Условный оператор + Отступы",                 "desc": "if, elif, else, блоки кода, PEP 8",                 "duration": 12, "complexity": 2, "badge": "decision_maker" },
-        { "num": 11, "file": "11-try-except.html",          "title": "Обработка ошибок",                            "desc": "try, except, finally, raise",                        "duration": 10, "complexity": 2, "badge": "error_handler" },
-        { "num": 12, "file": "12-complex-conditions.html",  "title": "Сложные условия",                             "desc": "and, or, not",                                       "duration": 8,  "complexity": 2, "badge": "logician" },
-        { "num": 13, "file": "13-nested-structures.html",   "title": "Вложенные структуры",                         "desc": "Условия внутри условий",                              "duration": 8,  "complexity": 2, "badge": "nested_navigator" }
+        {
+          "num": 9,
+          "file": "09-booleans.html",
+          "title": "Булевы переменные",
+          "desc": "True, False, логические операции",
+          "duration": 8,
+          "complexity": "beginner",
+          "badge": "bool_master"
+        },
+        {
+          "num": 10,
+          "file": "10-conditional.html",
+          "title": "Условный оператор + Отступы",
+          "desc": "if, elif, else, блоки кода, PEP 8",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "decision_maker"
+        },
+        {
+          "num": 11,
+          "file": "11-try-except.html",
+          "title": "Обработка ошибок",
+          "desc": "try, except, finally, raise",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "error_handler"
+        },
+        {
+          "num": 12,
+          "file": "12-complex-conditions.html",
+          "title": "Сложные условия",
+          "desc": "and, or, not",
+          "duration": 8,
+          "complexity": "basic",
+          "badge": "logician"
+        },
+        {
+          "num": 13,
+          "file": "13-nested-structures.html",
+          "title": "Вложенные структуры",
+          "desc": "Условия внутри условий",
+          "duration": 8,
+          "complexity": "basic",
+          "badge": "nested_navigator"
+        }
       ]
     },
     {
       "id": "strings",
       "title": "🔤 Строки",
       "lessons": [
-        { "num": 14, "file": "14-strings-index-slice.html", "title": "Строки: индексация и срезы",                  "desc": "Индексы, [start:stop:step]",                         "duration": 12, "complexity": 2, "badge": "string_slicer" },
-        { "num": 15, "file": "15-string-ops.html",          "title": "Операции над строками",                       "desc": "Конкатенация, умножение, методы",                     "duration": 10, "complexity": 2, "badge": "string_master" },
-        { "num": 16, "file": "16-regex.html",               "title": "Регулярные выражения",                         "desc": "re: поиск, замена, группы, шаблоны",                 "duration": 15, "complexity": 3, "badge": "regex_wizard" }
+        {
+          "num": 14,
+          "file": "14-strings-index-slice.html",
+          "title": "Строки: индексация и срезы",
+          "desc": "Индексы, [start:stop:step]",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "string_slicer"
+        },
+        {
+          "num": 15,
+          "file": "15-string-ops.html",
+          "title": "Операции над строками",
+          "desc": "Конкатенация, умножение, методы",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "string_master"
+        },
+        {
+          "num": 16,
+          "file": "16-regex.html",
+          "title": "Регулярные выражения",
+          "desc": "re: поиск, замена, группы, шаблоны",
+          "duration": 15,
+          "complexity": "intermediate",
+          "badge": "regex_wizard"
+        }
       ]
     },
     {
       "id": "loops",
       "title": "🔄 Циклы",
       "lessons": [
-        { "num": 17, "file": "17-while.html",               "title": "Цикл с предусловием",                         "desc": "while",                                              "duration": 10, "complexity": 2, "badge": "looper" },
-        { "num": 18, "file": "18-for.html",                 "title": "Цикл for",                                    "desc": "Перебор элементов",                                   "duration": 12, "complexity": 2, "badge": "for_master" },
-        { "num": 19, "file": "19-range.html",               "title": "range()",                                     "desc": "Генерация последовательностей",                       "duration": 8,  "complexity": 2, "badge": "range_runner" },
-        { "num": 20, "file": "20-break-continue.html",      "title": "break и continue",                            "desc": "Прерывание и пропуск итераций",                       "duration": 8,  "complexity": 2, "badge": "flow_controller" },
-        { "num": 21, "file": "21-nested-loops.html",        "title": "Вложенные циклы",                             "desc": "Циклы внутри циклов",                                 "duration": 10, "complexity": 2, "badge": "nested_looper" }
+        {
+          "num": 17,
+          "file": "17-while.html",
+          "title": "Цикл с предусловием",
+          "desc": "while",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "looper"
+        },
+        {
+          "num": 18,
+          "file": "18-for.html",
+          "title": "Цикл for",
+          "desc": "Перебор элементов",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "for_master"
+        },
+        {
+          "num": 19,
+          "file": "19-range.html",
+          "title": "range()",
+          "desc": "Генерация последовательностей",
+          "duration": 8,
+          "complexity": "basic",
+          "badge": "range_runner"
+        },
+        {
+          "num": 20,
+          "file": "20-break-continue.html",
+          "title": "break и continue",
+          "desc": "Прерывание и пропуск итераций",
+          "duration": 8,
+          "complexity": "basic",
+          "badge": "flow_controller"
+        },
+        {
+          "num": 21,
+          "file": "21-nested-loops.html",
+          "title": "Вложенные циклы",
+          "desc": "Циклы внутри циклов",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "nested_looper"
+        }
       ]
     },
     {
       "id": "functions",
       "title": "⚙️ Функции",
       "lessons": [
-        { "num": 22, "file": "22-functions.html",           "title": "Создание простейших функций",                 "desc": "def, return, параметры",                             "duration": 12, "complexity": 2, "badge": "func_creator" },
-        { "num": 23, "file": "23-functions-advanced.html",  "title": "Функции: продвинутые темы",                   "desc": "args/kwargs, области видимости, аннотации",           "duration": 15, "complexity": 3, "badge": "func_guru" },
-        { "num": 24, "file": "24-debugging.html",           "title": "Отладка программ",                            "desc": "pdb, print-отладка, assert, логирование",            "duration": 12, "complexity": 2, "badge": "debugger" }
+        {
+          "num": 22,
+          "file": "22-functions.html",
+          "title": "Создание простейших функций",
+          "desc": "def, return, параметры",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "func_creator"
+        },
+        {
+          "num": 23,
+          "file": "23-functions-advanced.html",
+          "title": "Функции: продвинутые темы",
+          "desc": "args/kwargs, области видимости, аннотации",
+          "duration": 15,
+          "complexity": "intermediate",
+          "badge": "func_guru"
+        },
+        {
+          "num": 24,
+          "file": "24-debugging.html",
+          "title": "Отладка программ",
+          "desc": "pdb, print-отладка, assert, логирование",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "debugger"
+        }
       ]
     },
     {
       "id": "data-structures",
       "title": "🗂️ Структуры данных",
       "lessons": [
-        { "num": 25, "file": "25-lists.html",               "title": "Списки",                                      "desc": "list, методы списков",                                "duration": 15, "complexity": 2, "badge": "list_master" },
-        { "num": 26, "file": "26-sets.html",                "title": "Множества",                                   "desc": "set(), операции над множествами",                     "duration": 10, "complexity": 2, "badge": "set_specialist" },
-        { "num": 27, "file": "27-tuples.html",              "title": "Кортежи",                                     "desc": "tuple, неизменяемые последовательности",              "duration": 10, "complexity": 2, "badge": "tuple_tamer" },
-        { "num": 28, "file": "28-dicts.html",               "title": "Словари",                                     "desc": "dict, ключи и значения",                             "duration": 15, "complexity": 2, "badge": "dict_master" },
-        { "num": 29, "file": "29-split-join.html",          "title": "split + join",                                "desc": "Разделение и объединение строк",                      "duration": 8,  "complexity": 2, "badge": "string_splitter" },
-        { "num": 30, "file": "30-list-comprehensions.html", "title": "Списочные выражения",                         "desc": "[x for x in ... if ...]",                           "duration": 12, "complexity": 3, "badge": "comprehension_master" },
-        { "num": 31, "file": "31-lambda.html",              "title": "Lambda-функции",                              "desc": "lambda, map(), filter(), sorted()",                  "duration": 12, "complexity": 3, "badge": "lambda_wizard" }
+        {
+          "num": 25,
+          "file": "25-lists.html",
+          "title": "Списки",
+          "desc": "list, методы списков",
+          "duration": 15,
+          "complexity": "basic",
+          "badge": "list_master"
+        },
+        {
+          "num": 26,
+          "file": "26-sets.html",
+          "title": "Множества",
+          "desc": "set(), операции над множествами",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "set_specialist"
+        },
+        {
+          "num": 27,
+          "file": "27-tuples.html",
+          "title": "Кортежи",
+          "desc": "tuple, неизменяемые последовательности",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "tuple_tamer"
+        },
+        {
+          "num": 28,
+          "file": "28-dicts.html",
+          "title": "Словари",
+          "desc": "dict, ключи и значения",
+          "duration": 15,
+          "complexity": "basic",
+          "badge": "dict_master"
+        },
+        {
+          "num": 29,
+          "file": "29-split-join.html",
+          "title": "split + join",
+          "desc": "Разделение и объединение строк",
+          "duration": 8,
+          "complexity": "basic",
+          "badge": "string_splitter"
+        },
+        {
+          "num": 30,
+          "file": "30-list-comprehensions.html",
+          "title": "Списочные выражения",
+          "desc": "[x for x in ... if ...]",
+          "duration": 12,
+          "complexity": "intermediate",
+          "badge": "comprehension_master"
+        },
+        {
+          "num": 31,
+          "file": "31-lambda.html",
+          "title": "Lambda-функции",
+          "desc": "lambda, map(), filter(), sorted()",
+          "duration": 12,
+          "complexity": "intermediate",
+          "badge": "lambda_wizard"
+        }
       ]
     },
     {
       "id": "files",
       "title": "📁 Файлы и данные",
       "lessons": [
-        { "num": 32, "file": "32-files.html",               "title": "Файлы: чтение и запись",                      "desc": "open(), with, построчное чтение, разбор чисел",      "duration": 12, "complexity": 2, "badge": "file_handler" },
-        { "num": 33, "file": "33-json-csv.html",            "title": "JSON и CSV",                                  "desc": "json.dump/load, csv.reader/writer",                  "duration": 12, "complexity": 2, "badge": "data_formatter" },
-        { "num": 34, "file": "34-sqlite3.html",             "title": "Базы данных SQLite",                          "desc": "CREATE TABLE, INSERT, SELECT, параметризованные запросы", "duration": 15, "complexity": 3, "badge": "sql_master" }
+        {
+          "num": 32,
+          "file": "32-files.html",
+          "title": "Файлы: чтение и запись",
+          "desc": "open(), with, построчное чтение, разбор чисел",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "file_handler"
+        },
+        {
+          "num": 33,
+          "file": "33-json-csv.html",
+          "title": "JSON и CSV",
+          "desc": "json.dump/load, csv.reader/writer",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "data_formatter"
+        },
+        {
+          "num": 34,
+          "file": "34-sqlite3.html",
+          "title": "Базы данных SQLite",
+          "desc": "CREATE TABLE, INSERT, SELECT, параметризованные запросы",
+          "duration": 15,
+          "complexity": "intermediate",
+          "badge": "sql_master"
+        }
       ]
     },
     {
       "id": "modules",
       "title": "🧰 Модули",
       "lessons": [
-        { "num": 35, "file": "35-modules-import.html",      "title": "Модули и import",                             "desc": "import, from, as, стандартная библиотека",            "duration": 10, "complexity": 2, "badge": "module_importer" },
-        { "num": 36, "file": "36-itertools.html",           "title": "Модуль itertools",                            "desc": "product, permutations, chain, groupby и другие функции", "duration": 12, "complexity": 3, "badge": "itertools_guru" },
-        { "num": 37, "file": "37-venv-pip.html",            "title": "Виртуальные окружения и pip",                 "desc": "venv, pip install, requirements.txt",                "duration": 12, "complexity": 2, "badge": "venv_master" },
-        { "num": 38, "file": "38-math-random.html",         "title": "Модули math и random",                        "desc": "Математика, случайные числа",                         "duration": 10, "complexity": 2, "badge": "math_random" },
-        { "num": 39, "file": "39-datetime.html",            "title": "Модуль datetime",                             "desc": "Даты, время, timedelta",                             "duration": 10, "complexity": 2, "badge": "time_traveler" },
-        { "num": 40, "file": "40-numpy-pandas.html",        "title": "NumPy и Pandas",                              "desc": "ndarray, DataFrame, анализ данных",                   "duration": 15, "complexity": 3, "badge": "data_scientist" }
+        {
+          "num": 35,
+          "file": "35-modules-import.html",
+          "title": "Модули и import",
+          "desc": "import, from, as, стандартная библиотека",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "module_importer"
+        },
+        {
+          "num": 36,
+          "file": "36-itertools.html",
+          "title": "Модуль itertools",
+          "desc": "product, permutations, chain, groupby и другие функции",
+          "duration": 12,
+          "complexity": "intermediate",
+          "badge": "itertools_guru"
+        },
+        {
+          "num": 37,
+          "file": "37-venv-pip.html",
+          "title": "Виртуальные окружения и pip",
+          "desc": "venv, pip install, requirements.txt",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "venv_master"
+        },
+        {
+          "num": 38,
+          "file": "38-math-random.html",
+          "title": "Модули math и random",
+          "desc": "Математика, случайные числа",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "math_random"
+        },
+        {
+          "num": 39,
+          "file": "39-datetime.html",
+          "title": "Модуль datetime",
+          "desc": "Даты, время, timedelta",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "time_traveler"
+        },
+        {
+          "num": 40,
+          "file": "40-numpy-pandas.html",
+          "title": "NumPy и Pandas",
+          "desc": "ndarray, DataFrame, анализ данных",
+          "duration": 15,
+          "complexity": "intermediate",
+          "badge": "data_scientist"
+        }
       ]
     },
     {
       "id": "oop",
       "title": "🏗️ ООП",
       "lessons": [
-        { "num": 41, "file": "41-oop-intro.html",           "title": "Введение в ООП",                              "desc": "Классы, объекты, __init__, self",                   "duration": 15, "complexity": 3, "badge": "oop_master" },
-        { "num": 42, "file": "42-inheritance.html",         "title": "Наследование и полиморфизм",                   "desc": "class Child(Parent), super(), переопределение",       "duration": 15, "complexity": 3, "badge": "inheritance_guru" }
+        {
+          "num": 41,
+          "file": "41-oop-intro.html",
+          "title": "Введение в ООП",
+          "desc": "Классы, объекты, __init__, self",
+          "duration": 15,
+          "complexity": "intermediate",
+          "badge": "oop_master"
+        },
+        {
+          "num": 42,
+          "file": "42-inheritance.html",
+          "title": "Наследование и полиморфизм",
+          "desc": "class Child(Parent), super(), переопределение",
+          "duration": 15,
+          "complexity": "intermediate",
+          "badge": "inheritance_guru"
+        }
       ]
     },
     {
       "id": "advanced",
       "title": "🚀 Продвинутые концепции",
       "lessons": [
-        { "num": 43, "file": "43-decorators.html",          "title": "Декораторы",                                  "desc": "@decorator, wraps, кастомные декораторы",             "duration": 12, "complexity": 3, "badge": "decorator_master" },
-        { "num": 44, "file": "44-generators.html",          "title": "Генераторы",                                  "desc": "yield, ленивые вычисления, generator expressions",    "duration": 12, "complexity": 3, "badge": "generator_guru" },
-        { "num": 45, "file": "45-threading-async.html",     "title": "Многопоточность и asyncio",                   "desc": "threading, multiprocessing, async/await",             "duration": 15, "complexity": 4, "badge": "async_master" }
+        {
+          "num": 43,
+          "file": "43-decorators.html",
+          "title": "Декораторы",
+          "desc": "@decorator, wraps, кастомные декораторы",
+          "duration": 12,
+          "complexity": "intermediate",
+          "badge": "decorator_master"
+        },
+        {
+          "num": 44,
+          "file": "44-generators.html",
+          "title": "Генераторы",
+          "desc": "yield, ленивые вычисления, generator expressions",
+          "duration": 12,
+          "complexity": "intermediate",
+          "badge": "generator_guru"
+        },
+        {
+          "num": 45,
+          "file": "45-threading-async.html",
+          "title": "Многопоточность и asyncio",
+          "desc": "threading, multiprocessing, async/await",
+          "duration": 15,
+          "complexity": "advanced",
+          "badge": "async_master"
+        }
       ]
     },
     {
       "id": "tools",
       "title": "🛠️ Инструменты и экосистема",
       "lessons": [
-        { "num": 46, "file": "46-type-hints.html",          "title": "Type Hints",                                  "desc": "Аннотации типов, mypy",                              "duration": 10, "complexity": 2, "badge": "type_hinter" },
-        { "num": 47, "file": "47-pytest.html",              "title": "Unit-тесты с pytest",                         "desc": "assert, parametrize, проверка исключений",            "duration": 12, "complexity": 3, "badge": "test_master" },
-        { "num": 48, "file": "48-requests-api.html",        "title": "Requests и API",                              "desc": "GET, POST, работа с JSON-сервисами",                 "duration": 12, "complexity": 3, "badge": "api_explorer" },
-        { "num": 49, "file": "49-flask.html",               "title": "Веб-фреймворки: Flask",                       "desc": "Маршруты, шаблоны Jinja2, обработка форм, REST API",  "duration": 15, "complexity": 3, "badge": "web_builder" },
-        { "num": 50, "file": "50-git-intro.html",           "title": "Введение в Git",                              "desc": "Коммиты, ветки, GitHub, .gitignore",                 "duration": 12, "complexity": 2, "badge": "git_master" }
+        {
+          "num": 46,
+          "file": "46-type-hints.html",
+          "title": "Type Hints",
+          "desc": "Аннотации типов, mypy",
+          "duration": 10,
+          "complexity": "basic",
+          "badge": "type_hinter"
+        },
+        {
+          "num": 47,
+          "file": "47-pytest.html",
+          "title": "Unit-тесты с pytest",
+          "desc": "assert, parametrize, проверка исключений",
+          "duration": 12,
+          "complexity": "intermediate",
+          "badge": "test_master"
+        },
+        {
+          "num": 48,
+          "file": "48-requests-api.html",
+          "title": "Requests и API",
+          "desc": "GET, POST, работа с JSON-сервисами",
+          "duration": 12,
+          "complexity": "intermediate",
+          "badge": "api_explorer"
+        },
+        {
+          "num": 49,
+          "file": "49-flask.html",
+          "title": "Веб-фреймворки: Flask",
+          "desc": "Маршруты, шаблоны Jinja2, обработка форм, REST API",
+          "duration": 15,
+          "complexity": "intermediate",
+          "badge": "web_builder"
+        },
+        {
+          "num": 50,
+          "file": "50-git-intro.html",
+          "title": "Введение в Git",
+          "desc": "Коммиты, ветки, GitHub, .gitignore",
+          "duration": 12,
+          "complexity": "basic",
+          "badge": "git_master"
+        }
       ]
     }
   ]

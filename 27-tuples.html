@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 27: Кортежи tuple: неизменяемые последовательности, распаковка, использование как ключей словаря" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="tuple, неизменяемые последовательности" />
     <meta property="og:title" content="27. Кортежи — Python: основы" />
-    <meta property="og:description" content="Урок 27: Кортежи tuple: неизменяемые последовательности, распаковка, использование как ключей словаря" />
+    <meta property="og:description" content="tuple, неизменяемые последовательности" />
     <meta property="og:type" content="article" />
     <title>Кортежи — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="27">
     <div class="container">
@@ -18,17 +19,16 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 27</span> Кортежи</h1>
         <p class="subtitle">tuple, неизменяемые последовательности</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~10 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Создание кортежей</h2>
+          <h2>Создание кортежей</h2>
 <p>Кортеж — неизменяемая упорядоченная коллекция:</p>
-<pre class="code-block">
-# Через круглые скобки
+<pre><code class="language-python"># Через круглые скобки
 point = (3, 4)
-colors = ("red", "green", "blue")
+colors = (&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;)
 
 # Без скобок (кортеж создаётся запятыми)
 point = 3, 4
@@ -38,13 +38,10 @@ single = (1,)  # запятая обязательна!
 
 # Через функцию tuple()
 nums = tuple([1, 2, 3])  # (1, 2, 3)
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Неизменяемость</h2>
 <p>Кортеж нельзя изменить после создания:</p>
-<pre class="code-block">
-point = (3, 4)
+<pre><code class="language-python">point = (3, 4)
 print(point[0])   # 3
 print(point[1])   # 4
 
@@ -53,13 +50,10 @@ print(point[1])   # 4
 # Но если кортеж содержит список, список можно изменить
 mixed = (1, [2, 3])
 mixed[1].append(4)  # (1, [2, 3, 4])
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Распаковка кортежей</h2>
 <p>Кортежи удобно распаковывать в переменные:</p>
-<pre class="code-block">
-point = (3, 4)
+<pre><code class="language-python">point = (3, 4)
 x, y = point
 print(x)  # 3
 print(y)  # 4
@@ -72,17 +66,16 @@ print(a, b)  # 2 1
 # Методы кортежа
 print(point.count(3))  # 1
 print(point.index(4))  # 1
-</pre>
-          </section>
-          <div id="contest-link-placeholder"></div>
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-<a href="26-sets.html" class="prev-link">< Списки (list)</a>
+        <a href="26-sets.html" class="prev-link">← Множества</a>
         <a href="28-dicts.html" class="next-link">Далее: Словари →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

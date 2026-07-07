@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 30: List comprehensions: компактное создание списков с фильтрацией и преобразованием элементов" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="[x for x in ... if ...]" />
     <meta property="og:title" content="30. Списочные выражения — Python: основы" />
-    <meta property="og:description" content="Урок 30: List comprehensions: компактное создание списков с фильтрацией и преобразованием элементов" />
+    <meta property="og:description" content="[x for x in ... if ...]" />
     <meta property="og:type" content="article" />
     <title>Списочные выражения — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="30">
     <div class="container">
@@ -18,15 +19,14 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 30</span> Списочные выражения</h1>
         <p class="subtitle">[x for x in ... if ...]</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Базовый синтаксис</h2>
+          <h2>Базовый синтаксис</h2>
 <p>Списочное выражение (list comprehension) — компактный способ создания списков:</p>
-<pre class="code-block">
-# Обычный цикл
+<pre><code class="language-python"># Обычный цикл
 squares = []
 for x in range(5):
     squares.append(x**2)
@@ -34,57 +34,47 @@ for x in range(5):
 # То же через list comprehension
 squares = [x**2 for x in range(5)]
 print(squares)  # [0, 1, 4, 9, 16]
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>С условием (if)</h2>
 <p>Можно добавить фильтрацию:</p>
-<pre class="code-block">
-# Только чётные числа
+<pre><code class="language-python"># Только чётные числа
 evens = [x for x in range(10) if x % 2 == 0]
 print(evens)  # [0, 2, 4, 6, 8]
 
 # Квадраты только нечётных
 odd_squares = [x**2 for x in range(10) if x % 2 != 0]
 print(odd_squares)  # [1, 9, 25, 49, 81]
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Вложенные списочные выражения</h2>
 <p>Можно использовать несколько for:</p>
-<pre class="code-block">
-# Матрица 3x3
+<pre><code class="language-python"># Матрица 3x3
 matrix = [[i * 3 + j for j in range(3)] for i in range(3)]
 print(matrix)  # [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
 
-# "Сплющивание" матрицы
+# &quot;Сплющивание&quot; матрицы
 flat = [num for row in matrix for num in row]
 print(flat)  # [0, 1, 2, 3, 4, 5, 6, 7, 8]
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Словарные выражения</h2>
 <p>Аналогично для словарей:</p>
-<pre class="code-block">
-# Словарь квадратов
+<pre><code class="language-python"># Словарь квадратов
 squares_dict = {x: x**2 for x in range(5)}
 print(squares_dict)  # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
 
 # Фильтрация словаря
-original = {"a": 1, "b": 2, "c": 3, "d": 4}
-filtered = {k: v for k, v in original.items() if v > 2}
-print(filtered)  # {"c": 3, "d": 4}
-</pre>
-          </section>
-        <div id="contest-link-placeholder"></div>
+original = {&quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: 3, &quot;d&quot;: 4}
+filtered = {k: v for k, v in original.items() if v &gt; 2}
+print(filtered)  # {&quot;c&quot;: 3, &quot;d&quot;: 4}
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-<a href="29-split-join.html" class="prev-link">< split + join</a>
-        <a href="31-lambda.html" class="next-link">Далее: lambda-функции →</a>
+        <a href="29-split-join.html" class="prev-link">← split + join</a>
+        <a href="31-lambda.html" class="next-link">Далее: Lambda-функции →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

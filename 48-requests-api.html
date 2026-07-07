@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 48: Работа с HTTP и API: библиотека requests, GET/POST запросы, заголовки, JSON-ответы, статус-коды" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="GET, POST, работа с JSON-сервисами" />
     <meta property="og:title" content="48. Requests + API — Python: основы" />
-    <meta property="og:description" content="Урок 48: Работа с HTTP и API: библиотека requests, GET/POST запросы, заголовки, JSON-ответы, статус-коды" />
+    <meta property="og:description" content="GET, POST, работа с JSON-сервисами" />
     <meta property="og:type" content="article" />
     <title>Requests + API — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="48">
     <div class="container">
@@ -18,122 +19,112 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 48</span> Requests + API</h1>
         <p class="subtitle">Взаимодействие с веб-сервисами через HTTP</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Что такое API?</h2>
-        <p>API (Application Programming Interface) — способ взаимодействия программ друг с другом через HTTP-запросы. Библиотека <code>requests</code> — стандарт для отправки таких запросов в Python.</p>
-        <pre class="code-block">
-# Установка
-pip install requests</pre>
-          </section>
-          <section>
+          <h2>Что такое API?</h2>
+<p>API (Application Programming Interface) — способ взаимодействия программ друг с другом через HTTP-запросы. Библиотека <code>requests</code> — стандарт для отправки таких запросов в Python.</p>
+<pre><code class="language-python"># Установка
+pip install requests
+</code></pre>
 <h2>GET-запрос — получение данных</h2>
-        <pre class="code-block">
-import requests
+<pre><code class="language-python">import requests
 
 # Получить список пользователей с JSON-API
-response = requests.get("https://jsonplaceholder.typicode.com/users")
+response = requests.get(&quot;https://jsonplaceholder.typicode.com/users&quot;)
 
 print(response.status_code)  # 200 = успех
 users = response.json()       # парсим JSON в список словарей
 
 for user in users:
-    print(f"{user['name']} — {user['email']}")
+    print(f&quot;{user['name']} — {user['email']}&quot;)
 
 # Вывод:
 # Leanne Graham — Sincere@april.biz
 # Ervin Howell — Shanna@melissa.tv
-# ...</pre>
-          </section>
-          <section>
+# ...
+</code></pre>
 <h2>Параметры GET-запроса</h2>
-        <pre class="code-block">
-import requests
+<pre><code class="language-python">import requests
 
 # Параметры через params (автоматически добавляются к URL)
 response = requests.get(
-    "https://jsonplaceholder.typicode.com/posts",
-    params={"userId": 1, "_limit": 5}  # ?userId=1&_limit=5
+    &quot;https://jsonplaceholder.typicode.com/posts&quot;,
+    params={&quot;userId&quot;: 1, &quot;_limit&quot;: 5}  # ?userId=1&amp;_limit=5
 )
 
 posts = response.json()
 for post in posts:
-    print(post["title"])</pre>
-          </section>
-          <section>
+    print(post[&quot;title&quot;])
+</code></pre>
 <h2>POST-запрос — отправка данных</h2>
-        <pre class="code-block">
-import requests
+<pre><code class="language-python">import requests
 
 new_post = {
-    "title": "Мой первый пост",
-    "body": "Привет, мир! Это тестовый пост.",
-    "userId": 1
+    &quot;title&quot;: &quot;Мой первый пост&quot;,
+    &quot;body&quot;: &quot;Привет, мир! Это тестовый пост.&quot;,
+    &quot;userId&quot;: 1
 }
 
 response = requests.post(
-    "https://jsonplaceholder.typicode.com/posts",
+    &quot;https://jsonplaceholder.typicode.com/posts&quot;,
     json=new_post
 )
 
 print(response.status_code)  # 201 = создано
-print(response.json()["id"])  # 101</pre>
-          </section>
-          <section>
+print(response.json()[&quot;id&quot;])  # 101
+</code></pre>
 <h2>Обработка ошибок</h2>
-        <pre class="code-block">
-import requests
+<pre><code class="language-python">import requests
 
 try:
-    response = requests.get("https://api.example.com/data", timeout=5)
+    response = requests.get(&quot;https://api.example.com/data&quot;, timeout=5)
     response.raise_for_status()   # выбросит исключение при ошибке 4xx/5xx
     data = response.json()
 except requests.exceptions.Timeout:
-    print("Сервер не ответил за 5 секунд")
+    print(&quot;Сервер не ответил за 5 секунд&quot;)
 except requests.exceptions.HTTPError as e:
-    print(f"Ошибка HTTP: {e}")
+    print(f&quot;Ошибка HTTP: {e}&quot;)
 except requests.exceptions.ConnectionError:
-    print("Не удалось подключиться к серверу")
+    print(&quot;Не удалось подключиться к серверу&quot;)
 else:
-    print("Данные получены успешно!")</pre>
-          </section>
-          <section>
+    print(&quot;Данные получены успешно!&quot;)
+</code></pre>
 <h2>Практический пример: погода через API</h2>
-        <pre class="code-block">
-import requests
+<pre><code class="language-python">import requests
 
-API_KEY = "ваш_ключ"  # возьмите на openweathermap.org
-city = "Москва"
+API_KEY = &quot;ваш_ключ&quot;  # возьмите на openweathermap.org
+city = &quot;Москва&quot;
 
 response = requests.get(
-    "https://api.openweathermap.org/data/2.5/weather",
+    &quot;https://api.openweathermap.org/data/2.5/weather&quot;,
     params={
-        "q": city,
-        "appid": API_KEY,
-        "units": "metric",
-        "lang": "ru"
+        &quot;q&quot;: city,
+        &quot;appid&quot;: API_KEY,
+        &quot;units&quot;: &quot;metric&quot;,
+        &quot;lang&quot;: &quot;ru&quot;
     }
 )
 
 if response.status_code == 200:
     data = response.json()
-    temp = data["main"]["temp"]
-    desc = data["weather"][0]["description"]
-    print(f"Погода в {city}: {temp}°C, {desc}")
+    temp = data[&quot;main&quot;][&quot;temp&quot;]
+    desc = data[&quot;weather&quot;][0][&quot;description&quot;]
+    print(f&quot;Погода в {city}: {temp}°C, {desc}&quot;)
 else:
-    print(f"Ошибка: {response.status_code}")</pre>
-        </section>
+    print(f&quot;Ошибка: {response.status_code}&quot;)
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-        <a href="47-pytest.html" class="prev-link">← pytest</a>
-        <a href="49-flask.html" class="next-link">Далее: Git →</a>
+        <a href="47-pytest.html" class="prev-link">← Unit-тесты с pytest</a>
+        <a href="49-flask.html" class="next-link">Далее: Веб-фреймворки: Flask →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Что такое API?",
+    "options": [
+      "Интерфейс для взаимодействия между программами",
+      "База данных",
+      "Язык программирования",
+      "Среда разработки"
+    ],
+    "correct": 0,
+    "explanation": "API (Application Programming Interface) — это набор правил и протоколов для взаимодействия между программами."
+  },
+  {
+    "question": "Какой модуль Python используется для HTTP-запросов?",
+    "options": [
+      "http",
+      "requests",
+      "urllib",
+      "И requests, и urllib"
+    ],
+    "correct": 3,
+    "explanation": "Модуль requests — популярная библиотека для HTTP-запросов. urllib — встроенный модуль."
+  },
+  {
+    "question": "Какой метод HTTP используется для получения данных?",
+    "options": [
+      "POST",
+      "GET",
+      "PUT",
+      "DELETE"
+    ],
+    "correct": 1,
+    "explanation": "GET-запрос используется для получения данных от сервера."
+  },
+  {
+    "question": "Как отправить GET-запрос с помощью requests?",
+    "options": [
+      "requests.get(url)",
+      "requests.post(url)",
+      "requests.fetch(url)",
+      "requests.send(url)"
+    ],
+    "correct": 0,
+    "explanation": "requests.get(url) отправляет GET-запрос и возвращает объект Response."
+  },
+  {
+    "question": "Как получить содержимое ответа в виде текста?",
+    "options": [
+      "response.text",
+      "response.content",
+      "response.body",
+      "response.data"
+    ],
+    "correct": 0,
+    "explanation": "response.text возвращает содержимое ответа в виде строки (текста)."
+  },
+  {
+    "question": "Как получить содержимое ответа в формате JSON?",
+    "options": [
+      "response.json()",
+      "response.parse_json()",
+      "response.to_json()",
+      "response.json_data()"
+    ],
+    "correct": 0,
+    "explanation": "response.json() парсит JSON-содержимое ответа и возвращает Python-объект (словарь/список)."
+  },
+  {
+    "question": "Какой статус-код означает успешный ответ?",
+    "options": [
+      "200",
+      "404",
+      "500",
+      "301"
+    ],
+    "correct": 0,
+    "explanation": "HTTP 200 OK — стандартный код успешного ответа."
+  },
+  {
+    "question": "Какой статус-код означает «не найдено»?",
+    "options": [
+      "200",
+      "404",
+      "500",
+      "403"
+    ],
+    "correct": 1,
+    "explanation": "HTTP 404 Not Found означает, что запрошенный ресурс не найден."
+  },
+  {
+    "question": "Как передать параметры в GET-запросе через requests?",
+    "options": [
+      "requests.get(url, params={\"key\": \"value\"})",
+      "requests.get(url + \"?key=value\")",
+      "Оба варианта работают",
+      "requests.get(url, data={\"key\": \"value\"})"
+    ],
+    "correct": 2,
+    "explanation": "Можно передать params= или вручную добавить параметры в URL. params= удобнее и безопаснее."
+  },
+  {
+    "question": "Как установить заголовки (headers) в запросе?",
+    "options": [
+      "requests.get(url, headers={\"Authorization\": \"Bearer ...\"})",
+      "requests.get(url, header={\"Authorization\": \"Bearer ...\"})",
+      "requests.get(url, meta={\"Authorization\": \"Bearer ...\"})",
+      "requests.get(url, auth={\"Authorization\": \"Bearer ...\"})"
+    ],
+    "correct": 0,
+    "explanation": "Параметр headers принимает словарь с HTTP-заголовками для запроса."
+  }
+]

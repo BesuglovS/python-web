@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 7: Форматирование строк через f-строки: вставка переменных, форматирование чисел, выравнивание, выражения внутри f-строк" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="f&quot;{переменная=}&quot;, форматирование чисел" />
     <meta property="og:title" content="7. f-строки — Python: основы" />
-    <meta property="og:description" content="Урок 7: Форматирование строк через f-строки: вставка переменных, форматирование чисел, выравнивание, выражения внутри f-строк" />
+    <meta property="og:description" content="f&quot;{переменная=}&quot;, форматирование чисел" />
     <meta property="og:type" content="article" />
     <title>f-строки — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="7">
     <div class="container">
@@ -18,121 +19,99 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 7</span> f-строки</h1>
         <p class="subtitle">Современное форматирование текста в Python (f-strings)</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~10 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Что такое f-строки?</h2>
-        <p>
-          f-строки (formatted string literals) — это самый удобный способ вставки значений переменных в строку.
-          Появились в Python 3.6 и стали стандартом для форматирования.
-        </p>
-        <pre class="code-block">
-name = "Максим"
+          <h2>Что такое f-строки?</h2>
+<p>f-строки (formatted string literals) — это самый удобный способ вставки значений переменных в строку. Появились в Python 3.6 и стали стандартом для форматирования.</p>
+<pre><code class="language-python">name = &quot;Максим&quot;
 age = 25
-print(f"Привет, {name}! Тебе {age} лет.")
-# Привет, Максим! Тебе 25 лет.</pre>
-        <p>
-          Синтаксис: перед строкой ставится буква <code>f</code>, а переменные или выражения пишутся внутри фигурных скобок <code>{ }</code>.
-        </p>
-          </section>
-          <section>
+print(f&quot;Привет, {name}! Тебе {age} лет.&quot;)
+# Привет, Максим! Тебе 25 лет.
+</code></pre>
+<p>Синтаксис: перед строкой ставится буква <code>f</code>, а переменные или выражения пишутся внутри фигурных скобок <code>{ }</code>.</p>
 <h2>Сравнение способов форматирования</h2>
-        <pre class="code-block">
-name = "Анна"
+<pre><code class="language-python">name = &quot;Анна&quot;
 age = 30
 
 # Старый способ (оператор %)
-print("Привет, %s! Тебе %d лет." % (name, age))
+print(&quot;Привет, %s! Тебе %d лет.&quot; % (name, age))
 
 # Метод .format()
-print("Привет, {}! Тебе {} лет.".format(name, age))
+print(&quot;Привет, {}! Тебе {} лет.&quot;.format(name, age))
 
 # f-строка — самый современный и читаемый
-print(f"Привет, {name}! Тебе {age} лет.")</pre>
-        <div class="tip">
-          <strong>Рекомендация:</strong> всегда используйте f-строки для нового кода. Они быстрее и читаемее.
-        </div>
-          </section>
-          <section>
+print(f&quot;Привет, {name}! Тебе {age} лет.&quot;)
+</code></pre>
+<blockquote>
+<p><strong>💡 Совет:</strong> <strong>Рекомендация:</strong> всегда используйте f-строки для нового кода. Они быстрее и читаемее.</p>
+</blockquote>
 <h2>Выражения внутри f-строк</h2>
-        <pre class="code-block">
-a = 10
+<pre><code class="language-python">a = 10
 b = 3
-print(f"{a} + {b} = {a + b}")     # 10 + 3 = 13
-print(f"{a} / {b} = {a / b:.2f}") # 10 / 3 = 3.33
+print(f&quot;{a} + {b} = {a + b}&quot;)     # 10 + 3 = 13
+print(f&quot;{a} / {b} = {a / b:.2f}&quot;) # 10 / 3 = 3.33
 
 # Вызов функций внутри f-строк
-name = "python"
-print(f"{name.upper()} — это круто!")  # PYTHON — это круто!
+name = &quot;python&quot;
+print(f&quot;{name.upper()} — это круто!&quot;)  # PYTHON — это круто!
 
 # Тернарный оператор
 score = 85
-print(f"Результат: {'Сдал' if score >= 60 else 'Не сдал'}")</pre>
-          </section>
-          <section>
+print(f&quot;Результат: {'Сдал' if score &gt;= 60 else 'Не сдал'}&quot;)
+</code></pre>
 <h2>Форматирование чисел</h2>
-        <table>
-          <tr><th>Спецификация</th><th>Пример</th><th>Результат</th></tr>
-          <tr><td><code>:.2f</code></td><td><code>f"{3.14159:.2f}"</code></td><td>3.14</td></tr>
-          <tr><td><code>:.0f</code></td><td><code>f"{3.99:.0f}"</code></td><td>4 (округляет!)</td></tr>
-          <tr><td><code>:.1%</code></td><td><code>f"{0.85:.1%}"</code></td><td>85.0%</td></tr>
-          <tr><td><code>:,</code></td><td><code>f"{1000000:,}"</code></td><td>1,000,000</td></tr>
-        </table>
-        <pre class="code-block">
+<table><tbody><tr><th>Спецификация</th><th>Пример</th><th>Результат</th></tr><tr><td><code>:.2f</code></td><td><code>f"{3.14159:.2f}"</code></td><td>3.14</td></tr><tr><td><code>:.0f</code></td><td><code>f"{3.99:.0f}"</code></td><td>4 (округляет!)</td></tr><tr><td><code>:.1%</code></td><td><code>f"{0.85:.1%}"</code></td><td>85.0%</td></tr><tr><td><code>:,</code></td><td><code>f"{1000000:,}"</code></td><td>1,000,000</td></tr></tbody></table>
+```python
 pi = 3.1415926535
 print(f"Число π ≈ {pi:.4f}")    # Число π ≈ 3.1416
-print(f"Число π ≈ {pi:.2f}")    # Число π ≈ 3.14</pre>
-          </section>
-          <section>
+print(f"Число π ≈ {pi:.2f}")    # Число π ≈ 3.14
+```
 <h2>Выравнивание текста</h2>
-        <pre class="code-block">
-# Выравнивание по правому краю (ширина 10)
-print(f"|{25:>10}|")   # |        25|
+<pre><code class="language-python"># Выравнивание по правому краю (ширина 10)
+print(f&quot;|{25:&gt;10}|&quot;)   # |        25|
 
 # По левому краю
-print(f"|{'текст':<10}|")  # |текст     |
+print(f&quot;|{'текст':&lt;10}|&quot;)  # |текст     |
 
 # По центру
-print(f"|{'Python':^10}|") # |  Python  |
+print(f&quot;|{'Python':^10}|&quot;) # |  Python  |
 
 # Заполнение символом
-print(f"|{25:0>5}|")       # |00025|
-print(f"|{'abc':-^7}|")    # |--abc--|</pre>
-          </section>
-          <section>
+print(f&quot;|{25:0&gt;5}|&quot;)       # |00025|
+print(f&quot;|{'abc':-^7}|&quot;)    # |--abc--|
+</code></pre>
 <h2>Практические примеры</h2>
-        <pre class="code-block">
-# Таблица умножения
+<pre><code class="language-python"># Таблица умножения
 for i in range(1, 5):
     for j in range(1, 5):
-        print(f"{i} × {j} = {i*j:>2}", end="  ")
+        print(f&quot;{i} × {j} = {i*j:&gt;2}&quot;, end=&quot;  &quot;)
     print()
 
 # Отображение цен
-products = {"apple": 79.90, "milk": 120.00, "bread": 55.50}
+products = {&quot;apple&quot;: 79.90, &quot;milk&quot;: 120.00, &quot;bread&quot;: 55.50}
 for name, price in products.items():
-    print(f"{name:.<20} {price:>8.2f} ₽")
+    print(f&quot;{name:.&lt;20} {price:&gt;8.2f} ₽&quot;)
 
 # Вывод списка с нумерацией
-fruits = ["яблоко", "банан", "вишня"]
+fruits = [&quot;яблоко&quot;, &quot;банан&quot;, &quot;вишня&quot;]
 for i, fruit in enumerate(fruits, 1):
-    print(f"{i}. {fruit}")</pre>
-          </section>
-          <section>
+    print(f&quot;{i}. {fruit}&quot;)
+</code></pre>
 <h2>Debug-режим: {x=}</h2>
-        <pre class="code-block">
-x = 42
+<pre><code class="language-python">x = 42
 y = 3.14
-print(f"{x=}")          # x=42
-print(f"{x=} {y=}")    # x=42 y=3.14
-print(f"{x+y=}")       # x+y=45.14
+print(f&quot;{x=}&quot;)          # x=42
+print(f&quot;{x=} {y=}&quot;)    # x=42 y=3.14
+print(f&quot;{x+y=}&quot;)       # x+y=45.14
 
 # Очень удобно для отладки:
-name = "Максим"
-print(f"{name=}")      # name='Максим'</pre>
-          </section>
+name = &quot;Максим&quot;
+print(f&quot;{name=}&quot;)      # name='Максим'
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
@@ -140,7 +119,7 @@ print(f"{name=}")      # name='Максим'</pre>
         <a href="08-number-ops.html" class="next-link">Далее: Операции над числами →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

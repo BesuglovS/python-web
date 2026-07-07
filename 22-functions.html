@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 22: Определение функций через def, параметры и аргументы, return, область видимости переменных (scope)" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="def, return, параметры" />
     <meta property="og:title" content="22. Функции — Python: основы" />
-    <meta property="og:description" content="Урок 22: Определение функций через def, параметры и аргументы, return, область видимости переменных (scope)" />
+    <meta property="og:description" content="def, return, параметры" />
     <meta property="og:type" content="article" />
     <title>Функции — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="22">
     <div class="container">
@@ -18,36 +19,29 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 22</span> Функции</h1>
         <p class="subtitle">def, return, параметры, аргументы</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="2">📘 Базовый</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Определение функции</h2>
+          <h2>Определение функции</h2>
 <p>Функция — это именованный блок кода, который можно вызывать:</p>
-<pre class="code-block">
-def greet():
-    print("Привет!")
+<pre><code class="language-python">def greet():
+    print(&quot;Привет!&quot;)
 
-greet()  # Вызов функции -> "Привет!"
-</pre>
-          </section>
-          <section>
+greet()  # Вызов функции -&gt; &quot;Привет!&quot;
+</code></pre>
 <h2>Параметры и аргументы</h2>
 <p>Функции могут принимать входные данные:</p>
-<pre class="code-block">
-def greet(name):
-    print(f"Привет, {name}!")
+<pre><code class="language-python">def greet(name):
+    print(f&quot;Привет, {name}!&quot;)
 
-greet("Анна")  # "Привет, Анна!"
-greet("Мир")   # "Привет, Мир!"
-</pre>
-          </section>
-          <section>
+greet(&quot;Анна&quot;)  # &quot;Привет, Анна!&quot;
+greet(&quot;Мир&quot;)   # &quot;Привет, Мир!&quot;
+</code></pre>
 <h2>Возврат значения — return</h2>
 <p>return передаёт результат обратно в вызывающий код:</p>
-<pre class="code-block">
-def add(a, b):
+<pre><code class="language-python">def add(a, b):
     return a + b
 
 result = add(5, 3)
@@ -58,40 +52,31 @@ def do_nothing():
     pass
 
 print(do_nothing())  # None
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Параметры по умолчанию</h2>
 <p>Можно задать значения по умолчанию:</p>
-<pre class="code-block">
-def greet(name, greeting="Привет"):
-    print(f"{greeting}, {name}!")
+<pre><code class="language-python">def greet(name, greeting=&quot;Привет&quot;):
+    print(f&quot;{greeting}, {name}!&quot;)
 
-greet("Анна")           # "Привет, Анна!"
-greet("Анна", "Здравствуйте")  # "Здравствуйте, Анна!"
-</pre>
-          </section>
-          <section>
+greet(&quot;Анна&quot;)           # &quot;Привет, Анна!&quot;
+greet(&quot;Анна&quot;, &quot;Здравствуйте&quot;)  # &quot;Здравствуйте, Анна!&quot;
+</code></pre>
 <h2>Документирование (docstring)</h2>
 <p>Строка документации сразу после def:</p>
-<pre class="code-block">
-def add(a, b):
-    """Возвращает сумму двух чисел."""
+<pre><code class="language-python">def add(a, b):
+    &quot;&quot;&quot;Возвращает сумму двух чисел.&quot;&quot;&quot;
     return a + b
 
-print(add.__doc__)  # "Возвращает сумму двух чисел."
+print(add.__doc__)  # &quot;Возвращает сумму двух чисел.&quot;
 help(add)           # Покажет документацию
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Несколько параметров</h2>
 <p>Функция может принимать любое количество параметров через запятую:</p>
-<pre class="code-block">
-def describe_person(name, age, city):
-    print(f"{name}, {age} лет, город {city}")
+<pre><code class="language-python">def describe_person(name, age, city):
+    print(f&quot;{name}, {age} лет, город {city}&quot;)
 
-describe_person("Олег", 25, "Москва")
-# "Олег, 25 лет, город Москва"
+describe_person(&quot;Олег&quot;, 25, &quot;Москва&quot;)
+# &quot;Олег, 25 лет, город Москва&quot;
 
 # Параметры передаются по порядку
 def power(base, exp):
@@ -99,13 +84,10 @@ def power(base, exp):
 
 print(power(2, 10))   # 1024
 print(power(10, 2))   # 100  (порядок важен!)
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Область видимости переменных</h2>
 <p>Переменные, созданные внутри функции, не видны снаружи (локальная область видимости):</p>
-<pre class="code-block">
-def my_func():
+<pre><code class="language-python">def my_func():
     x = 100        # Локальная переменная
     print(x)
 
@@ -122,88 +104,78 @@ def add_to_total(n):
 
 print(add_to_total(5))  # 5
 print(total)            # 0 (не изменилась!)
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Именованные аргументы</h2>
 <p>При вызове можно явно указать, какому параметру присваивается значение. Это позволяет не запоминать порядок:</p>
-<pre class="code-block">
-def greet(name, greeting="Привет"):
-    print(f"{greeting}, {name}!")
+<pre><code class="language-python">def greet(name, greeting=&quot;Привет&quot;):
+    print(f&quot;{greeting}, {name}!&quot;)
 
 # Позиционные аргументы (по порядку)
-greet("Анна", "Здравствуйте")     # "Здравствуйте, Анна!"
+greet(&quot;Анна&quot;, &quot;Здравствуйте&quot;)     # &quot;Здравствуйте, Анна!&quot;
 
 # Именованные аргументы (порядок не важен)
-greet(greeting="Здравствуйте", name="Анна")  # "Здравствуйте, Анна!"
-greet(name="Борис")                          # "Привет, Борис!"
+greet(greeting=&quot;Здравствуйте&quot;, name=&quot;Анна&quot;)  # &quot;Здравствуйте, Анна!&quot;
+greet(name=&quot;Борис&quot;)                          # &quot;Привет, Борис!&quot;
 
 # Смешанный вызов: сначала позиционные, затем именованные
-greet("Виктор", greeting="Добрый день")      # "Добрый день, Виктор!"
-</pre>
-          </section>
-          <section>
+greet(&quot;Виктор&quot;, greeting=&quot;Добрый день&quot;)      # &quot;Добрый день, Виктор!&quot;
+</code></pre>
 <h2>Аннотации типов</h2>
 <p>Начиная с Python 3.5, можно указывать ожидаемые типы параметров и возвращаемого значения. Это помогает читать код и использовать автодополнение в IDE:</p>
-<pre class="code-block">
-def add(a: int, b: int) -> int:
-    """Складывает два целых числа."""
+<pre><code class="language-python">def add(a: int, b: int) -&gt; int:
+    &quot;&quot;&quot;Складывает два целых числа.&quot;&quot;&quot;
     return a + b
 
-def greet(name: str, times: int = 1) -> None:
-    """Приветствует указанное количество раз."""
+def greet(name: str, times: int = 1) -&gt; None:
+    &quot;&quot;&quot;Приветствует указанное количество раз.&quot;&quot;&quot;
     for _ in range(times):
-        print(f"Привет, {name}!")
+        print(f&quot;Привет, {name}!&quot;)
 
 result: int = add(5, 3)   # Аннотация переменной
-greet("Анна", 3)           # Аннотации не проверяются во время выполнения
-</pre>
-          </section>
-          <section>
+greet(&quot;Анна&quot;, 3)           # Аннотации не проверяются во время выполнения
+</code></pre>
 <h2>Практический пример: калькулятор</h2>
 <p>Объединим изученные концепции в одной программе:</p>
-<pre class="code-block">
-def calculate(a: float, b: float, operation: str = "+") -> float:
-    """Выполняет арифметическую операцию над двумя числами.
+<pre><code class="language-python">def calculate(a: float, b: float, operation: str = &quot;+&quot;) -&gt; float:
+    &quot;&quot;&quot;Выполняет арифметическую операцию над двумя числами.
     
     Аргументы:
         a, b — числа
-        operation — знак операции: "+", "-", "*", "/"
+        operation — знак операции: &quot;+&quot;, &quot;-&quot;, &quot;*&quot;, &quot;/&quot;
     
     Возвращает:
         Результат вычисления.
-    """
-    if operation == "+":
+    &quot;&quot;&quot;
+    if operation == &quot;+&quot;:
         return a + b
-    elif operation == "-":
+    elif operation == &quot;-&quot;:
         return a - b
-    elif operation == "*":
+    elif operation == &quot;*&quot;:
         return a * b
-    elif operation == "/":
+    elif operation == &quot;/&quot;:
         if b != 0:
-            return a / b
+  return a / b
         else:
-            print("Ошибка: деление на ноль!")
-            return None
+  print(&quot;Ошибка: деление на ноль!&quot;)
+  return None
     else:
-        print(f"Неизвестная операция: {operation}")
+        print(f&quot;Неизвестная операция: {operation}&quot;)
         return None
 
 # Использование
-print(calculate(10, 5, "+"))   # 15.0
-print(calculate(10, 5, "/"))   # 2.0
-print(calculate(10, 0, "/"))   # Ошибка: деление на ноль! \n None
-</pre>
-          </section>
-          <div id="contest-link-placeholder"></div>
+print(calculate(10, 5, &quot;+&quot;))   # 15.0
+print(calculate(10, 5, &quot;/&quot;))   # 2.0
+print(calculate(10, 0, &quot;/&quot;))   # Ошибка: деление на ноль! \n None
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
-<a href="21-nested-loops.html" class="prev-link">< Вложенные циклы</a>
-        <a href="23-functions-advanced.html" class="next-link">Далее: Продвинутые функции →</a>
+        <a href="21-nested-loops.html" class="prev-link">← Вложенные циклы</a>
+        <a href="23-functions-advanced.html" class="next-link">Далее: Функции: продвинутые темы →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

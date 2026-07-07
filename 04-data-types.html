@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Урок 4: Основные типы данных в Python: int, float, str, bool, type(), isinstance()" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="description" content="int, float, str, bool, NoneType" />
     <meta property="og:title" content="4. Типы данных — Python: основы" />
-    <meta property="og:description" content="Урок 4: Основные типы данных в Python: int, float, str, bool, type(), isinstance()" />
+    <meta property="og:description" content="int, float, str, bool, NoneType" />
     <meta property="og:type" content="article" />
     <title>Типы данных — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
   </head>
   <body data-lesson="4">
     <div class="container">
@@ -18,114 +19,92 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 4</span> Типы данных</h1>
         <p class="subtitle">int, float, str, bool, NoneType, type(), isinstance()</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <section>
-<h2>Основные встроенные типы</h2>
+          <h2>Основные встроенные типы</h2>
 <p>В Python у каждого значения есть тип:</p>
-<pre class="code-block">
-# Числовые типы
+<pre><code class="language-python"># Числовые типы
 x = 10          # int — целое число
 y = 3.14        # float — число с плавающей точкой
 z = 1 + 2j      # complex — комплексное число
 
 # Строковый тип
-name = "Python"  # str — строка
+name = &quot;Python&quot;  # str — строка
 
 # Логический тип
 flag = True      # bool — булево значение
 
 # Пустой тип
 result = None    # NoneType — отсутствие значения
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Определение типа — type() и isinstance()</h2>
 <p>Узнать тип переменной:</p>
-<pre class="code-block">
-print(type(10))          # <class 'int'>
-print(type("hello"))     # <class 'str'>
-print(type(True))        # <class 'bool'>
+<pre><code class="language-python">print(type(10))          # 
+print(type(&quot;hello&quot;))     # 
+print(type(True))        # 
 
 # isinstance — проверка принадлежности типу
 print(isinstance(10, int))       # True
-print(isinstance("abc", str))    # True
+print(isinstance(&quot;abc&quot;, str))    # True
 print(isinstance(10, (int, float)))  # True
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Преобразование типов</h2>
 <p>Явное преобразование (приведение) типов — превращение значения из одного типа в другой с помощью функций-конструкторов: <code>int()</code>, <code>float()</code>, <code>str()</code>, <code>bool()</code>.</p>
-
 <h3>Числовые преобразования</h3>
-<pre class="code-block">
-# int > float
+<pre><code class="language-python"># int &gt; float
 print(float(5))        # 5.0
 
-# float > int (дробная часть отбрасывается!)
+# float &gt; int (дробная часть отбрасывается!)
 print(int(3.14))       # 3
 print(int(3.99))       # 3  (не округляет, а отбрасывает)
 
-# int > str
-print(str(100))        # "100"
+# int &gt; str
+print(str(100))        # &quot;100&quot;
 
-# float > str
-print(str(3.14))       # "3.14"
-</pre>
-
+# float &gt; str
+print(str(3.14))       # &quot;3.14&quot;
+</code></pre>
 <h3>Преобразование строк в числа</h3>
-<pre class="code-block">
-# Строка > int
-print(int("42"))       # 42
+<pre><code class="language-python"># Строка &gt; int
+print(int(&quot;42&quot;))       # 42
 
-# Строка > float
-print(float("2.5"))    # 2.5
-print(float("3"))      # 3.0  (float допускает целое в строке)
-</pre>
-
-<p class="warning">
-  <strong>Ошибка преобразования.</strong> Если строка не является числом, Python
-  выбросит ошибку <code>ValueError</code>:
-</p>
-<pre class="code-block">
-# int("abc")    # ValueError: invalid literal for int()
-# float("12,5") # ValueError: 12,5 — нужна точка, а не запятая
-</pre>
-
+# Строка &gt; float
+print(float(&quot;2.5&quot;))    # 2.5
+print(float(&quot;3&quot;))      # 3.0  (float допускает целое в строке)
+</code></pre>
+<p><strong>Ошибка преобразования.</strong> Если строка не является числом, Python выбросит ошибку <code>ValueError</code>:</p>
+<pre><code class="language-python"># int(&quot;abc&quot;)    # ValueError: invalid literal for int()
+# float(&quot;12,5&quot;) # ValueError: 12,5 — нужна точка, а не запятая
+</code></pre>
 <h3>Преобразование в bool</h3>
 <p>Любое значение можно превратить в <code>bool</code>. Правило простое: «пустые» значения дают <code>False</code>, всё остальное — <code>True</code>. Подробнее о truthy и falsy значениях — в уроке 8.</p>
-<pre class="code-block">
-print(bool(1))         # True
+<pre><code class="language-python">print(bool(1))         # True
 print(bool(0))         # False   (ноль — «пустое» число)
 print(bool(-5))        # True
-print(bool(""))        # False   (пустая строка)
-print(bool("text"))    # True    (непустая строка)
+print(bool(&quot;&quot;))        # False   (пустая строка)
+print(bool(&quot;text&quot;))    # True    (непустая строка)
 print(bool(None))      # False
-</pre>
-
+</code></pre>
 <h3>Bool как число</h3>
 <p><code>True</code> ведёт себя как <code>1</code>, <code>False</code> — как <code>0</code>:</p>
-<pre class="code-block">
-print(int(True))       # 1
+<pre><code class="language-python">print(int(True))       # 1
 print(int(False))      # 0
 print(True + 5)        # 6
 print(False * 10)      # 0
-</pre>
-          </section>
-          <section>
+</code></pre>
 <h2>Изменяемые и неизменяемые типы</h2>
 <p>Одни типы можно изменять после создания (изменяемые), другие — нет (неизменяемые):</p>
 <p>Неизменяемые (immutable): int, float, str, bool</p>
 <p>Изменяемые (mutable) мы изучим позже — к ним относятся list, dict, set и другие коллекции.</p>
-<pre class="code-block">
-# Строки неизменяемы
-s = "hello"
-# s[0] = "H"  # Ошибка! Нельзя изменить символ
-s = "H" + s[1:]  # Нужно создать новую строку
-</pre>
-          </section>
+<pre><code class="language-python"># Строки неизменяемы
+s = &quot;hello&quot;
+# s[0] = &quot;H&quot;  # Ошибка! Нельзя изменить символ
+s = &quot;H&quot; + s[1:]  # Нужно создать новую строку
+</code></pre>
+
         </div>
       </div>
       <footer class="topic-footer">
@@ -133,7 +112,7 @@ s = "H" + s[1:]  # Нужно создать новую строку
         <a href="05-type-casting.html" class="next-link">Далее: Приведение типов →</a>
       </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>
