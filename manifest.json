@@ -1,7 +1,7 @@
 {
   "name": "Python — Основы программирования",
   "short_name": "Python Basics",
-  "description": "27 интерактивных уроков по Python с нуля с примерами кода, подсветкой синтаксиса и отслеживанием прогресса",
+  "description": "50 интерактивных уроков по Python с нуля с примерами кода, подсветкой синтаксиса и отслеживанием прогресса",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f0f2f5",

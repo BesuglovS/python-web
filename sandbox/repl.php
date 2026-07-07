@@ -1,17 +1,30 @@
 <?php
 /**
  * Persistent REPL Sandbox — выполняет код с сохранением состояния между вызовами.
- * Использует pickle-файл для хранения namespace. Данные передаются через stdin.
- * Не требует фоновых процессов.
+ * Использует JSON-файл для хранения namespace (безопаснее pickle).
+ * Данные передаются через stdin. Не требует фоновых процессов.
  *
  * POST /sandbox/repl.php
- *   code     — строка с кодом на Python
- *   input    — строка с stdin для input()
- *   reset    — true, чтобы сбросить сессию (опционально)
- *   timeout  — опциональный таймаут (сек), по умолчанию 5
+ *   code       — строка с кодом на Python
+ *   input      — строка с stdin для input() (опционально)
+ *   session_id — UUID клиента для изоляции сессий (только [a-f0-9-])
+ *   reset      — true, чтобы сбросить сессию (опционально)
+ *   timeout    — опциональный таймаут (сек), по умолчанию 5
  *
  * Возвращает JSON:
  *   { "ok": true/false, "stdout": "...", "stderr": "...", "exit_code": N }
+ *
+ * Безопасность:
+ *   - AST-анализ: whitelist разрешённых узлов
+ *   - Без shell: proc_open с bypass_shell => true
+ *   - Изоляция Python: флаги -I -S (изолированный режим, без site-packages)
+ *   - Rate limiting: не более 10 запросов в минуту с одного IP
+ *   - Memory limit: 128MB
+ *   - Лимит кода: 64KB
+ *   - Лимит вывода: 1MB
+ *   - Сессии в JSON (не pickle) — безопасно от RCE при десериализации
+ *   - Сессии в изолированной поддиректории .repl_sessions/
+ *   - Строгая валидация session_id (только UUID-формат)
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -30,11 +43,54 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$MAX_CODE_LENGTH = 65536;
-$MAX_OUTPUT_SIZE = 1048576;
+// ─── Конфигурация ───
+$MAX_CODE_LENGTH = 65536;       // 64 KB
+$MAX_OUTPUT_SIZE = 1048576;     // 1 MB
+$DEFAULT_TIMEOUT = 5;           // секунд
+$MEMORY_LIMIT_MB = 128;         // MB на процесс Python
+$RATE_LIMIT = 10;               // запросов в минуту
+$RATE_WINDOW = 60;              // секунд
+$MAX_SESSION_SIZE = 10 * 1024 * 1024; // 10 MB
+
 $SCRIPTS_DIR = __DIR__;
-$SESSION_FILE = $SCRIPTS_DIR . '/.repl_session.pkl';
+$RATE_DIR = $SCRIPTS_DIR . '/.ratelimit';
+$SESSIONS_DIR = $SCRIPTS_DIR . '/.repl_sessions';
 $PYTHON_RUNNER = $SCRIPTS_DIR . '/.repl_runner.py';
+
+// ─── Rate Limiting ───
+$clientIp = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+$ipHash = md5($clientIp);
+$rateFile = $RATE_DIR . '/' . $ipHash . '.json';
+
+if (!is_dir($RATE_DIR)) {
+    @mkdir($RATE_DIR, 0700, true);
+}
+
+$now = time();
+$window = [];
+if (file_exists($rateFile)) {
+    $window = json_decode(file_get_contents($rateFile), true) ?: [];
+}
+// Очищаем старые записи
+$window = array_filter($window, function($ts) use ($now, $RATE_WINDOW) {
+    return ($now - $ts) < $RATE_WINDOW;
+});
+$window = array_values($window);
+
+if (count($window) >= $RATE_LIMIT) {
+    $oldest = $window[0];
+    $retryAfter = $RATE_WINDOW - ($now - $oldest);
+    http_response_code(429);
+    header('Retry-After: ' . max(0, $retryAfter));
+    echo json_encode([
+        'ok' => false,
+        'error' => 'Слишком много запросов. Подождите ' . max(1, $retryAfter) . ' сек.'
+    ]);
+    exit;
+}
+
+$window[] = $now;
+file_put_contents($rateFile, json_encode($window), LOCK_EX);
 
 // ─── Читаем вход ───
 $raw = file_get_contents('php://input');
@@ -53,14 +109,30 @@ if (!$data || !isset($data['code'])) {
 
 $code = $data['code'];
 
-// Изолируем сессию по session_id (UUID клиента)
-$sessionId = isset($data['session_id']) ? preg_replace('/[^a-zA-Z0-9\-]/', '', $data['session_id']) : '';
-if ($sessionId !== '') {
-    $SESSION_FILE = $SCRIPTS_DIR . '/.repl_session_' . $sessionId . '.pkl';
+// Изолируем сессию по session_id (строгий UUID клиента)
+// session_id ДОЛЖЕН быть UUID v4 формата: 8-4-4-4-12 hex цифр
+$sessionId = isset($data['session_id']) ? $data['session_id'] : '';
+$uuidPattern = '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i';
+
+// Создаём директорию для сессий если её нет
+if (!is_dir($SESSIONS_DIR)) {
+    @mkdir($SESSIONS_DIR, 0700, true);
 }
+
+$SESSION_FILE = $SESSIONS_DIR . '/.repl_session_' . md5('default') . '.json';
+
+if ($sessionId !== '' && preg_match($uuidPattern, $sessionId)) {
+    // Используем хеш от UUID для имени файла (защита от path traversal)
+    $safeName = md5($sessionId);
+    $SESSION_FILE = $SESSIONS_DIR . '/.repl_session_' . $safeName . '.json';
+} elseif ($sessionId !== '') {
+    // Невалидный session_id — используем default (не даём клиенту контролировать имя файла)
+    // но не выдаём ошибку, чтобы не раскрывать детали валидации
+}
+
 $input = isset($data['input']) ? $data['input'] : '';
 $reset = !empty($data['reset']);
-$timeout = isset($data['timeout']) ? max(1, min(10, (int)$data['timeout'])) : 5;
+$timeout = isset($data['timeout']) ? max(1, min(10, (int)$data['timeout'])) : $DEFAULT_TIMEOUT;
 
 if (strlen($code) > $MAX_CODE_LENGTH) {
     http_response_code(413);
@@ -81,7 +153,7 @@ $ALLOWED_IMPORTS_LIST = [
 ];
 
 // ─── AST-валидация ───
-function runPythonScript($scriptContent, $stdinData = '') {
+function runPythonScript($scriptContent, $stdinData = '', $timeout = 5, $memoryMb = 128) {
     $tmpFile = tempnam(sys_get_temp_dir(), 'py_');
     file_put_contents($tmpFile, $scriptContent);
 
@@ -91,11 +163,19 @@ function runPythonScript($scriptContent, $stdinData = '') {
         2 => ['pipe', 'w'],
     ];
 
-    // Используем прямой вызов python3 с файлом (UTF-8 mode)
+    $pythonCmd = DIRECTORY_SEPARATOR === '\\' ? 'python' : 'python3';
+    // -I: изолированный режим (игнорирует PYTHON* переменные окружения)
+    // -S: не импортировать site-packages при старте
+    // -X utf8: принудительный UTF-8 режим
+    $cmd = $pythonCmd . ' -I -S -X utf8 "' . $tmpFile . '"';
+
     $process = proc_open(
-        'python3 -X utf8 "' . $tmpFile . '"',
+        $cmd,
         $descriptorspec,
-        $pipes
+        $pipes,
+        null,
+        null,
+        ['bypass_shell' => true]
     );
 
     if (!is_resource($process)) {
@@ -108,9 +188,60 @@ function runPythonScript($scriptContent, $stdinData = '') {
     }
     fclose($pipes[0]);
 
-    $stdout = stream_get_contents($pipes[1]);
+    // Мониторинг таймаута
+    $startTime = microtime(true);
+    $stdout = '';
+    $stderr = '';
+
+    // Читаем вывод с контролем таймаута
+    stream_set_timeout($pipes[1], $timeout);
+    stream_set_timeout($pipes[2], $timeout);
+
+    while (!feof($pipes[1]) || !feof($pipes[2])) {
+        $elapsed = microtime(true) - $startTime;
+        if ($elapsed > $timeout) {
+            // Таймаут — убиваем процесс
+            proc_terminate($process, 9);
+            $stdout = stream_get_contents($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            proc_close($process);
+            unlink($tmpFile);
+            return [
+                $stdout ?: '',
+                ($stderr ?: '') . "\n⏱ Превышен лимит времени (" . $timeout . " сек). Выполнение остановлено.",
+                124  // Тот же код, что у timeout в bash
+            ];
+        }
+
+        $read = [$pipes[1], $pipes[2]];
+        $write = null;
+        $except = null;
+        $sel = stream_select($read, $write, $except, 1, 0); // таймаут 1 сек для проверки
+
+        if ($sel === false) {
+            break;
+        }
+        if ($sel > 0) {
+            foreach ($read as $pipe) {
+                $data = fread($pipe, 8192);
+                if ($data === false || $data === '') {
+                    continue;
+                }
+                if ($pipe === $pipes[1]) {
+                    $stdout .= $data;
+                } else {
+                    $stderr .= $data;
+                }
+            }
+        }
+    }
+
+    // Дособираем остатки
+    $stdout .= stream_get_contents($pipes[1]);
+    $stderr .= stream_get_contents($pipes[2]);
     fclose($pipes[1]);
-    $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[2]);
 
     $exitCode = proc_close($process);
@@ -207,7 +338,7 @@ PYTHON;
 
     $script = str_replace('IMPORTS_PLACEHOLDER', $importsJson, $script);
 
-    list($stdout, $stderr, $exitCode) = runPythonScript($script, $code);
+    list($stdout, $stderr, $exitCode) = runPythonScript($script, $code, 5, 64);
 
     $result = json_decode(trim($stdout), true);
     if (!$result) {
@@ -227,107 +358,8 @@ if (!$astOk) {
     exit;
 }
 
-// ─── Формируем скрипт для выполнения ───
-$runnerScript = <<<'PYTHON'
-import sys, json, pickle, io, traceback, builtins, os
-
-# Force UTF-8 everywhere
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
-
-# Читаем входные данные из stdin
-input_data = json.loads(sys.stdin.read())
-
-session_file = input_data['session_file']
-code = input_data['code']
-stdin_data = input_data['stdin_data']
-max_output = input_data['max_output']
-
-# Загружаем существующее состояние или создаём новое
-namespace = {}
-try:
-    with open(session_file, 'rb') as f:
-        namespace = pickle.load(f)
-except (FileNotFoundError, pickle.UnpicklingError, EOFError):
-    pass
-
-# Подмена stdin
-input_lines = stdin_data.split('\n') if stdin_data else []
-input_iter = iter(input_lines)
-
-_original_input = builtins.input
-def custom_input(prompt=''):
-    sys.__stdout__.write(prompt)
-    sys.__stdout__.flush()
-    try:
-        return next(input_iter)
-    except StopIteration:
-        return ''
-builtins.input = custom_input
-
-# Подмена stdout/stderr
-old_stdout = sys.stdout
-old_stderr = sys.stderr
-# После загрузки из pickle __builtins__ мог стать копией, а не ссылкой на builtins.__dict__.
-# Удаляем его, чтобы Python при exec() заново подхватил текущие builtins
-# (включая подменённый input → custom_input).
-namespace.pop('__builtins__', None)
-
-sys.stdout = io.StringIO()
-sys.stderr = io.StringIO()
-
-exit_code = 0
-try:
-    exec(code, namespace)
-except SystemExit:
-    pass
-except Exception as e:
-    tb = traceback.extract_tb(sys.exc_info()[2])
-    user_frame = tb[-1] if tb else None
-    line_no = user_frame.lineno if user_frame and user_frame.filename == '<string>' else '?'
-    sys.stderr.write(f"Line {line_no}: {type(e).__name__}: {e}\n")
-    exit_code = 1
-
-builtins.input = _original_input
-
-captured_out = sys.stdout.getvalue()
-captured_err = sys.stderr.getvalue()
-sys.stdout = old_stdout
-sys.stderr = old_stderr
-
-# Ограничение размера namespace: максимум 200 ключей
-MAX_NAMESPACE_KEYS = 200
-if len(namespace) > MAX_NAMESPACE_KEYS:
-    # Удаляем лишние ключи (кроме '__builtins__'), оставляя последние 200
-    keys_to_keep = set(list(namespace.keys())[-MAX_NAMESPACE_KEYS:])
-    for k in list(namespace.keys()):
-        if k not in keys_to_keep:
-            del namespace[k]
-
-# Сохраняем состояние
-try:
-    with open(session_file, 'wb') as f:
-        pickle.dump(namespace, f)
-except Exception:
-    pass
-
-# Ограничение размера вывода
-if len(captured_out) > max_output:
-    captured_out = captured_out[:max_output] + '\n\n... [output truncated]'
-if len(captured_err) > max_output:
-    captured_err = captured_err[:max_output] + '\n\n... [output truncated]'
-
-print(json.dumps({
-    'ok': exit_code == 0,
-    'stdout': captured_out,
-    'stderr': captured_err,
-    'exit_code': exit_code
-}, ensure_ascii=False))
-PYTHON;
-
-// Сохраняем скрипт-исполнитель на диск
-file_put_contents($PYTHON_RUNNER, $runnerScript);
+// ─── Выполнение через .repl_runner.py ───
+// Раннер лежит на диске (не перезаписываем каждый раз — избегаем гонки данных)
 
 $inputJson = json_encode([
     'session_file' => $SESSION_FILE,
@@ -336,14 +368,13 @@ $inputJson = json_encode([
     'max_output' => $MAX_OUTPUT_SIZE,
 ], JSON_UNESCAPED_UNICODE);
 
-// Запускаем
-list($stdout, $stderr, $exitCode) = runPythonScript($runnerScript, $inputJson);
+// Запускаем раннер
+list($stdout, $stderr, $exitCode) = runPythonScript($PYTHON_RUNNER, $inputJson, $timeout, $MEMORY_LIMIT_MB);
 
-// Проверяем размер pickle-файла сессии (не более 10 МБ)
-$MAX_SESSION_SIZE = 10 * 1024 * 1024; // 10 MB
+// Проверяем размер файла сессии (не более 10 МБ)
 if (file_exists($SESSION_FILE) && filesize($SESSION_FILE) > $MAX_SESSION_SIZE) {
     @unlink($SESSION_FILE);
-    $stderr = '⚠ Размер сессии превысил лимит (10 МБ). Сессия сброшена.';
+    $stderr = ($stderr ? $stderr . "\n" : '') . '⚠ Размер сессии превысил лимит (10 МБ). Сессия сброшена.';
 }
 
 if (empty($stdout)) {

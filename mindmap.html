@@ -60,201 +60,94 @@
   <a href="index.html" class="back-link">← На главную</a>
   <header>
     <h1>🗺️ <span>Карта курса</span> Python</h1>
-    <p>Визуальная схема всех 44 тем и их взаимосвязей. Стрелки показывают порядок изучения «от простого к сложному».</p>
+    <p>Визуальная схема всех 50 тем и их взаимосвязей. Стрелки показывают порядок изучения «от простого к сложному».</p>
   </header>
 
-  <!-- Этап 1: Введение -->
-  <div class="mm-stage">
-    <h2>📖 Этап 1 — Введение (уроки 1–2)</h2>
-    <div class="mm-row">
-      <a href="01-history.html" class="mm-node"><span class="num">1</span><div class="title">История Python</div><div class="desc">Философия, области</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="02-ide-setup.html" class="mm-node"><span class="num">2</span><div class="title">Настройка IDE</div><div class="desc">IDLE, VS Code</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 2: Основы -->
-  <div class="mm-stage">
-    <h2>📚 Этап 2 — Базовый синтаксис (уроки 3–6)</h2>
-    <div class="mm-row">
-      <a href="03-variables.html" class="mm-node"><span class="num">3</span><div class="title">Переменные</div><div class="desc">Присваивание, имена</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="04-data-types.html" class="mm-node"><span class="num">4</span><div class="title">Типы данных</div><div class="desc">int/float/str/bool</div></a>
-    </div>
-    <div class="mm-row" style="margin-top:12px;">
-      <a href="05-type-casting.html" class="mm-node"><span class="num">5</span><div class="title">Преобразование типов</div><div class="desc">int(), float(), str()</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="06-io.html" class="mm-node"><span class="num">5</span><div class="title">Ввод-вывод</div><div class="desc">print, input</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="07-number-ops.html" class="mm-node"><span class="num">6</span><div class="title">Числовые операции</div><div class="desc">+ - * / // % **</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 3: Условия -->
-  <div class="mm-stage">
-    <h2>🔀 Этап 3 — Условные конструкции (уроки 7–11)</h2>
-    <div class="mm-row">
-      <a href="08-conditional.html" class="mm-node"><span class="num">7</span><div class="title">if / else</div><div class="desc">Условия, отступы</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="09-booleans.html" class="mm-node"><span class="num">8</span><div class="title">Булевы значения</div><div class="desc">True/False, логика</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="10-complex-conditions.html" class="mm-node"><span class="num">9</span><div class="title">Сложные условия</div><div class="desc">and, or, not</div></a>
-    </div>
-    <div class="mm-row" style="margin-top:12px;">
-      <a href="11-nested-structures.html" class="mm-node"><span class="num">10</span><div class="title">Вложенные структуры</div><div class="desc">if в if</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="12-priority.html" class="mm-node"><span class="num">11</span><div class="title">Приоритет операций</div><div class="desc">Очерёдность</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 4: Строки -->
-  <div class="mm-stage">
-    <h2>🔤 Этап 4 — Строки (уроки 12–15, 25)</h2>
-    <div class="mm-row">
-      <a href="13-strings-index-slice.html" class="mm-node"><span class="num">12</span><div class="title">Индексы и срезы</div><div class="desc">[start:stop:step]</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="14-string-ops.html" class="mm-node"><span class="num">13</span><div class="title">Операции над строками</div><div class="desc">Конкатенация, методы</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="15-f-strings.html" class="mm-node"><span class="num">15</span><div class="title">f-строки</div><div class="desc">Форматирование</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="28-split-join.html" class="mm-node"><span class="num">25</span><div class="title">split + join</div><div class="desc">Разбор и сборка</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 5: Циклы -->
-  <div class="mm-stage">
-    <h2>🔄 Этап 5 — Циклы (уроки 14–18)</h2>
-    <div class="mm-row">
-      <a href="16-while.html" class="mm-node"><span class="num">14</span><div class="title">Цикл while</div><div class="desc">Цикл с предусловием</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="17-for.html" class="mm-node"><span class="num">15</span><div class="title">Цикл for</div><div class="desc">Перебор элементов</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="18-range.html" class="mm-node"><span class="num">16</span><div class="title">range()</div><div class="desc">Последовательности</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="19-break-continue.html" class="mm-node"><span class="num">17</span><div class="title">break / continue</div><div class="desc">Управление циклом</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="20-nested-loops.html" class="mm-node"><span class="num">18</span><div class="title">Вложенные циклы</div><div class="desc">Цикл в цикле</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 6: Функции -->
-  <div class="mm-stage">
-    <h2>⚙️ Этап 6 — Функции (уроки 19–23)</h2>
-    <div class="mm-row">
-      <a href="21-functions.html" class="mm-node"><span class="num">19</span><div class="title">Создание функций</div><div class="desc">def, return, параметры</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="22-functions-advanced.html" class="mm-node"><span class="num">20</span><div class="title">Продвинутые функции</div><div class="desc">*args, области видимости</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="23-lambda.html" class="mm-node"><span class="num">23</span><div class="title">Lambda-функции</div><div class="desc">Анонимные ф-ции</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 7: Структуры данных -->
-  <div class="mm-stage">
-    <h2>🗂️ Этап 7 — Структуры данных (уроки 21–26)</h2>
-    <div class="mm-row">
-      <a href="24-lists.html" class="mm-node"><span class="num">21</span><div class="title">Списки (list)</div><div class="desc">Методы, срезы</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="25-sets.html" class="mm-node"><span class="num">22</span><div class="title">Множества (set)</div><div class="desc">Уникальные</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="26-tuples.html" class="mm-node"><span class="num">23</span><div class="title">Кортежи (tuple)</div><div class="desc">Неизменяемые</div></a>
-    </div>
-    <div class="mm-row" style="margin-top:12px;">
-      <a href="27-dicts.html" class="mm-node"><span class="num">24</span><div class="title">Словари (dict)</div><div class="desc">Ключ:значение</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="29-list-comprehensions.html" class="mm-node"><span class="num">26</span><div class="title">Списочные выражения</div><div class="desc">[x for x in ...]</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 8: Ошибки и файлы -->
-  <div class="mm-stage">
-    <h2>⚠️ Этап 8 — Обработка ошибок и файлы (уроки 27–32)</h2>
-    <div class="mm-row">
-      <a href="30-try-except.html" class="mm-node"><span class="num">27</span><div class="title">try / except</div><div class="desc">Обработка исключений</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="31-files.html" class="mm-node"><span class="num">28</span><div class="title">Файлы: чтение/запись</div><div class="desc">open(), with</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="32-json-csv.html" class="mm-node"><span class="num">32</span><div class="title">JSON и CSV</div><div class="desc">Структурированные</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 9: Модули -->
-  <div class="mm-stage">
-    <h2>🧰 Этап 9 — Модули (уроки 29–32)</h2>
-    <div class="mm-row">
-      <a href="33-modules-import.html" class="mm-node"><span class="num">29</span><div class="title">import / модули</div><div class="desc">Подключение, псевдонимы</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="34-itertools.html" class="mm-node"><span class="num">30</span><div class="title">itertools</div><div class="desc">Комбинаторика, цепочки</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="35-math-random.html" class="mm-node"><span class="num">31</span><div class="title">math & random</div><div class="desc">Матем., случайность</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="36-datetime.html" class="mm-node"><span class="num">32</span><div class="title">datetime</div><div class="desc">Даты и время</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 10: ООП -->
-  <div class="mm-stage">
-    <h2>🏗️ Этап 10 — ООП (уроки 33–34)</h2>
-    <div class="mm-row">
-      <a href="37-oop-intro.html" class="mm-node"><span class="num">33</span><div class="title">Введение в ООП</div><div class="desc">Классы, объекты, self</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="38-inheritance.html" class="mm-node"><span class="num">38</span><div class="title">Наследование</div><div class="desc">super(), переопределение</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="#" class="mm-node"><span class="num">34</span><div class="title">Финальный проект</div><div class="desc">Применяем всё</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 11: Инструменты -->
-  <div class="mm-stage">
-    <h2>🛠️ Этап 11 — Инструменты разработки (уроки 35–36)</h2>
-    <div class="mm-row">
-      <a href="40-venv-pip.html" class="mm-node"><span class="num">35</span><div class="title">venv и pip</div><div class="desc">Окружения, пакеты</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="41-decorators.html" class="mm-node"><span class="num">36</span><div class="title">Декораторы</div><div class="desc">@decorator, обёртки</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 12: Продвинутые -->
-  <div class="mm-stage">
-    <h2>🚀 Этап 12 — Продвинутые темы (уроки 37–39)</h2>
-    <div class="mm-row">
-      <a href="42-generators.html" class="mm-node"><span class="num">37</span><div class="title">Генераторы</div><div class="desc">yield, genexpr</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="43-type-hints.html" class="mm-node"><span class="num">38</span><div class="title">Type hints</div><div class="desc">Аннотации типов</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="44-pytest.html" class="mm-node"><span class="num">39</span><div class="title">Unit-тесты</div><div class="desc">pytest, assert</div></a>
-    </div>
-  </div>
-
-  <!-- Этап 13: Реальный мир -->
-  <div class="mm-stage">
-    <h2>🌐 Этап 13 — Реальный мир (уроки 40–41)</h2>
-    <div class="mm-row">
-      <a href="50-requests-api.html" class="mm-node"><span class="num">40</span><div class="title">Requests и API</div><div class="desc">HTTP-запросы</div></a>
-      <span class="mm-arrow">→</span>
-      <a href="50-git-intro.html" class="mm-node"><span class="num">41</span><div class="title">Git для начинающих</div><div class="desc">Версионирование</div></a>
-    </div>
-  </div>
-
-  <!-- Финальный этап -->
-  <div class="mm-stage">
-    <h2>🏁 Финальный этап</h2>
-    <div class="mm-row">
-      <a href="final-test.html" class="mm-node">
-        <span class="num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">🏆</span>
-        <div class="title">Итоговый тест</div><div class="desc">Проверка знаний</div>
-      </a>
-      <span class="mm-arrow">→</span>
-      <a href="cheatsheets.html" class="mm-node">
-        <span class="num" style="background:linear-gradient(135deg,#10b981,#059669);">📋</span>
-        <div class="title">Шпаргалки</div><div class="desc">Краткие конспекты</div>
-      </a>
-    </div>
+  <!-- Динамический контейнер для mindmap — заполняется из lessons.json -->
+  <div id="mm-container">
+    <p style="text-align:center;color:var(--text-muted);padding:40px;">⏳ Загрузка карты курса...</p>
   </div>
 
   <footer style="text-align:center; color:var(--text-muted); padding:24px; font-size:0.9em;">
     🗺️ Python Web — Карта курса. Навигация по темам от простого к сложному.
   </footer>
 </div>
+<script>
+<!-- Динамическая загрузка карты курса из lessons.json -->
+(function () {
+  var container = document.getElementById('mm-container');
+  if (!container) return;
+
+  var stageEmoji = [
+    '📖', '📚', '🔀', '🔁', '🔤', '🔄', '⚙️', '🗂️', 'λ', '💾', '🧰', '🏗️', '🚀', '🌐'
+  ];
+
+  fetch('lessons.json')
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (data) {
+      var sections = data.sections;
+      if (!sections || !sections.length) throw new Error('No sections');
+
+      var html = '';
+      sections.forEach(function (section, si) {
+        var emoji = stageEmoji[si] || '📖';
+        var lessons = section.lessons;
+        if (!lessons || !lessons.length) return;
+
+        // Заголовок этапа
+        var firstNum = lessons[0].num;
+        var lastNum = lessons[lessons.length - 1].num;
+        var range = (firstNum === lastNum) ? ('урок ' + firstNum) : ('уроки ' + firstNum + '–' + lastNum);
+        html += '<div class="mm-stage">';
+        html += '  <h2>' + emoji + ' ' + section.title + ' (' + range + ')</h2>';
+
+        // Разбиваем уроки по строкам: max 3 в строке
+        var chunkSize = 3;
+        for (var i = 0; i < lessons.length; i += chunkSize) {
+          var chunk = lessons.slice(i, i + chunkSize);
+          html += '  <div class="mm-row"' + (i > 0 ? ' style="margin-top:12px;"' : '') + '>';
+          for (var j = 0; j < chunk.length; j++) {
+            var lesson = chunk[j];
+            if (j > 0) {
+              html += '    <span class="mm-arrow">→</span>';
+            }
+            html += '    <a href="' + lesson.file + '" class="mm-node">';
+            html += '      <span class="num">' + lesson.num + '</span>';
+            html += '      <div class="title">' + lesson.title + '</div>';
+            html += '      <div class="desc">' + (lesson.desc || '') + '</div>';
+            html += '    </a>';
+          }
+          html += '  </div>';
+        }
+
+        html += '</div>';
+      });
+
+      // Финальная секция
+      html += '<div class="mm-stage">';
+      html += '  <h2>🏁 Финальный этап</h2>';
+      html += '  <div class="mm-row">';
+      html += '    <a href="final-test.html" class="mm-node">';
+      html += '      <span class="num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">🏆</span>';
+      html += '      <div class="title">Итоговый тест</div><div class="desc">Проверка знаний</div>';
+      html += '    </a>';
+      html += '    <span class="mm-arrow">→</span>';
+      html += '    <a href="cheatsheets.html" class="mm-node">';
+      html += '      <span class="num" style="background:linear-gradient(135deg,#10b981,#059669);">📋</span>';
+      html += '      <div class="title">Шпаргалки</div><div class="desc">Краткие конспекты</div>';
+      html += '    </a>';
+      html += '  </div>';
+      html += '</div>';
+
+      container.innerHTML = html;
+    })
+    .catch(function (err) {
+      container.innerHTML = '<p style="text-align:center;color:red;padding:40px;">⚠️ Не удалось загрузить карту курса: ' + err.message + '</p>';
+    });
+})();
+</script>
 </body>
 </html>

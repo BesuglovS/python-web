@@ -586,6 +586,170 @@ async function executeCode(outputEl, code, userInput) {
   });
 })();
 
+// === ДИНАМИЧЕСКАЯ ГЕНЕРАЦИЯ НАВИГАЦИИ НА ГЛАВНОЙ ИЗ lessons.json ===
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Только на главной странице
+    var page = window.location.pathname.split('/').pop();
+    if (page && page !== 'index.html' && page !== '') return;
+    var nav = document.querySelector('nav');
+    if (!nav || nav.querySelector('.section-group')) return; // уже сгенерировано
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'lessons.json', true);
+    xhr.onload = function () {
+      if (xhr.status < 200 || xhr.status >= 300) return;
+      try {
+        var data = JSON.parse(xhr.responseText);
+        buildNav(nav, data);
+      } catch (e) {
+        console.warn('Failed to parse lessons.json:', e);
+      }
+    };
+    xhr.onerror = function () { console.warn('lessons.json not available — nav stays static'); };
+    xhr.send();
+  });
+
+  function buildNav(nav, data) {
+    var sections = data.sections;
+    if (!sections || !sections.length) return;
+
+    sections.forEach(function (section) {
+      var group = document.createElement('div');
+      group.className = 'section-group';
+      group.setAttribute('data-section', section.id);
+
+      var title = document.createElement('h2');
+      title.className = 'section-title';
+      title.textContent = section.title;
+      group.appendChild(title);
+
+      var cards = document.createElement('div');
+      cards.className = 'section-cards';
+
+      section.lessons.forEach(function (lesson) {
+        var a = document.createElement('a');
+        a.href = lesson.file;
+        a.className = 'topic-card';
+        a.setAttribute('data-lesson', lesson.num);
+
+        var numDiv = document.createElement('div');
+        numDiv.className = 'topic-num';
+        numDiv.textContent = lesson.num;
+        a.appendChild(numDiv);
+
+        var info = document.createElement('div');
+        info.className = 'topic-info';
+
+        var h2 = document.createElement('h2');
+        h2.textContent = lesson.title;
+        info.appendChild(h2);
+
+        var p = document.createElement('p');
+        p.textContent = lesson.desc;
+        info.appendChild(p);
+
+        // Метаданные: длительность + сложность
+        if (typeof COMPLEXITY_LABELS !== 'undefined') {
+          var metaSpan = document.createElement('div');
+          metaSpan.className = 'topic-meta';
+          var label = COMPLEXITY_LABELS[lesson.complexity] || lesson.complexity;
+          metaSpan.innerHTML = '<span class="meta-duration">⏱ ' + lesson.duration + ' мин</span> · <span class="meta-complexity" data-level="' + lesson.complexity + '">' + label + '</span>';
+          info.appendChild(metaSpan);
+        }
+
+        a.appendChild(info);
+
+        // Значок контеста
+        if (typeof THEORY_CONTESTS !== 'undefined' && THEORY_CONTESTS[lesson.num]) {
+          var badge = document.createElement('a');
+          badge.className = 'contest-badge';
+          badge.href = (typeof CONTEST_BASE_URL !== 'undefined' ? CONTEST_BASE_URL : 'https://contest.nayanovaacademy.ru/c/') + THEORY_CONTESTS[lesson.num];
+          badge.target = '_blank';
+          badge.rel = 'noopener noreferrer';
+          badge.title = 'Задачи к этой теме';
+          badge.innerHTML = '📝';
+          badge.setAttribute('aria-label', 'Открыть задачи контеста');
+          a.appendChild(badge);
+        }
+
+        cards.appendChild(a);
+      });
+
+      group.appendChild(cards);
+      nav.appendChild(group);
+    });
+
+    // Секция «Итоги» (финальный тест + REPL)
+    var finalGroup = document.createElement('div');
+    finalGroup.className = 'section-group';
+    finalGroup.setAttribute('data-section', 'final');
+    var finalTitle = document.createElement('h2');
+    finalTitle.className = 'section-title';
+    finalTitle.textContent = '🏁 Итоги';
+    finalGroup.appendChild(finalTitle);
+    var finalCards = document.createElement('div');
+    finalCards.className = 'section-cards';
+
+    // Финальный тест
+    var ftA = document.createElement('a');
+    ftA.href = 'final-test.html';
+    ftA.className = 'topic-card';
+    ftA.setAttribute('data-lesson', 'final-test');
+    var ftNum = document.createElement('div');
+    ftNum.className = 'topic-num';
+    ftNum.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+    ftNum.textContent = '🏆';
+    ftA.appendChild(ftNum);
+    var ftInfo = document.createElement('div');
+    ftInfo.className = 'topic-info';
+    ftInfo.innerHTML = '<h2>Итоговый тест</h2><p>Проверка знаний по всем темам</p>';
+    ftA.appendChild(ftInfo);
+    finalCards.appendChild(ftA);
+
+    // REPL
+    var rA = document.createElement('a');
+    rA.href = 'repl.html';
+    rA.className = 'topic-card';
+    rA.style.borderColor = 'var(--primary)';
+    var rNum = document.createElement('div');
+    rNum.className = 'topic-num';
+    rNum.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+    rNum.textContent = '▶';
+    rA.appendChild(rNum);
+    var rInfo = document.createElement('div');
+    rInfo.className = 'topic-info';
+    rInfo.innerHTML = '<h2>Python REPL — Интерактивная консоль</h2><p>Пиши код и сразу видь результат</p>';
+    rA.appendChild(rInfo);
+    finalCards.appendChild(rA);
+
+    finalGroup.appendChild(finalCards);
+    nav.appendChild(finalGroup);
+
+    // Переинициализируем прогресс / метаданные / контесты
+    if (typeof markCompleted === 'function') markCompleted();
+
+    // Добавляем метаданные для уже сгенерированных карточек (на случай если markCompleted их не покрыл)
+    var allCards = nav.querySelectorAll('.topic-card[data-lesson]');
+    for (var i = 0; i < allCards.length; i++) {
+      var card = allCards[i];
+      var lessonNum = parseInt(card.getAttribute('data-lesson'));
+      if (!lessonNum || isNaN(lessonNum)) continue;
+      if (typeof THEORY_CONTESTS !== 'undefined' && THEORY_CONTESTS[lessonNum] && !card.querySelector('.contest-badge')) {
+        var b = document.createElement('a');
+        b.className = 'contest-badge';
+        b.href = (typeof CONTEST_BASE_URL !== 'undefined' ? CONTEST_BASE_URL : 'https://contest.nayanovaacademy.ru/c/') + THEORY_CONTESTS[lessonNum];
+        b.target = '_blank';
+        b.rel = 'noopener noreferrer';
+        b.title = 'Задачи к этой теме';
+        b.innerHTML = '📝';
+        b.setAttribute('aria-label', 'Открыть задачи контеста');
+        card.appendChild(b);
+      }
+    }
+  }
+})();
+
 // === ПЛАВНЫЙ СКРОЛЛ ДЛЯ ЯКОРНЫХ ССЫЛОК ===
 (function () {
   document.addEventListener('DOMContentLoaded', () => {
