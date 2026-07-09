@@ -62,5 +62,3 @@ while i <= 3:
         j += 1
     i += 1
 ```
-
-[← Сложные условия](12-complex-conditions.html) [Далее: Строки: индексация и срезы →](14-strings-index-slice.html)

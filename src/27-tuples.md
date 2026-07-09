@@ -69,5 +69,3 @@ print(a, b)  # 2 1
 print(point.count(3))  # 1
 print(point.index(4))  # 1
 ```
-
-[< Списки (list)](26-sets.html) [Далее: Словари →](28-dicts.html)

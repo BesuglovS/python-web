@@ -85,5 +85,3 @@ conn.close()
 -   После `INSERT/UPDATE/DELETE` обязателен `commit()`
 -   Контекстный менеджер `with sqlite3.connect()` упрощает работу
 -   `fetchone()`, `fetchall()` — получение результатов SELECT
-
-[← JSON и CSV](33-json-csv.html) [Далее: Модули и import →](35-modules-import.html)

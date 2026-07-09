@@ -72,5 +72,3 @@ while num != 0:
     num = int(input("Число: "))
 print(f"Сумма: {total}")
 ```
-
-[< Операции над строками](16-regex.html) [Далее: Цикл for →](18-for.html)

@@ -172,5 +172,3 @@ print(f"Возраст: {calculate_age('15.05.1995')} лет")
 -   `timedelta` — разница между датами, арифметика с датами
 -   Коды форматирования: `%Y %m %d %H %M %S` — основа
 -   `.weekday()` — день недели (0 = понедельник)
-
-[← math и random](38-math-random.html) [Далее: NumPy и Pandas →](40-numpy-pandas.html)

@@ -92,5 +92,3 @@ if first() and second():
 if first() or second():
     pass
 ```
-
-[← Обработка исключений](11-try-except.html) [Далее: Вложенные структуры →](13-nested-structures.html)

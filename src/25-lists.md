@@ -65,5 +65,3 @@ nums.reverse()        # разворот
 print(nums.index(4))  # 2 — индекс элемента
 print(nums.count(2))  # 1 — количество вхождений
 ```
-
-[< Функции: продвинутые](24-debugging.html) [Далее: Множества →](26-sets.html)

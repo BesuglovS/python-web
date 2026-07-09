@@ -72,5 +72,3 @@ original = {"a": 1, "b": 2, "c": 3, "d": 4}
 filtered = {k: v for k, v in original.items() if v > 2}
 print(filtered)  # {"c": 3, "d": 4}
 ```
-
-[< split + join](29-split-join.html) [Далее: lambda-функции →](31-lambda.html)

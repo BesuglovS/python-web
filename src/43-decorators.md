@@ -127,5 +127,3 @@ def fibonacci(n):
 
 print(fibonacci(100))  # работает мгновенно!
 ```
-
-[← Наследование](42-inheritance.html) [Далее: Генераторы →](44-generators.html)

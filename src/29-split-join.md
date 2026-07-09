@@ -67,5 +67,3 @@ print(f"{name} из {city}, возраст {age}")
 new_data = ";".join(fields)
 print(new_data)  # "Иван;25;Москва"
 ```
-
-[< Словари (dict)](28-dicts.html) [Далее: Списочные выражения →](30-list-comprehensions.html)

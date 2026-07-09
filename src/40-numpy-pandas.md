@@ -71,5 +71,3 @@ print(df[df['Возраст'] > 25])  # фильтрация
 -   `pd.read_csv()`, `pd.read_excel()` — загрузка данных из файлов
 -   Фильтрация: `df[df["столбец"] > значение]`, группировка: `df.groupby()`
 -   Установка: `pip install numpy pandas`
-
-[← Дата и время](39-datetime.html) [Далее: ООП: введение →](41-oop-intro.html)

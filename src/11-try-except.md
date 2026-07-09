@@ -231,5 +231,3 @@ except ValueError as original_error:
 2.  Деление на ноль (`ZeroDivisionError`)
 
 \# ВАШ КОД — напишите функцию safe\_calculator() def safe\_calculator(): try: a = float(input("Первое число: ")) b = float(input("Второе число: ")) # Ваш код здесь... except ValueError: print("Ошибка: нужно ввести число!") except ZeroDivisionError: print("Ошибка: на ноль делить нельзя!") safe\_calculator() ▶ Запустить ↺ Сброс
-
-[← Условный оператор](10-conditional.html) [Далее: Сложные условия →](12-complex-conditions.html)

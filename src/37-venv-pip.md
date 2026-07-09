@@ -115,5 +115,3 @@ pip freeze > requirements.txt
 
 # 6. Готово — можно писать код!
 ```
-
-[← itertools](36-itertools.html) [Далее: math и random →](38-math-random.html)

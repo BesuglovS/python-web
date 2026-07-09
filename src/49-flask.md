@@ -77,5 +77,3 @@ if __name__ == '__main__':
 -   `request.form` — данные из HTML-форм (POST)
 -   `jsonify()` — возвращает JSON-ответ для REST API
 -   `app.run(debug=True)` — запуск с авто-перезагрузкой
-
-[← API-запросы](48-requests-api.html) [Далее: Git: введение →](50-git-intro.html)

@@ -158,5 +158,3 @@ with open("users.csv", "w", encoding="utf-8", newline="") as f:
 
 print("Конвертация завершена!")
 ```
-
-[← Файлы](32-files.html) [Далее: Модули и import →](34-sqlite3.html)

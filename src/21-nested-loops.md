@@ -61,5 +61,3 @@ for i in range(3):
 # (1,0)
 # (2,0)
 ```
-
-[< break и continue](20-break-continue.html) [Далее: Функции →](22-functions.html)

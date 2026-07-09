@@ -180,5 +180,3 @@ print(generate_password(16))
 ## Итоги
 
 <table><tbody><tr><th>Модуль</th><th>Функция</th><th>Назначение</th></tr><tr><td>math</td><td><code>sqrt(x)</code></td><td>Квадратный корень</td></tr><tr><td>math</td><td><code>ceil/floor/trunc</code></td><td>Округление</td></tr><tr><td>math</td><td><code>sin/cos/tan</code></td><td>Тригонометрия (в радианах)</td></tr><tr><td>math</td><td><code>log/log10/log2</code></td><td>Логарифмы</td></tr><tr><td>math</td><td><code>pi, e, tau</code></td><td>Математические константы</td></tr><tr><td>random</td><td><code>randint(a, b)</code></td><td>Случайное целое [a, b]</td></tr><tr><td>random</td><td><code>choice(seq)</code></td><td>Случайный элемент</td></tr><tr><td>random</td><td><code>shuffle(list)</code></td><td>Перемешивание на месте</td></tr><tr><td>random</td><td><code>sample(seq, k)</code></td><td>k уникальных элементов</td></tr><tr><td>random</td><td><code>seed(n)</code></td><td>Фиксация зерна для повторяемости</td></tr></tbody></table>
-
-[← venv и pip](37-venv-pip.html) [Далее: Дата и время →](39-datetime.html)

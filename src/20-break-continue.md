@@ -118,5 +118,3 @@ def find_first_even(limit):
     return None
 ```
 <table><tbody><tr><th>Оператор</th><th>Действие</th><th>Что завершает</th></tr><tr><td><code>break</code></td><td>Выход из цикла</td><td>Только текущий цикл</td></tr><tr><td><code>continue</code></td><td>Пропуск итерации</td><td>Текущую итерацию цикла</td></tr><tr><td><code>return</code></td><td>Возврат значения</td><td>Всю функцию</td></tr></tbody></table>
-
-[< range()](19-range.html) [Далее: Вложенные циклы →](21-nested-loops.html)

@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
-    <meta name="description" content="re: поиск, замена, группы, шаблоны" />
+    <meta name="description" content="Модуль re: поиск, замена, группы, шаблоны" />
     <meta property="og:title" content="16. Регулярные выражения — Python: основы" />
-    <meta property="og:description" content="re: поиск, замена, группы, шаблоны" />
+    <meta property="og:description" content="Модуль re: поиск, замена, группы, шаблоны" />
     <meta property="og:type" content="article" />
     <title>Регулярные выражения — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
@@ -18,13 +18,395 @@
       <header class="topic-header">
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 16</span> Регулярные выражения</h1>
-        
+        <p class="subtitle">Модуль re: поиск, замена, группы, шаблоны</p>
         <div class="lesson-meta-info"><span class="meta-duration">⏱ ~15 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="3">📗 Средний</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          
+          <h2>Что такое регулярные выражения</h2>
+<p>Регулярные выражения (regex, regexp) — это язык шаблонов для поиска и обработки текста. Вместо того чтобы писать сложный код с циклами и условиями, вы описываете <strong>шаблон</strong>, а движок регулярных выражений ищет совпадения за вас.</p>
+<pre><code class="language-python"># Без regex: проверка, является ли строка номером телефона
+def is_phone(s):
+    if len(s) != 12:
+        return False
+    if s[0] != &#x27;+&#x27;:
+        return False
+    for ch in s[1:]:
+        if not ch.isdigit():
+            return False
+    return True
+
+# С regex: один шаблон решает всё
+import re
+def is_phone(s):
+    return bool(re.fullmatch(r&#x27;\+\d{11}&#x27;, s))
+</code></pre>
+<p>В Python регулярные выражения доступны через встроенный модуль <strong><code>re</code></strong>.</p>
+<h2>Сырые строки и regex</h2>
+<p>Перед строками с шаблонами всегда ставьте <code>r</code> (raw string), чтобы обратный слеш <code>\</code> не интерпретировался как escape-символ:</p>
+<pre><code class="language-python">pattern = r&#x27;\d+\.\d+&#x27;    # Правильно: ищет число с плавающей точкой
+pattern = &#x27;\\d+\\.\\d+&#x27;  # Без r пришлось бы экранировать каждый слеш
+</code></pre>
+<h2>Базовые метасимволы</h2>
+<p>Метасимволы — это специальные знаки, которые не совпадают сами с собой, а задают правило поиска:</p>
+<table>
+  <thead>
+    <tr><th>Символ</th><th>Значение</th><th>Пример</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.</code></td><td>Любой символ, кроме <code>\n</code></td><td><code>к.т</code> → «кот», «кит»</td></tr>
+    <tr><td><code>^</code></td><td>Начало строки</td><td><code>^Привет</code> → строка начинается с «Привет»</td></tr>
+    <tr><td><code>$</code></td><td>Конец строки</td><td><code>конец$</code> → строка заканчивается на «конец»</td></tr>
+    <tr><td><code>*</code></td><td>0 или более повторений</td><td><code>a*</code> → '', 'a', 'aa', 'aaa'...</td></tr>
+    <tr><td><code>+</code></td><td>1 или более повторений</td><td><code>a+</code> → 'a', 'aa', 'aaa'...</td></tr>
+    <tr><td><code>?</code></td><td>0 или 1 повторение</td><td><code>colou?r</code> → 'color', 'colour'</td></tr>
+    <tr><td><code>{n}</code></td><td>Ровно n повторений</td><td><code>\d{3}</code> → ровно 3 цифры</td></tr>
+    <tr><td><code>{n,m}</code></td><td>От n до m повторений</td><td><code>\d{2,4}</code> → 2, 3 или 4 цифры</td></tr>
+    <tr><td><code>{n,}</code></td><td>n или более повторений</td><td><code>\d{2,}</code> → 2 и более цифр</td></tr>
+    <tr><td><code>[]</code></td><td>Один символ из набора</td><td><code>[aeiou]</code> → любая гласная</td></tr>
+    <tr><td><code>[^]</code></td><td>Один символ НЕ из набора</td><td><code>[^0-9]</code> → не цифра</td></tr>
+    <tr><td><code>|</code></td><td>ИЛИ (альтернатива)</td><td><code>кот|пёс</code> → 'кот' или 'пёс'</td></tr>
+    <tr><td><code>()</code></td><td>Группировка и захват</td><td><code>(ab)+</code> → 'ab', 'abab'...</td></tr>
+    <tr><td><code>\</code></td><td>Экранирование метасимвола</td><td><code>\.</code> → точка как символ</td></tr>
+  </tbody>
+</table>
+<h2>Символьные классы (shorthand)</h2>
+<p>Это сокращённые обозначения для часто используемых наборов символов:</p>
+<table>
+  <thead>
+    <tr><th>Класс</th><th>Значение</th><th>Противоположность</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>\d</code></td><td>Цифра <code>[0-9]</code></td><td><code>\D</code> — не цифра</td></tr>
+    <tr><td><code>\w</code></td><td>Буква, цифра или <code>_</code> <code>[a-zA-Z0-9_]</code></td><td><code>\W</code> — не буква/цифра</td></tr>
+    <tr><td><code>\s</code></td><td>Пробельный символ (пробел, таб, перенос)</td><td><code>\S</code> — не пробельный</td></tr>
+    <tr><td><code>\b</code></td><td>Граница слова</td><td><code>\B</code> — не граница слова</td></tr>
+    <tr><td><code>\A</code></td><td>Начало строки (аналог <code>^</code>)</td><td><code>\Z</code> — конец строки (аналог <code>$</code>)</td></tr>
+  </tbody>
+</table>
+<pre><code class="language-python">import re
+
+text = &quot;Кот №42 съел 3 рыбки и рис.&quot;
+print(re.findall(r&#x27;\d+&#x27;, text))      # [&#x27;42&#x27;, &#x27;3&#x27;]
+print(re.findall(r&#x27;\w+&#x27;, text))      # [&#x27;Кот&#x27;, &#x27;42&#x27;, &#x27;съел&#x27;, &#x27;3&#x27;, &#x27;рыбки&#x27;, &#x27;рис&#x27;]
+print(re.findall(r&#x27;\b\w{3}\b&#x27;, text))  # [&#x27;Кот&#x27;, &#x27;рис&#x27;] — слова из 3 букв
+</code></pre>
+<h2>re.search() — первый найденный</h2>
+<p>Ищет <strong>первое</strong> совпадение шаблона в любом месте строки. Возвращает объект <code>Match</code> или <code>None</code>:</p>
+<pre><code class="language-python">import re
+
+text = &quot;Мой номер: +7-999-123-45-67&quot;
+
+match = re.search(r&#x27;\+\d-\d{3}-\d{3}-\d{2}-\d{2}&#x27;, text)
+if match:
+    print(match.group())   # +7-999-123-45-67
+    print(match.start())   # 11 (индекс начала)
+    print(match.end())     # 27 (индекс конца)
+    print(match.span())    # (11, 27)
+
+# Если не найдено — возвращает None
+result = re.search(r&#x27;z{10}&#x27;, &quot;zzz&quot;)
+print(result)              # None
+</code></pre>
+<h2>re.match() — только с начала строки</h2>
+<p>Проверяет совпадение <strong>строго с начала строки</strong>. Не ищет в середине:</p>
+<pre><code class="language-python">text = &quot;Python — отличный язык&quot;
+
+print(re.match(r&#x27;Python&#x27;, text))    # Match — начинается с Python
+print(re.match(r&#x27;язык&#x27;, text))      # None — &#x27;язык&#x27; не в начале
+print(re.search(r&#x27;язык&#x27;, text))     # Match — search найдёт в любом месте
+</code></pre>
+<p>Фактически <code>re.match(pat, text)</code> эквивалентен <code>re.search(r'^' + pat, text)</code>.</p>
+<h2>re.fullmatch() — полное совпадение</h2>
+<p>Вся строка должна соответствовать шаблону от начала до конца:</p>
+<pre><code class="language-python">print(re.fullmatch(r&#x27;\d+&#x27;, &quot;12345&quot;))   # Match
+print(re.fullmatch(r&#x27;\d+&#x27;, &quot;123abc&quot;))  # None — есть буквы
+print(re.fullmatch(r&#x27;\d+&#x27;, &quot;123 45&quot;))  # None — есть пробел
+
+# fullmatch автоматически добавляет ^ в начале и $ в конце
+# Это эквивалентно: re.search(r&#x27;^\d+$&#x27;, &quot;12345&quot;)
+</code></pre>
+<h2>re.findall() — все совпадения</h2>
+<p>Возвращает <strong>список</strong> всех найденных совпадений:</p>
+<pre><code class="language-python">text = &quot;Цены: 100 руб, 250 руб, 50 руб.&quot;
+prices = re.findall(r&#x27;\d+&#x27;, text)
+print(prices)                # [&#x27;100&#x27;, &#x27;250&#x27;, &#x27;50&#x27;]
+
+# Если в шаблоне есть группы, findall возвращает список кортежей
+text = &quot;Иван: 25 лет, Анна: 30 лет&quot;
+pairs = re.findall(r&#x27;(\w+): (\d+)&#x27;, text)
+print(pairs)                 # [(&#x27;Иван&#x27;, &#x27;25&#x27;), (&#x27;Анна&#x27;, &#x27;30&#x27;)]
+</code></pre>
+<h2>re.finditer() — итератор по совпадениям</h2>
+<p>Возвращает итератор объектов <code>Match</code>. Полезно, когда нужны позиции или когда данных много:</p>
+<pre><code class="language-python">text = &quot;Первый, второй, третий&quot;
+for m in re.finditer(r&#x27;\w+&#x27;, text):
+    print(f&quot;&#x27;{m.group()}&#x27; на позиции {m.start()}-{m.end()}&quot;)
+# &#x27;Первый&#x27; на позиции 0-6
+# &#x27;второй&#x27; на позиции 8-14
+# &#x27;третий&#x27; на позиции 16-22
+</code></pre>
+<h2>re.sub() — замена по шаблону</h2>
+<p>Заменяет все совпадения на указанную строку. Четвёртый аргумент <code>count</code> ограничивает количество замен:</p>
+<pre><code class="language-python">text = &quot;Кот ловит мышь. Кот спит.&quot;
+
+# Замена всех вхождений
+print(re.sub(r&#x27;Кот&#x27;, &#x27;Пёс&#x27;, text))
+# Пёс ловит мышь. Пёс спит.
+
+# Замена только первого вхождения
+print(re.sub(r&#x27;Кот&#x27;, &#x27;Пёс&#x27;, text, count=1))
+# Пёс ловит мышь. Кот спит.
+
+# Удаление всех цифр
+print(re.sub(r&#x27;\d&#x27;, &#x27;&#x27;, &quot;a1b2c3&quot;))   # abc
+
+# Удаление лишних пробелов
+print(re.sub(r&#x27;\s+&#x27;, &#x27; &#x27;, &quot;Много    лишних   пробелов&quot;))
+# Много лишних пробелов
+</code></pre>
+<p><strong>Ссылки на группы в замене</strong> — <code>\1</code>, <code>\2</code> и т.д. позволяют использовать найденные группы:</p>
+<pre><code class="language-python"># Меняем порядок слов
+print(re.sub(r&#x27;(\w+) (\w+)&#x27;, r&#x27;\2 \1&#x27;, &quot;Hello World&quot;))
+# World Hello
+
+# Форматируем дату: ДД-ММ-ГГГГ → ГГГГ.ММ.ДД
+date = &quot;25-12-2023&quot;
+print(re.sub(r&#x27;(\d{2})-(\d{2})-(\d{4})&#x27;, r&#x27;\3.\2.\1&#x27;, date))
+# 2023.12.25
+
+# Маскируем середину номера телефона
+phone = &quot;+7-999-123-45-67&quot;
+print(re.sub(r&#x27;(\d{3}-\d{2})-\d{2}$&#x27;, r&#x27;\1-XX&#x27;, phone))
+# +7-999-123-45-XX
+</code></pre>
+<p>Можно также передать <strong>функцию</strong>, которая будет вызвана для каждого совпадения:</p>
+<pre><code class="language-python">def double(match):
+    return str(int(match.group()) * 2)
+
+text = &quot;Было 5 яблок и 3 груши&quot;
+print(re.sub(r&#x27;\d+&#x27;, double, text))
+# Было 10 яблок и 6 груш
+</code></pre>
+<h2>re.split() — разделение по шаблону</h2>
+<p>Разбивает строку там, где шаблон совпадает:</p>
+<pre><code class="language-python"># Разбить по любому количеству пробелов и запятых
+text = &quot;яблоко,  груша,банан,  апельсин&quot;
+print(re.split(r&#x27;[,\s]+&#x27;, text))
+# [&#x27;яблоко&#x27;, &#x27;груша&#x27;, &#x27;банан&#x27;, &#x27;апельсин&#x27;]
+
+# Обычный split со сложным разделителем
+text = &quot;один; два: три, четыре&quot;
+print(re.split(r&#x27;[;:,]\s*&#x27;, text))
+# [&#x27;один&#x27;, &#x27;два&#x27;, &#x27;три&#x27;, &#x27;четыре&#x27;]
+
+# maxsplit ограничивает количество разбиений
+print(re.split(r&#x27;[;:,]\s*&#x27;, text, maxsplit=2))
+# [&#x27;один&#x27;, &#x27;два&#x27;, &#x27;три, четыре&#x27;]
+</code></pre>
+<h2>Группы и захват</h2>
+<p>Круглые скобки <code>()</code> создают <strong>группу захвата</strong>. Содержимое, совпавшее с группой, можно извлечь:</p>
+<pre><code class="language-python">text = &quot;Email: ivan@mail.ru, Контакт: anna@gmail.com&quot;
+
+match = re.search(r&#x27;(\w+)@(\w+\.\w+)&#x27;, text)
+if match:
+    print(match.group(0))    # ivan@mail.ru — всё совпадение
+    print(match.group(1))    # ivan — первая группа (имя)
+    print(match.group(2))    # mail.ru — вторая группа (домен)
+    print(match.groups())    # (&#x27;ivan&#x27;, &#x27;mail.ru&#x27;) — все группы
+
+# Именованные группы: (?P&lt;name&gt;...)
+match = re.search(r&#x27;(?P&lt;user&gt;\w+)@(?P&lt;domain&gt;\w+\.\w+)&#x27;, text)
+if match:
+    print(match.group(&#x27;user&#x27;))     # ivan
+    print(match.group(&#x27;domain&#x27;))   # mail.ru
+    print(match.groupdict())       # {&#x27;user&#x27;: &#x27;ivan&#x27;, &#x27;domain&#x27;: &#x27;mail.ru&#x27;}
+</code></pre>
+<h2>Незахватывающие группы (?:...)</h2>
+<p>Если скобки нужны только для группировки, но не для захвата — используйте <code>(?:...)</code>:</p>
+<pre><code class="language-python"># С захватом: findall вернёт только содержимое групп
+print(re.findall(r&#x27;(кот|пёс) спит&#x27;, &quot;кот спит и пёс спит&quot;))
+# [&#x27;кот&#x27;, &#x27;пёс&#x27;]
+
+# Без захвата: findall вернёт полные совпадения
+print(re.findall(r&#x27;(?:кот|пёс) спит&#x27;, &quot;кот спит и пёс спит&quot;))
+# [&#x27;кот спит&#x27;, &#x27;пёс спит&#x27;]
+</code></pre>
+<h2>Жадность и ленивость</h2>
+<p>По умолчанию квантификаторы <code>*</code>, <code>+</code>, <code>?</code>, <code>{}</code> — <strong>жадные</strong> (захватывают максимум). Добавление <code>?</code> после квантификатора делает его <strong>ленивым</strong> (захватывает минимум):</p>
+<pre><code class="language-python">text = &quot;&lt;h1&gt;Заголовок&lt;/h1&gt;&lt;p&gt;Текст&lt;/p&gt;&quot;
+
+# Жадный захват — от первого &lt; до последнего &gt;
+print(re.findall(r&#x27;&lt;.*&gt;&#x27;, text))
+# [&#x27;&lt;h1&gt;Заголовок&lt;/h1&gt;&lt;p&gt;Текст&lt;/p&gt;&#x27;]
+
+# Ленивый захват — от первого &lt; до ближайшего &gt;
+print(re.findall(r&#x27;&lt;.*?&gt;&#x27;, text))
+# [&#x27;&lt;h1&gt;&#x27;, &#x27;&lt;/h1&gt;&#x27;, &#x27;&lt;p&gt;&#x27;, &#x27;&lt;/p&gt;&#x27;]
+
+# Извлечение содержимого тегов
+print(re.findall(r&#x27;&lt;.*?&gt;(.*?)&lt;/.*?&gt;&#x27;, text))
+# [&#x27;Заголовок&#x27;, &#x27;Текст&#x27;]
+</code></pre>
+<h2>re.compile() — компиляция шаблона</h2>
+<p>Если шаблон используется многократно, скомпилируйте его один раз:</p>
+<pre><code class="language-python">import re
+
+# Компилируем один раз
+email_pattern = re.compile(r&#x27;[\w.-]+@[\w.-]+\.\w+&#x27;)
+
+emails = [&quot;ivan@mail.ru&quot;, &quot;bad@@mail&quot;, &quot;anna@gmail.com&quot;, &quot;no-at&quot;]
+
+for e in emails:
+    if email_pattern.fullmatch(e):
+        print(f&quot;{e} — корректный email&quot;)
+    else:
+        print(f&quot;{e} — НЕ email&quot;)
+
+# У скомпилированного шаблона есть те же методы:
+# pattern.search(), pattern.match(), pattern.findall(), pattern.sub(), ...
+</code></pre>
+<h2>Флаги (модификаторы)</h2>
+<p>Флаги меняют поведение регулярных выражений. Передаются вторым аргументом в функции <code>re</code> или в компиляцию:</p>
+<pre><code class="language-python">import re
+
+text = &quot;&quot;&quot;Python — лучший язык.
+PYTHON используют миллионы.
+python прост в изучении.&quot;&quot;&quot;
+
+# re.IGNORECASE (или re.I) — игнорировать регистр
+print(re.findall(r&#x27;python&#x27;, text, re.IGNORECASE))
+# [&#x27;Python&#x27;, &#x27;PYTHON&#x27;, &#x27;python&#x27;]
+
+# re.MULTILINE (или re.M) — ^ и $ работают с началом/концом каждой строки
+# По умолчанию ^ и $ привязаны к началу/концу всего текста
+lines = &quot;строка1\nстрока2\nстрока3&quot;
+print(re.findall(r&#x27;^строка\d&#x27;, lines, re.MULTILINE))
+# [&#x27;строка1&#x27;, &#x27;строка2&#x27;, &#x27;строка3&#x27;]
+
+# re.DOTALL (или re.S) — точка . совпадает и с переносом строки \n
+html = &quot;&lt;div&gt;\n  &lt;span&gt;текст&lt;/span&gt;\n&lt;/div&gt;&quot;
+print(re.findall(r&#x27;&lt;div&gt;.*&lt;/div&gt;&#x27;, html))           # [] — . не проходит \n
+print(re.findall(r&#x27;&lt;div&gt;.*&lt;/div&gt;&#x27;, html, re.DOTALL))  # [&#x27;&lt;div&gt;\n  &lt;span&gt;текст&lt;/span&gt;\n&lt;/div&gt;&#x27;]
+
+# re.VERBOSE (или re.X) — позволяет писать шаблоны с комментариями и отступами
+phone_pattern = re.compile(r&quot;&quot;&quot;
+    \+7          # код страны
+    [-\s]?       # необязательный разделитель
+    \d{3}        # код оператора
+    [-\s]?       # необязательный разделитель
+    \d{3}        # первая часть
+    [-\s]?       # необязательный разделитель
+    \d{2}        # вторая часть
+    [-\s]?       # необязательный разделитель
+    \d{2}        # третья часть
+&quot;&quot;&quot;, re.VERBOSE)
+
+# Флаги можно комбинировать через |
+pattern = re.compile(r&#x27;python&#x27;, re.IGNORECASE | re.MULTILINE)
+</code></pre>
+<h2>Lookahead и Lookbehind (опережающая и ретроспективная проверки)</h2>
+<p>Проверяют, что перед или после совпадения находится определённый шаблон, но <strong>не включают его в результат</strong>:</p>
+<pre><code class="language-python">text = &quot;100 руб, $50, 200 руб, $75&quot;
+
+# (?=...) — позитивный lookahead: после цифр идёт &quot;руб&quot;
+print(re.findall(r&#x27;\d+(?=\s*руб)&#x27;, text))
+# [&#x27;100&#x27;, &#x27;200&#x27;]
+
+# (?!...) — негативный lookahead: после цифр НЕ идёт &quot;руб&quot;
+print(re.findall(r&#x27;\d+(?!\s*руб)&#x27;, text))
+# [&#x27;10&#x27;, &#x27;0&#x27;, &#x27;20&#x27;, &#x27;0&#x27;, &#x27;50&#x27;, &#x27;75&#x27;]
+
+# (?&lt;=...) — позитивный lookbehind: перед цифрами стоит &quot;$&quot;
+print(re.findall(r&#x27;(?&lt;=\$)\d+&#x27;, text))
+# [&#x27;50&#x27;, &#x27;75&#x27;]
+
+# (?&lt;!...) — негативный lookbehind: перед цифрами НЕ стоит &quot;$&quot;
+# Полезно для исключения определённых совпадений
+</code></pre>
+<h2>Практические примеры</h2>
+<h3>Проверка email</h3>
+<pre><code class="language-python">import re
+
+def is_valid_email(email):
+    pattern = r&#x27;^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$&#x27;
+    return bool(re.fullmatch(pattern, email))
+
+print(is_valid_email(&quot;ivan@mail.ru&quot;))     # True
+print(is_valid_email(&quot;bad-email@&quot;))       # False
+print(is_valid_email(&quot;name@sub.dom.org&quot;)) # True
+</code></pre>
+<h3>Извлечение URL из текста</h3>
+<pre><code class="language-python">text = &quot;Сайты: https://python.org и http://example.com/page&quot;
+
+urls = re.findall(r&#x27;https?://[^\s,;]+&#x27;, text)
+print(urls)  # [&#x27;https://python.org&#x27;, &#x27;http://example.com/page&#x27;]
+</code></pre>
+<h3>Проверка надёжности пароля</h3>
+<pre><code class="language-python">def is_strong_password(password):
+    &quot;&quot;&quot;
+    Пароль должен быть &gt;= 8 символов,
+    содержать хотя бы одну цифру, заглавную и строчную букву.
+    &quot;&quot;&quot;
+    checks = [
+        (r&#x27;.{8,}&#x27;, &#x27;Минимум 8 символов&#x27;),
+        (r&#x27;\d&#x27;, &#x27;Хотя бы одна цифра&#x27;),
+        (r&#x27;[A-ZА-ЯЁ]&#x27;, &#x27;Хотя бы одна заглавная буква&#x27;),
+        (r&#x27;[a-zа-яё]&#x27;, &#x27;Хотя бы одна строчная буква&#x27;),
+    ]
+    for pattern, msg in checks:
+        if not re.search(pattern, password):
+            return False, msg
+    return True, &quot;Пароль надёжный&quot;
+
+print(is_strong_password(&quot;qwerty&quot;))        # (False, &#x27;Минимум 8 символов&#x27;)
+print(is_strong_password(&quot;Qwerty123&quot;))     # (True, &#x27;Пароль надёжный&#x27;)
+</code></pre>
+<h3>Очистка текста от HTML-тегов</h3>
+<pre><code class="language-python">def strip_html(text):
+    return re.sub(r&#x27;&lt;[^&gt;]+&gt;&#x27;, &#x27;&#x27;, text)
+
+html = &quot;&lt;p&gt;Это &lt;b&gt;важный&lt;/b&gt; текст.&lt;/p&gt;&quot;
+print(strip_html(html))  # Это важный текст.
+</code></pre>
+<h2>Когда использовать regex, а когда — строковые методы</h2>
+<p>Регулярные выражения мощны, но не всегда нужны. Для простых операций строковые методы быстрее и читаемее:</p>
+<pre><code class="language-python">text = &quot;  Hello World  &quot;
+
+# Строковый метод (лучше для простого)
+print(text.strip())              # Убрать пробелы по краям
+
+# Regex (избыточен)
+print(re.sub(r&#x27;^\s+|\s+$&#x27;, &#x27;&#x27;, text))
+
+# Строковый метод
+text = &quot;раз,два,три&quot;
+parts = text.split(&quot;,&quot;)
+
+# Regex (оправдан для сложного разделителя)
+text = &quot;раз; два, три: четыре&quot;
+parts = re.split(r&#x27;[;,:]\s*&#x27;, text)
+
+# Строковый метод
+print(&quot;abc&quot; in &quot;abcdef&quot;)            # Проверить вхождение подстроки
+
+# Regex (оправдан для поиска по шаблону)
+print(bool(re.search(r&#x27;\d{3}-\d{2}-\d{2}&#x27;, &quot;Мой СНИЛС: 123-45-67&quot;)))
+</code></pre>
+<h2>Итоги</h2>
+<ul>
+  <li>Модуль <strong><code>re</code></strong> — встроенный инструмент Python для работы с регулярными выражениями</li>
+  <li><strong>Сырые строки</strong> <code>r'...'</code> обязательны при написании шаблонов</li>
+  <li><strong><code>re.search()</code></strong> — первое совпадение в любом месте; <strong><code>re.match()</code></strong> — совпадение с начала; <strong><code>re.fullmatch()</code></strong> — полное совпадение</li>
+  <li><strong><code>re.findall()</code></strong> — список всех совпадений; <strong><code>re.finditer()</code></strong> — итератор с позициями</li>
+  <li><strong><code>re.sub()</code></strong> — замена по шаблону; <strong><code>re.split()</code></strong> — разделение по шаблону</li>
+  <li><strong>Группы</strong> <code>(...)</code> захватывают части совпадения; <strong><code>(?:...)</code></strong> — группировка без захвата</li>
+  <li><strong>Флаги</strong> (<code>re.IGNORECASE</code>, <code>re.MULTILINE</code>, <code>re.DOTALL</code>, <code>re.VERBOSE</code>) управляют поведением</li>
+  <li>Компилируйте шаблоны через <strong><code>re.compile()</code></strong>, если используете их многократно</li>
+  <li>Не усложняйте: для простой проверки подстроки используйте <code>in</code>, а не regex</li>
+</ul>
+
         </div>
       </div>
       <footer class="topic-footer">

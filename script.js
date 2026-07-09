@@ -293,53 +293,60 @@
     }
   });
 
-  // === ТЁМНАЯ / СВЕТЛАЯ ТЕМА ===
+  // === ТЁМНАЯ / СВЕТЛАЯ ТЕМА (применение при загрузке) ===
   (function () {
     const THEME_KEY = 'python-web-theme';
 
+    function getSystemTheme() {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
     function getSavedTheme() {
-      return localStorage.getItem(THEME_KEY) || 'light';
+      return localStorage.getItem(THEME_KEY); // null если не задано вручную
     }
 
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem(THEME_KEY, theme);
-      updateToggleIcon(theme);
     }
 
-    function updateToggleIcon(theme) {
+    function updateThemeToggleIcon(theme) {
       const btn = document.querySelector('.theme-toggle');
       if (!btn) return;
-      btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-      btn.title = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
+      btn.innerHTML = theme === 'auto' ? '🔄' : (theme === 'dark' ? '☀️' : '🌙');
+      btn.title = theme === 'auto' ? 'Авто (сейчас: ' + getSystemTheme() + ')' : (theme === 'dark' ? 'Светлая тема' : 'Тёмная тема');
     }
 
-    function createThemeToggle() {
-      const btn = document.createElement('button');
-      btn.className = 'theme-toggle';
-      btn.setAttribute('aria-label', 'Переключить тему');
-      const theme = getSavedTheme();
-      btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-      btn.title = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
-
-      btn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
-      });
-
-      const header = document.querySelector('.topic-header') || document.querySelector('header');
-      if (header) {
-        header.insertBefore(btn, header.firstChild);
-      } else {
-        document.body.prepend(btn);
-      }
+    function getEffectiveTheme() {
+      var saved = getSavedTheme();
+      if (saved === 'light' || saved === 'dark') return saved;
+      return getSystemTheme(); // 'auto' или ничего → система
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      applyTheme(getSavedTheme());
-      createThemeToggle();
+    document.addEventListener('DOMContentLoaded', function () {
+      var saved = getSavedTheme();
+      applyTheme(getEffectiveTheme());
+      updateThemeToggleIcon(saved || 'auto');
     });
+
+    // Слушатель изменения системной темы — переключает, если пользователь в авто-режиме
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+        var saved = getSavedTheme();
+        if (saved) return; // ручной выбор имеет приоритет
+        applyTheme(getSystemTheme());
+        updateThemeToggleIcon('auto');
+      });
+    }
+
+    // Делаем утилиты доступными для блока кнопки
+    window.__themeUtils = {
+      THEME_KEY: THEME_KEY,
+      getSystemTheme: getSystemTheme,
+      getSavedTheme: getSavedTheme,
+      applyTheme: applyTheme,
+      updateThemeToggleIcon: updateThemeToggleIcon,
+      getEffectiveTheme: getEffectiveTheme
+    };
   })();
 
   // === ХЛЕБНЫЕ КРОШКИ ===
@@ -656,9 +663,15 @@
     });
   })();
 
-  // === КНОПКА «НАВЕРХ» ===
+  // === КНОПКА «НАВЕРХ» + ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ (в правом нижнем углу) ===
   (function () {
     document.addEventListener('DOMContentLoaded', () => {
+      // Общий контейнер для кнопок в правом нижнем углу
+      const container = document.createElement('div');
+      container.className = 'bottom-controls';
+      document.body.appendChild(container);
+
+      // Кнопка «Наверх»
       const btn = document.createElement('button');
       btn.className = 'back-to-top';
       btn.innerHTML = '⬆';
@@ -667,13 +680,57 @@
       btn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
-      document.body.appendChild(btn);
+      container.appendChild(btn);
 
+      // Переключатель темы (трёхпозиционный: light → dark → auto)
+      const themeBtn = document.createElement('button');
+      themeBtn.className = 'theme-toggle';
+      themeBtn.setAttribute('aria-label', 'Переключить тему');
+      const THEME_KEY = 'python-web-theme';
+
+      function getCurrentMode() {
+        var saved = localStorage.getItem(THEME_KEY);
+        return saved || 'auto'; // null / отсутствует → авто
+      }
+
+      // Устанавливаем начальную иконку
+      var initMode = getCurrentMode();
+      themeBtn.innerHTML = initMode === 'auto' ? '🔄' : (initMode === 'dark' ? '☀️' : '🌙');
+      themeBtn.title = initMode === 'auto' ? 'Авто (сейчас: ' + (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') + ')' : (initMode === 'dark' ? 'Светлая тема' : 'Тёмная тема');
+
+      themeBtn.addEventListener('click', function () {
+        var current = getCurrentMode();
+        var next;
+        if (current === 'light') {
+          next = 'dark';
+        } else if (current === 'dark') {
+          next = 'auto';
+        } else {
+          next = 'light';
+        }
+
+        if (next === 'auto') {
+          localStorage.removeItem(THEME_KEY);
+        } else {
+          localStorage.setItem(THEME_KEY, next);
+        }
+
+        var effectiveTheme = next === 'auto'
+          ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : next;
+        document.documentElement.setAttribute('data-theme', effectiveTheme);
+
+        themeBtn.innerHTML = next === 'auto' ? '🔄' : (next === 'dark' ? '☀️' : '🌙');
+        themeBtn.title = next === 'auto' ? 'Авто (сейчас: ' + effectiveTheme + ')' : (next === 'dark' ? 'Светлая тема' : 'Тёмная тема');
+      });
+      container.appendChild(themeBtn);
+
+      // Показать/скрыть контейнер при скролле
       let scrollTimeout;
       window.addEventListener('scroll', () => {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
-          btn.classList.toggle('visible', window.scrollY > 400);
+          container.classList.toggle('visible', window.scrollY > 400);
         }, 50);
       });
     });
@@ -766,6 +823,16 @@
             info.innerHTML = 'Пройдено: <strong>' + done + '</strong> из <strong>' + totalLessons + '</strong> уроков (' + pct + '%)';
           }
         }
+      }
+
+      // === ИСПРАВЛЕНИЕ БЕДЖЕЙ СЛОЖНОСТИ: заменяем английские метки на русские ===
+      if (typeof COMPLEXITY_LABELS !== 'undefined') {
+        document.querySelectorAll('.meta-complexity').forEach(function(el) {
+          var level = el.getAttribute('data-level');
+          if (level && COMPLEXITY_LABELS[level]) {
+            el.textContent = COMPLEXITY_LABELS[level];
+          }
+        });
       }
 
       // Отмечаем пройденные уроки галочками
@@ -1083,21 +1150,22 @@
     if (typeof window.THEORY_CONTESTS === 'undefined' || typeof window.CONTEST_BASE_URL === 'undefined') return;
 
     document.addEventListener('DOMContentLoaded', () => {
-      const placeholder = document.getElementById('contest-link-placeholder');
-      if (!placeholder) return;
+      // Определяем номер урока: из data-lesson на body, затем из URL
+      var lessonKey = document.body.getAttribute('data-lesson');
+      var lessonNum = parseInt(lessonKey, 10);
+      if (isNaN(lessonNum)) {
+        var pageName = window.location.pathname.split('/').pop();
+        var match = pageName.match(/^(\d+)/);
+        if (!match) return;
+        lessonNum = parseInt(match[1], 10);
+      }
 
-      // Определяем номер урока из имени файла (например, 06-number-ops.html → 6)
-      const pageName = window.location.pathname.split('/').pop();
-      const match = pageName.match(/^(\d+)/);
-      if (!match) return;
-      const lessonNum = parseInt(match[1], 10);
-
-      const contestId = window.THEORY_CONTESTS[lessonNum];
+      var contestId = window.THEORY_CONTESTS[lessonNum];
       if (!contestId) return;
 
-      const contestUrl = window.CONTEST_BASE_URL + contestId;
+      var contestUrl = window.CONTEST_BASE_URL + contestId;
 
-      const div = document.createElement('div');
+      var div = document.createElement('div');
       div.className = 'contest-link';
       div.innerHTML =
         '<p style="text-align: center; margin-top: 2rem; padding: 1rem; background: #1e3a5f; border-radius: 8px; color: #e0e0e0;">' +
@@ -1106,15 +1174,28 @@
         '</p>';
 
       // Вставляем ссылку на контест после контейнера с квизом
-      setTimeout(function () {
-        const quizContainer = document.querySelector('.main-content > .quiz-container');
+      var main = document.querySelector('.main-content');
+      if (!main) return;
+
+      function insertContestLink() {
+        var quizContainer = main.querySelector('.quiz-container');
+        var toggle = main.querySelector('.lesson-complete-toggle');
+        var existingContestLink = main.querySelector('.contest-link');
+
+        // Не вставляем повторно
+        if (existingContestLink) return;
+
         if (quizContainer) {
           quizContainer.parentNode.insertBefore(div, quizContainer.nextSibling);
-          placeholder.remove();
+        } else if (toggle) {
+          main.insertBefore(div, toggle);
         } else {
-          placeholder.parentNode.replaceChild(div, placeholder);
+          main.appendChild(div);
         }
-      }, 0);
+      }
+
+      // Небольшая задержка, чтобы квиз успел загрузиться асинхронно
+      setTimeout(insertContestLink, 500);
     });
   })();
 

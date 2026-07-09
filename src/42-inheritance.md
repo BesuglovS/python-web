@@ -207,5 +207,3 @@ for person in staff:
 # Петя: 96,000 ₽
 # Анна: 125,000 ₽
 ```
-
-[← ООП: введение](41-oop-intro.html) [Далее: Декораторы →](43-decorators.html)

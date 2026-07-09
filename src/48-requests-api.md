@@ -125,5 +125,3 @@ if response.status_code == 200:
 else:
     print(f"Ошибка: {response.status_code}")
 ```
-
-[← pytest](47-pytest.html) [Далее: Git →](49-flask.html)

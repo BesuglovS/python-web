@@ -197,5 +197,3 @@ print(calculate(10, 5, "+"))   # 15.0
 print(calculate(10, 5, "/"))   # 2.0
 print(calculate(10, 0, "/"))   # Ошибка: деление на ноль! \n None
 ```
-
-[< Вложенные циклы](21-nested-loops.html) [Далее: Продвинутые функции →](23-functions-advanced.html)

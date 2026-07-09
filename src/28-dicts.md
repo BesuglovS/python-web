@@ -97,5 +97,3 @@ for key, value in d.items():
 for value in d.values():
     print(value)
 ```
-
-[< Кортежи (tuple)](27-tuples.html) [Далее: split() и join() →](29-split-join.html)

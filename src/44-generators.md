@@ -86,5 +86,3 @@ for line in read_large_file("huge_log.txt"):
     if "ERROR" in line:
         print(line)  # обрабатываем строки по одной, а не весь файл сразу
 ```
-
-[← Декораторы](43-decorators.html) [Далее: Многопоточность и asyncio →](45-threading-async.html)

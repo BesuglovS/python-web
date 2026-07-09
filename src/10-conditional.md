@@ -2,110 +2,100 @@
 title: "Условный оператор"
 lesson: 10
 description: "if, elif, else, блоки кода, PEP 8"
-duration: 12
+duration: 8
 complexity: "2"
 badge: "decision_maker"
 file: "10-conditional.html"
 layout: "layout.njk"
 permalink: "10-conditional.html"
-subtitle: "True, False, bool(), truthy и falsy значения. Логические операторы"
+subtitle: "if, elif, else — ветвление программы и правила отступов"
 prevUrl: "09-booleans.html"
 prevTitle: "Булевы переменные"
 nextUrl: "11-try-except.html"
 nextTitle: "Обработка ошибок"
 ---
 
-## Тип bool
+## Отступы в Python
 
-`bool` — это подтип `int`. `True` = 1, `False` = 0:
+В отличие от многих языков, Python не использует фигурные скобки `{}` для выделения блоков. Вместо этого блок кода определяется **отступами** (4 пробела):
 
 ```python
-is_active = True
-is_finished = False
-
-print(type(is_active))  # 
-print(True + 1)         # 2
-print(False * 5)        # 0
+if True:
+    print("Этот код внутри if")
+    print("Это тоже внутри if")
+print("А это уже вне блока if")
 ```
 
-## Функция bool()
+После двоеточия `:` следующая строка **обязательно** должна иметь отступ (4 пробела). Все строки с одинаковым отступом принадлежат одному блоку.
 
-`bool()` преобразует любое значение в `True` или `False`:
+> **⚠️ Важно:** **Стандарт PEP 8:** используйте ровно **4 пробела** для каждого уровня отступа. Не смешивайте табуляцию и пробелы!
 
-```python
-# Falsy значения (преобразуются в False):
-print(bool(0))        # False
-print(bool(0.0))      # False
-print(bool(""))       # False
-print(bool(None))     # False
+## Простой if
 
-# Truthy значения (всё остальное):
-print(bool(1))        # True
-print(bool(-1))       # True
-print(bool("text"))   # True
-```
-<table><tbody><tr><th>Falsy (→ False)</th><th>Truthy (→ True)</th></tr><tr><td><code>None</code></td><td>Любое ненулевое число</td></tr><tr><td><code>0</code>, <code>0.0</code></td><td>Непустая строка</td></tr><tr><td>Пустая строка <code>""</code></td><td><code>True</code></td></tr></tbody></table>
-> **💡 Совет:** **Почему это важно?** Falsy/truthy значения позволяют писать лаконичные проверки: `if name:` вместо `if name != "":`
-
-## Логические операторы
-
-`and`, `or`, `not` работают с булевыми значениями:
+Условный оператор `if` выполняет блок кода, если условие истинно:
 
 ```python
-print(True and False)  # False
-print(True or False)   # True
-print(not True)        # False
-
-# С truthy/falsy значениями:
-print(0 and 42)        # 0 (and возвращает первое falsy)
-print(3 or 0)          # 3 (or возвращает первое truthy)
-print("" or "default") # "default"
-print(not "")          # True (пустая строка — falsy)
+age = 18
+if age >= 18:
+    print("Вы совершеннолетний")
 ```
 
-**Правила:**
+## if-else
 
--   `and` — возвращает первое falsy-значение или последний операнд
--   `or` — возвращает первое truthy-значение или последний операнд
--   `not` — инвертирует булево значение
-
-## Булевы переменные в условиях
-
-Булевы переменные часто используются для управления потоком программы:
+Команды после `else` выполняются, если условие после `if` ложно:
 
 ```python
-is_authenticated = True
-has_permission = False
-
-if is_authenticated and has_permission:
-    print("Доступ разрешён")
-elif is_authenticated:
-    print("Недостаточно прав")
+age = 16
+if age >= 18:
+    print("Вы совершеннолетний")
 else:
-    print("Требуется авторизация")
-
-# Сокращённая проверка (truthy/falsy)
-name = "Анна"
-if name:
-    print(f"Привет, {name}!")  # Выполнится
-else:
-    print("Имя не указано")
+    print("Вы несовершеннолетний")
 ```
 
-## Приоритет логических операторов
+## if-elif-else
 
-Приоритет (от высшего к низшему): `not` → `and` → `or`
+`elif` (сокращение от else if) позволяет проверить несколько условий:
 
 ```python
-# not применяется первым
-print(not True and False)   # False: (not True) → False, затем False and False → False
+score = 85
 
-# and имеет приоритет над or
-print(True or True and False)  # True: True and False → False, затем True or False → True
+if score >= 90:
+    grade = "Отлично"
+elif score >= 75:
+    grade = "Хорошо"
+elif score >= 60:
+    grade = "Удовлетворительно"
+else:
+    grade = "Неудовлетворительно"
 
-# Скобки для ясности
-print(True or (True and False))  # True — то же самое, но понятнее
+print(f"Оценка: {grade}")  # Хорошо
 ```
-> **💡 Совет:** **Совет:** всегда используйте скобки в сложных выражениях, даже если знаете приоритет. Код должен быть понятен другим.
 
-[← Булевы переменные](09-booleans.html) [Далее: Обработка исключений →](11-try-except.html)
+Условия проверяются сверху вниз. Как только находится истинное, остальные пропускаются.
+
+## Тернарный оператор
+
+Короткая запись if-else в одну строку:
+
+```python
+age = 20
+status = "Взрослый" if age >= 18 else "Ребёнок"
+print(status)  # Взрослый
+```
+
+## Операторы сравнения
+
+<table><tbody><tr><th>Оператор</th><th>Значение</th><th>Пример</th></tr><tr><td><code>==</code></td><td>Равно</td><td><code>5 == 5</code> > True</td></tr><tr><td><code>!=</code></td><td>Не равно</td><td><code>5 != 3</code> > True</td></tr><tr><td><code>></code></td><td>Больше</td><td><code>5 > 3</code> > True</td></tr><tr><td><code><</code></td><td>Меньше</td><td><code>5 < 3</code> > False</td></tr><tr><td><code>>=</code></td><td>Больше или равно</td><td><code>5 >= 5</code> > True</td></tr><tr><td><code><=</code></td><td>Меньше или равно</td><td><code>5 <= 3</code> > False</td></tr></tbody></table>
+
+## Распространённые ошибки с отступами
+
+-   **IndentationError: unexpected indent** — лишний отступ там, где он не нужен
+-   **IndentationError: expected an indented block** — отсутствует отступ после `if`, `for`, `def` и т.д.
+-   Смешивание табуляции и пробелов приводит к трудноуловимым ошибкам
+
+```python
+# Ошибка: нет отступа после if
+if True:
+print("Ошибка!")
+```
+> **💡 Совет:** **Совет:** VS Code (Shift+Alt+F) и PyCharm (Ctrl+Alt+L) умеют автоформатировать отступы. Включите `Format On Save` в настройках редактора.

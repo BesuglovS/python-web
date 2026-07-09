@@ -80,5 +80,3 @@ async def main():
 -   `concurrent.futures` — удобные пулы потоков/процессов
 -   `async/await` — асинхронный код с event loop для высоконагруженных сетевых приложений
 -   `asyncio.gather()` — параллельный запуск нескольких корутин
-
-[← Генераторы](44-generators.html) [Далее: Аннотации типов →](46-type-hints.html)

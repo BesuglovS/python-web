@@ -48,5 +48,3 @@ x = 3.14      # теперь float
 a, b, c = 1, 2, 3
 a = b = c = 0     # всем трём присвоится 0
 ```
-
-[< Настройка IDE: VS Code и PyCharm](02-ide-setup.html) [Далее: Типы данных →](04-data-types.html)

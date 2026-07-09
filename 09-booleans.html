@@ -18,80 +18,93 @@
       <header class="topic-header">
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок 9</span> Булевы переменные</h1>
-        <p class="subtitle">if, elif, else — ветвление программы и правила отступов</p>
-        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~8 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
+        <p class="subtitle">True, False, bool(), truthy и falsy значения. Логические операторы</p>
+        <div class="lesson-meta-info"><span class="meta-duration">⏱ ~12 мин чтения</span><span class="meta-sep">·</span> <span class="meta-complexity" data-level="1">🚀 Начальный</span></div>
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
         <div class="main-content">
-          <h2>Отступы в Python</h2>
-<p>В отличие от многих языков, Python не использует фигурные скобки <code>{}</code> для выделения блоков. Вместо этого блок кода определяется <strong>отступами</strong> (4 пробела):</p>
-<pre><code class="language-python">if True:
-    print(&quot;Этот код внутри if&quot;)
-    print(&quot;Это тоже внутри if&quot;)
-print(&quot;А это уже вне блока if&quot;)
-</code></pre>
-<p>После двоеточия <code>:</code> следующая строка <strong>обязательно</strong> должна иметь отступ (4 пробела). Все строки с одинаковым отступом принадлежат одному блоку.</p>
-<blockquote>
-<p><strong>⚠️ Важно:</strong> <strong>Стандарт PEP 8:</strong> используйте ровно <strong>4 пробела</strong> для каждого уровня отступа. Не смешивайте табуляцию и пробелы!</p>
-</blockquote>
-<h2>Простой if</h2>
-<p>Условный оператор <code>if</code> выполняет блок кода, если условие истинно:</p>
-<pre><code class="language-python">age = 18
-if age &gt;= 18:
-    print(&quot;Вы совершеннолетний&quot;)
-</code></pre>
-<h2>if-else</h2>
-<p>Команды после <code>else</code> выполняются, если условие после <code>if</code> ложно:</p>
-<pre><code class="language-python">age = 16
-if age &gt;= 18:
-    print(&quot;Вы совершеннолетний&quot;)
-else:
-    print(&quot;Вы несовершеннолетний&quot;)
-</code></pre>
-<h2>if-elif-else</h2>
-<p><code>elif</code> (сокращение от else if) позволяет проверить несколько условий:</p>
-<pre><code class="language-python">score = 85
+          <h2>Тип bool</h2>
+<p><code>bool</code> — это подтип <code>int</code>. <code>True</code> = 1, <code>False</code> = 0:</p>
+<pre><code class="language-python">is_active = True
+is_finished = False
 
-if score &gt;= 90:
-    grade = &quot;Отлично&quot;
-elif score &gt;= 75:
-    grade = &quot;Хорошо&quot;
-elif score &gt;= 60:
-    grade = &quot;Удовлетворительно&quot;
-else:
-    grade = &quot;Неудовлетворительно&quot;
+print(type(is_active))  # &lt;class 'bool'&gt;
+print(True + 1)         # 2
+print(False * 5)        # 0
+</code></pre>
+<h2>Функция bool()</h2>
+<p><code>bool()</code> преобразует любое значение в <code>True</code> или <code>False</code>:</p>
+<pre><code class="language-python"># Falsy значения (преобразуются в False):
+print(bool(0))        # False
+print(bool(0.0))      # False
+print(bool(&quot;&quot;))       # False
+print(bool(None))     # False
 
-print(f&quot;Оценка: {grade}&quot;)  # Хорошо
+# Truthy значения (всё остальное):
+print(bool(1))        # True
+print(bool(-1))       # True
+print(bool(&quot;text&quot;))   # True
 </code></pre>
-<p>Условия проверяются сверху вниз. Как только находится истинное, остальные пропускаются.</p>
-<h2>Тернарный оператор</h2>
-<p>Короткая запись if-else в одну строку:</p>
-<pre><code class="language-python">age = 20
-status = &quot;Взрослый&quot; if age &gt;= 18 else &quot;Ребёнок&quot;
-print(status)  # Взрослый
+<table><tbody><tr><th>Falsy (→ False)</th><th>Truthy (→ True)</th></tr><tr><td><code>None</code></td><td>Любое ненулевое число</td></tr><tr><td><code>0</code>, <code>0.0</code></td><td>Непустая строка</td></tr><tr><td>Пустая строка <code>""</code></td><td><code>True</code></td></tr></tbody></table>
+> **💡 Совет:** **Почему это важно?** Falsy/truthy значения позволяют писать лаконичные проверки: `if name:` вместо `if name != "":`
+<h2>Логические операторы</h2>
+<p><code>and</code>, <code>or</code>, <code>not</code> работают с булевыми значениями:</p>
+<pre><code class="language-python">print(True and False)  # False
+print(True or False)   # True
+print(not True)        # False
+
+# С truthy/falsy значениями:
+print(0 and 42)        # 0 (and возвращает первое falsy)
+print(3 or 0)          # 3 (or возвращает первое truthy)
+print(&quot;&quot; or &quot;default&quot;) # &quot;default&quot;
+print(not &quot;&quot;)          # True (пустая строка — falsy)
 </code></pre>
-<h2>Операторы сравнения</h2>
-<table><tbody><tr><th>Оператор</th><th>Значение</th><th>Пример</th></tr><tr><td><code>==</code></td><td>Равно</td><td><code>5 == 5</code> &gt; True</td></tr><tr><td><code>!=</code></td><td>Не равно</td><td><code>5 != 3</code> &gt; True</td></tr><tr><td><code>&gt;</code></td><td>Больше</td><td><code>5 &gt; 3</code> &gt; True</td></tr><tr><td><code>&lt;</code></td><td>Меньше</td><td><code>5 &lt; 3</code> &gt; False</td></tr><tr><td><code>&gt;=</code></td><td>Больше или равно</td><td><code>5 &gt;= 5</code> &gt; True</td></tr><tr><td><code>&lt;=</code></td><td>Меньше или равно</td><td><code>5 &lt;= 3</code> &gt; False</td></tr></tbody></table>
-<h2>Распространённые ошибки с отступами</h2>
+<p><strong>Правила:</strong></p>
 <ul>
-<li><strong>IndentationError: unexpected indent</strong> — лишний отступ там, где он не нужен</li>
-<li><strong>IndentationError: expected an indented block</strong> — отсутствует отступ после <code>if</code>, <code>for</code>, <code>def</code> и т.д.</li>
-<li>Смешивание табуляции и пробелов приводит к трудноуловимым ошибкам</li>
+<li><code>and</code> — возвращает первое falsy-значение или последний операнд</li>
+<li><code>or</code> — возвращает первое truthy-значение или последний операнд</li>
+<li><code>not</code> — инвертирует булево значение</li>
 </ul>
-<pre><code class="language-python"># Ошибка: нет отступа после if
-if True:
-print(&quot;Ошибка!&quot;)
+<h2>Булевы переменные в условиях</h2>
+<p>Булевы переменные часто используются для управления потоком программы:</p>
+<pre><code class="language-python">is_authenticated = True
+has_permission = False
+
+if is_authenticated and has_permission:
+    print(&quot;Доступ разрешён&quot;)
+elif is_authenticated:
+    print(&quot;Недостаточно прав&quot;)
+else:
+    print(&quot;Требуется авторизация&quot;)
+
+# Сокращённая проверка (truthy/falsy)
+name = &quot;Анна&quot;
+if name:
+    print(f&quot;Привет, {name}!&quot;)  # Выполнится
+else:
+    print(&quot;Имя не указано&quot;)
+</code></pre>
+<h2>Приоритет логических операторов</h2>
+<p>Приоритет (от высшего к низшему): <code>not</code> → <code>and</code> → <code>or</code></p>
+<pre><code class="language-python"># not применяется первым
+print(not True and False)   # False: (not True) → False, затем False and False → False
+
+# and имеет приоритет над or
+print(True or True and False)  # True: True and False → False, затем True or False → True
+
+# Скобки для ясности
+print(True or (True and False))  # True — то же самое, но понятнее
 </code></pre>
 <blockquote>
-<p><strong>💡 Совет:</strong> <strong>Совет:</strong> VS Code (Shift+Alt+F) и PyCharm (Ctrl+Alt+L) умеют автоформатировать отступы. Включите <code>Format On Save</code> в настройках редактора.</p>
+<p><strong>💡 Совет:</strong> <strong>Совет:</strong> всегда используйте скобки в сложных выражениях, даже если знаете приоритет. Код должен быть понятен другим.</p>
 </blockquote>
 
         </div>
       </div>
       <footer class="topic-footer">
         <a href="08-number-ops.html" class="prev-link">← Операции над числами</a>
-        <a href="10-conditional.html" class="next-link">Далее: Условный оператор + Отступы →</a>
+        <a href="10-conditional.html" class="next-link">Далее: Условный оператор →</a>
       </footer>
     </div>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>

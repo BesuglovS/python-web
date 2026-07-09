@@ -154,5 +154,3 @@ for item in sales:
 # Клавиатура: 60,000 ₽
 # Мышь: 60,000 ₽
 ```
-
-[← Списочные выражения](30-list-comprehensions.html) [Далее: Файлы →](32-files.html)

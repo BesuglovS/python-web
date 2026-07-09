@@ -83,5 +83,3 @@ def test_float_comparison():
 def test_multiply(a, b, expected):
     assert a * b == expected
 ```
-
-[← Type Hints](46-type-hints.html) [Далее: Requests + API →](48-requests-api.html)

@@ -87,5 +87,3 @@ def double(x: int) -> int:
 
 double("hello")  # mypy: error: Argument 1 to "double" has incompatible type "str"
 ```
-
-[← Многопоточность и asyncio](45-threading-async.html) [Далее: pytest →](47-pytest.html)

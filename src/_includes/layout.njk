@@ -19,7 +19,7 @@
         <div id="breadcrumbs" class="breadcrumbs"></div>
         <h1><span class="lesson-badge">Урок {{ lesson }}</span> {{ title }}</h1>
         {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
-        {% if duration %}<div class="lesson-meta-info"><span class="meta-duration">⏱ ~{{ duration }} мин чтения</span>{% if complexity %}<span class="meta-sep">·</span> <span class="meta-complexity" data-level="{{ complexity }}">{% if complexity == "beginner" %}🚀 Начальный{% elif complexity == "basic" %}📘 Базовый{% elif complexity == "intermediate" %}📗 Средний{% elif complexity == "advanced" %}📙 Продвинутый{% else %}{{ complexity }}{% endif %}</span>{% endif %}</div>{% endif %}
+        {% if duration %}<div class="lesson-meta-info"><span class="meta-duration">⏱ ~{{ duration }} мин чтения</span>{% if complexity %}<span class="meta-sep">·</span> <span class="meta-complexity" data-level="{{ complexity }}">{% if complexity == "1" %}🚀 Начальный{% elif complexity == "2" %}📘 Базовый{% elif complexity == "3" %}📗 Средний{% elif complexity == "4" %}📙 Продвинутый{% else %}{{ complexity }}{% endif %}</span>{% endif %}</div>{% endif %}
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
