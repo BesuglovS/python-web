@@ -20,6 +20,7 @@ const FILES = [
 ];
 
 async function main() {
+  let hasErrors = false;
   for (const file of FILES) {
     const filePath = path.join(PROJECT, file.name);
     if (!fs.existsSync(filePath)) {
@@ -33,6 +34,7 @@ async function main() {
       const result = new CleanCSS({ level: 2 }).minify(content);
       if (result.errors.length) {
         console.error(`✖ ${file.name} CSS errors:`, result.errors);
+        hasErrors = true;
         continue;
       }
       fs.writeFileSync(filePath, result.styles, 'utf-8');
@@ -45,6 +47,7 @@ async function main() {
       });
       if (result.error) {
         console.error(`✖ ${file.name} JS error:`, result.error);
+        hasErrors = true;
         continue;
       }
       fs.writeFileSync(filePath, result.code, 'utf-8');
@@ -52,6 +55,9 @@ async function main() {
       console.log(`✔ ${file.name}: ${content.length} → ${result.code.length} bytes (${saved}%)`);
     }
   }
+  if (hasErrors) {
+    process.exit(1);
+  }
 }
 
-main().catch(console.error);
+main().catch(function(err) { console.error(err); process.exit(1); });

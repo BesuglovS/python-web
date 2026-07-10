@@ -80,6 +80,18 @@ if (count($window) >= $RATE_LIMIT) {
 $window[] = $now;
 file_put_contents($rateFile, json_encode($window), LOCK_EX);
 
+// Периодическая очистка устаревших файлов rate-limit (~1 из 100 запросов)
+if (mt_rand(1, 100) === 1 && is_dir($RATE_DIR)) {
+    $files = glob($RATE_DIR . '/*.json');
+    if ($files && count($files) > 100) {
+        foreach ($files as $f) {
+            if (time() - filemtime($f) > $RATE_WINDOW * 2) {
+                @unlink($f);
+            }
+        }
+    }
+}
+
 // ─── Читаем вход ───
 $raw = file_get_contents('php://input');
 if (!$raw) {
@@ -331,7 +343,7 @@ $descriptorspec = [
     2 => ['pipe', 'w'],
 ];
 
-$cmd = 'python3 -I -S "' . $tmpFile . '"'; // -I изолированный режим, -S без site-packages
+$cmd = $pythonCmd . ' -I -S "' . $tmpFile . '"'; // -I изолированный режим, -S без site-packages
 
 $process = proc_open(
     $cmd,

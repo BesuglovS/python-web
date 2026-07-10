@@ -13,6 +13,7 @@ const CRITICAL_ASSETS = [
   './script.js',
   './config.js',
   './repl.js',
+  './mindmap.js',
   './ga.js',
   './highlight-py.min.js',
   './highlight-theme.min.css',

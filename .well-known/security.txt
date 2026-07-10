@@ -1,0 +1,5 @@
+Contact: https://github.com/BesuglovS/python-web/issues
+Expires: 2027-07-10T00:00:00.000Z
+Preferred-Languages: ru, en
+Canonical: https://python.nayanovaacademy.ru/.well-known/security.txt
+Policy: https://github.com/BesuglovS/python-web/blob/master/LICENSE
