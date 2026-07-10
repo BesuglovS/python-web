@@ -1,0 +1,4 @@
+# Deny access to sensitive subdirectories
+RewriteEngine On
+RewriteRule ^\.repl_sessions/ - [R=404,L]
+RewriteRule ^\.ratelimit/ - [R=404,L]

@@ -8,6 +8,7 @@
     <meta property="og:title" content="36. itertools — Python: основы" />
     <meta property="og:description" content="product, permutations, chain, groupby и другие функции" />
     <meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2026-07-10" />
     <meta property="og:image" content="https://python.nayanovaacademy.ru/favicon.png" />
     <meta property="og:url" content="https://python.nayanovaacademy.ru/36-itertools.html" />
     <meta name="twitter:card" content="summary" />
@@ -37,7 +38,7 @@
           <h2>Что такое itertools?</h2>
 <p>Модуль <code>itertools</code> — это встроенная библиотека Python, которая предоставляет быстрые и эффективные функции для работы с итераторами. Она особенно полезна для комбинаторных задач — перебора всех возможных комбинаций, перестановок, декартовых произведений.</p>
 <blockquote>
-<p><strong>⚠️ Важно:</strong> <strong>💡 Про импорт:</strong> Чтобы использовать любой модуль Python, его нужно подключить командой <code>import</code>. Например, <code>from itertools import product</code> берёт функцию <code>product</code> из модуля <code>itertools</code>. Подробно импорт разбирается в <a href="33-modules-import.html">предыдущем уроке</a>, а пока просто скопируйте команду импорта — это стандартная конструкция Python.</p>
+<p><strong>⚠️ Важно:</strong> Чтобы использовать любой модуль Python, его нужно подключить командой <code>import</code>. Например, <code>from itertools import product</code> берёт функцию <code>product</code> из модуля <code>itertools</code>. Подробно импорт разбирается в <a href="33-modules-import.html">предыдущем уроке</a>, а пока просто скопируйте команду импорта — это стандартная конструкция Python.</p>
 </blockquote>
 <p>Эти функции часто встречаются в задачах <strong>ЕГЭ по информатике</strong>, а также в олимпиадном программировании. Вместо того чтобы писать вложенные циклы вручную, можно использовать готовые функции из itertools.</p>
 <p>Подключается модуль одной строкой:</p>
@@ -47,7 +48,7 @@
 <pre><code class="language-python">import itertools
 </code></pre>
 <blockquote>
-<p><strong>⚠️ Важно:</strong> <strong>Важно:</strong> все функции itertools возвращают <strong>итераторы</strong>, а не списки. Чтобы получить список, нужно обернуть вызов в <code>list()</code>. Итераторы экономят память, но пройти по ним можно только один раз.</p>
+<p><strong>⚠️ Важно:</strong> все функции itertools возвращают <strong>итераторы</strong>, а не списки. Чтобы получить список, нужно обернуть вызов в <code>list()</code>. Итераторы экономят память, но пройти по ним можно только один раз.</p>
 </blockquote>
 <h2>product() — декартово произведение</h2>
 <p>Функция <code>product(*iterables, repeat=1)</code> возвращает декартово произведение переданных итерируемых объектов. Проще говоря — она порождает все возможные комбинации, где каждый элемент берётся из соответствующего списка.</p>
@@ -126,7 +127,7 @@ for team in combinations(students, 3):
 # Всего C(5, 3) = 10 вариантов
 </code></pre>
 <blockquote>
-<p><strong>⚠️ Важно:</strong> <strong>Запомните разницу:</strong></p>
+<p><strong>⚠️ Важно:</strong></p>
 </blockquote>
 <ul>
 <li><code>permutations</code> — порядок важен; (1,2) ≠ (2,1)</li>
@@ -214,7 +215,7 @@ pairs = list(product(range(1, 4), repeat=2))
 <li>Модуль <code>itertools</code> — мощный инструмент для решения комбинаторных задач и задач ЕГЭ</li>
 </ul>
 <blockquote>
-<p><strong>⚠️ Важно:</strong> <strong>Совет:</strong> потренируйтесь вручную посчитать количество комбинаций для разных значений, а потом проверьте себя с помощью itertools. Это поможет лучше понять комбинаторику и сэкономит время на экзамене.</p>
+<p><strong>⚠️ Важно:</strong> потренируйтесь вручную посчитать количество комбинаций для разных значений, а потом проверьте себя с помощью itertools. Это поможет лучше понять комбинаторику и сэкономит время на экзамене.</p>
 </blockquote>
 
         </main>

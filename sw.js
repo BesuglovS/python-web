@@ -1,114 +1,121 @@
 /**
- * Service Worker — офлайн-доступ и кеширование
- * Стратегия: кеширование по мере посещения (cache-first с обновлением)
- * При установке кешируются только критически важные ресурсы.
- * HTML-страницы и JSON-данные кешируются при первом посещении.
+ * Service Worker — кэширование статических ресурсов и офлайн-доступ
+ * для python.nayanovaacademy.ru
  */
-const CACHE_NAME = 'python-web-v6';
-const CRITICAL_ASSETS = [
-  './',
-  './index.html',
-  './offline.html',
-  './style.css',
-  './script.js',
-  './config.js',
-  './repl.js',
-  './mindmap.js',
-  './ga.js',
-  './highlight-py.min.js',
-  './highlight-theme.min.css',
-  './lessons.json',
-  './favicon.png',
-  './apple-touch-icon.png',
-  './manifest.json'
+'use strict';
+
+const CACHE_NAME = 'python-web-v2';
+const OFFLINE_PAGE = '/offline.html';
+
+// Ресурсы, которые кэшируем сразу при установке SW
+const PRECACHE = [
+  '/',
+  '/index.html',
+  '/offline.html',
+  '/repl.html',
+  '/final-test.html',
+  '/mindmap.html',
+  '/cheatsheets.html',
+  '/style.css',
+  '/script.js',
+  '/config.js',
+  '/repl.js',
+  '/mindmap.js',
+  '/highlight-theme.min.css',
+  '/highlight-py.min.js',
+  '/favicon.png',
+  '/favicon-192x192.png',
+  '/favicon-512x512.png',
+  '/manifest.json',
+  '/robots.txt',
 ];
 
-// Установка: кешируем только критически важные ресурсы
+// Установка: предварительное кэширование критических ресурсов
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return Promise.allSettled(
-          CRITICAL_ASSETS.map((url) =>
-            cache.add(url).catch((err) => {
-              console.warn('SW: failed to cache critical', url, err);
-            })
-          )
-        );
-      })
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => {
+      return Promise.allSettled(
+        PRECACHE.map((url) =>
+          cache.add(url).catch(() => {
+            // Игнорируем ошибки отдельных файлов — не фатально
+          })
+        )
+      );
+    }).then(() => self.skipWaiting())
   );
 });
 
-// Активация: удаляем старые кеши
+// Активация: удаляем старые кэши
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((names) => {
-      return Promise.all(
-        names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      )
+    ).then(() => self.clients.claim())
   );
 });
 
-// Перехват запросов: стратегия Stale-While-Revalidate для HTML/JS,
-// кеширование по мере посещения
+// Стратегия: Cache-first для статики, Network-first для HTML-страниц
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') {
-    return;
-  }
+  // Только GET-запросы к нашему origin
+  if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
 
-  // Не кешируем запросы к песочнице и API
-  if (url.pathname.includes('/sandbox/') || url.pathname.includes('/api/')) {
+  // Не кэшируем запросы к песочнице и API
+  if (url.pathname.startsWith('/sandbox/')) return;
+  if (url.pathname.startsWith('/quizzes/')) return;
+
+  // Для HTML-страниц используем Network-first (всегда свежий контент)
+  if (event.request.destination === 'document' ||
+      url.pathname.endsWith('.html') ||
+      url.pathname === '/') {
+    event.respondWith(networkFirst(event.request));
     return;
   }
 
-  // HTML-страницы и JSON-файлы: кешируем при первом посещении (cache-first, затем обновляем)
-  const isHTML = event.request.headers.get('accept')?.includes('text/html') ||
-                 url.pathname.endsWith('.html') ||
-                 url.pathname === '/' ||
-                 url.pathname.endsWith('/');
-  const isJSON = url.pathname.endsWith('.json');
-
-  if (isHTML || isJSON) {
-    event.respondWith(
-      caches.match(event.request).then((cached) => {
-        // Фоновое обновление кеша из сети
-        const networkFetch = fetch(event.request).then((response) => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
-        }).catch(() => {
-          // Если HTML и нет сети — показываем offline-страницу
-          if (isHTML) {
-            return caches.match('./offline.html');
-          }
-          return cached;
-        });
-
-        // Если есть в кеше — сразу отдаём, иначе ждём сеть
-        return cached || networkFetch;
-      })
-    );
-    return;
-  }
-
-  // Остальные статические ресурсы (CSS, JS, CDN): Stale-While-Revalidate
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const networkFetch = fetch(event.request).then((response) => {
-        if (response && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-        }
-        return response;
-      }).catch(() => cached);
-
-      return cached || networkFetch;
-    })
-  );
+  // Для статических ресурсов — Cache-first
+  event.respondWith(cacheFirst(event.request));
 });
+
+// Cache-first стратегия: сначала кэш, потом сеть
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (err) {
+    // Для изображений можно вернуть заглушку, для остального — ошибка
+    return new Response('', { status: 504 });
+  }
+}
+
+// Network-first стратегия: сначала сеть, при ошибке — кэш, при отсутствии — офлайн-страница
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (err) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    // Возвращаем офлайн-страницу для navigation-запросов
+    if (request.mode === 'navigate') {
+      const offline = await caches.match(OFFLINE_PAGE);
+      if (offline) return offline;
+    }
+
+    return new Response('Офлайн. Проверьте подключение к интернету.', {

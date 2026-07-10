@@ -246,6 +246,23 @@ npm run build
 | PHP | **7.4+** (для `sandbox/run.php`) |
 | Python | **3.10+** (песочница выполняет код пользователя) |
 
+### Конфигурация сервера
+
+В проекте два конфигурационных файла — используйте тот, который соответствует вашему веб-серверу:
+
+| Файл | Сервер | Назначение |
+|------|--------|------------|
+| `python.nayanovaacademy.ru` | **Nginx** | Полный конфиг виртуального хоста |
+| `.htaccess` | **Apache** | Security headers, кэширование, сжатие |
+
+**Nginx** не читает `.htaccess` — вся конфигурация должна быть в `python.nayanovaacademy.ru`.
+
+Оба файла содержат:
+- Security headers (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
+- Кэширование статики (CSS/JS/изображения — 1 год, HTML/JSON — 1 час)
+- Gzip-сжатие
+- Запрет листинга директорий
+
 ### Варианты деплоя
 
 **VPS / выделенный сервер:**

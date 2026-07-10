@@ -18,12 +18,15 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://python.nayanovaacademy.ru/" />
     <title>Основы программирования на Python — 50 уроков для начинающих</title>
+    <link rel="preload" href="style.css" as="style" />
+    <link rel="preload" href="highlight-theme.min.css" as="style" />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <meta name="theme-color" content="#667eea" />
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="highlight-theme.min.css" id="hljs-theme" />
+    <script src="ga.js"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -55,7 +58,11 @@
         </div>
       </header>
 
-      <nav class="index-nav" id="main-content">
+      <div class="search-container">
+        <input type="text" id="lesson-search" class="search-input" placeholder="🔍 Поиск уроков... (попробуйте: циклы, строки, функции)" autocomplete="off" />
+      </div>
+
+      <main class="index-nav" id="main-content">
         {% for section in collections.sections %}
         <div class="section-group" data-section="{{ section.id }}" id="section-{{ section.id }}">
           <h2 class="section-title">{{ section.title }}</h2>
@@ -65,15 +72,15 @@
               <div class="topic-num">{{ lesson.num }}</div>
               <div class="topic-info">
                 <h2>{{ lesson.title }}</h2>
-                <p>{{ lesson.subtitle }}</p>
-                {% if lesson.duration %}<div class="topic-meta"><span class="meta-duration">⏱ {{ lesson.duration }} мин</span> · <span class="meta-complexity" data-level="{{ lesson.complexity }}">{{ lesson.complexity }}</span></div>{% endif %}
+                <p>{{ lesson.desc }}</p>
+                {% if lesson.duration %}<div class="topic-meta"><span class="meta-duration">⏱ {{ lesson.duration }} мин</span> · <span class="meta-complexity" data-level="{% if lesson.complexity == 'beginner' %}🚀 Начальный{% elif lesson.complexity == 'basic' %}📘 Базовый{% elif lesson.complexity == 'intermediate' %}🔷 Средний{% elif lesson.complexity == 'advanced' %}🏆 Продвинутый{% else %}{{ lesson.complexity }}{% endif %}">{% if lesson.complexity == 'beginner' %}🚀 Начальный{% elif lesson.complexity == 'basic' %}📘 Базовый{% elif lesson.complexity == 'intermediate' %}🔷 Средний{% elif lesson.complexity == 'advanced' %}🏆 Продвинутый{% else %}{{ lesson.complexity }}{% endif %}</span></div>{% endif %}
               </div>
             </a>
             {% endfor %}
           </div>
         </div>
         {% endfor %}
-      </nav>
+      </main>
       <footer class="index-footer">
         Создано для изучения основ Python. Все примеры можно запустить в интерпретаторе.
       </footer>

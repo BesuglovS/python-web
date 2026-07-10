@@ -8,6 +8,40 @@ const zlib = require('zlib');
 const ROOT = __dirname;
 const DIST = path.join(ROOT, 'dist');
 
+// ---- Whitelist: only these files and directories go to dist/ ----
+
+// Exact file names to include
+const INCLUDE_FILES = [
+  // HTML pages
+  'index.html', 'cheatsheets.html', 'final-test.html', 'mindmap.html',
+  'offline.html', 'repl.html',
+  // CSS
+  'style.css', 'highlight-theme.min.css',
+  // JS
+  'script.js', 'ga.js', 'sw.js', 'highlight-py.min.js', 'mindmap.js',
+  'repl.js', 'config.js',
+  // Data / SEO
+  'lessons.json', 'manifest.json', 'sitemap.xml', 'robots.txt',
+  // Icons
+  'favicon.png', 'favicon.webp', 'apple-touch-icon.png',
+  'favicon-32x32.png', 'favicon-192x192.png', 'favicon-512x512.png',
+  // Server
+  '.htaccess', 'router.php',
+];
+
+// Directories to copy recursively
+const INCLUDE_DIRS = [
+  'sandbox',
+  'quizzes',
+];
+
+// ---- Helpers ----
+
+// Returns true if the file name matches a numbered lesson pattern: NN-*.html
+function isLessonFile(name) {
+  return /^\d{2}-.+\.html$/.test(name);
+}
+
 // ---- Minifiers ----
 
 function minifyCSS(css) {
@@ -52,6 +86,27 @@ function minifyJS(js) {
 
 // ---- Build ----
 
+function processFile(file, srcPath, destPath) {
+  const ext = path.extname(file).toLowerCase();
+
+  if (ext === '.css') {
+    const src = fs.readFileSync(srcPath, 'utf8');
+    const min = minifyCSS(src);
+    fs.writeFileSync(destPath, min, 'utf8');
+    const ratio = ((1 - min.length / src.length) * 100).toFixed(0);
+    console.log(`  ✅ ${file} → ${(src.length / 1024).toFixed(1)} KB → ${(min.length / 1024).toFixed(1)} KB (${ratio}%)`);
+  } else if (ext === '.js') {
+    const src = fs.readFileSync(srcPath, 'utf8');
+    const min = minifyJS(src);
+    fs.writeFileSync(destPath, min, 'utf8');
+    const ratio = ((1 - min.length / src.length) * 100).toFixed(0);
+    console.log(`  ✅ ${file} → ${(src.length / 1024).toFixed(1)} KB → ${(min.length / 1024).toFixed(1)} KB (${ratio}%)`);
+  } else {
+    fs.copyFileSync(srcPath, destPath);
+    console.log(`  ✅ ${file} (copied)`);
+  }
+}
+
 function build() {
   console.log('🔨 Building...');
 
@@ -59,49 +114,30 @@ function build() {
     fs.mkdirSync(DIST, { recursive: true });
   }
 
-  // Copy non-CSS/JS static files into dist
-  const staticFiles = fs.readdirSync(ROOT)
-    .filter(f => !f.startsWith('.') && !['dist', 'node_modules', 'sandbox', 'quizzes', 'build.js', 'package.json', 'package-lock.json'].includes(f));
-  for (const file of staticFiles) {
-    const srcPath = path.join(ROOT, file);
-    const destPath = path.join(DIST, file);
-    if (fs.statSync(srcPath).isFile()) {
-      if (file.endsWith('.html') || file.endsWith('.json') || file.endsWith('.xml') || file.endsWith('.txt') || file.endsWith('.php') || file.endsWith('.webmanifest')) {
-        fs.copyFileSync(srcPath, destPath);
-        console.log(`  ✅ ${file} (copied)`);
-      } else if (file.endsWith('.css')) {
-        const src = fs.readFileSync(srcPath, 'utf8');
-        const min = minifyCSS(src);
-        fs.writeFileSync(destPath, min, 'utf8');
-        const ratio = ((1 - min.length / src.length) * 100).toFixed(0);
-        console.log(`  ✅ ${file} → ${(src.length / 1024).toFixed(1)} KB → ${(min.length / 1024).toFixed(1)} KB (${ratio}%)`);
-      } else if (file.endsWith('.js')) {
-        const src = fs.readFileSync(srcPath, 'utf8');
-        const min = minifyJS(src);
-        fs.writeFileSync(destPath, min, 'utf8');
-        const ratio = ((1 - min.length / src.length) * 100).toFixed(0);
-        console.log(`  ✅ ${file} → ${(src.length / 1024).toFixed(1)} KB → ${(min.length / 1024).toFixed(1)} KB (${ratio}%)`);
-      } else {
-        fs.copyFileSync(srcPath, destPath);
-        console.log(`  ✅ ${file} (copied binary)`);
-      }
+  // 1. Copy exact whitelisted files
+  const allFiles = fs.readdirSync(ROOT);
+  const includedSet = new Set(INCLUDE_FILES);
+
+  for (const file of allFiles) {
+    const isDir = fs.statSync(path.join(ROOT, file)).isDirectory();
+    if (isDir) continue;
+
+    // Skip dot-files except those explicitly whitelisted (e.g., .htaccess)
+    if (file.startsWith('.') && !includedSet.has(file)) continue;
+
+    if (includedSet.has(file) || isLessonFile(file)) {
+      processFile(file, path.join(ROOT, file), path.join(DIST, file));
     }
   }
 
-  // Copy sandbox directory
-  const sandboxSrc = path.join(ROOT, 'sandbox');
-  const sandboxDest = path.join(DIST, 'sandbox');
-  if (fs.existsSync(sandboxSrc)) {
-    copyDir(sandboxSrc, sandboxDest);
-    console.log('  ✅ sandbox/ (copied)');
-  }
-
-  // Copy quizzes directory
-  const quizzesSrc = path.join(ROOT, 'quizzes');
-  const quizzesDest = path.join(DIST, 'quizzes');
-  if (fs.existsSync(quizzesSrc)) {
-    copyDir(quizzesSrc, quizzesDest);
-    console.log('  ✅ quizzes/ (copied)');
+  // 2. Copy whitelisted directories
+  for (const dir of INCLUDE_DIRS) {
+    const srcDir = path.join(ROOT, dir);
+    const destDir = path.join(DIST, dir);
+    if (fs.existsSync(srcDir)) {
+      copyDir(srcDir, destDir);
+      console.log(`  ✅ ${dir}/ (copied)`);
+    }
   }
 
   // Generate cache-busted hashes
@@ -136,7 +172,7 @@ if (args.includes('--watch')) {
   let lastBuild = Date.now();
   setInterval(() => {
     const files = fs.readdirSync(ROOT)
-      .filter(f => ['.css', '.js'].some(ext => f.endsWith(ext)));
+      .filter(f => ['.css', '.js', '.html'].some(ext => f.endsWith(ext)));
     let changed = false;
     for (const file of files) {
       const stat = fs.statSync(path.join(ROOT, file));

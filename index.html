@@ -24,6 +24,7 @@
     <meta name="theme-color" content="#667eea" />
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="highlight-theme.min.css" id="hljs-theme" />
+    <script src="ga.js"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -55,7 +56,11 @@
         </div>
       </header>
 
-      <nav class="index-nav" id="main-content">
+      <div class="search-container">
+        <input type="text" id="lesson-search" class="search-input" placeholder="🔍 Поиск уроков... (попробуйте: циклы, строки, функции)" autocomplete="off" />
+      </div>
+
+      <main class="index-nav" id="main-content">
         
         <div class="section-group" data-section="intro" id="section-intro">
           <h2 class="section-title">📖 Введение</h2>
@@ -65,8 +70,8 @@
               <div class="topic-num">1</div>
               <div class="topic-info">
                 <h2>История, обзор и области применения</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>История Python, философия, ключевые особенности</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -74,8 +79,8 @@
               <div class="topic-num">2</div>
               <div class="topic-info">
                 <h2>Настройка IDE: IDLE, VS Code и PyCharm</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>Запуск в IDLE, установка, создание проекта</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -90,8 +95,8 @@
               <div class="topic-num">3</div>
               <div class="topic-info">
                 <h2>Переменные</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>Объявление, присваивание, имена</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -99,8 +104,8 @@
               <div class="topic-num">4</div>
               <div class="topic-info">
                 <h2>Типы данных</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>int, float, str, bool, NoneType</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -108,8 +113,8 @@
               <div class="topic-num">5</div>
               <div class="topic-info">
                 <h2>Приведение типов</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>int(), float(), str(), bool()</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -117,8 +122,8 @@
               <div class="topic-num">6</div>
               <div class="topic-info">
                 <h2>Ввод и вывод</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>print(), input(), форматирование</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -126,8 +131,8 @@
               <div class="topic-num">7</div>
               <div class="topic-info">
                 <h2>f-строки и форматирование</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>f&quot;{переменная=}&quot;, форматирование чисел</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -135,8 +140,8 @@
               <div class="topic-num">8</div>
               <div class="topic-info">
                 <h2>Операции над числами</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>+, -, *, /, //, %, **</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -151,8 +156,8 @@
               <div class="topic-num">9</div>
               <div class="topic-info">
                 <h2>Булевы переменные</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="beginner">beginner</span></div>
+                <p>True, False, логические операции</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="🚀 Начальный">🚀 Начальный</span></div>
               </div>
             </a>
             
@@ -160,8 +165,8 @@
               <div class="topic-num">10</div>
               <div class="topic-info">
                 <h2>Условный оператор + Отступы</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>if, elif, else, блоки кода, PEP 8</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -169,8 +174,8 @@
               <div class="topic-num">11</div>
               <div class="topic-info">
                 <h2>Обработка ошибок</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>try, except, finally, raise</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -178,8 +183,8 @@
               <div class="topic-num">12</div>
               <div class="topic-info">
                 <h2>Сложные условия</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>and, or, not</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -187,8 +192,8 @@
               <div class="topic-num">13</div>
               <div class="topic-info">
                 <h2>Вложенные структуры</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Условия внутри условий</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -203,8 +208,8 @@
               <div class="topic-num">14</div>
               <div class="topic-info">
                 <h2>Строки: индексация и срезы</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Индексы, [start:stop:step]</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -212,8 +217,8 @@
               <div class="topic-num">15</div>
               <div class="topic-info">
                 <h2>Операции над строками</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Конкатенация, умножение, методы</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -221,8 +226,8 @@
               <div class="topic-num">16</div>
               <div class="topic-info">
                 <h2>Регулярные выражения</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>re: поиск, замена, группы, шаблоны</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -237,8 +242,8 @@
               <div class="topic-num">17</div>
               <div class="topic-info">
                 <h2>Цикл с предусловием</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>while</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -246,8 +251,8 @@
               <div class="topic-num">18</div>
               <div class="topic-info">
                 <h2>Цикл for</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Перебор элементов</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -255,8 +260,8 @@
               <div class="topic-num">19</div>
               <div class="topic-info">
                 <h2>range()</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Генерация последовательностей</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -264,8 +269,8 @@
               <div class="topic-num">20</div>
               <div class="topic-info">
                 <h2>break и continue</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Прерывание и пропуск итераций</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -273,8 +278,8 @@
               <div class="topic-num">21</div>
               <div class="topic-info">
                 <h2>Вложенные циклы</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Циклы внутри циклов</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -289,8 +294,8 @@
               <div class="topic-num">22</div>
               <div class="topic-info">
                 <h2>Создание простейших функций</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>def, return, параметры</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -298,8 +303,8 @@
               <div class="topic-num">23</div>
               <div class="topic-info">
                 <h2>Функции: продвинутые темы</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>args/kwargs, области видимости, аннотации</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -307,8 +312,8 @@
               <div class="topic-num">24</div>
               <div class="topic-info">
                 <h2>Отладка программ</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>pdb, print-отладка, assert, логирование</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -323,8 +328,8 @@
               <div class="topic-num">25</div>
               <div class="topic-info">
                 <h2>Списки</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>list, методы списков</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -332,8 +337,8 @@
               <div class="topic-num">26</div>
               <div class="topic-info">
                 <h2>Множества</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>set(), операции над множествами</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -341,8 +346,8 @@
               <div class="topic-num">27</div>
               <div class="topic-info">
                 <h2>Кортежи</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>tuple, неизменяемые последовательности</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -350,8 +355,8 @@
               <div class="topic-num">28</div>
               <div class="topic-info">
                 <h2>Словари</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>dict, ключи и значения</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -359,8 +364,8 @@
               <div class="topic-num">29</div>
               <div class="topic-info">
                 <h2>split + join</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Разделение и объединение строк</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 8 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -368,8 +373,8 @@
               <div class="topic-num">30</div>
               <div class="topic-info">
                 <h2>Списочные выражения</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>[x for x in ... if ...]</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -377,8 +382,8 @@
               <div class="topic-num">31</div>
               <div class="topic-info">
                 <h2>Lambda-функции</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>lambda, map(), filter(), sorted()</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -393,8 +398,8 @@
               <div class="topic-num">32</div>
               <div class="topic-info">
                 <h2>Файлы: чтение и запись</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>open(), with, построчное чтение, разбор чисел</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -402,8 +407,8 @@
               <div class="topic-num">33</div>
               <div class="topic-info">
                 <h2>JSON и CSV</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>json.dump/load, csv.reader/writer</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -411,8 +416,8 @@
               <div class="topic-num">34</div>
               <div class="topic-info">
                 <h2>Базы данных SQLite</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>CREATE TABLE, INSERT, SELECT, параметризованные запросы</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -427,8 +432,8 @@
               <div class="topic-num">35</div>
               <div class="topic-info">
                 <h2>Модули и import</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>import, from, as, стандартная библиотека</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -436,8 +441,8 @@
               <div class="topic-num">36</div>
               <div class="topic-info">
                 <h2>Модуль itertools</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>product, permutations, chain, groupby и другие функции</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -445,8 +450,8 @@
               <div class="topic-num">37</div>
               <div class="topic-info">
                 <h2>Виртуальные окружения и pip</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>venv, pip install, requirements.txt</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -454,8 +459,8 @@
               <div class="topic-num">38</div>
               <div class="topic-info">
                 <h2>Модули math и random</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Математика, случайные числа</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -463,8 +468,8 @@
               <div class="topic-num">39</div>
               <div class="topic-info">
                 <h2>Модуль datetime</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Даты, время, timedelta</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -472,8 +477,8 @@
               <div class="topic-num">40</div>
               <div class="topic-info">
                 <h2>NumPy и Pandas</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>ndarray, DataFrame, анализ данных</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -488,8 +493,8 @@
               <div class="topic-num">41</div>
               <div class="topic-info">
                 <h2>Введение в ООП</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>Классы, объекты, __init__, self</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -497,8 +502,8 @@
               <div class="topic-num">42</div>
               <div class="topic-info">
                 <h2>Наследование и полиморфизм</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>class Child(Parent), super(), переопределение</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -513,8 +518,8 @@
               <div class="topic-num">43</div>
               <div class="topic-info">
                 <h2>Декораторы</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>@decorator, wraps, кастомные декораторы</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -522,8 +527,8 @@
               <div class="topic-num">44</div>
               <div class="topic-info">
                 <h2>Генераторы</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>yield, ленивые вычисления, generator expressions</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -531,8 +536,8 @@
               <div class="topic-num">45</div>
               <div class="topic-info">
                 <h2>Многопоточность и asyncio</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="advanced">advanced</span></div>
+                <p>threading, multiprocessing, async/await</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🏆 Продвинутый">🏆 Продвинутый</span></div>
               </div>
             </a>
             
@@ -547,8 +552,8 @@
               <div class="topic-num">46</div>
               <div class="topic-info">
                 <h2>Type Hints</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Аннотации типов, mypy</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 10 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
@@ -556,8 +561,8 @@
               <div class="topic-num">47</div>
               <div class="topic-info">
                 <h2>Unit-тесты с pytest</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>assert, parametrize, проверка исключений</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -565,8 +570,8 @@
               <div class="topic-num">48</div>
               <div class="topic-info">
                 <h2>Requests и API</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>GET, POST, работа с JSON-сервисами</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -574,8 +579,8 @@
               <div class="topic-num">49</div>
               <div class="topic-info">
                 <h2>Веб-фреймворки: Flask</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="intermediate">intermediate</span></div>
+                <p>Маршруты, шаблоны Jinja2, обработка форм, REST API</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 15 мин</span> · <span class="meta-complexity" data-level="🔷 Средний">🔷 Средний</span></div>
               </div>
             </a>
             
@@ -583,15 +588,15 @@
               <div class="topic-num">50</div>
               <div class="topic-info">
                 <h2>Введение в Git</h2>
-                <p></p>
-                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="basic">basic</span></div>
+                <p>Коммиты, ветки, GitHub, .gitignore</p>
+                <div class="topic-meta"><span class="meta-duration">⏱ 12 мин</span> · <span class="meta-complexity" data-level="📘 Базовый">📘 Базовый</span></div>
               </div>
             </a>
             
           </div>
         </div>
         
-      </nav>
+      </main>
       <footer class="index-footer">
         Создано для изучения основ Python. Все примеры можно запустить в интерпретаторе.
       </footer>

@@ -1,0 +1,50 @@
+# Security Headers
+<IfModule mod_headers.c>
+    # Strict-Transport-Security (enforce HTTPS)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    # Prevent clickjacking
+    Header always set X-Frame-Options "DENY"
+    # XSS protection for older browsers
+    Header always set X-XSS-Protection "1; mode=block"
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Permissions policy (restrict browser features)
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+</IfModule>
+
+# Cache-Control for static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    # CSS and JS — 1 year (cache-busted via build hash or filename)
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    # Images — 1 year
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    # Fonts — 1 year
+    ExpiresByType font/woff2 "access plus 1 year"
+    # JSON / manifest — 1 hour
+    ExpiresByType application/json "access plus 1 hour"
+    ExpiresByType application/manifest+json "access plus 1 hour"
+    # HTML — 1 hour
+    ExpiresByType text/html "access plus 1 hour"
+    # Default — 1 day
+    ExpiresDefault "access plus 1 day"
+</IfModule>
+
+# Compress text-based resources
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json text/xml image/svg+xml
+</IfModule>
+
+# Disable directory listing
+Options -Indexes
+
+# Custom error pages (optional, uncomment if you create them)
+# ErrorDocument 404 /404.html
+# ErrorDocument 500 /500.html

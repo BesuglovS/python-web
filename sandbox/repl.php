@@ -28,9 +28,16 @@
  */
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+$allowedOrigin = 'https://python.nayanovaacademy.ru';
+if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] === $allowedOrigin) {
+    header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+} else {
+    header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+}
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+
+define('JSON_OPT', JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
@@ -39,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['ok' => false, 'error' => 'Only POST allowed']);
+    echo json_encode(['ok' => false, 'error' => 'Only POST allowed'], JSON_OPT);
     exit;
 }
 
@@ -85,25 +92,25 @@ if (count($window) >= $RATE_LIMIT) {
     echo json_encode([
         'ok' => false,
         'error' => 'Слишком много запросов. Подождите ' . max(1, $retryAfter) . ' сек.'
-    ]);
+    ], JSON_OPT);
     exit;
 }
 
 $window[] = $now;
-file_put_contents($rateFile, json_encode($window), LOCK_EX);
+file_put_contents($rateFile, json_encode($window, JSON_OPT), LOCK_EX);
 
 // ─── Читаем вход ───
 $raw = file_get_contents('php://input');
 if (!$raw) {
     http_response_code(400);
-    echo json_encode(['ok' => false, 'error' => 'Empty request body']);
+    echo json_encode(['ok' => false, 'error' => 'Empty request body'], JSON_OPT);
     exit;
 }
 
 $data = json_decode($raw, true);
 if (!$data || !isset($data['code'])) {
     http_response_code(400);
-    echo json_encode(['ok' => false, 'error' => 'Missing "code" field in JSON']);
+    echo json_encode(['ok' => false, 'error' => 'Missing "code" field in JSON'], JSON_OPT);
     exit;
 }
 
@@ -136,13 +143,13 @@ $timeout = isset($data['timeout']) ? max(1, min(10, (int)$data['timeout'])) : $D
 
 if (strlen($code) > $MAX_CODE_LENGTH) {
     http_response_code(413);
-    echo json_encode(['ok' => false, 'error' => 'Code too long (max ' . $MAX_CODE_LENGTH . ' bytes)']);
+    echo json_encode(['ok' => false, 'error' => 'Code too long (max ' . $MAX_CODE_LENGTH . ' bytes)'], JSON_OPT);
     exit;
 }
 
 if ($reset) {
     @unlink($SESSION_FILE);
-    echo json_encode(['ok' => true, 'stdout' => '', 'stderr' => 'Session reset']);
+    echo json_encode(['ok' => true, 'stdout' => '', 'stderr' => 'Session reset'], JSON_OPT);
     exit;
 }
 
@@ -154,104 +161,108 @@ $ALLOWED_IMPORTS_LIST = [
 
 // ─── AST-валидация ───
 function runPythonScript($scriptContent, $stdinData = '', $timeout = 5, $memoryMb = 128) {
-    $tmpFile = tempnam(sys_get_temp_dir(), 'py_');
-    file_put_contents($tmpFile, $scriptContent);
+    $tmpFile = null;
+    try {
+        $tmpFile = tempnam(sys_get_temp_dir(), 'py_');
+        file_put_contents($tmpFile, $scriptContent);
 
-    $descriptorspec = [
-        0 => ['pipe', 'r'],
-        1 => ['pipe', 'w'],
-        2 => ['pipe', 'w'],
-    ];
+        $descriptorspec = [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w'],
+        ];
 
-    $pythonCmd = DIRECTORY_SEPARATOR === '\\' ? 'python' : 'python3';
-    // -I: изолированный режим (игнорирует PYTHON* переменные окружения)
-    // -S: не импортировать site-packages при старте
-    // -X utf8: принудительный UTF-8 режим
-    $cmd = $pythonCmd . ' -I -S -X utf8 "' . $tmpFile . '"';
+        $pythonCmd = DIRECTORY_SEPARATOR === '\\' ? 'python' : 'python3';
+        // -I: изолированный режим (игнорирует PYTHON* переменные окружения)
+        // -S: не импортировать site-packages при старте
+        // -X utf8: принудительный UTF-8 режим
+        $cmd = $pythonCmd . ' -I -S -X utf8 "' . $tmpFile . '"';
 
-    $process = proc_open(
-        $cmd,
-        $descriptorspec,
-        $pipes,
-        null,
-        null,
-        ['bypass_shell' => true]
-    );
+        $process = proc_open(
+            $cmd,
+            $descriptorspec,
+            $pipes,
+            null,
+            null,
+            ['bypass_shell' => true]
+        );
 
-    if (!is_resource($process)) {
-        unlink($tmpFile);
-        return [false, 'Failed to start Python'];
-    }
-
-    if (strlen($stdinData) > 0) {
-        fwrite($pipes[0], $stdinData);
-    }
-    fclose($pipes[0]);
-
-    // Мониторинг таймаута
-    $startTime = microtime(true);
-    $stdout = '';
-    $stderr = '';
-
-    // Читаем вывод с контролем таймаута
-    stream_set_timeout($pipes[1], $timeout);
-    stream_set_timeout($pipes[2], $timeout);
-
-    while (!feof($pipes[1]) || !feof($pipes[2])) {
-        $elapsed = microtime(true) - $startTime;
-        if ($elapsed > $timeout) {
-            // Таймаут — убиваем процесс
-            proc_terminate($process, 9);
-            $stdout = stream_get_contents($pipes[1]);
-            $stderr = stream_get_contents($pipes[2]);
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-            proc_close($process);
-            unlink($tmpFile);
-            return [
-                $stdout ?: '',
-                ($stderr ?: '') . "\n⏱ Превышен лимит времени (" . $timeout . " сек). Выполнение остановлено.",
-                124  // Тот же код, что у timeout в bash
-            ];
+        if (!is_resource($process)) {
+            return [false, 'Failed to start Python'];
         }
 
-        $read = [$pipes[1], $pipes[2]];
-        $write = null;
-        $except = null;
-        $sel = stream_select($read, $write, $except, 1, 0); // таймаут 1 сек для проверки
-
-        if ($sel === false) {
-            break;
+        if (strlen($stdinData) > 0) {
+            fwrite($pipes[0], $stdinData);
         }
-        if ($sel > 0) {
-            foreach ($read as $pipe) {
-                $data = fread($pipe, 8192);
-                if ($data === false || $data === '') {
-                    continue;
-                }
-                if ($pipe === $pipes[1]) {
-                    $stdout .= $data;
-                } else {
-                    $stderr .= $data;
+        fclose($pipes[0]);
+
+        // Мониторинг таймаута
+        $startTime = microtime(true);
+        $stdout = '';
+        $stderr = '';
+
+        // Читаем вывод с контролем таймаута
+        stream_set_timeout($pipes[1], $timeout);
+        stream_set_timeout($pipes[2], $timeout);
+
+        while (!feof($pipes[1]) || !feof($pipes[2])) {
+            $elapsed = microtime(true) - $startTime;
+            if ($elapsed > $timeout) {
+                // Таймаут — убиваем процесс
+                proc_terminate($process, 9);
+                $stdout = stream_get_contents($pipes[1]);
+                $stderr = stream_get_contents($pipes[2]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+                return [
+                    $stdout ?: '',
+                    ($stderr ?: '') . "\n⏱ Превышен лимит времени (" . $timeout . " сек). Выполнение остановлено.",
+                    124  // Тот же код, что у timeout в bash
+                ];
+            }
+
+            $read = [$pipes[1], $pipes[2]];
+            $write = null;
+            $except = null;
+            $sel = stream_select($read, $write, $except, 1, 0); // таймаут 1 сек для проверки
+
+            if ($sel === false) {
+                break;
+            }
+            if ($sel > 0) {
+                foreach ($read as $pipe) {
+                    $data = fread($pipe, 8192);
+                    if ($data === false || $data === '') {
+                        continue;
+                    }
+                    if ($pipe === $pipes[1]) {
+                        $stdout .= $data;
+                    } else {
+                        $stderr .= $data;
+                    }
                 }
             }
         }
+
+        // Дособираем остатки
+        $stdout .= stream_get_contents($pipes[1]);
+        $stderr .= stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        $exitCode = proc_close($process);
+
+        return [$stdout, $stderr, $exitCode];
+    } finally {
+        if ($tmpFile !== null && file_exists($tmpFile)) {
+            @unlink($tmpFile);
+        }
     }
-
-    // Дособираем остатки
-    $stdout .= stream_get_contents($pipes[1]);
-    $stderr .= stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-
-    $exitCode = proc_close($process);
-    unlink($tmpFile);
-
-    return [$stdout, $stderr, $exitCode];
 }
 
 function validateCodeAST($code, $allowedImports) {
-    $importsJson = json_encode($allowedImports);
+    $importsJson = json_encode($allowedImports, JSON_UNESCAPED_UNICODE);
 
     $script = <<<'PYTHON'
 import ast, sys, json
@@ -354,7 +365,7 @@ if (!$astOk) {
     echo json_encode([
         'ok' => false,
         'error' => '🚫 Запрещённая конструкция: ' . htmlspecialchars($astError)
-    ]);
+    ], JSON_OPT);
     exit;
 }
 
@@ -383,7 +394,7 @@ if (empty($stdout)) {
         'stdout' => '',
         'stderr' => $stderr ?: 'Empty response from Python (exit: ' . $exitCode . ')',
         'exit_code' => $exitCode
-    ]);
+    ], JSON_OPT);
     exit;
 }
 

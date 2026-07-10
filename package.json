@@ -17,12 +17,14 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
     "@playwright/test": "^1.61.1",
     "clean-css": "^5.3.3",
     "esbuild": "^0.28.1",
     "highlight.js": "^11.11.1",
     "html-minifier-terser": "^7.2.0",
     "http-server": "^14.1.1",
+    "luxon": "^3.6.1",
     "terser": "^5.49.0"
   }
 }

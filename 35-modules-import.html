@@ -8,6 +8,7 @@
     <meta property="og:title" content="35. Модули и import — Python: основы" />
     <meta property="og:description" content="import, from, as, стандартная библиотека" />
     <meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2026-07-10" />
     <meta property="og:image" content="https://python.nayanovaacademy.ru/favicon.png" />
     <meta property="og:url" content="https://python.nayanovaacademy.ru/35-modules-import.html" />
     <meta name="twitter:card" content="summary" />
@@ -51,7 +52,7 @@ print(math.pi)          # 3.141592653589793
 print(math.factorial(5)) # 120
 </code></pre>
 <blockquote>
-<p><strong>⚠️ Важно:</strong> <strong>Правило:</strong> <code>import module</code> загружает модуль и создаёт пространство имён. Обращаться к содержимому нужно через точку: <code>module.function()</code>.</p>
+<p><strong>⚠️ Важно:</strong> <code>import module</code> загружает модуль и создаёт пространство имён. Обращаться к содержимому нужно через точку: <code>module.function()</code>.</p>
 </blockquote>
 <p>Это самый безопасный способ: вы всегда видите, из какого модуля взята функция, и избегаете конфликтов имён.</p>
 <h2>from...import — импорт конкретных имён</h2>
@@ -110,7 +111,7 @@ print(utils.add(3, 5))      # 8
 print(utils.PI)             # 3.14159
 </code></pre>
 <blockquote>
-<p><strong>⚠️ Важно:</strong> <strong>Важно:</strong> при импорте Python выполняет весь код модуля. Чтобы защитить исполняемый код от запуска при импорте, используйте конструкцию <code>if __name__ == '__main__':</code>.</p>
+<p><strong>⚠️ Важно:</strong> при импорте Python выполняет весь код модуля. Чтобы защитить исполняемый код от запуска при импорте, используйте конструкцию <code>if __name__ == '__main__':</code>.</p>
 </blockquote>
 <pre><code class="language-python"># utils.py с защитой от запуска при импорте
 def greet(name):

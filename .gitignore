@@ -22,3 +22,10 @@ dist/
 # Test artifacts
 playwright-report/
 test-results/
+
+# Sandbox runtime files (generated at runtime)
+sandbox/.repl_sessions/
+sandbox/.ratelimit/
+
+# Temporary scripts
+_fix_duplicates.py
