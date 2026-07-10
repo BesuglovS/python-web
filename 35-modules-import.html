@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="import, from, as, стандартная библиотека" />
     <meta property="og:title" content="35. Модули и import — Python: основы" />
     <meta property="og:description" content="import, from, as, стандартная библиотека" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Зачем нужны модули?</h2>
 <p>Модуль в Python — это просто файл с расширением <code>.py</code>, содержащий функции, классы и переменные. Вместо того чтобы писать весь код в одном файле, программисты разбивают программу на модули. Это делает код:</p>
 <ul>
@@ -122,7 +122,7 @@ if __name__ == '__main__':
 <li><code>if __name__ == '__main__':</code> защищает код от выполнения при импорте</li>
 </ul>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="34-sqlite3.html" class="prev-link">← Базы данных SQLite</a>

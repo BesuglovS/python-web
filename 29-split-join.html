@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Разделение и объединение строк" />
     <meta property="og:title" content="29. split() и join() — Python: основы" />
     <meta property="og:description" content="Разделение и объединение строк" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>split() — разделение строки</h2>
 <p>split() разбивает строку на список подстрок:</p>
 <pre><code class="language-python">text = &quot;яблоко банан вишня&quot;
@@ -67,7 +67,7 @@ new_data = &quot;;&quot;.join(fields)
 print(new_data)  # &quot;Иван;25;Москва&quot;
 </code></pre>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="28-dicts.html" class="prev-link">← Словари</a>

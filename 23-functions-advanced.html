@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="args/kwargs, области видимости, аннотации" />
     <meta property="og:title" content="23. Продвинутые функции — Python: основы" />
     <meta property="og:description" content="args/kwargs, области видимости, аннотации" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>*args — произвольное количество аргументов</h2>
 <p><code>*args</code> позволяет передать любое количество позиционных аргументов. Внутри функции это кортеж:</p>
 <pre><code class="language-python">def sum_all(*args):
@@ -106,7 +106,7 @@ greet(&quot;Анна&quot;, 3)           # Аннотации не провер�
 <p><strong>⚠️ Важно:</strong> <strong>Важно:</strong> аннотации типов не проверяются интерпретатором. Для проверки используйте инструменты вроде <code>mypy</code>.</p>
 </blockquote>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="22-functions.html" class="prev-link">← Создание простейших функций</a>

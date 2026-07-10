@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="json.dump/load, csv.reader/writer" />
     <meta property="og:title" content="33. JSON и CSV — Python: основы" />
     <meta property="og:description" content="json.dump/load, csv.reader/writer" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>JSON — JavaScript Object Notation</h2>
 <p>JSON — самый популярный формат обмена данными. В Python данные преобразуются между объектами Python и JSON-строками:</p>
 <table><tbody><tr><th>Python</th><th>JSON</th></tr><tr><td><code>dict</code></td><td>object</td></tr><tr><td><code>list</code>, <code>tuple</code></td><td>array</td></tr><tr><td><code>str</code></td><td>string</td></tr><tr><td><code>int</code>, <code>float</code></td><td>number</td></tr><tr><td><code>True</code>, <code>False</code></td><td><code>true</code>, <code>false</code></td></tr><tr><td><code>None</code></td><td><code>null</code></td></tr></tbody></table>
@@ -143,7 +143,7 @@ with open(&quot;users.csv&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;, newl
 print(&quot;Конвертация завершена!&quot;)
 </code></pre>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="32-files.html" class="prev-link">← Файлы: чтение и запись</a>

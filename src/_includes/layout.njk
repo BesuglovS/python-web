@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="{% if description %}{{ description }}{% elif subtitle %}Урок {{ lesson }}: {{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
     <meta property="og:title" content="{{ lesson }}. {{ title }} — Python: основы" />
     <meta property="og:description" content="{% if description %}{{ description }}{% elif subtitle %}{{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
@@ -24,9 +24,9 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           {{ content | safe }}
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         {% if prevUrl %}<a href="{{ prevUrl }}" class="prev-link">← {{ prevTitle }}</a>{% endif %}

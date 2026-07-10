@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="@decorator, wraps, кастомные декораторы" />
     <meta property="og:title" content="43. Декораторы — Python: основы" />
     <meta property="og:description" content="@decorator, wraps, кастомные декораторы" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Что такое декоратор?</h2>
 <p>Декоратор — это функция, которая принимает другую функцию и расширяет её поведение, не изменяя исходный код.</p>
 <pre><code class="language-python">def my_decorator(func):
@@ -122,7 +122,7 @@ def fibonacci(n):
 print(fibonacci(100))  # работает мгновенно!
 </code></pre>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="42-inheritance.html" class="prev-link">← Наследование и полиморфизм</a>

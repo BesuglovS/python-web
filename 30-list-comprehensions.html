@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="[x for x in ... if ...]" />
     <meta property="og:title" content="30. Списочные выражения — Python: основы" />
     <meta property="og:description" content="[x for x in ... if ...]" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Базовый синтаксис</h2>
 <p>Списочное выражение (list comprehension) — компактный способ создания списков:</p>
 <pre><code class="language-python"># Обычный цикл
@@ -68,7 +68,7 @@ filtered = {k: v for k, v in original.items() if v &gt; 2}
 print(filtered)  # {&quot;c&quot;: 3, &quot;d&quot;: 4}
 </code></pre>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="29-split-join.html" class="prev-link">← split + join</a>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Прерывание и пропуск итераций" />
     <meta property="og:title" content="20. break и continue — Python: основы" />
     <meta property="og:description" content="Прерывание и пропуск итераций" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>break: прерывание цикла</h2>
 <p><code>break</code> немедленно завершает текущий цикл:</p>
 <pre><code class="language-python">for i in range(10):
@@ -104,7 +104,7 @@ def find_first_even(limit):
 </code></pre>
 <table><tbody><tr><th>Оператор</th><th>Действие</th><th>Что завершает</th></tr><tr><td><code>break</code></td><td>Выход из цикла</td><td>Только текущий цикл</td></tr><tr><td><code>continue</code></td><td>Пропуск итерации</td><td>Текущую итерацию цикла</td></tr><tr><td><code>return</code></td><td>Возврат значения</td><td>Всю функцию</td></tr></tbody></table>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="19-range.html" class="prev-link">← range()</a>

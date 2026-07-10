@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="int(), float(), str(), bool()" />
     <meta property="og:title" content="5. Приведение типов — Python: основы" />
     <meta property="og:description" content="int(), float(), str(), bool()" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Зачем нужно приведение типов?</h2>
 <p>Когда вы получаете данные от пользователя через <code>input()</code>, они всегда приходят в виде строки (<code>str</code>). Чтобы выполнять математические операции, строку нужно преобразовать в число.</p>
 <pre><code class="language-python">age_str = input(&quot;Сколько вам лет? &quot;)   # пользователь ввёл &quot;25&quot;
@@ -86,7 +86,7 @@ print(&quot;Частное:&quot;, a / b if b != 0 else &quot;на ноль де
 <li><code>int(input())</code> без проверки — если пользователь введёт буквы, программа упадёт. Используйте <code>try/except</code> (будет в уроке 10).</li>
 </ul>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="04-data-types.html" class="prev-link">← Типы данных</a>

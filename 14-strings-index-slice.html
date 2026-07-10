@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Индексы, [start:stop:step]" />
     <meta property="og:title" content="14. Строки: индексация и срезы — Python: основы" />
     <meta property="og:description" content="Индексы, [start:stop:step]" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Индексация строк</h2>
 <p>Каждый символ строки имеет <strong>индекс</strong> — порядковый номер позиции. Индексы начинаются с <code>0</code> (первый символ) и идут до <code>len(s) - 1</code> (последний символ).</p>
 <pre><code class="language-python">s = &quot;Python&quot;
@@ -212,7 +212,7 @@ print(tail == &quot;ing&quot;)                 # True
 <p><strong>⚠️ Важно:</strong> Синтаксис срезов <code>[start:stop:step]</code> работает не только для строк, но и для любых <strong>последовательностей</strong> — списков (<em>list</em>), кортежей (<em>tuple</em>) и других. Мы изучим списки и кортежи в одном из следующих уроков, но уже сейчас полезно знать, что срезы везде работают по одним и тем же правилам.</p>
 </blockquote>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="13-nested-structures.html" class="prev-link">← Вложенные структуры</a>

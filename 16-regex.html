@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="re: поиск, замена, группы, шаблоны" />
     <meta property="og:title" content="16. Регулярные выражения — Python: основы" />
     <meta property="og:description" content="re: поиск, замена, группы, шаблоны" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Что такое регулярные выражения</h2>
 <p>Регулярные выражения (regex, regexp) — это язык шаблонов для поиска и обработки текста. Вместо того чтобы писать сложный код с циклами и условиями, вы описываете <strong>шаблон</strong>, а движок регулярных выражений ищет совпадения за вас.</p>
 <pre><code class="language-python"># Без regex: проверка, является ли строка номером телефона
@@ -492,7 +492,7 @@ print(bool(re.search(r'\d{3}-\d{2}-\d{2}', &quot;Мой СНИЛС: 123-45-67&qu
 <li>Не усложняйте: для простой проверки подстроки используйте <code>in</code>, а не regex</li>
 </ul>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="15-string-ops.html" class="prev-link">← Операции над строками</a>

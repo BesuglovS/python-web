@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="threading, multiprocessing, async/await" />
     <meta property="og:title" content="45. Многопоточность и asyncio — Python: основы" />
     <meta property="og:description" content="threading, multiprocessing, async/await" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Введение</h2>
 <p>Когда программа выполняет задачи, которые можно делать параллельно (загрузка файлов, запросы к API, обработка данных), на помощь приходят многопоточность и асинхронность. Python предлагает три подхода: <code>threading</code> для I/O-задач, <code>multiprocessing</code> для CPU-задач и <code>asyncio</code> для асинхронного кода.</p>
 <p><strong>📌 На этом уроке вы узнаете:</strong></p>
@@ -83,7 +83,7 @@ async def main():
 <li><code>asyncio.gather()</code> — параллельный запуск нескольких корутин</li>
 </ul>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="44-generators.html" class="prev-link">← Генераторы</a>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="CREATE TABLE, INSERT, SELECT, параметризованные запросы" />
     <meta property="og:title" content="34. Базы данных SQLite — Python: основы" />
     <meta property="og:description" content="CREATE TABLE, INSERT, SELECT, параметризованные запросы" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Введение</h2>
 <p>SQLite — легковесная реляционная база данных, которая хранится в одном файле. Модуль <code>sqlite3</code> входит в стандартную библиотеку Python и позволяет выполнять SQL-запросы без установки сервера баз данных.</p>
 <p><strong>📌 На этом уроке вы узнаете:</strong></p>
@@ -88,7 +88,7 @@ conn.close()
 <li><code>fetchone()</code>, <code>fetchall()</code> — получение результатов SELECT</li>
 </ul>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="33-json-csv.html" class="prev-link">← JSON и CSV</a>

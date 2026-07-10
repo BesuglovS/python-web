@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="yield, ленивые вычисления, generator expressions" />
     <meta property="og:title" content="44. Генераторы — Python: основы" />
     <meta property="og:description" content="yield, ленивые вычисления, generator expressions" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Что такое генератор?</h2>
 <p>Генератор — это функция, которая выдаёт значения по одному с помощью <code>yield</code>. В отличие от <code>return</code>, <code>yield</code> не завершает функцию, а приостанавливает её до следующего запроса. Это экономит память.</p>
 <h2>yield vs return</h2>
@@ -84,7 +84,7 @@ for line in read_large_file(&quot;huge_log.txt&quot;):
         print(line)  # обрабатываем строки по одной, а не весь файл сразу
 </code></pre>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="43-decorators.html" class="prev-link">← Декораторы</a>

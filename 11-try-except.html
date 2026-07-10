@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="try, except, finally, raise" />
     <meta property="og:title" content="11. Обработка исключений — Python: основы" />
     <meta property="og:description" content="try, except, finally, raise" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Зачем нужна обработка ошибок?</h2>
 <p>Во время выполнения программы могут возникать ошибки (исключения): деление на ноль, неверный тип данных, отсутствующий файл. Если не обработать исключение — программа <strong>аварийно завершится</strong>.</p>
 <p>Python предоставляет механизм <code>try/except</code> для «перехвата» ошибок и безопасной реакции на них.</p>
@@ -195,7 +195,7 @@ except ValueError as original_error:
 </ol>
 <p># ВАШ КОД — напишите функцию safe_calculator() def safe_calculator(): try: a = float(input(&quot;Первое число: &quot;)) b = float(input(&quot;Второе число: &quot;)) # Ваш код здесь... except ValueError: print(&quot;Ошибка: нужно ввести число!&quot;) except ZeroDivisionError: print(&quot;Ошибка: на ноль делить нельзя!&quot;) safe_calculator() ▶ Запустить ↺ Сброс</p>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="10-conditional.html" class="prev-link">← Условный оператор + Отступы</a>

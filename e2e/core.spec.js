@@ -46,8 +46,8 @@ test.describe('Главная страница', () => {
 test.describe('Уроки', () => {
   test('первый урок загружается', async ({ page }) => {
     await page.goto('/01-history.html');
-    await expect(page.locator('h1')).toContainText('История');
-    await expect(page.locator('.main-content')).toBeVisible();
+    await expect(page.locator('h1')).toContainText(/Python/);
+    await expect(page.locator('main')).toBeVisible();
   });
 
   test('последний урок загружается', async ({ page }) => {

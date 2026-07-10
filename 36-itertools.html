@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="product, permutations, chain, groupby и другие функции" />
     <meta property="og:title" content="36. itertools — Python: основы" />
     <meta property="og:description" content="product, permutations, chain, groupby и другие функции" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Что такое itertools?</h2>
 <p>Модуль <code>itertools</code> — это встроенная библиотека Python, которая предоставляет быстрые и эффективные функции для работы с итераторами. Она особенно полезна для комбинаторных задач — перебора всех возможных комбинаций, перестановок, декартовых произведений.</p>
 <blockquote>
@@ -208,7 +208,7 @@ pairs = list(product(range(1, 4), repeat=2))
 <p><strong>⚠️ Важно:</strong> <strong>Совет:</strong> потренируйтесь вручную посчитать количество комбинаций для разных значений, а потом проверьте себя с помощью itertools. Это поможет лучше понять комбинаторику и сэкономит время на экзамене.</p>
 </blockquote>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="35-modules-import.html" class="prev-link">← Модули и import</a>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Математика, случайные числа" />
     <meta property="og:title" content="38. math и random — Python: основы" />
     <meta property="og:description" content="Математика, случайные числа" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Модуль math — математика в Python</h2>
 <p>Модуль <code>math</code> предоставляет доступ к основным математическим функциям и константам. Это стандартный модуль — устанавливать ничего не нужно.</p>
 <pre><code class="language-python">import math
@@ -156,7 +156,7 @@ print(generate_password(16))
 <h2>Итоги</h2>
 <table><tbody><tr><th>Модуль</th><th>Функция</th><th>Назначение</th></tr><tr><td>math</td><td><code>sqrt(x)</code></td><td>Квадратный корень</td></tr><tr><td>math</td><td><code>ceil/floor/trunc</code></td><td>Округление</td></tr><tr><td>math</td><td><code>sin/cos/tan</code></td><td>Тригонометрия (в радианах)</td></tr><tr><td>math</td><td><code>log/log10/log2</code></td><td>Логарифмы</td></tr><tr><td>math</td><td><code>pi, e, tau</code></td><td>Математические константы</td></tr><tr><td>random</td><td><code>randint(a, b)</code></td><td>Случайное целое [a, b]</td></tr><tr><td>random</td><td><code>choice(seq)</code></td><td>Случайный элемент</td></tr><tr><td>random</td><td><code>shuffle(list)</code></td><td>Перемешивание на месте</td></tr><tr><td>random</td><td><code>sample(seq, k)</code></td><td>k уникальных элементов</td></tr><tr><td>random</td><td><code>seed(n)</code></td><td>Фиксация зерна для повторяемости</td></tr></tbody></table>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="37-venv-pip.html" class="prev-link">← Виртуальные окружения и pip</a>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="GET, POST, работа с JSON-сервисами" />
     <meta property="og:title" content="48. Requests + API — Python: основы" />
     <meta property="og:description" content="GET, POST, работа с JSON-сервисами" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Что такое API?</h2>
 <p>API (Application Programming Interface) — способ взаимодействия программ друг с другом через HTTP-запросы. Библиотека <code>requests</code> — стандарт для отправки таких запросов в Python.</p>
 <pre><code class="language-python"># Установка
@@ -118,7 +118,7 @@ else:
     print(f&quot;Ошибка: {response.status_code}&quot;)
 </code></pre>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="47-pytest.html" class="prev-link">← Unit-тесты с pytest</a>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Аннотации типов, mypy" />
     <meta property="og:title" content="46. Type Hints — Python: основы" />
     <meta property="og:description" content="Аннотации типов, mypy" />
@@ -24,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content" id="main-content">
+        <main id="main-content">
           <h2>Что такое type hints?</h2>
 <p>Аннотации типов — способ указать, какого типа аргументы ожидает функция и что она возвращает. Python <strong>не проверяет</strong> типы во время выполнения, но IDE и линтеры используют их для подсказок.</p>
 <pre><code class="language-python"># Без аннотаций
@@ -87,7 +87,7 @@ def double(x: int) -&gt; int:
 double(&quot;hello&quot;)  # mypy: error: Argument 1 to &quot;double&quot; has incompatible type &quot;str&quot;
 </code></pre>
 
-        </div>
+        </main>
       </div>
       <footer class="topic-footer">
         <a href="45-threading-async.html" class="prev-link">← Многопоточность и asyncio</a>
