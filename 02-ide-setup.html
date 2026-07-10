@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Запуск в IDLE, установка, создание проекта" />
     <meta property="og:title" content="2. Настройка IDE — Python: основы" />
     <meta property="og:description" content="Запуск в IDLE, установка, создание проекта" />
@@ -11,9 +11,10 @@
     <title>Настройка IDE — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
+    <link rel="stylesheet" href="highlight-theme.min.css" />
   </head>
   <body data-lesson="2">
+    <a href="#main-content" class="skip-link">Перейти к содержанию</a>
     <div class="container">
       <header class="topic-header">
         <div id="breadcrumbs" class="breadcrumbs"></div>
@@ -23,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content">
+        <div class="main-content" id="main-content">
           <h2>Обзор IDLE, VS Code и PyCharm</h2>
 <table><tbody><tr><th>Характеристика</th><th>IDLE</th><th>VS Code</th><th>PyCharm</th></tr><tr><td>Разработчик</td><td>Python Software Foundation</td><td>Microsoft</td><td>JetBrains</td></tr><tr><td>Вес</td><td>Очень лёгкий (~10 МБ)</td><td>Лёгкий (~200 МБ)</td><td>Тяжёлый (~1 ГБ)</td></tr><tr><td>Лицензия</td><td>Бесплатно (Open Source)</td><td>Бесплатно (Open Source)</td><td>Community — бесплатно, Professional — платно</td></tr><tr><td>Python "из коробки"</td><td>Да (встроен в Python)</td><td>Требуется установка расширения</td><td>Полная поддержка сразу</td></tr><tr><td>Лучше всего подходит</td><td>Для обучения и простых скриптов</td><td>Для лёгких проектов, скриптов, веб-разработки</td><td>Для крупных проектов, Data Science, Django</td></tr></tbody></table>
 <p>Все IDE отлично подходят для изучения Python. Вы можете выбрать любую — разница для начинающего минимальна. Мы рассмотрим их чтобы вы могли принять взвешенное решение.</p>
@@ -184,7 +185,7 @@ deactivate
         <a href="03-variables.html" class="next-link">Далее: Переменные →</a>
       </footer>
     </div>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
+    <script defer src="highlight-py.min.js"></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

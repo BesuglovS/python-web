@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="json.dump/load, csv.reader/writer" />
     <meta property="og:title" content="33. JSON и CSV — Python: основы" />
     <meta property="og:description" content="json.dump/load, csv.reader/writer" />
@@ -11,9 +11,10 @@
     <title>JSON и CSV — Python: основы</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
+    <link rel="stylesheet" href="highlight-theme.min.css" />
   </head>
   <body data-lesson="33">
+    <a href="#main-content" class="skip-link">Перейти к содержанию</a>
     <div class="container">
       <header class="topic-header">
         <div id="breadcrumbs" class="breadcrumbs"></div>
@@ -23,7 +24,7 @@
       </header>
       <div class="content-layout">
         <aside id="toc"></aside>
-        <div class="main-content">
+        <div class="main-content" id="main-content">
           <h2>JSON — JavaScript Object Notation</h2>
 <p>JSON — самый популярный формат обмена данными. В Python данные преобразуются между объектами Python и JSON-строками:</p>
 <table><tbody><tr><th>Python</th><th>JSON</th></tr><tr><td><code>dict</code></td><td>object</td></tr><tr><td><code>list</code>, <code>tuple</code></td><td>array</td></tr><tr><td><code>str</code></td><td>string</td></tr><tr><td><code>int</code>, <code>float</code></td><td>number</td></tr><tr><td><code>True</code>, <code>False</code></td><td><code>true</code>, <code>false</code></td></tr><tr><td><code>None</code></td><td><code>null</code></td></tr></tbody></table>
@@ -149,7 +150,7 @@ print(&quot;Конвертация завершена!&quot;)
         <a href="34-sqlite3.html" class="next-link">Далее: Базы данных SQLite →</a>
       </footer>
     </div>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
+    <script defer src="highlight-py.min.js"></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>

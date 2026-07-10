@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Нет соединения — Python: основы</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <style>
+      .offline-page { display: flex; min-height: 80vh; align-items: center; justify-content: center; text-align: center; }
+      .offline-card { background: var(--bg-alt); padding: 48px; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 480px; }
+      .offline-icon { font-size: 64px; margin-bottom: 16px; }
+      .offline-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+      .offline-desc { color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+      .offline-retry { display: inline-block; padding: 12px 28px; background: var(--primary-gradient); color: #fff; border-radius: var(--radius-sm); text-decoration: none; font-weight: 600; transition: opacity var(--transition); }
+      .offline-retry:hover { opacity: 0.9; }
+    </style>
+  </head>
+  <body class="index-page">
+    <div class="container">
+      <div class="offline-page">
+        <div class="offline-card">
+          <div class="offline-icon">📡</div>
+          <h1 class="offline-title">Нет соединения</h1>
+          <p class="offline-desc">Похоже, вы отключились от интернета. Некоторые страницы могут быть недоступны. Попробуйте вернуться на главную или повторите попытку позже.</p>
+          <a href="index.html" class="offline-retry">← На главную</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

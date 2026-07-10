@@ -4,18 +4,22 @@
  * При установке кешируются только критически важные ресурсы.
  * HTML-страницы и JSON-данные кешируются при первом посещении.
  */
-const CACHE_NAME = 'python-web-v5';
+const CACHE_NAME = 'python-web-v6';
 const CRITICAL_ASSETS = [
   './',
   './index.html',
+  './offline.html',
   './style.css',
   './script.js',
   './config.js',
+  './repl.js',
+  './ga.js',
+  './highlight-py.min.js',
+  './highlight-theme.min.css',
   './lessons.json',
   './favicon.png',
-  './manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css'
+  './apple-touch-icon.png',
+  './manifest.json'
 ];
 
 // Установка: кешируем только критически важные ресурсы
@@ -77,7 +81,13 @@ self.addEventListener('fetch', (event) => {
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
           return response;
-        }).catch(() => cached);
+        }).catch(() => {
+          // Если HTML и нет сети — показываем offline-страницу
+          if (isHTML) {
+            return caches.match('./offline.html');
+          }
+          return cached;
+        });
 
         // Если есть в кеше — сразу отдаём, иначе ждём сеть
         return cached || networkFetch;

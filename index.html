@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="Изучайте Python с нуля — 50 интерактивных уроков с примерами кода, подсветкой синтаксиса и отслеживанием прогресса." />
     <meta property="og:title" content="Python — Основы программирования" />
     <meta property="og:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
@@ -23,8 +23,7 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <meta name="theme-color" content="#667eea" />
     <link rel="manifest" href="manifest.json" />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css" id="hljs-theme" integrity="sha384-BE+nmfgoK1j3fBxbLI64Jzf52Mx/QAyw+4O7GyPYevJnAyrljCoRtQkYNfCfuWPF" crossorigin="anonymous" />
+    <link rel="stylesheet" href="highlight-theme.min.css" id="hljs-theme" />
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -40,6 +39,7 @@
     </script>
   </head>
   <body class="index-page">
+    <a href="#main-content" class="skip-link">Перейти к содержанию</a>
     <div class="container index-container">
       <header class="index-header">
         <h1>🐍 <span>Python</span> — основы программирования</h1>
@@ -54,7 +54,7 @@
         </div>
       </header>
 
-      <nav class="index-nav">
+      <nav class="index-nav" id="main-content">
         
         <div class="section-group" data-section="intro" id="section-intro">
           <h2 class="section-title">📖 Введение</h2>
@@ -596,7 +596,7 @@
       </footer>
     </div>
 
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous" ></script>
+    <script defer src="highlight-py.min.js"></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
   </body>
