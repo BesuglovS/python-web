@@ -1,5 +1,7 @@
 const path = require("path");
 const { DateTime } = require("luxon");
+const CleanCSS = require("clean-css");
+const Terser = require("terser");
 
 const PROJECT = __dirname;
 const SRC = path.join(PROJECT, "src");
@@ -42,6 +44,35 @@ module.exports = function (eleventyConfig) {
         };
       }),
     }));
+  });
+
+  // Минификация CSS и JS через transform
+  eleventyConfig.addTransform("minify", async (content, outputPath) => {
+    if (!outputPath) return content;
+
+    // Минификация CSS
+    if (outputPath.endsWith(".css")) {
+      const result = new CleanCSS({ level: 2 }).minify(content);
+      if (result.errors.length) {
+        console.warn("CSS minify errors:", result.errors);
+      }
+      return result.styles || content;
+    }
+
+    // Минификация JS
+    if (outputPath.endsWith(".js")) {
+      const result = await Terser.minify(content, {
+        compress: { passes: 2 },
+        mangle: { reserved: ["escapeHtml", "__themeUtils"] },
+      });
+      if (result.error) {
+        console.warn("JS minify error:", result.error);
+        return content;
+      }
+      return result.code || content;
+    }
+
+    return content;
   });
 
   return {

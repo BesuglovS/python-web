@@ -6,10 +6,21 @@
   "scripts": {
     "convert": "node convert-lessons.js",
     "build": "npx @11ty/eleventy",
+    "build:prod": "npx @11ty/eleventy && node minify.js",
     "watch": "npx @11ty/eleventy --serve",
+    "minify": "node minify.js",
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
     "old-build": "node build.js",
     "old-watch": "node build.js --watch"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "clean-css": "^5.3.3",
+    "html-minifier-terser": "^7.2.0",
+    "http-server": "^14.1.1",
+    "terser": "^5.49.0"
+  }
 }

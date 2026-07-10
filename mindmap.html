@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdnjs.cloudflare.com www.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
   <meta name="description" content="Карта курса Python — визуальная схема всех тем и их взаимосвязей." />
   <title>🐍 Python — Карта курса (Mind Map)</title>
   <link rel="stylesheet" href="style.css" />
@@ -73,82 +73,6 @@
     🗺️ Python Web — Карта курса. Навигация по темам от простого к сложному.
   </footer>
 </div>
-<script>
-<!-- Динамическая загрузка карты курса из lessons.json -->
-(function () {
-  var container = document.getElementById('mm-container');
-  if (!container) return;
-
-  var stageEmoji = [
-    '📖', '📚', '🔀', '🔁', '🔤', '🔄', '⚙️', '🗂️', 'λ', '💾', '🧰', '🏗️', '🚀', '🌐'
-  ];
-
-  fetch('lessons.json')
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (data) {
-      var sections = data.sections;
-      if (!sections || !sections.length) throw new Error('No sections');
-
-      var html = '';
-      sections.forEach(function (section, si) {
-        var emoji = stageEmoji[si] || '📖';
-        var lessons = section.lessons;
-        if (!lessons || !lessons.length) return;
-
-        // Заголовок этапа
-        var firstNum = lessons[0].num;
-        var lastNum = lessons[lessons.length - 1].num;
-        var range = (firstNum === lastNum) ? ('урок ' + firstNum) : ('уроки ' + firstNum + '–' + lastNum);
-        html += '<div class="mm-stage">';
-        html += '  <h2>' + emoji + ' ' + section.title + ' (' + range + ')</h2>';
-
-        // Разбиваем уроки по строкам: max 3 в строке
-        var chunkSize = 3;
-        for (var i = 0; i < lessons.length; i += chunkSize) {
-          var chunk = lessons.slice(i, i + chunkSize);
-          html += '  <div class="mm-row"' + (i > 0 ? ' style="margin-top:12px;"' : '') + '>';
-          for (var j = 0; j < chunk.length; j++) {
-            var lesson = chunk[j];
-            if (j > 0) {
-              html += '    <span class="mm-arrow">→</span>';
-            }
-            html += '    <a href="' + lesson.file + '" class="mm-node">';
-            html += '      <span class="num">' + lesson.num + '</span>';
-            html += '      <div class="title">' + lesson.title + '</div>';
-            html += '      <div class="desc">' + (lesson.desc || '') + '</div>';
-            html += '    </a>';
-          }
-          html += '  </div>';
-        }
-
-        html += '</div>';
-      });
-
-      // Финальная секция
-      html += '<div class="mm-stage">';
-      html += '  <h2>🏁 Финальный этап</h2>';
-      html += '  <div class="mm-row">';
-      html += '    <a href="final-test.html" class="mm-node">';
-      html += '      <span class="num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">🏆</span>';
-      html += '      <div class="title">Итоговый тест</div><div class="desc">Проверка знаний</div>';
-      html += '    </a>';
-      html += '    <span class="mm-arrow">→</span>';
-      html += '    <a href="cheatsheets.html" class="mm-node">';
-      html += '      <span class="num" style="background:linear-gradient(135deg,#10b981,#059669);">📋</span>';
-      html += '      <div class="title">Шпаргалки</div><div class="desc">Краткие конспекты</div>';
-      html += '    </a>';
-      html += '  </div>';
-      html += '</div>';
-
-      container.innerHTML = html;
-    })
-    .catch(function (err) {
-      container.innerHTML = '<p style="text-align:center;color:red;padding:40px;">⚠️ Не удалось загрузить карту курса: ' + err.message + '</p>';
-    });
-})();
-</script>
+<script src="mindmap.js"></script>
 </body>
 </html>

@@ -169,8 +169,6 @@ ALLOWED_NODES = {
     # Starred
     'Starred',
     # PEP 604 union types (Python 3.10+)
-    'If',
-}
 
 # Стандартные модули разрешённые для импорта
 ALLOWED_IMPORTS = {
