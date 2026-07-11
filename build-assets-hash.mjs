@@ -85,12 +85,39 @@ for (const asset of ASSETS) {
 }
 
 // ─── 2. Обновляем ссылки во всех собранных файлах ───
+// Собираем паттерны замены: исходное имя + любые старые хэшированные версии → новый хэш
+const replacePatterns = []; // [{ re: RegExp, replacement: string }]
+for (const [asset, hashed] of Object.entries(hashes)) {
+  const ext = extname(asset);
+  const base = basename(asset, ext);
+  // Исходное имя (config.js)
+  replacePatterns.push({
+    re: new RegExp(
+      `(^|[/"'>\`\\s])${escapeRe(asset)}(?=["'<\\\`\\s]|$)`,
+      'g'
+    ),
+    replacement: `$1${hashed}`,
+  });
+  // Любое хэшированное имя, кроме текущего нового (config.XXXXXXXX.js)
+  replacePatterns.push({
+    re: new RegExp(
+      `(^|[/"'>\`\\s])${escapeRe(base)}\\.[a-f0-9]{8}\\.${escapeRe(ext.slice(1))}(?=["'<\\\`\\s]|$)`,
+      'g'
+    ),
+    replacement: (match, pre) => {
+      const found = match.slice(pre.length);
+      // Не заменяем, если это уже новый хэш
+      return found === hashed ? match : pre + hashed;
+    },
+  });
+}
+
 function rewriteFile(file) {
   const content = readFileSync(file, 'utf-8');
-  const keys = Object.keys(hashes).map(escapeRe);
-  if (keys.length === 0) return;
-  const re = new RegExp(`(^|[/"'>\`\\s])(${keys.join('|')})(?=["'<\\\`\\s]|$)`, 'g');
-  const next = content.replace(re, (m, pre, asset) => pre + hashes[asset]);
+  let next = content;
+  for (const { re, replacement } of replacePatterns) {
+    next = next.replace(re, replacement);
+  }
   if (next !== content) writeFileSync(file, next, 'utf-8');
 }
 

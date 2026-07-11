@@ -105,7 +105,7 @@ export function initProgressTracking() {
   const headerParagraph = header.querySelector('p');
   if (headerParagraph) {
     const count = completedLessons.length;
-    const totalLessons = typeof TOTAL_LESSONS !== 'undefined' ? TOTAL_LESSONS : 50;
+    const totalLessons = typeof window.TOTAL_LESSONS !== 'undefined' ? window.TOTAL_LESSONS : 50;
     const pct = Math.round((count / totalLessons) * 100);
 
     if (headerParagraph.querySelector('.progress-info')) {
@@ -157,11 +157,11 @@ export function initProgressTracking() {
   }
 
   // Complexity labels
-  if (typeof COMPLEXITY_LABELS !== 'undefined') {
+  if (typeof window.COMPLEXITY_LABELS !== 'undefined') {
     document.querySelectorAll('.meta-complexity').forEach(function (el) {
       const level = el.getAttribute('data-level');
-      if (level && COMPLEXITY_LABELS[level]) {
-        el.textContent = COMPLEXITY_LABELS[level];
+      if (level && window.COMPLEXITY_LABELS[level]) {
+        el.textContent = window.COMPLEXITY_LABELS[level];
       }
     });
   }
@@ -178,8 +178,8 @@ export function initProgressTracking() {
     }
 
     const lessonNum = parseInt(card.getAttribute('data-lesson'));
-    if (typeof LESSON_META !== 'undefined') {
-      const meta = LESSON_META[lessonNum];
+    if (typeof window.LESSON_META !== 'undefined') {
+      const meta = window.LESSON_META[lessonNum];
       if (meta) {
         const infoDiv = card.querySelector('.topic-info');
         if (infoDiv && !infoDiv.querySelector('.topic-meta')) {

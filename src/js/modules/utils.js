@@ -68,8 +68,8 @@ export function createContestBadge(lessonNum) {
  * Create meta info element (duration + complexity)
  */
 export function createMetaInfo(duration, complexity) {
-  if (typeof COMPLEXITY_LABELS === 'undefined') return null;
-  const label = COMPLEXITY_LABELS[complexity] || complexity;
+  if (typeof window.COMPLEXITY_LABELS === 'undefined') return null;
+  const label = window.COMPLEXITY_LABELS[complexity] || complexity;
   const metaDiv = document.createElement('div');
   metaDiv.className = 'topic-meta';
 

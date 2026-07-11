@@ -130,6 +130,13 @@ const COMPLEXITY_LABELS = {
   advanced: '📙 Продвинутый',
 };
 
+// Expose globals to window for module access
+window.THEORY_CONTESTS = THEORY_CONTESTS;
+window.CONTEST_BASE_URL = CONTEST_BASE_URL;
+window.TOTAL_LESSONS = TOTAL_LESSONS;
+window.LESSON_META = LESSON_META;
+window.COMPLEXITY_LABELS = COMPLEXITY_LABELS;
+
 // ─── Helper: convert progress array to lesson-number lookup ───
 // Progress is stored as ["01-history.html", "02-variables.html", ...]
 // This builds {"1": true, "2": true, ...} for badge checks.

@@ -7,6 +7,12 @@
 export function initContestLinkInjection() {
   if (window.THEORY_CONTESTS === undefined || window.CONTEST_BASE_URL === undefined) return;
 
+  // На главной странице добавляем значки контестов на карточки уроков
+  if (document.body.classList.contains('index-page')) {
+    initIndexPageContestBadges();
+    return;
+  }
+
   const pageName = window.location.pathname.split('/').pop() || '';
   const lessonAttr = document.body.getAttribute('data-lesson');
   let lessonNum = parseInt(lessonAttr, 10);
@@ -61,4 +67,38 @@ export function initContestLinkInjection() {
       }
     }, 500);
   }
+}
+
+/**
+ * Добавляет значки контестов (🏆) на карточки уроков главной страницы.
+ * Для каждого урока, у которого есть соответствующий contest ID в THEORY_CONTESTS,
+ * добавляет кликабельную ссылку-значок в правый нижний угол карточки.
+ */
+function initIndexPageContestBadges() {
+  setTimeout(function () {
+    var cards = document.querySelectorAll('.topic-card[data-lesson]');
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      // Пропускаем, если значок уже добавлен
+      if (card.querySelector('.contest-badge')) continue;
+
+      var lessonNum = parseInt(card.getAttribute('data-lesson'), 10);
+      if (isNaN(lessonNum)) continue;
+
+      var contestId = window.THEORY_CONTESTS[lessonNum];
+      if (!contestId) continue;
+
+      var contestUrl = window.CONTEST_BASE_URL + contestId;
+
+      var badge = document.createElement('a');
+      badge.className = 'contest-badge';
+      badge.href = contestUrl;
+      badge.target = '_blank';
+      badge.rel = 'noopener noreferrer';
+      badge.title = 'Задачи контеста №' + contestId;
+      badge.textContent = '🏆';
+
+      card.appendChild(badge);
+    }
+  }, 500);
 }
