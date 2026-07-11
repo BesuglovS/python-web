@@ -60,8 +60,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install coverage
-        run: pip install coverage
+      - name: Install coverage and pytest
+        run: pip install coverage pytest
 
       - name: Run Python tests with coverage
         run: python -m coverage run -m pytest tests/test_ast_validator.py -v

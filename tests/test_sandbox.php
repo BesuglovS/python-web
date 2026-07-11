@@ -70,11 +70,12 @@ echo "\n=== sandbox_build_ast_command() ===\n";
 
 $imports = ['math', 'json'];
 $astCmd = sandbox_build_ast_command($imports);
-assert_test('Возвращает строку', is_string($astCmd));
-assert_test('Содержит python команду', str_contains($astCmd, 'python') || str_contains($astCmd, 'python3'));
-assert_test('Содержит ast_validator.py', str_contains($astCmd, 'ast_validator.py'));
-assert_test('Содержит -I -S флаги', str_contains($astCmd, '-I') && str_contains($astCmd, '-S'));
-assert_test('Содержит JSON с модулями', str_contains($astCmd, 'math') && str_contains($astCmd, 'json'));
+assert_test('Возвращает массив', is_array($astCmd));
+assert_test('Содержит python команду в первом элементе', isset($astCmd[0]) && ($astCmd[0] === 'python' || $astCmd[0] === 'python3'));
+assert_test('Содержит -I флаг', in_array('-I', $astCmd, true));
+assert_test('Содержит -S флаг', in_array('-S', $astCmd, true));
+assert_test('Содержит ast_validator.py', in_array('ast_validator.py', array_map('basename', $astCmd)));
+assert_test('Содержит JSON с модулями', str_contains(implode(' ', $astCmd), 'math') && str_contains(implode(' ', $astCmd), 'json'));
 
 echo "\n=== sandbox_reject_ast() — subprocess test ===\n";
 
@@ -127,7 +128,7 @@ if (!$astWorks) {
     assert_test('Сообщается о запрещённом импорте', str_contains($error, 'os'));
 
     // Тест с разрешённым импортом
-    [$ok, $error] = sandbox_validate_ast('import math\nprint(math.pi)', ['math']);
+    [$ok, $error] = sandbox_validate_ast("import math\nprint(math.pi)", ['math']);
     assert_test('import math проходит', $ok === true);
 }
 
