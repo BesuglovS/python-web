@@ -39,7 +39,7 @@
     "@playwright/test": "^1.61.1",
     "@types/luxon": "^3.4.2",
     "@types/node": "^22.5.0",
-    "@vitest/coverage-v8": "^3.2.7",
+    "@vitest/coverage-v8": "^4.1.10",
     "clean-css": "^5.3.3",
     "esbuild": "^0.28.1",
     "eslint": "^9.28.0",
