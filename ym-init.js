@@ -2,11 +2,17 @@
  * Yandex.Metrika initialization
  * Loaded as external script to satisfy CSP (no 'unsafe-inline').
  */
-(function(m, e, t, r, i, k, a) {
-  m[i] = m[i] || function() { (m[i].a = m[i].a || []).push(arguments); };
+(function (m, e, t, r, i, k, a) {
+  m[i] =
+    m[i] ||
+    function () {
+      (m[i].a = m[i].a || []).push(arguments);
+    };
   m[i].l = 1 * new Date();
   for (let j = 0; j < document.scripts.length; j++) {
-    if (document.scripts[j].src === r) { return; }
+    if (document.scripts[j].src === r) {
+      return;
+    }
   }
   k = e.createElement(t);
   a = e.getElementsByTagName(t)[0];
@@ -22,5 +28,5 @@ ym(110596777, 'init', {
   referrer: document.referrer,
   url: location.href,
   accurateTrackBounce: true,
-  trackLinks: true
+  trackLinks: true,
 });

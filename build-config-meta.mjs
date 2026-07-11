@@ -35,7 +35,11 @@ const allLines = config.split('\n');
 let startIdx = -1;
 let endIdx = -1;
 for (let i = 0; i < allLines.length; i++) {
-  if (allLines[i].includes('// LESSON_META генерируется из lessons.json скриптом build-config-meta.mjs.')) {
+  if (
+    allLines[i].includes(
+      '// LESSON_META генерируется из lessons.json скриптом build-config-meta.mjs.',
+    )
+  ) {
     startIdx = i;
   }
   if (startIdx !== -1 && allLines[i].trim() === '};' && i > startIdx + 1) {
@@ -63,4 +67,6 @@ const newBlock = [
 const newLines = [...allLines.slice(0, startIdx), ...newBlock, ...allLines.slice(endIdx + 1)];
 
 writeFileSync(configPath, newLines.join('\n'), 'utf-8');
-console.log(`✔ LESSON_META обновлён в config.js: ${Object.keys(meta).length} уроков из lessons.json`);
+console.log(
+  `✔ LESSON_META обновлён в config.js: ${Object.keys(meta).length} уроков из lessons.json`,
+);

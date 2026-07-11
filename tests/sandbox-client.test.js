@@ -31,12 +31,7 @@ describe('runSandbox', () => {
       ok: true,
       json: { ok: true, stdout: 'out', stderr: '', exit_code: 0 },
     });
-    await runSandbox(
-      makeEl(),
-      'x = (a < b) if (b < c) else (c < a)',
-      'in < put',
-      5,
-    );
+    await runSandbox(makeEl(), 'x = (a < b) if (b < c) else (c < a)', 'in < put', 5);
     expect(captured.url).toContain('sandbox/run.php');
     const body = JSON.parse(captured.opts.body);
     expect(body.code).toBe('x = (a < b) if (b < c) else (c < a)');

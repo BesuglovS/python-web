@@ -22,7 +22,8 @@ const SKIP_DIRS = new Set([
 ]);
 
 // Файлы сборки/инструментария — не кэшируем как контент сайта
-const SKIP_FILES = /^(playwright\.config|build-|minify|eslint\.config|vitest\.config)\.|package\.json|package-lock\.json|\.mjs$|tsconfig\.json|lighthouserc\.json/;
+const SKIP_FILES =
+  /^(playwright\.config|build-|minify|eslint\.config|vitest\.config)\.|package\.json|package-lock\.json|\.mjs$|tsconfig\.json|lighthouserc\.json/;
 
 // Контент-хэшированные копии ассетов (style.3647cdfb.css и т.п.) — их
 // не сканируем: ссылки на них появляются в PRECACHE через rewrite build-assets-hash.mjs.

@@ -19,7 +19,7 @@ module.exports = function (eleventyConfig) {
 
   // Данные
   eleventyConfig.addPassthroughCopy({ 'lessons.json': 'lessons.json' });
-  eleventyConfig.addPassthroughCopy({ 'quizzes': 'quizzes' });
+  eleventyConfig.addPassthroughCopy({ quizzes: 'quizzes' });
 
   // Статика
   eleventyConfig.addPassthroughCopy({ '.htaccess': '.htaccess' });
@@ -30,7 +30,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ 'manifest.json': 'manifest.json' });
 
   // PHP-песочница
-  eleventyConfig.addPassthroughCopy({ 'sandbox': 'sandbox' });
+  eleventyConfig.addPassthroughCopy({ sandbox: 'sandbox' });
 
   // Фильтр для форматирования дат
   eleventyConfig.addFilter('readableDate', (dateObj) => {
