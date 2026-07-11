@@ -1,18 +1,18 @@
 ---
-title: "break и continue"
+title: 'break и continue'
 lesson: 20
-description: "Прерывание и пропуск итераций"
+description: 'Прерывание и пропуск итераций'
 duration: 8
-complexity: "2"
-badge: "flow_controller"
-file: "20-break-continue.html"
-layout: "layout.njk"
-permalink: "20-break-continue.html"
-subtitle: "Управление потоком цикла — прерывание и пропуск итераций"
-prevUrl: "19-range.html"
-prevTitle: "range()"
-nextUrl: "21-nested-loops.html"
-nextTitle: "Вложенные циклы"
+complexity: '2'
+badge: 'flow_controller'
+file: '20-break-continue.html'
+layout: 'layout.njk'
+permalink: '20-break-continue.html'
+subtitle: 'Управление потоком цикла — прерывание и пропуск итераций'
+prevUrl: '19-range.html'
+prevTitle: 'range()'
+nextUrl: '21-nested-loops.html'
+nextTitle: 'Вложенные циклы'
 ---
 
 ## break: прерывание цикла
@@ -46,7 +46,8 @@ for char in text:
 else:
     print(f"{search} не найден")
 ```
-> **⚠️ Важно:** **for...else:** блок `else` выполняется только если цикл завершился *без* `break`.
+
+> **⚠️ Важно:** **for...else:** блок `else` выполняется только если цикл завершился _без_ `break`.
 
 ## break в while
 
@@ -117,4 +118,5 @@ def find_first_even(limit):
   return num  # завершает функцию
     return None
 ```
+
 <table><tbody><tr><th>Оператор</th><th>Действие</th><th>Что завершает</th></tr><tr><td><code>break</code></td><td>Выход из цикла</td><td>Только текущий цикл</td></tr><tr><td><code>continue</code></td><td>Пропуск итерации</td><td>Текущую итерацию цикла</td></tr><tr><td><code>return</code></td><td>Возврат значения</td><td>Всю функцию</td></tr></tbody></table>

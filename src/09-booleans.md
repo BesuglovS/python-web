@@ -1,18 +1,18 @@
 ---
-title: "Булевы переменные"
+title: 'Булевы переменные'
 lesson: 9
-description: "True, False, логические операции"
+description: 'True, False, логические операции'
 duration: 12
-complexity: "1"
-badge: "bool_master"
-file: "09-booleans.html"
-layout: "layout.njk"
-permalink: "09-booleans.html"
-subtitle: "True, False, bool(), truthy и falsy значения. Логические операторы"
-prevUrl: "08-number-ops.html"
-prevTitle: "Операции над числами"
-nextUrl: "10-conditional.html"
-nextTitle: "Условный оператор"
+complexity: '1'
+badge: 'bool_master'
+file: '09-booleans.html'
+layout: 'layout.njk'
+permalink: '09-booleans.html'
+subtitle: 'True, False, bool(), truthy и falsy значения. Логические операторы'
+prevUrl: '08-number-ops.html'
+prevTitle: 'Операции над числами'
+nextUrl: '10-conditional.html'
+nextTitle: 'Условный оператор'
 ---
 
 ## Тип bool
@@ -44,6 +44,7 @@ print(bool(1))        # True
 print(bool(-1))       # True
 print(bool("text"))   # True
 ```
+
 <table><tbody><tr><th>Falsy (→ False)</th><th>Truthy (→ True)</th></tr><tr><td><code>None</code></td><td>Любое ненулевое число</td></tr><tr><td><code>0</code>, <code>0.0</code></td><td>Непустая строка</td></tr><tr><td>Пустая строка <code>""</code></td><td><code>True</code></td></tr></tbody></table>
 > **💡 Совет:** **Почему это важно?** Falsy/truthy значения позволяют писать лаконичные проверки: `if name:` вместо `if name != "":`
 
@@ -65,9 +66,9 @@ print(not "")          # True (пустая строка — falsy)
 
 **Правила:**
 
--   `and` — возвращает первое falsy-значение или последний операнд
--   `or` — возвращает первое truthy-значение или последний операнд
--   `not` — инвертирует булево значение
+- `and` — возвращает первое falsy-значение или последний операнд
+- `or` — возвращает первое truthy-значение или последний операнд
+- `not` — инвертирует булево значение
 
 ## Булевы переменные в условиях
 
@@ -106,4 +107,5 @@ print(True or True and False)  # True: True and False → False, затем True
 # Скобки для ясности
 print(True or (True and False))  # True — то же самое, но понятнее
 ```
+
 > **💡 Совет:** **Совет:** всегда используйте скобки в сложных выражениях, даже если знаете приоритет. Код должен быть понятен другим.

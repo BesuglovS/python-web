@@ -1,18 +1,18 @@
 ---
-title: "Type Hints"
+title: 'Type Hints'
 lesson: 46
-description: "Аннотации типов, mypy"
+description: 'Аннотации типов, mypy'
 duration: 10
-complexity: "2"
-badge: "type_hinter"
-file: "46-type-hints.html"
-layout: "layout.njk"
-permalink: "46-type-hints.html"
-subtitle: "Улучшаем читаемость кода с помощью аннотаций типов"
-prevUrl: "45-threading-async.html"
-prevTitle: "Многопоточность и asyncio"
-nextUrl: "47-pytest.html"
-nextTitle: "Unit-тесты с pytest"
+complexity: '2'
+badge: 'type_hinter'
+file: '46-type-hints.html'
+layout: 'layout.njk'
+permalink: '46-type-hints.html'
+subtitle: 'Улучшаем читаемость кода с помощью аннотаций типов'
+prevUrl: '45-threading-async.html'
+prevTitle: 'Многопоточность и asyncio'
+nextUrl: '47-pytest.html'
+nextTitle: 'Unit-тесты с pytest'
 ---
 
 ## Что такое type hints?
@@ -76,9 +76,9 @@ def process(value: Union[int, str]) -> str:
 
 ## Практическая ценность
 
--   IDE (VS Code, PyCharm) показывает автодополнение и предупреждения
--   Код становится самодокументированным
--   Инструменты типа `mypy` находят ошибки до запуска
+- IDE (VS Code, PyCharm) показывает автодополнение и предупреждения
+- Код становится самодокументированным
+- Инструменты типа `mypy` находят ошибки до запуска
 
 ```python
 # mypy найдёт ошибку:

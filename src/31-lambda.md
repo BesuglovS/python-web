@@ -1,18 +1,18 @@
 ---
-title: "lambda-функции"
+title: 'lambda-функции'
 lesson: 31
-description: "lambda, map(), filter(), sorted()"
+description: 'lambda, map(), filter(), sorted()'
 duration: 12
-complexity: "3"
-badge: "lambda_wizard"
-file: "31-lambda.html"
-layout: "layout.njk"
-permalink: "31-lambda.html"
-subtitle: "Анонимные однострочные функции в Python"
-prevUrl: "30-list-comprehensions.html"
-prevTitle: "Списочные выражения"
-nextUrl: "32-files.html"
-nextTitle: "Файлы: чтение и запись"
+complexity: '3'
+badge: 'lambda_wizard'
+file: '31-lambda.html'
+layout: 'layout.njk'
+permalink: '31-lambda.html'
+subtitle: 'Анонимные однострочные функции в Python'
+prevUrl: '30-list-comprehensions.html'
+prevTitle: 'Списочные выражения'
+nextUrl: '32-files.html'
+nextTitle: 'Файлы: чтение и запись'
 ---
 
 ## Что такое lambda-функция?
@@ -119,6 +119,7 @@ print(pairs)  # [(3, 2), (1, 5), (2, 8)]
 ## Когда НЕ использовать lambda
 
 > **💡 Совет:** **Правило:** если логика занимает более одной строки или требует условий с `if/elif/else`, используйте обычную функцию с `def`. Lambda — для коротких, простых выражений.
+
 ```python
 # ПЛОХО: слишком сложная lambda (нечитаемо!)
 process = lambda x: x**2 if x > 0 else x**3 if x < 0 else 0

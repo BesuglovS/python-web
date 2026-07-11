@@ -1,18 +1,18 @@
 ---
 title: 'ООП: введение'
 lesson: 41
-description: "Классы, объекты, __init__, self"
+description: 'Классы, объекты, __init__, self'
 duration: 15
-complexity: "3"
-badge: "oop_master"
-file: "41-oop-intro.html"
-layout: "layout.njk"
-permalink: "41-oop-intro.html"
-subtitle: "Классы, объекты, конструктор __init__, методы, self — первые шаги в ООП"
-prevUrl: "40-numpy-pandas.html"
-prevTitle: "NumPy и Pandas"
-nextUrl: "42-inheritance.html"
-nextTitle: "Наследование и полиморфизм"
+complexity: '3'
+badge: 'oop_master'
+file: '41-oop-intro.html'
+layout: 'layout.njk'
+permalink: '41-oop-intro.html'
+subtitle: 'Классы, объекты, конструктор __init__, методы, self — первые шаги в ООП'
+prevUrl: '40-numpy-pandas.html'
+prevTitle: 'NumPy и Pandas'
+nextUrl: '42-inheritance.html'
+nextTitle: 'Наследование и полиморфизм'
 ---
 
 ## Что такое ООП и зачем оно нужно?
@@ -21,9 +21,9 @@ nextTitle: "Наследование и полиморфизм"
 
 До сих пор мы писали процедурный код: функции отдельно, данные отдельно. С ростом программы это становится неудобно:
 
--   Трудно отслеживать, какие данные к какой функции относятся
--   Легко запутаться в глобальных переменных
--   Код плохо переиспользуется
+- Трудно отслеживать, какие данные к какой функции относятся
+- Легко запутаться в глобальных переменных
+- Код плохо переиспользуется
 
 ООП решает эти проблемы, группируя связанные данные и функции в **классы**.
 
@@ -40,7 +40,7 @@ class Car:
 my_car = Car()
 friends_car = Car()
 
-print(type(my_car))      # 
+print(type(my_car))      #
 print(type(friends_car)) #  — оба одного класса
 ```
 
@@ -80,12 +80,12 @@ class Car:
         self.model = model
         self.year = year
         self.odometer = 0  # начальный пробег
-    
+
     def drive(self, km):
         """Проехать км километров."""
         self.odometer += km
         print(f"Проехали {km} км. Пробег: {self.odometer} км")
-    
+
     def info(self):
         """Вернуть информацию о машине."""
         return f"{self.brand} {self.model} ({self.year})"
@@ -101,7 +101,7 @@ car.drive(80)          # Проехали 80 км. Пробег: 230 км
 ```python
 class Car:
     wheels = 4  # атрибут КЛАССА — общий для всех
-    
+
     def __init__(self, brand):
         self.brand = brand  # атрибут ЭКЗЕМПЛЯРА — у каждого свой
 
@@ -125,7 +125,7 @@ class Student:
         self.name = name
         self.age = age
         self.grades = []  # список оценок
-    
+
     def add_grade(self, grade):
         """Добавить оценку (2-5)."""
         if 2 <= grade <= 5:
@@ -133,13 +133,13 @@ class Student:
   print(f"Оценка {grade} добавлена для {self.name}")
         else:
   print(f"Ошибка: оценка {grade} недопустима. Допустимы 2-5.")
-    
+
     def average(self):
         """Средний балл."""
         if not self.grades:
   return 0
         return sum(self.grades) / len(self.grades)
-    
+
     def info(self):
         """Полная информация о студенте."""
         return f"{self.name}, {self.age} лет, средний балл: {self.average():.2f}"
@@ -162,15 +162,15 @@ class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-    
+
     def __str__(self):
         """Вызывается при print() и str()."""
         return f"Point({self.x}, {self.y})"
-    
+
     def __repr__(self):
         """Вызывается при repr() и в интерактивной консоли."""
         return f"Point({self.x}, {self.y})"
-    
+
     def __eq__(self, other):
         """Вызывается при сравнении ==."""
         if not isinstance(other, Point):
@@ -188,11 +188,11 @@ print(p1 == p3)     # False
 
 ## Итоги
 
--   `class` — создаёт новый класс (чертёж объектов)
--   `__init__(self, ...)` — конструктор, инициализирует объект
--   `self` — первый параметр всех методов, ссылка на сам объект
--   Методы — обычные функции внутри класса, работают с данными объекта через `self`
--   Атрибуты класса — общие для всех экземпляров
--   Атрибуты экземпляра (через `self.`) — у каждого свои
--   Специальные методы (`__str__`, `__eq__`, etc.) — встроенное поведение
--   ООП помогает организовать код, когда программа вырастает за пределы одного файла
+- `class` — создаёт новый класс (чертёж объектов)
+- `__init__(self, ...)` — конструктор, инициализирует объект
+- `self` — первый параметр всех методов, ссылка на сам объект
+- Методы — обычные функции внутри класса, работают с данными объекта через `self`
+- Атрибуты класса — общие для всех экземпляров
+- Атрибуты экземпляра (через `self.`) — у каждого свои
+- Специальные методы (`__str__`, `__eq__`, etc.) — встроенное поведение
+- ООП помогает организовать код, когда программа вырастает за пределы одного файла

@@ -1,18 +1,18 @@
 ---
-title: "split() и join()"
+title: 'split() и join()'
 lesson: 29
-description: "Разделение и объединение строк"
+description: 'Разделение и объединение строк'
 duration: 8
-complexity: "2"
-badge: "string_splitter"
-file: "29-split-join.html"
-layout: "layout.njk"
-permalink: "29-split-join.html"
-subtitle: "Разделение и объединение строк"
-prevUrl: "28-dicts.html"
-prevTitle: "Словари"
-nextUrl: "30-list-comprehensions.html"
-nextTitle: "Списочные выражения"
+complexity: '2'
+badge: 'string_splitter'
+file: '29-split-join.html'
+layout: 'layout.njk'
+permalink: '29-split-join.html'
+subtitle: 'Разделение и объединение строк'
+prevUrl: '28-dicts.html'
+prevTitle: 'Словари'
+nextUrl: '30-list-comprehensions.html'
+nextTitle: 'Списочные выражения'
 ---
 
 ## split() — разделение строки

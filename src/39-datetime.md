@@ -1,29 +1,29 @@
 ---
-title: "datetime"
+title: 'datetime'
 lesson: 39
-description: "Даты, время, timedelta"
+description: 'Даты, время, timedelta'
 duration: 10
-complexity: "2"
-badge: "time_traveler"
-file: "39-datetime.html"
-layout: "layout.njk"
-permalink: "39-datetime.html"
+complexity: '2'
+badge: 'time_traveler'
+file: '39-datetime.html'
+layout: 'layout.njk'
+permalink: '39-datetime.html'
 subtitle: 'Работа с датами и временем: сейчас, завтра, через неделю, в любом формате'
-prevUrl: "38-math-random.html"
-prevTitle: "Модули math и random"
-nextUrl: "40-numpy-pandas.html"
-nextTitle: "NumPy и Pandas"
+prevUrl: '38-math-random.html'
+prevTitle: 'Модули math и random'
+nextUrl: '40-numpy-pandas.html'
+nextTitle: 'NumPy и Pandas'
 ---
 
 ## Зачем нужен datetime?
 
 Модуль `datetime` — основной инструмент Python для работы с датами и временем. Он входит в стандартную библиотеку и позволяет:
 
--   Получать текущую дату и время
--   Форматировать даты в любом виде
--   Разбирать даты из строк
--   Вычислять разницу между датами
--   Работать с часовыми поясами (через `zoneinfo` в Python 3.9+)
+- Получать текущую дату и время
+- Форматировать даты в любом виде
+- Разбирать даты из строк
+- Вычислять разницу между датами
+- Работать с часовыми поясами (через `zoneinfo` в Python 3.9+)
 
 ## Основные классы модуля datetime
 
@@ -83,11 +83,12 @@ from datetime import datetime
 
 now = datetime.now()
 
-print(now.strftime("%d.%m.%Y"))           # 23.06.2026
-print(now.strftime("%H:%M:%S"))            # 14:30:15
-print(now.strftime("%d %B %Y года, %A"))  # 23 June 2026 года, Tuesday
-print(now.strftime("%Y-%m-%d %H:%M"))     # 2026-06-23 14:30 (ISO-формат)
-```
+print(now.strftime("%d.%m.%Y")) # 23.06.2026
+print(now.strftime("%H:%M:%S")) # 14:30:15
+print(now.strftime("%d %B %Y года, %A")) # 23 June 2026 года, Tuesday
+print(now.strftime("%Y-%m-%d %H:%M")) # 2026-06-23 14:30 (ISO-формат)
+
+````
 
 ## strptime() — разбор строки в дату
 
@@ -109,7 +110,7 @@ print(dt)  # 2026-06-23 14:30:00
 # Разбор нестандартного формата
 dt2 = datetime.strptime("23 June 2026, 2:30 PM", "%d %B %Y, %I:%M %p")
 print(dt2)  # 2026-06-23 14:30:00
-```
+````
 
 ## timedelta — разница между датами
 
@@ -151,12 +152,12 @@ def calculate_age(birth_date_str):
     """Считает возраст по дате рождения (формат ДД.ММ.ГГГГ)."""
     birth = datetime.strptime(birth_date_str, "%d.%m.%Y")
     today = date.today()
-    
+
     age = today.year - birth.year
     # Проверяем, был ли день рождения в этом году
     if today.month < birth.month or (today.month == birth.month and today.day < birth.day):
         age -= 1
-    
+
     return age
 
 print(f"Возраст: {calculate_age('15.05.1995')} лет")
@@ -165,10 +166,10 @@ print(f"Возраст: {calculate_age('15.05.1995')} лет")
 
 ## Итоги
 
--   `datetime.now()` — текущие дата и время
--   `date.today()` — только сегодняшняя дата
--   `strftime(шаблон)` — дата → строка по формату
--   `strptime(строка, шаблон)` — строка → дата
--   `timedelta` — разница между датами, арифметика с датами
--   Коды форматирования: `%Y %m %d %H %M %S` — основа
--   `.weekday()` — день недели (0 = понедельник)
+- `datetime.now()` — текущие дата и время
+- `date.today()` — только сегодняшняя дата
+- `strftime(шаблон)` — дата → строка по формату
+- `strptime(строка, шаблон)` — строка → дата
+- `timedelta` — разница между датами, арифметика с датами
+- Коды форматирования: `%Y %m %d %H %M %S` — основа
+- `.weekday()` — день недели (0 = понедельник)

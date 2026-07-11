@@ -1,18 +1,18 @@
 ---
-title: "Наследование"
+title: 'Наследование'
 lesson: 42
-description: "class Child(Parent), super(), переопределение"
+description: 'class Child(Parent), super(), переопределение'
 duration: 15
-complexity: "3"
-badge: "inheritance_guru"
-file: "42-inheritance.html"
-layout: "layout.njk"
-permalink: "42-inheritance.html"
-subtitle: "super(), переопределение методов, полиморфизм"
-prevUrl: "41-oop-intro.html"
-prevTitle: "Введение в ООП"
-nextUrl: "43-decorators.html"
-nextTitle: "Декораторы"
+complexity: '3'
+badge: 'inheritance_guru'
+file: '42-inheritance.html'
+layout: 'layout.njk'
+permalink: '42-inheritance.html'
+subtitle: 'super(), переопределение методов, полиморфизм'
+prevUrl: '41-oop-intro.html'
+prevTitle: 'Введение в ООП'
+nextUrl: '43-decorators.html'
+nextTitle: 'Декораторы'
 ---
 
 ## Что такое наследование?
@@ -146,6 +146,7 @@ print(duck.fly())    # Я лечу!
 print(duck.swim())   # Я плыву!
 print(duck.speak())  # Кря!
 ```
+
 > **💡 Совет:** **MRO (Method Resolution Order):** Python ищет методы слева направо по цепочке наследования.
 
 ## isinstance() и issubclass()

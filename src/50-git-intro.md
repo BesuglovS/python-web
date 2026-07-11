@@ -1,16 +1,16 @@
 ---
 title: 'Git: введение'
 lesson: 50
-description: "Коммиты, ветки, GitHub, .gitignore"
+description: 'Коммиты, ветки, GitHub, .gitignore'
 duration: 12
-complexity: "2"
-badge: "git_master"
-file: "50-git-intro.html"
-layout: "layout.njk"
-permalink: "50-git-intro.html"
+complexity: '2'
+badge: 'git_master'
+file: '50-git-intro.html'
+layout: 'layout.njk'
+permalink: '50-git-intro.html'
 subtitle: 'Система контроля версий: репозиторий, коммиты, ветки, GitHub'
-prevUrl: "49-flask.html"
-prevTitle: "Веб-фреймворки: Flask"
+prevUrl: '49-flask.html'
+prevTitle: 'Веб-фреймворки: Flask'
 ---
 
 ## Введение
@@ -19,11 +19,11 @@ Git — самая популярная система контроля верс
 
 **📌 На этом уроке вы узнаете:**
 
--   Установка и `git init` — инициализация репозитория
--   Основные команды: `git add`, `git commit`, `git status`, `git log`
--   Ветки: `git branch`, `git checkout`, `git merge`
--   `.gitignore` — что не нужно отслеживать
--   Работа с удалённым репозиторием: `git push`, `git pull`
+- Установка и `git init` — инициализация репозитория
+- Основные команды: `git add`, `git commit`, `git status`, `git log`
+- Ветки: `git branch`, `git checkout`, `git merge`
+- `.gitignore` — что не нужно отслеживать
+- Работа с удалённым репозиторием: `git push`, `git pull`
 
 ## Основной материал
 
@@ -60,9 +60,9 @@ git pull                     # получение изменений с серв
 
 ## Ключевые выводы
 
--   `git init` — создаёт новый репозиторий в текущей папке
--   `git add` → `git commit` — стандартный цикл работы
--   Ветки (`branch`) позволяют работать над функциями изолированно
--   `git merge` объединяет изменения из разных веток
--   `.gitignore` исключает служебные файлы из репозитория
--   `git push` / `git pull` — синхронизация с GitHub
+- `git init` — создаёт новый репозиторий в текущей папке
+- `git add` → `git commit` — стандартный цикл работы
+- Ветки (`branch`) позволяют работать над функциями изолированно
+- `git merge` объединяет изменения из разных веток
+- `.gitignore` исключает служебные файлы из репозитория
+- `git push` / `git pull` — синхронизация с GitHub

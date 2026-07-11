@@ -1,18 +1,18 @@
 ---
-title: "range()"
+title: 'range()'
 lesson: 19
-description: "Генерация последовательностей"
+description: 'Генерация последовательностей'
 duration: 8
-complexity: "2"
-badge: "range_runner"
-file: "19-range.html"
-layout: "layout.njk"
-permalink: "19-range.html"
-subtitle: "Генерация последовательностей чисел"
-prevUrl: "18-for.html"
-prevTitle: "Цикл for"
-nextUrl: "20-break-continue.html"
-nextTitle: "break и continue"
+complexity: '2'
+badge: 'range_runner'
+file: '19-range.html'
+layout: 'layout.njk'
+permalink: '19-range.html'
+subtitle: 'Генерация последовательностей чисел'
+prevUrl: '18-for.html'
+prevTitle: 'Цикл for'
+nextUrl: '20-break-continue.html'
+nextTitle: 'break и continue'
 ---
 
 ## Три формы range()
@@ -57,7 +57,7 @@ range() не создаёт список, а генерирует числа н�
 ```python
 # range — это отдельный тип
 r = range(1000000)
-print(type(r))  # 
+print(type(r))  #
 print(len(r))   # 1000000
 print(r[0])     # 0
 print(r[-1])    # 999999
@@ -70,4 +70,5 @@ nums = list(range(5))
 print(nums)     # [0, 1, 2, 3, 4]
 print(type(nums))  #
 ```
+
 > **⚠️ Важно:** **📝 Что такое list()?** `list()` — это функция, которая создаёт список (коллекцию элементов) из переданной последовательности. Квадратные скобки `[0, 1, 2, 3, 4]` — это как раз внешний вид списка. Подробно списки разбираются в [уроке 22](22-lists.html).

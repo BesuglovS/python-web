@@ -1,18 +1,18 @@
 ---
-title: "Словари"
+title: 'Словари'
 lesson: 28
-description: "dict, ключи и значения"
+description: 'dict, ключи и значения'
 duration: 15
-complexity: "2"
-badge: "dict_master"
-file: "28-dicts.html"
-layout: "layout.njk"
-permalink: "28-dicts.html"
-subtitle: "dict, ключи и значения, методы"
-prevUrl: "27-tuples.html"
-prevTitle: "Кортежи"
-nextUrl: "29-split-join.html"
-nextTitle: "split + join"
+complexity: '2'
+badge: 'dict_master'
+file: '28-dicts.html'
+layout: 'layout.njk'
+permalink: '28-dicts.html'
+subtitle: 'dict, ключи и значения, методы'
+prevUrl: '27-tuples.html'
+prevTitle: 'Кортежи'
+nextUrl: '29-split-join.html'
+nextTitle: 'split + join'
 ---
 
 ## Создание словаря

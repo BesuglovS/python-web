@@ -3,16 +3,16 @@ title: 'Строки: индексация и срезы'
 lesson: 14
 description: 'Индексы, [start:stop:step]'
 duration: 12
-complexity: "2"
-badge: "string_slicer"
-file: "14-strings-index-slice.html"
-layout: "layout.njk"
-permalink: "14-strings-index-slice.html"
+complexity: '2'
+badge: 'string_slicer'
+file: '14-strings-index-slice.html'
+layout: 'layout.njk'
+permalink: '14-strings-index-slice.html'
 subtitle: 'Индексы, [start:stop:step]'
-prevUrl: "13-nested-structures.html"
-prevTitle: "Вложенные структуры"
-nextUrl: "15-string-ops.html"
-nextTitle: "Операции над строками"
+prevUrl: '13-nested-structures.html'
+prevTitle: 'Вложенные структуры'
+nextUrl: '15-string-ops.html'
+nextTitle: 'Операции над строками'
 ---
 
 ## Индексация строк
@@ -42,9 +42,9 @@ print(s[-6])    # P — первый символ (len=6, -len = -6)
 
 **Срез** (slice) извлекает подстроку по правилу `[start:stop:step]`:
 
--   `start` — начальный индекс (включительно). По умолчанию `0`.
--   `stop` — конечный индекс (**не включительно**). По умолчанию — длина строки.
--   `step` — шаг. По умолчанию `1`. Может быть отрицательным.
+- `start` — начальный индекс (включительно). По умолчанию `0`.
+- `stop` — конечный индекс (**не включительно**). По умолчанию — длина строки.
+- `step` — шаг. По умолчанию `1`. Может быть отрицательным.
 
 ```python
 s = "Python Programming"

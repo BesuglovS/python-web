@@ -1,18 +1,18 @@
 ---
-title: "Цикл for"
+title: 'Цикл for'
 lesson: 18
-description: "Перебор элементов"
+description: 'Перебор элементов'
 duration: 12
-complexity: "2"
-badge: "for_master"
-file: "18-for.html"
-layout: "layout.njk"
-permalink: "18-for.html"
-subtitle: "Перебор элементов последовательности"
-prevUrl: "17-while.html"
-prevTitle: "Цикл с предусловием"
-nextUrl: "19-range.html"
-nextTitle: "range()"
+complexity: '2'
+badge: 'for_master'
+file: '18-for.html'
+layout: 'layout.njk'
+permalink: '18-for.html'
+subtitle: 'Перебор элементов последовательности'
+prevUrl: '17-while.html'
+prevTitle: 'Цикл с предусловием'
+nextUrl: '19-range.html'
+nextTitle: 'range()'
 ---
 
 ## Синтаксис for
@@ -89,4 +89,5 @@ for letter in "ABC":
     pass
 print(letter)  # C (последнее значение)
 ```
+
 > **⚠️ Важно:** **ℹ️ Замечание:** В этом уроке мы перебираем строки посимвольно и используем `range()` для повторения действий N раз. `for` также умеет перебирать списки, кортежи и другие коллекции — они будут подробно разобраны в [уроке 21](24-lists.html) (списки) и [уроке 23](26-tuples.html) (кортежи).

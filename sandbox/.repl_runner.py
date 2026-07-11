@@ -1,42 +1,46 @@
-import sys, json, io, traceback, builtins
+"""Persistent REPL Runner — выполнение Python-кода
+с сохранением namespace между вызовами.
 
-# ═══════════════════════════════════════════════════════════
-# Persistent REPL Runner — выполнение Python-кода
-# с сохранением namespace между вызовами.
-#
-# Безопасность:
-#   - Использует JSON (не pickle) для хранения состояния.
-#     JSON не поддерживает выполнение кода при десериализации,
-#     что устраняет вектор RCE через подделку файла сессии.
-#     Ограничение: сохраняются только JSON-сериализуемые типы
-#     (числа, строки, списки, словари, bool, None).
-#     Функции, классы и другие объекты не переносятся между сессиями.
-#   - Запускается с флагами -I -S (изолированный режим).
-#   - Лимит namespace: 200 ключей.
-#   - Лимит размера вывода настраивается извне.
-# ═══════════════════════════════════════════════════════════
+Безопасность:
+  - Использует JSON (не pickle) для хранения состояния.
+    JSON не поддерживает выполнение кода при десериализации,
+    что устраняет вектор RCE через подделку файла сессии.
+    Ограничение: сохраняются только JSON-сериализуемые типы
+    (числа, строки, списки, словари, bool, None).
+    Функции, классы и другие объекты не переносятся между сессиями.
+  - Запускается с флагами -I -S (изолированный режим).
+  - Лимит namespace: 200 ключей.
+  - Лимит размера вывода настраивается извне.
+"""
+
+import builtins
+import io
+import json
+import sys
+import traceback
+from typing import Any
 
 # Force UTF-8 everywhere (even if -X utf8 is not set)
 try:
     sys.stdin.reconfigure(encoding='utf-8')
     sys.stdout.reconfigure(encoding='utf-8')
     sys.stderr.reconfigure(encoding='utf-8')
-except Exception:
-    pass  # Некоторые окружения могут не поддерживать reconfigure
+except Exception as e:
+    sys.__stderr__.write(f"Warning: UTF-8 reconfigure failed: {e}\n")
 
 # Читаем входные данные из stdin
-input_data = json.loads(sys.stdin.read())
+input_data: dict[str, Any] = json.loads(sys.stdin.read())
 
-session_file = input_data['session_file']
-code = input_data['code']
-stdin_data = input_data['stdin_data']
-max_output = input_data['max_output']
+session_file: str = input_data['session_file']
+code: str = input_data['code']
+stdin_data: str = input_data['stdin_data']
+max_output: int = input_data['max_output']
 
 # ─── Загружаем состояние из JSON ───
-namespace = {}
+namespace: dict[str, Any] = {}
 try:
     with open(session_file, 'r', encoding='utf-8') as f:
-        loaded = json.load(f)
+        loaded: Any = json.load(f)
         if isinstance(loaded, dict):
             # Ограничиваем количество ключей при загрузке
             MAX_LOAD_KEYS = 200
@@ -47,18 +51,22 @@ except (FileNotFoundError, json.JSONDecodeError, ValueError):
     pass
 
 # ─── Подмена stdin ───
-input_lines = stdin_data.split('\n') if stdin_data else []
+input_lines: list[str] = stdin_data.split('\n') if stdin_data else []
 input_iter = iter(input_lines)
 
 _original_input = builtins.input
 
-def custom_input(prompt=''):
+
+def custom_input(prompt: str = '') -> str:
+    """Подмена builtins.input для перенаправления данных из stdin."""
     sys.__stdout__.write(prompt)
     sys.__stdout__.flush()
     try:
         return next(input_iter)
     except StopIteration:
         return ''
+
+
 builtins.input = custom_input
 
 # ─── Подмена stdout/stderr ───
@@ -72,9 +80,9 @@ sys.stdout = io.StringIO()
 sys.stderr = io.StringIO()
 
 # ─── Выполнение кода ───
-exit_code = 0
+exit_code: int = 0
 try:
-    exec(code, namespace)
+    exec(code, namespace)  # noqa: S102
 except SystemExit:
     pass
 except Exception:
@@ -86,8 +94,8 @@ except Exception:
 
 builtins.input = _original_input
 
-captured_out = sys.stdout.getvalue()
-captured_err = sys.stderr.getvalue()
+captured_out: str = sys.stdout.getvalue()
+captured_err: str = sys.stderr.getvalue()
 sys.stdout = old_stdout
 sys.stderr = old_stderr
 
@@ -97,14 +105,15 @@ sys.stderr = old_stderr
 
 JSON_SAFE_TYPES = (str, int, float, bool, list, dict, tuple, type(None))
 
-def sanitize_for_json(obj):
+
+def sanitize_for_json(obj: Any) -> Any:
     """Рекурсивно очищает значение, оставляя только JSON-совместимые типы."""
     if isinstance(obj, (str, int, float, bool, type(None))):
         return obj
     elif isinstance(obj, (list, tuple)):
         return [sanitize_for_json(item) for item in obj]
     elif isinstance(obj, dict):
-        result = {}
+        result: dict[str, Any] = {}
         for k, v in obj.items():
             if isinstance(k, (str, int, float, bool)):
                 result[str(k)] = sanitize_for_json(v)
@@ -115,7 +124,8 @@ def sanitize_for_json(obj):
         # Функции, классы, модули и прочие не-JSON типы — пропускаем
         return None
 
-sanitized_namespace = {}
+
+sanitized_namespace: dict[str, Any] = {}
 for key, value in namespace.items():
     # Пропускаем приватные и системные ключи
     if key.startswith('__') and key.endswith('__'):
@@ -136,8 +146,8 @@ if len(sanitized_namespace) > MAX_NAMESPACE_KEYS:
 try:
     with open(session_file, 'w', encoding='utf-8') as f:
         json.dump(sanitized_namespace, f, ensure_ascii=False, separators=(',', ':'))
-except Exception:
-    pass  # Не удалось сохранить — не фатально
+except OSError as e:
+    sys.__stderr__.write(f"Warning: failed to save session to {session_file}: {e}\n")
 
 # ─── Ограничение размера вывода ───
 if len(captured_out) > max_output:

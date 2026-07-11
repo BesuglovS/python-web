@@ -1,18 +1,18 @@
 ---
-title: "Условный оператор"
+title: 'Условный оператор'
 lesson: 10
-description: "if, elif, else, блоки кода, PEP 8"
+description: 'if, elif, else, блоки кода, PEP 8'
 duration: 8
-complexity: "2"
-badge: "decision_maker"
-file: "10-conditional.html"
-layout: "layout.njk"
-permalink: "10-conditional.html"
-subtitle: "if, elif, else — ветвление программы и правила отступов"
-prevUrl: "09-booleans.html"
-prevTitle: "Булевы переменные"
-nextUrl: "11-try-except.html"
-nextTitle: "Обработка ошибок"
+complexity: '2'
+badge: 'decision_maker'
+file: '10-conditional.html'
+layout: 'layout.njk'
+permalink: '10-conditional.html'
+subtitle: 'if, elif, else — ветвление программы и правила отступов'
+prevUrl: '09-booleans.html'
+prevTitle: 'Булевы переменные'
+nextUrl: '11-try-except.html'
+nextTitle: 'Обработка ошибок'
 ---
 
 ## Отступы в Python
@@ -89,13 +89,14 @@ print(status)  # Взрослый
 
 ## Распространённые ошибки с отступами
 
--   **IndentationError: unexpected indent** — лишний отступ там, где он не нужен
--   **IndentationError: expected an indented block** — отсутствует отступ после `if`, `for`, `def` и т.д.
--   Смешивание табуляции и пробелов приводит к трудноуловимым ошибкам
+- **IndentationError: unexpected indent** — лишний отступ там, где он не нужен
+- **IndentationError: expected an indented block** — отсутствует отступ после `if`, `for`, `def` и т.д.
+- Смешивание табуляции и пробелов приводит к трудноуловимым ошибкам
 
 ```python
 # Ошибка: нет отступа после if
 if True:
 print("Ошибка!")
 ```
+
 > **💡 Совет:** **Совет:** VS Code (Shift+Alt+F) и PyCharm (Ctrl+Alt+L) умеют автоформатировать отступы. Включите `Format On Save` в настройках редактора.

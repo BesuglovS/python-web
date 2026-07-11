@@ -1,18 +1,18 @@
 ---
-title: "venv и pip"
+title: 'venv и pip'
 lesson: 37
-description: "venv, pip install, requirements.txt"
+description: 'venv, pip install, requirements.txt'
 duration: 12
-complexity: "2"
-badge: "venv_master"
-file: "37-venv-pip.html"
-layout: "layout.njk"
-permalink: "37-venv-pip.html"
-subtitle: "Установка библиотек и изоляция проектов"
-prevUrl: "36-itertools.html"
-prevTitle: "Модуль itertools"
-nextUrl: "38-math-random.html"
-nextTitle: "Модули math и random"
+complexity: '2'
+badge: 'venv_master'
+file: '37-venv-pip.html'
+layout: 'layout.njk'
+permalink: '37-venv-pip.html'
+subtitle: 'Установка библиотек и изоляция проектов'
+prevUrl: '36-itertools.html'
+prevTitle: 'Модуль itertools'
+nextUrl: '38-math-random.html'
+nextTitle: 'Модули math и random'
 ---
 
 ## pip — менеджер пакетов Python
@@ -33,9 +33,9 @@ pip freeze > requirements.txt  # сохранить список зависим�
 
 Без виртуальных окружений все библиотеки устанавливаются глобально. Проблемы:
 
--   Разные проекты требуют **разные версии** одной библиотеки
--   Глобальная установка засоряет систему
--   Нельзя точно воспроизвести окружение на другом компьютере
+- Разные проекты требуют **разные версии** одной библиотеки
+- Глобальная установка засоряет систему
+- Нельзя точно воспроизвести окружение на другом компьютере
 
 Виртуальное окружение (venv) — это изолированная копия Python для одного проекта.
 
@@ -65,7 +65,7 @@ python3 -m venv myenv
 source myenv/bin/activate
 
 # В консоли появится префикс (myenv):
-(myenv) $ 
+(myenv) $
 
 # Деактивировать
 deactivate
@@ -81,6 +81,7 @@ requests==2.31.0
 numpy==1.24.0
 pandas==2.0.0
 ```
+
 ```python
 # Сохранить текущие зависимости
 pip freeze > requirements.txt
@@ -88,6 +89,7 @@ pip freeze > requirements.txt
 # Установить все зависимости из файла
 pip install -r requirements.txt
 ```
+
 > **💡 Совет:** **Добавьте `venv/` в `.gitignore`** — виртуальное окружение не должно попадать в Git. В репозиторий кладите только `requirements.txt`.
 
 ## Популярные библиотеки для старта

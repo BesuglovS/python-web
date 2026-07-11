@@ -1,18 +1,18 @@
 ---
-title: "Requests + API"
+title: 'Requests + API'
 lesson: 48
-description: "GET, POST, работа с JSON-сервисами"
+description: 'GET, POST, работа с JSON-сервисами'
 duration: 12
-complexity: "3"
-badge: "api_explorer"
-file: "48-requests-api.html"
-layout: "layout.njk"
-permalink: "48-requests-api.html"
-subtitle: "Взаимодействие с веб-сервисами через HTTP"
-prevUrl: "47-pytest.html"
-prevTitle: "Unit-тесты с pytest"
-nextUrl: "49-flask.html"
-nextTitle: "Веб-фреймворки: Flask"
+complexity: '3'
+badge: 'api_explorer'
+file: '48-requests-api.html'
+layout: 'layout.njk'
+permalink: '48-requests-api.html'
+subtitle: 'Взаимодействие с веб-сервисами через HTTP'
+prevUrl: '47-pytest.html'
+prevTitle: 'Unit-тесты с pytest'
+nextUrl: '49-flask.html'
+nextTitle: 'Веб-фреймворки: Flask'
 ---
 
 ## Что такое API?

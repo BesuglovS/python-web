@@ -16,12 +16,12 @@ await esbuild.build({
   },
   bundle: true,
   minify: true,
-  outfile: 'highlight-py.min.js',
+  outfile: 'dist/highlight-py.min.js',
   format: 'iife',
   target: 'es2017',
   platform: 'browser',
 });
 
 const fs = await import('fs');
-const stat = fs.statSync('highlight-py.min.js');
+const stat = fs.statSync('dist/highlight-py.min.js');
 console.log(`✔ highlight-py.min.js: ${(stat.size / 1024).toFixed(1)} KB`);

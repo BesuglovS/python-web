@@ -1,18 +1,18 @@
 ---
-title: "Типы данных"
+title: 'Типы данных'
 lesson: 4
-description: "int, float, str, bool, NoneType"
+description: 'int, float, str, bool, NoneType'
 duration: 12
-complexity: "1"
-badge: "type_explorer"
-file: "04-data-types.html"
-layout: "layout.njk"
-permalink: "04-data-types.html"
-subtitle: "int, float, str, bool, NoneType, type(), isinstance()"
-prevUrl: "03-variables.html"
-prevTitle: "Переменные"
-nextUrl: "05-type-casting.html"
-nextTitle: "Приведение типов"
+complexity: '1'
+badge: 'type_explorer'
+file: '04-data-types.html'
+layout: 'layout.njk'
+permalink: '04-data-types.html'
+subtitle: 'int, float, str, bool, NoneType, type(), isinstance()'
+prevUrl: '03-variables.html'
+prevTitle: 'Переменные'
+nextUrl: '05-type-casting.html'
+nextTitle: 'Приведение типов'
 ---
 
 ## Основные встроенные типы
@@ -40,9 +40,9 @@ result = None    # NoneType — отсутствие значения
 Узнать тип переменной:
 
 ```python
-print(type(10))          # 
-print(type("hello"))     # 
-print(type(True))        # 
+print(type(10))          #
+print(type("hello"))     #
+print(type(True))        #
 
 # isinstance — проверка принадлежности типу
 print(isinstance(10, int))       # True

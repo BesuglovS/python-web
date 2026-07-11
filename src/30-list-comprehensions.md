@@ -1,18 +1,18 @@
 ---
-title: "Списочные выражения"
+title: 'Списочные выражения'
 lesson: 30
-description: "[x for x in ... if ...]"
+description: '[x for x in ... if ...]'
 duration: 12
-complexity: "3"
-badge: "comprehension_master"
-file: "30-list-comprehensions.html"
-layout: "layout.njk"
-permalink: "30-list-comprehensions.html"
-subtitle: "[x for x in ... if ...]"
-prevUrl: "29-split-join.html"
-prevTitle: "split + join"
-nextUrl: "31-lambda.html"
-nextTitle: "Lambda-функции"
+complexity: '3'
+badge: 'comprehension_master'
+file: '30-list-comprehensions.html'
+layout: 'layout.njk'
+permalink: '30-list-comprehensions.html'
+subtitle: '[x for x in ... if ...]'
+prevUrl: '29-split-join.html'
+prevTitle: 'split + join'
+nextUrl: '31-lambda.html'
+nextTitle: 'Lambda-функции'
 ---
 
 ## Базовый синтаксис

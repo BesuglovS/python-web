@@ -1,18 +1,18 @@
 ---
-title: "Функции"
+title: 'Функции'
 lesson: 22
-description: "def, return, параметры"
+description: 'def, return, параметры'
 duration: 12
-complexity: "2"
-badge: "func_creator"
-file: "22-functions.html"
-layout: "layout.njk"
-permalink: "22-functions.html"
-subtitle: "def, return, параметры, аргументы"
-prevUrl: "21-nested-loops.html"
-prevTitle: "Вложенные циклы"
-nextUrl: "23-functions-advanced.html"
-nextTitle: "Функции: продвинутые темы"
+complexity: '2'
+badge: 'func_creator'
+file: '22-functions.html'
+layout: 'layout.njk'
+permalink: '22-functions.html'
+subtitle: 'def, return, параметры, аргументы'
+prevUrl: '21-nested-loops.html'
+prevTitle: 'Вложенные циклы'
+nextUrl: '23-functions-advanced.html'
+nextTitle: 'Функции: продвинутые темы'
 ---
 
 ## Определение функции
@@ -168,11 +168,11 @@ greet("Анна", 3)           # Аннотации не проверяются 
 ```python
 def calculate(a: float, b: float, operation: str = "+") -> float:
     """Выполняет арифметическую операцию над двумя числами.
-    
+
     Аргументы:
         a, b — числа
         operation — знак операции: "+", "-", "*", "/"
-    
+
     Возвращает:
         Результат вычисления.
     """

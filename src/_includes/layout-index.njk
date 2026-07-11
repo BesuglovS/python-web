@@ -3,22 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="{% if description %}{{ description }}{% else %}Изучайте Python с нуля — 50 интерактивных уроков с примерами кода.{% endif %}" />
     <meta property="og:title" content="Python — Основы программирования" />
     <meta property="og:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://python.nayanovaacademy.ru/" />
-    <meta property="og:image" content="https://python.nayanovaacademy.ru/favicon.png" />
+    <meta property="og:url" content="{{ site.url }}/" />
+    <meta property="og:image" content="{{ site.url }}/og-image.png" />
     <meta property="og:locale" content="ru_RU" />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Python — Основы программирования" />
     <meta name="twitter:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
-    <meta name="twitter:image" content="https://python.nayanovaacademy.ru/favicon.png" />
+    <meta name="twitter:image" content="{{ site.url }}/og-image.png" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://python.nayanovaacademy.ru/" />
+    <link rel="canonical" href="{{ site.url }}/" />
     <title>Основы программирования на Python — 50 уроков для начинающих</title>
-    <link rel="preload" href="style.css" as="style" />
     <link rel="preload" href="highlight-theme.min.css" as="style" />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -26,7 +25,6 @@
     <meta name="theme-color" content="#667eea" />
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="highlight-theme.min.css" id="hljs-theme" />
-    <script src="ga.js"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -40,6 +38,10 @@
       "hasCourseInstance": { "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }
     }
     </script>
+    <!-- Yandex.Metrika -->
+    <script defer src="ym-init.js"></script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/110596777" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
   </head>
   <body class="index-page">
     <noscript><div style="padding:40px;text-align:center;font-size:1.2em;">Для работы сайта необходим JavaScript.</div></noscript>
@@ -48,7 +50,7 @@
       <header class="index-header">
         <h1>🐍 <span>Python</span> — основы программирования</h1>
         <p>50 тем для начинающих с примерами кода</p>
-        <div class="progress-bar-container"></div>
+        <div class="progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Прогресс прохождения курса"></div>
         <span class="progress-info"></span>
         <a href="repl.html" class="repl-hero-btn">▶ Интерактивная консоль Python</a>
         <!-- Блок достижений (badges) -->
@@ -59,6 +61,7 @@
       </header>
 
       <div class="search-container">
+        <label for="lesson-search" class="sr-only">Поиск уроков</label>
         <input type="text" id="lesson-search" class="search-input" placeholder="🔍 Поиск уроков... (попробуйте: циклы, строки, функции)" autocomplete="off" />
       </div>
 
@@ -87,7 +90,7 @@
     </div>
 
     <script defer src="highlight-py.min.js"></script>
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+    <script defer src="config.js"></script>
+    <script defer src="script.js"></script>
   </body>
 </html>

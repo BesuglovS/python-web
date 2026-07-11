@@ -1,38 +1,58 @@
-const path = require("path");
-const { DateTime } = require("luxon");
-const CleanCSS = require("clean-css");
-const Terser = require("terser");
+const path = require('path');
+const { DateTime } = require('luxon');
 
 const PROJECT = __dirname;
-const SRC = path.join(PROJECT, "src");
+const SRC = path.join(PROJECT, 'src');
 
 module.exports = function (eleventyConfig) {
-  // Passthrough copy — статические файлы (уже в корне, не трогаем)
-  // Уроки генерируются в корень, перезаписывая старые HTML
+  // Passthrough copy — статические файлы, которые не обрабатываются сборкой
+  eleventyConfig.addPassthroughCopy({ 'src/js/ym-init.js': 'ym-init.js' });
+
+  // Изображения
+  eleventyConfig.addPassthroughCopy({ 'favicon.png': 'favicon.png' });
+  eleventyConfig.addPassthroughCopy({ 'favicon-192x192.png': 'favicon-192x192.png' });
+  eleventyConfig.addPassthroughCopy({ 'favicon-512x512.png': 'favicon-512x512.png' });
+  eleventyConfig.addPassthroughCopy({ 'favicon-32x32.png': 'favicon-32x32.png' });
+  eleventyConfig.addPassthroughCopy({ 'favicon.webp': 'favicon.webp' });
+  eleventyConfig.addPassthroughCopy({ 'apple-touch-icon.png': 'apple-touch-icon.png' });
+  eleventyConfig.addPassthroughCopy({ 'og-image.png': 'og-image.png' });
+
+  // Данные
+  eleventyConfig.addPassthroughCopy({ 'lessons.json': 'lessons.json' });
+  eleventyConfig.addPassthroughCopy({ 'quizzes': 'quizzes' });
+
+  // Статика
+  eleventyConfig.addPassthroughCopy({ '.htaccess': '.htaccess' });
+  eleventyConfig.addPassthroughCopy({ 'robots.txt': 'robots.txt' });
+  eleventyConfig.addPassthroughCopy({ 'sitemap.xml': 'sitemap.xml' });
+  eleventyConfig.addPassthroughCopy({ 'offline.html': 'offline.html' });
+  eleventyConfig.addPassthroughCopy({ 'highlight-theme.min.css': 'highlight-theme.min.css' });
+  eleventyConfig.addPassthroughCopy({ 'manifest.json': 'manifest.json' });
+
+  // PHP-песочница
+  eleventyConfig.addPassthroughCopy({ 'sandbox': 'sandbox' });
 
   // Фильтр для форматирования дат
-  eleventyConfig.addFilter("readableDate", (dateObj) => {
-    return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
-      "dd.MM.yyyy"
-    );
+  eleventyConfig.addFilter('readableDate', (dateObj) => {
+    return DateTime.fromJSDate(dateObj, { zone: 'utc' }).toFormat('dd.MM.yyyy');
   });
 
   // Коллекция всех уроков (из Markdown файлов в src/)
-  const lessonsGlob = path.join(SRC, "*.md");
-  eleventyConfig.addCollection("lessons", function (collectionApi) {
+  const lessonsGlob = path.join(SRC, '*.md');
+  eleventyConfig.addCollection('lessons', function (collectionApi) {
     return collectionApi
       .getFilteredByGlob(lessonsGlob)
       .sort((a, b) => a.data.lesson - b.data.lesson);
   });
 
   // Коллекции по секциям для index.njk
-  eleventyConfig.addCollection("sections", function (collectionApi) {
+  eleventyConfig.addCollection('sections', function (collectionApi) {
     const lessons = collectionApi
       .getFilteredByGlob(lessonsGlob)
       .sort((a, b) => a.data.lesson - b.data.lesson);
 
     // Секции из lessons.json
-    const sections = require(path.join(PROJECT, "lessons.json")).sections;
+    const sections = require(path.join(PROJECT, 'lessons.json')).sections;
     return sections.map((section) => ({
       id: section.id,
       title: section.title,
@@ -46,44 +66,15 @@ module.exports = function (eleventyConfig) {
     }));
   });
 
-  // Минификация CSS и JS через transform
-  eleventyConfig.addTransform("minify", async (content, outputPath) => {
-    if (!outputPath) return content;
-
-    // Минификация CSS
-    if (outputPath.endsWith(".css")) {
-      const result = new CleanCSS({ level: 2 }).minify(content);
-      if (result.errors.length) {
-        console.warn("CSS minify errors:", result.errors);
-      }
-      return result.styles || content;
-    }
-
-    // Минификация JS
-    if (outputPath.endsWith(".js")) {
-      const result = await Terser.minify(content, {
-        compress: { passes: 2 },
-        mangle: { reserved: ["escapeHtml", "__themeUtils"] },
-      });
-      if (result.error) {
-        console.warn("JS minify error:", result.error);
-        return content;
-      }
-      return result.code || content;
-    }
-
-    return content;
-  });
-
   return {
     dir: {
       input: SRC,
-      output: PROJECT,
-      includes: "_includes",
-      data: "_data",
+      output: path.join(PROJECT, 'dist'),
+      includes: '_includes',
+      data: '_data',
     },
     markdownTemplateEngine: false,
-    htmlTemplateEngine: "njk",
-    templateFormats: ["md", "njk", "html"],
+    htmlTemplateEngine: 'njk',
+    templateFormats: ['md', 'njk', 'html'],
   };
 };

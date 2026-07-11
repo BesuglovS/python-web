@@ -187,9 +187,19 @@ test.describe('PWA и SEO', () => {
 
   test('Service Worker регистрируется', async ({ page }) => {
     await page.goto('/');
-    const sw = await page.evaluate(() => navigator.serviceWorker.getRegistration());
-    // SW может не успеть зарегистрироваться — не падаем
-    expect(true).toBeTruthy();
+    const registered = await page
+      .waitForFunction(
+        async () => {
+          if (!('serviceWorker' in navigator)) return false;
+          const reg = await navigator.serviceWorker.getRegistration();
+          return !!reg;
+        },
+        null,
+        { timeout: 10000 },
+      )
+      .then(() => true)
+      .catch(() => false);
+    expect(registered).toBe(true);
   });
 });
 
@@ -201,14 +211,18 @@ test.describe('CSP безопасность', () => {
 
   test('CSP script-src не содержит unsafe-inline на главной', async ({ page }) => {
     await page.goto('/');
-    const csp = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
+    const csp = await page
+      .locator('meta[http-equiv="Content-Security-Policy"]')
+      .getAttribute('content');
     const scriptSrc = getScriptSrc(csp);
     expect(scriptSrc).not.toContain("'unsafe-inline'");
   });
 
   test('CSP script-src не содержит unsafe-inline на уроке', async ({ page }) => {
     await page.goto('/03-variables.html');
-    const csp = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
+    const csp = await page
+      .locator('meta[http-equiv="Content-Security-Policy"]')
+      .getAttribute('content');
     const scriptSrc = getScriptSrc(csp);
     expect(scriptSrc).not.toContain("'unsafe-inline'");
   });
@@ -232,5 +246,105 @@ test.describe('Клавиатурная навигация', () => {
     await page.keyboard.press('ArrowRight');
     await page.waitForTimeout(500);
     expect(page.url()).toContain(nextHref);
+  });
+});
+
+test.describe('Доступность (a11y)', () => {
+  test('skip-link существует на главной', async ({ page }) => {
+    await page.goto('/');
+    const skipLink = page.locator('a.skip-link, a[href="#main"], a[href="#content"]');
+    await expect(skipLink.first()).toBeAttached();
+  });
+
+  test('skip-link существует на уроке', async ({ page }) => {
+    await page.goto('/01-history.html');
+    const skipLink = page.locator('a.skip-link, a[href="#main"], a[href="#content"]');
+    await expect(skipLink.first()).toBeAttached();
+  });
+
+  test('атрибут lang установлен на html', async ({ page }) => {
+    await page.goto('/');
+    const lang = await page.locator('html').getAttribute('lang');
+    expect(lang).toBeTruthy();
+    expect(lang.length).toBeGreaterThanOrEqual(2);
+  });
+
+  test('все изображения имеют alt атрибут', async ({ page }) => {
+    await page.goto('/');
+    const images = page.locator('img');
+    const count = await images.count();
+    for (let i = 0; i < count; i++) {
+      const alt = await images.nth(i).getAttribute('alt');
+      expect(alt).not.toBeNull();
+    }
+  });
+
+  test('все изображения на уроке имеют alt атрибут', async ({ page }) => {
+    await page.goto('/03-variables.html');
+    const images = page.locator('img');
+    const count = await images.count();
+    for (let i = 0; i < count; i++) {
+      const alt = await images.nth(i).getAttribute('alt');
+      expect(alt).not.toBeNull();
+    }
+  });
+
+  test('главная страница имеет main landmark', async ({ page }) => {
+    await page.goto('/');
+    const main = page.locator('main, [role="main"]');
+    await expect(main.first()).toBeAttached();
+  });
+
+  test('урок имеет main landmark', async ({ page }) => {
+    await page.goto('/01-history.html');
+    const main = page.locator('main, [role="main"]');
+    await expect(main.first()).toBeAttached();
+  });
+
+  test('navigation landmark присутствует на уроке', async ({ page }) => {
+    await page.goto('/01-history.html');
+    const nav = page.locator('nav, [role="navigation"]');
+    const count = await nav.count();
+    expect(count).toBeGreaterThanOrEqual(1);
+  });
+
+  test('заголовки идут по порядку (h1 → h2 → h3)', async ({ page }) => {
+    await page.goto('/03-variables.html');
+    const headings = await page.evaluate(() => {
+      const hs = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      return Array.from(hs).map((h) => parseInt(h.tagName.charAt(1)));
+    });
+    // Проверяем что нет прыжков больше чем на 1 уровень
+    for (let i = 1; i < headings.length; i++) {
+      expect(headings[i] - headings[i - 1]).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test('фокус видим на интерактивных элементах (кнопки)', async ({ page }) => {
+    await page.goto('/03-variables.html');
+    const runBtn = page.locator('.run-btn').first();
+    if ((await runBtn.count()) > 0) {
+      await runBtn.focus();
+      const outline = await runBtn.evaluate((el) => {
+        const style = window.getComputedStyle(el);
+        return style.outlineStyle || style.outline;
+      });
+      // Кнопка не должна полностью скрывать outline
+      expect(outline).not.toBe('none');
+    }
+  });
+
+  test('REPL страница имеет доступные форму', async ({ page }) => {
+    await page.goto('/repl.html');
+    const textarea = page.locator('#repl-input');
+    await expect(textarea).toBeAttached();
+    // Проверяем что textarea имеет доступное имя
+    const ariaLabel = await textarea.getAttribute('aria-label');
+    const labelledBy = await textarea.getAttribute('aria-labelledby');
+    const id = await textarea.getAttribute('id');
+    // Должен иметь aria-label, aria-labelledby, или associated <label>
+    const hasLabel =
+      ariaLabel || labelledBy || (id && (await page.locator(`label[for="${id}"]`).count()) > 0);
+    expect(hasLabel).toBeTruthy();
   });
 });

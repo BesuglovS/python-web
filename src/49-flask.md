@@ -1,18 +1,18 @@
 ---
 title: 'Веб-фреймворки: Flask'
 lesson: 49
-description: "Маршруты, шаблоны Jinja2, обработка форм, REST API"
+description: 'Маршруты, шаблоны Jinja2, обработка форм, REST API'
 duration: 15
-complexity: "3"
-badge: "web_builder"
-file: "49-flask.html"
-layout: "layout.njk"
-permalink: "49-flask.html"
+complexity: '3'
+badge: 'web_builder'
+file: '49-flask.html'
+layout: 'layout.njk'
+permalink: '49-flask.html'
 subtitle: 'Микро-фреймворк для веб-приложений: маршруты, шаблоны, API'
-prevUrl: "48-requests-api.html"
-prevTitle: "Requests и API"
-nextUrl: "50-git-intro.html"
-nextTitle: "Введение в Git"
+prevUrl: '48-requests-api.html'
+prevTitle: 'Requests и API'
+nextUrl: '50-git-intro.html'
+nextTitle: 'Введение в Git'
 ---
 
 ## Введение
@@ -21,11 +21,11 @@ Flask — микро-фреймворк для создания веб-прил�
 
 **📌 На этом уроке вы узнаете:**
 
--   Установка: `pip install flask`
--   Маршруты: `@app.route()`, переменные в URL, методы GET/POST
--   Шаблоны Jinja2: передача переменных, циклы, условия, наследование
--   Обработка форм через `request.form` и редиректы
--   Создание простого REST API с JSON-ответами
+- Установка: `pip install flask`
+- Маршруты: `@app.route()`, переменные в URL, методы GET/POST
+- Шаблоны Jinja2: передача переменных, циклы, условия, наследование
+- Обработка форм через `request.form` и редиректы
+- Создание простого REST API с JSON-ответами
 
 ## Основной материал
 
@@ -72,8 +72,8 @@ if __name__ == '__main__':
 
 ## Ключевые выводы
 
--   `@app.route("/")` — связывает URL с функцией
--   `render_template()` — рендерит Jinja2-шаблоны с переменными
--   `request.form` — данные из HTML-форм (POST)
--   `jsonify()` — возвращает JSON-ответ для REST API
--   `app.run(debug=True)` — запуск с авто-перезагрузкой
+- `@app.route("/")` — связывает URL с функцией
+- `render_template()` — рендерит Jinja2-шаблоны с переменными
+- `request.form` — данные из HTML-форм (POST)
+- `jsonify()` — возвращает JSON-ответ для REST API
+- `app.run(debug=True)` — запуск с авто-перезагрузкой

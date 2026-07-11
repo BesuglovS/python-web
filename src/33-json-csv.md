@@ -1,18 +1,18 @@
 ---
-title: "JSON и CSV"
+title: 'JSON и CSV'
 lesson: 33
-description: "json.dump/load, csv.reader/writer"
+description: 'json.dump/load, csv.reader/writer'
 duration: 12
-complexity: "2"
-badge: "data_formatter"
-file: "33-json-csv.html"
-layout: "layout.njk"
-permalink: "33-json-csv.html"
-subtitle: "Чтение и запись структурированных данных в популярных форматах"
-prevUrl: "32-files.html"
-prevTitle: "Файлы: чтение и запись"
-nextUrl: "34-sqlite3.html"
-nextTitle: "Базы данных SQLite"
+complexity: '2'
+badge: 'data_formatter'
+file: '33-json-csv.html'
+layout: 'layout.njk'
+permalink: '33-json-csv.html'
+subtitle: 'Чтение и запись структурированных данных в популярных форматах'
+prevUrl: '32-files.html'
+prevTitle: 'Файлы: чтение и запись'
+nextUrl: '34-sqlite3.html'
+nextTitle: 'Базы данных SQLite'
 ---
 
 ## JSON — JavaScript Object Notation
@@ -61,9 +61,10 @@ with open("output.json", "w", encoding="utf-8") as f:
 
 print("Файл сохранён!")
 ```
+
 > **💡 Совет:** **Параметры `json.dump()`:**  
-`ensure_ascii=False` — сохраняет кириллицу как есть  
-`indent=4` — красивое форматирование с отступами
+> `ensure_ascii=False` — сохраняет кириллицу как есть  
+> `indent=4` — красивое форматирование с отступами
 
 ## JSON-строка ↔ Python-объект
 
@@ -74,7 +75,7 @@ import json
 json_str = '{"name": "Анна", "score": 95}'
 data = json.loads(json_str)
 print(data["name"])          # Анна
-print(type(data))            # 
+print(type(data))            #
 
 # Из Python в строку JSON
 person = {"name": "Борис", "age": 30}
@@ -134,6 +135,7 @@ with open("output.csv", "w", encoding="utf-8", newline="") as f:
 
 print("CSV сохранён!")
 ```
+
 > **💡 Совет:** **Важно:** всегда указывайте `newline=""` при открытии CSV-файлов на Windows — иначе появятся лишние пустые строки.
 
 ## Практический пример: конвертер JSON → CSV

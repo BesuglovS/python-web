@@ -1,13 +1,13 @@
 # Security Headers
 <IfModule mod_headers.c>
-    # Strict-Transport-Security (enforce HTTPS)
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    # Strict-Transport-Security (enforce HTTPS + preload)
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
     # Prevent MIME-type sniffing
     Header always set X-Content-Type-Options "nosniff"
     # Prevent clickjacking
     Header always set X-Frame-Options "DENY"
-    # XSS protection for older browsers
-    Header always set X-XSS-Protection "1; mode=block"
+    # Content Security Policy (moved from <meta> for frame-ancestors/report-uri support)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
     # Referrer policy
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     # Permissions policy (restrict browser features)
@@ -45,6 +45,6 @@
 # Disable directory listing
 Options -Indexes
 
-# Custom error pages (optional, uncomment if you create them)
-# ErrorDocument 404 /404.html
-# ErrorDocument 500 /500.html
+# Custom error pages
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html

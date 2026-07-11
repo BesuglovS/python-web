@@ -1,18 +1,18 @@
 ---
-title: "Генераторы"
+title: 'Генераторы'
 lesson: 44
-description: "yield, ленивые вычисления, generator expressions"
+description: 'yield, ленивые вычисления, generator expressions'
 duration: 12
-complexity: "3"
-badge: "generator_guru"
-file: "44-generators.html"
-layout: "layout.njk"
-permalink: "44-generators.html"
-subtitle: "yield и ленивые вычисления"
-prevUrl: "43-decorators.html"
-prevTitle: "Декораторы"
-nextUrl: "45-threading-async.html"
-nextTitle: "Многопоточность и asyncio"
+complexity: '3'
+badge: 'generator_guru'
+file: '44-generators.html'
+layout: 'layout.njk'
+permalink: '44-generators.html'
+subtitle: 'yield и ленивые вычисления'
+prevUrl: '43-decorators.html'
+prevTitle: 'Декораторы'
+nextUrl: '45-threading-async.html'
+nextTitle: 'Многопоточность и asyncio'
 ---
 
 ## Что такое генератор?

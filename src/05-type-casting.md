@@ -1,18 +1,18 @@
 ---
-title: "Приведение типов"
+title: 'Приведение типов'
 lesson: 5
-description: "int(), float(), str(), bool()"
+description: 'int(), float(), str(), bool()'
 duration: 8
-complexity: "1"
-badge: "caster"
-file: "05-type-casting.html"
-layout: "layout.njk"
-permalink: "05-type-casting.html"
-subtitle: "int(), float(), str(), bool() — преобразование данных из одного типа в другой"
-prevUrl: "04-data-types.html"
-prevTitle: "Типы данных"
-nextUrl: "06-io.html"
-nextTitle: "Ввод и вывод"
+complexity: '1'
+badge: 'caster'
+file: '05-type-casting.html'
+layout: 'layout.njk'
+permalink: '05-type-casting.html'
+subtitle: 'int(), float(), str(), bool() — преобразование данных из одного типа в другой'
+prevUrl: '04-data-types.html'
+prevTitle: 'Типы данных'
+nextUrl: '06-io.html'
+nextTitle: 'Ввод и вывод'
 ---
 
 ## Зачем нужно приведение типов?
@@ -24,6 +24,7 @@ age_str = input("Сколько вам лет? ")   # пользователь �
 age = int(age_str)                      # теперь age = 25 (int)
 print("Через год будет:", age + 1)      # 26
 ```
+
 > **💡 Совет:** **Правило:** `input()` всегда возвращает строку. Если нужны вычисления — приводите к числу!
 
 ## Основные функции приведения
@@ -72,6 +73,7 @@ print(bool("hello"))   # True  (непустая строка)
 print(bool([]))        # False (пустой список)
 print(bool([1, 2]))    # True  (непустой список)
 ```
+
 > **💡 Совет:** **Запомните:** «Пустые» значения (`0`, `""`, `[]`, `{}`, `None`) приводятся к `False`. Всё остальное — к `True`.
 
 ## Практический пример: калькулятор
@@ -88,6 +90,6 @@ print("Частное:", a / b if b != 0 else "на ноль делить нел
 
 ## Частые ошибки
 
--   `int("3.14")` — **ValueError**: строка с точкой не может быть int. Сначала `float()`, потом `int()`.
--   `"Мне " + 25 + " лет"` — **TypeError**: нельзя складывать строку и число. Используйте `str(25)`.
--   `int(input())` без проверки — если пользователь введёт буквы, программа упадёт. Используйте `try/except` (будет в уроке 10).
+- `int("3.14")` — **ValueError**: строка с точкой не может быть int. Сначала `float()`, потом `int()`.
+- `"Мне " + 25 + " лет"` — **TypeError**: нельзя складывать строку и число. Используйте `str(25)`.
+- `int(input())` без проверки — если пользователь введёт буквы, программа упадёт. Используйте `try/except` (будет в уроке 10).

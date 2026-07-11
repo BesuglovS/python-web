@@ -1,18 +1,18 @@
 ---
-title: "Обработка исключений"
+title: 'Обработка исключений'
 lesson: 11
-description: "try, except, finally, raise"
+description: 'try, except, finally, raise'
 duration: 10
-complexity: "2"
-badge: "error_handler"
-file: "11-try-except.html"
-layout: "layout.njk"
-permalink: "11-try-except.html"
-subtitle: "try / except / finally / raise — как сделать программу устойчивой к ошибкам"
-prevUrl: "10-conditional.html"
-prevTitle: "Условный оператор + Отступы"
-nextUrl: "12-complex-conditions.html"
-nextTitle: "Сложные условия"
+complexity: '2'
+badge: 'error_handler'
+file: '11-try-except.html'
+layout: 'layout.njk'
+permalink: '11-try-except.html'
+subtitle: 'try / except / finally / raise — как сделать программу устойчивой к ошибкам'
+prevUrl: '10-conditional.html'
+prevTitle: 'Условный оператор + Отступы'
+nextUrl: '12-complex-conditions.html'
+nextTitle: 'Сложные условия'
 ---
 
 ## Зачем нужна обработка ошибок?
@@ -40,6 +40,7 @@ except ValueError:
 except ZeroDivisionError:
     print("❌ На ноль делить нельзя!")
 ```
+
 > **⚠️ Важно:** **Важно:** как только в блоке `try` возникает ошибка, выполнение сразу переходит в соответствующий `except`. Оставшаяся часть `try` не выполняется.
 
 ## Несколько типов исключений в одном except
@@ -66,6 +67,7 @@ try:
 except Exception as e:
     print(f"Что-то пошло не так: {e}")
 ```
+
 > **⚠️ Важно:** **Совет:** перехватывайте конкретные типы исключений. Голый `except:` может скрыть ошибки, которые вы не ожидали, и усложнить отладку.
 
 ## Блок else
@@ -212,14 +214,14 @@ except ValueError as original_error:
 
 ## Резюме
 
--   `try` — код, который может вызвать ошибку
--   `except ТипОшибки` — перехват конкретной ошибки
--   `except (Тип1, Тип2)` — перехват нескольких типов
--   `as переменная` — получить объект исключения
--   `else` — выполняется, если ошибок не было
--   `finally` — выполняется всегда (очистка ресурсов)
--   `raise` — вызвать исключение вручную
--   Свои исключения — наследование от `Exception`
+- `try` — код, который может вызвать ошибку
+- `except ТипОшибки` — перехват конкретной ошибки
+- `except (Тип1, Тип2)` — перехват нескольких типов
+- `as переменная` — получить объект исключения
+- `else` — выполняется, если ошибок не было
+- `finally` — выполняется всегда (очистка ресурсов)
+- `raise` — вызвать исключение вручную
+- Свои исключения — наследование от `Exception`
 
 > **⚠️ Важно:** **Золотое правило:** перехватывайте только те исключения, которые можете осмысленно обработать. Не используйте голый `except:` без крайней необходимости.
 

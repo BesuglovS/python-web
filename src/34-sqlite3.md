@@ -1,18 +1,18 @@
 ---
-title: "Базы данных SQLite"
+title: 'Базы данных SQLite'
 lesson: 34
-description: "CREATE TABLE, INSERT, SELECT, параметризованные запросы"
+description: 'CREATE TABLE, INSERT, SELECT, параметризованные запросы'
 duration: 15
-complexity: "3"
-badge: "sql_master"
-file: "34-sqlite3.html"
-layout: "layout.njk"
-permalink: "34-sqlite3.html"
-subtitle: "Подключение, CRUD-операции, параметризованные запросы, транзакции"
-prevUrl: "33-json-csv.html"
-prevTitle: "JSON и CSV"
-nextUrl: "35-modules-import.html"
-nextTitle: "Модули и import"
+complexity: '3'
+badge: 'sql_master'
+file: '34-sqlite3.html'
+layout: 'layout.njk'
+permalink: '34-sqlite3.html'
+subtitle: 'Подключение, CRUD-операции, параметризованные запросы, транзакции'
+prevUrl: '33-json-csv.html'
+prevTitle: 'JSON и CSV'
+nextUrl: '35-modules-import.html'
+nextTitle: 'Модули и import'
 ---
 
 ## Введение
@@ -21,11 +21,11 @@ SQLite — легковесная реляционная база данных, 
 
 **📌 На этом уроке вы узнаете:**
 
--   Подключение к базе данных `sqlite3.connect()` и создание курсора
--   Создание таблиц через `CREATE TABLE` с типами данных
--   CRUD-операции: `INSERT`, `SELECT`, `UPDATE`, `DELETE`
--   Параметризованные запросы и защита от SQL-инъекций
--   Транзакции: `commit()` и `rollback()`
+- Подключение к базе данных `sqlite3.connect()` и создание курсора
+- Создание таблиц через `CREATE TABLE` с типами данных
+- CRUD-операции: `INSERT`, `SELECT`, `UPDATE`, `DELETE`
+- Параметризованные запросы и защита от SQL-инъекций
+- Транзакции: `commit()` и `rollback()`
 
 ## Основной материал
 
@@ -80,8 +80,8 @@ conn.close()
 
 ## Ключевые выводы
 
--   `sqlite3.connect()` — подключение к файлу БД, `cursor()` — выполнение SQL
--   Параметризованные запросы с `?` защищают от SQL-инъекций
--   После `INSERT/UPDATE/DELETE` обязателен `commit()`
--   Контекстный менеджер `with sqlite3.connect()` упрощает работу
--   `fetchone()`, `fetchall()` — получение результатов SELECT
+- `sqlite3.connect()` — подключение к файлу БД, `cursor()` — выполнение SQL
+- Параметризованные запросы с `?` защищают от SQL-инъекций
+- После `INSERT/UPDATE/DELETE` обязателен `commit()`
+- Контекстный менеджер `with sqlite3.connect()` упрощает работу
+- `fetchone()`, `fetchall()` — получение результатов SELECT

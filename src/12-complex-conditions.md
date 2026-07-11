@@ -1,18 +1,18 @@
 ---
-title: "Сложные условия"
+title: 'Сложные условия'
 lesson: 12
-description: "and, or, not"
+description: 'and, or, not'
 duration: 8
-complexity: "2"
-badge: "logician"
-file: "12-complex-conditions.html"
-layout: "layout.njk"
-permalink: "12-complex-conditions.html"
-subtitle: "and, or, not — логические операторы"
-prevUrl: "11-try-except.html"
-prevTitle: "Обработка ошибок"
-nextUrl: "13-nested-structures.html"
-nextTitle: "Вложенные структуры"
+complexity: '2'
+badge: 'logician'
+file: '12-complex-conditions.html'
+layout: 'layout.njk'
+permalink: '12-complex-conditions.html'
+subtitle: 'and, or, not — логические операторы'
+prevUrl: '11-try-except.html'
+prevTitle: 'Обработка ошибок'
+nextUrl: '13-nested-structures.html'
+nextTitle: 'Вложенные структуры'
 ---
 
 ## Логический оператор and

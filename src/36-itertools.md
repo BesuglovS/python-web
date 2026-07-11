@@ -1,18 +1,18 @@
 ---
-title: "itertools"
+title: 'itertools'
 lesson: 36
-description: "product, permutations, chain, groupby и другие функции"
+description: 'product, permutations, chain, groupby и другие функции'
 duration: 12
-complexity: "3"
-badge: "itertools_guru"
-file: "36-itertools.html"
-layout: "layout.njk"
-permalink: "36-itertools.html"
-subtitle: "product, permutations, combinations, cycle, chain, groupby — комбинаторные генераторы"
-prevUrl: "35-modules-import.html"
-prevTitle: "Модули и import"
-nextUrl: "37-venv-pip.html"
-nextTitle: "Виртуальные окружения и pip"
+complexity: '3'
+badge: 'itertools_guru'
+file: '36-itertools.html'
+layout: 'layout.njk'
+permalink: '36-itertools.html'
+subtitle: 'product, permutations, combinations, cycle, chain, groupby — комбинаторные генераторы'
+prevUrl: '35-modules-import.html'
+prevTitle: 'Модули и import'
+nextUrl: '37-venv-pip.html'
+nextTitle: 'Виртуальные окружения и pip'
 ---
 
 ## Что такое itertools?
@@ -34,6 +34,7 @@ from itertools import product, permutations, combinations
 ```python
 import itertools
 ```
+
 > **⚠️ Важно:** **Важно:** все функции itertools возвращают **итераторы**, а не списки. Чтобы получить список, нужно обернуть вызов в `list()`. Итераторы экономят память, но пройти по ним можно только один раз.
 
 ## product() — декартово произведение
@@ -142,11 +143,12 @@ for team in combinations(students, 3):
 
 # Всего C(5, 3) = 10 вариантов
 ```
+
 > **⚠️ Важно:** **Запомните разницу:**
 
--   `permutations` — порядок важен; (1,2) ≠ (2,1)
--   `combinations` — порядок не важен; (1,2) = (2,1)
--   `product` — элементы могут повторяться; каждый выбирается независимо
+- `permutations` — порядок важен; (1,2) ≠ (2,1)
+- `combinations` — порядок не важен; (1,2) = (2,1)
+- `product` — элементы могут повторяться; каждый выбирается независимо
 
 ## combinations\_with\_replacement()
 
@@ -250,14 +252,14 @@ pairs = list(product(range(1, 4), repeat=2))
 
 ## Резюме
 
--   `product(iter1, iter2, ..., repeat=n)` — декартово произведение, все комбинации с повторением
--   `permutations(iterable, r)` — все упорядоченные размещения (порядок важен)
--   `combinations(iterable, r)` — все неупорядоченные сочетания (порядок не важен, без повторов)
--   `combinations_with_replacement(iterable, r)` — сочетания с повторениями
--   `chain(*iterables)` — объединение нескольких итераторов в один
--   `cycle(iterable)` — бесконечное повторение элементов
--   `groupby(iterable, key)` — группировка последовательных элементов
--   Все функции возвращают **итераторы** — используйте `list()` для преобразования в список
--   Модуль `itertools` — мощный инструмент для решения комбинаторных задач и задач ЕГЭ
+- `product(iter1, iter2, ..., repeat=n)` — декартово произведение, все комбинации с повторением
+- `permutations(iterable, r)` — все упорядоченные размещения (порядок важен)
+- `combinations(iterable, r)` — все неупорядоченные сочетания (порядок не важен, без повторов)
+- `combinations_with_replacement(iterable, r)` — сочетания с повторениями
+- `chain(*iterables)` — объединение нескольких итераторов в один
+- `cycle(iterable)` — бесконечное повторение элементов
+- `groupby(iterable, key)` — группировка последовательных элементов
+- Все функции возвращают **итераторы** — используйте `list()` для преобразования в список
+- Модуль `itertools` — мощный инструмент для решения комбинаторных задач и задач ЕГЭ
 
 > **⚠️ Важно:** **Совет:** потренируйтесь вручную посчитать количество комбинаций для разных значений, а потом проверьте себя с помощью itertools. Это поможет лучше понять комбинаторику и сэкономит время на экзамене.

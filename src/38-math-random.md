@@ -1,18 +1,18 @@
 ---
-title: "math и random"
+title: 'math и random'
 lesson: 38
-description: "Математика, случайные числа"
+description: 'Математика, случайные числа'
 duration: 10
-complexity: "2"
-badge: "math_random"
-file: "38-math-random.html"
-layout: "layout.njk"
-permalink: "38-math-random.html"
-subtitle: "Математические вычисления и генерация случайных чисел"
-prevUrl: "37-venv-pip.html"
-prevTitle: "Виртуальные окружения и pip"
-nextUrl: "39-datetime.html"
-nextTitle: "Модуль datetime"
+complexity: '2'
+badge: 'math_random'
+file: '38-math-random.html'
+layout: 'layout.njk'
+permalink: '38-math-random.html'
+subtitle: 'Математические вычисления и генерация случайных чисел'
+prevUrl: '37-venv-pip.html'
+prevTitle: 'Виртуальные окружения и pip'
+nextUrl: '39-datetime.html'
+nextTitle: 'Модуль datetime'
 ---
 
 ## Модуль math — математика в Python
@@ -41,10 +41,11 @@ print(math.nan)  # не число (Not a Number)
 ```python
 import math
 
-print(math.ceil(3.1))    # 4
-print(math.floor(3.9))   # 3
-print(math.trunc(-3.9))  # -3
-```
+print(math.ceil(3.1)) # 4
+print(math.floor(3.9)) # 3
+print(math.trunc(-3.9)) # -3
+
+````
 
 ## Корни, степени, логарифмы
 
@@ -68,7 +69,7 @@ print(math.log2(8))       # 3.0
 
 # Экспонента: e^x
 print(math.exp(2))        # 7.38905609893065
-```
+````
 
 ## Тригонометрия
 
@@ -101,6 +102,7 @@ print(math.hypot(3, 4))        # 5.0
 ```python
 import random
 ```
+
 > **⚠️ Важно:** **Важно:** для криптографических целей используйте модуль `secrets`, а не `random`. `random` не обеспечивает криптографическую стойкость.
 
 ## random.randint() и random.randrange()

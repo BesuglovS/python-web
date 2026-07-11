@@ -7,12 +7,29 @@
 
 $uri = $_SERVER['REQUEST_URI'];
 $path = parse_url($uri, PHP_URL_PATH);
+$projectDir = realpath(__DIR__);
+
+/**
+ * Безопасное разрешение пути с защитой от path traversal.
+ * Возвращает реальный путь внутри $projectDir или null если путь невалиден.
+ */
+function safeResolve(string $projectDir, string $path): ?string {
+    $fullPath = realpath($projectDir . $path);
+    if ($fullPath === false) {
+        return null;
+    }
+    // Путь должен начинаться с корня проекта (защита от ../)
+    if (strpos($fullPath, $projectDir . DIRECTORY_SEPARATOR) !== 0 && $fullPath !== $projectDir) {
+        return null;
+    }
+    return $fullPath;
+}
 
 // Если запрос к sandbox — выполняем его напрямую
 // Поддерживаем run.php, repl.php и любые будущие .php в sandbox
 if (strpos($path, '/sandbox/') === 0) {
-    $file = __DIR__ . $path;
-    if (file_exists($file) && is_file($file) && substr($file, -4) === '.php') {
+    $file = safeResolve($projectDir, $path);
+    if ($file !== null && is_file($file) && substr($file, -4) === '.php') {
         require $file;
         return true;
     }
@@ -25,8 +42,8 @@ if (strpos($path, '/sandbox/') === 0) {
 }
 
 // Для остальных файлов — проверяем, существует ли файл
-$filePath = __DIR__ . $path;
-if (file_exists($filePath) && is_file($filePath)) {
+$filePath = safeResolve($projectDir, $path);
+if ($filePath !== null && is_file($filePath)) {
     return false; // отдаём статику через built-in сервер
 }
 

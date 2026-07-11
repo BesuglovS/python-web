@@ -1,18 +1,18 @@
 ---
-title: "NumPy и Pandas"
+title: 'NumPy и Pandas'
 lesson: 40
-description: "ndarray, DataFrame, анализ данных"
+description: 'ndarray, DataFrame, анализ данных'
 duration: 15
-complexity: "3"
-badge: "data_scientist"
-file: "40-numpy-pandas.html"
-layout: "layout.njk"
-permalink: "40-numpy-pandas.html"
+complexity: '3'
+badge: 'data_scientist'
+file: '40-numpy-pandas.html'
+layout: 'layout.njk'
+permalink: '40-numpy-pandas.html'
 subtitle: 'Введение в анализ данных: массивы, таблицы, фильтрация и группировка'
-prevUrl: "39-datetime.html"
-prevTitle: "Модуль datetime"
-nextUrl: "41-oop-intro.html"
-nextTitle: "Введение в ООП"
+prevUrl: '39-datetime.html'
+prevTitle: 'Модуль datetime'
+nextUrl: '41-oop-intro.html'
+nextTitle: 'Введение в ООП'
 ---
 
 ## Введение
@@ -21,11 +21,11 @@ NumPy и Pandas — фундаментальные библиотеки для �
 
 **📌 На этом уроке вы узнаете:**
 
--   Установка через `pip install numpy pandas`
--   NumPy-массивы: создание, индексация, срезы, broadcasting
--   Базовые операции: `np.mean()`, `np.sum()`, `np.reshape()`
--   Pandas: `Series`, `DataFrame`, чтение CSV/Excel
--   Фильтрация, группировка и агрегация данных в Pandas
+- Установка через `pip install numpy pandas`
+- NumPy-массивы: создание, индексация, срезы, broadcasting
+- Базовые операции: `np.mean()`, `np.sum()`, `np.reshape()`
+- Pandas: `Series`, `DataFrame`, чтение CSV/Excel
+- Фильтрация, группировка и агрегация данных в Pandas
 
 ## Основной материал
 
@@ -66,8 +66,8 @@ print(df[df['Возраст'] > 25])  # фильтрация
 
 ## Ключевые выводы
 
--   NumPy `ndarray` — быстрые массивы с векторизованными операциями
--   Pandas `DataFrame` — таблица с именованными столбцами и индексами
--   `pd.read_csv()`, `pd.read_excel()` — загрузка данных из файлов
--   Фильтрация: `df[df["столбец"] > значение]`, группировка: `df.groupby()`
--   Установка: `pip install numpy pandas`
+- NumPy `ndarray` — быстрые массивы с векторизованными операциями
+- Pandas `DataFrame` — таблица с именованными столбцами и индексами
+- `pd.read_csv()`, `pd.read_excel()` — загрузка данных из файлов
+- Фильтрация: `df[df["столбец"] > значение]`, группировка: `df.groupby()`
+- Установка: `pip install numpy pandas`

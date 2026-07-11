@@ -1,18 +1,18 @@
 ---
-title: "Множества"
+title: 'Множества'
 lesson: 26
-description: "set(), операции над множествами"
+description: 'set(), операции над множествами'
 duration: 10
-complexity: "2"
-badge: "set_specialist"
-file: "26-sets.html"
-layout: "layout.njk"
-permalink: "26-sets.html"
-subtitle: "set(), операции над множествами"
-prevUrl: "25-lists.html"
-prevTitle: "Списки"
-nextUrl: "27-tuples.html"
-nextTitle: "Кортежи"
+complexity: '2'
+badge: 'set_specialist'
+file: '26-sets.html'
+layout: 'layout.njk'
+permalink: '26-sets.html'
+subtitle: 'set(), операции над множествами'
+prevUrl: '25-lists.html'
+prevTitle: 'Списки'
+nextUrl: '27-tuples.html'
+nextTitle: 'Кортежи'
 ---
 
 ## Создание множества

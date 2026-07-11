@@ -1,18 +1,18 @@
 ---
-title: "Многопоточность и asyncio"
+title: 'Многопоточность и asyncio'
 lesson: 45
-description: "threading, multiprocessing, async/await"
+description: 'threading, multiprocessing, async/await'
 duration: 15
-complexity: "4"
-badge: "async_master"
-file: "45-threading-async.html"
-layout: "layout.njk"
-permalink: "45-threading-async.html"
+complexity: '4'
+badge: 'async_master'
+file: '45-threading-async.html'
+layout: 'layout.njk'
+permalink: '45-threading-async.html'
 subtitle: 'Потоки, процессы, асинхронное программирование: три подхода к параллельному выполнению'
-prevUrl: "44-generators.html"
-prevTitle: "Генераторы"
-nextUrl: "46-type-hints.html"
-nextTitle: "Type Hints"
+prevUrl: '44-generators.html'
+prevTitle: 'Генераторы'
+nextUrl: '46-type-hints.html'
+nextTitle: 'Type Hints'
 ---
 
 ## Введение
@@ -21,11 +21,11 @@ nextTitle: "Type Hints"
 
 **📌 На этом уроке вы узнаете:**
 
--   Модуль `threading`: запуск функций в отдельных потоках
--   GIL в Python и когда потоки реально параллельны
--   `ThreadPoolExecutor` из `concurrent.futures`
--   Асинхронность: `async def`, `await`, `asyncio.gather()`
--   Сравнение threading, multiprocessing и asyncio — что и когда использовать
+- Модуль `threading`: запуск функций в отдельных потоках
+- GIL в Python и когда потоки реально параллельны
+- `ThreadPoolExecutor` из `concurrent.futures`
+- Асинхронность: `async def`, `await`, `asyncio.gather()`
+- Сравнение threading, multiprocessing и asyncio — что и когда использовать
 
 ## Основной материал
 
@@ -75,8 +75,8 @@ async def main():
 
 ## Ключевые выводы
 
--   `threading` — для I/O-задач (сеть, файлы), не для CPU из-за GIL
--   `multiprocessing` — для CPU-задач, обходит GIL
--   `concurrent.futures` — удобные пулы потоков/процессов
--   `async/await` — асинхронный код с event loop для высоконагруженных сетевых приложений
--   `asyncio.gather()` — параллельный запуск нескольких корутин
+- `threading` — для I/O-задач (сеть, файлы), не для CPU из-за GIL
+- `multiprocessing` — для CPU-задач, обходит GIL
+- `concurrent.futures` — удобные пулы потоков/процессов
+- `async/await` — асинхронный код с event loop для высоконагруженных сетевых приложений
+- `asyncio.gather()` — параллельный запуск нескольких корутин

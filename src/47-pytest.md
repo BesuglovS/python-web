@@ -1,18 +1,18 @@
 ---
-title: "pytest"
+title: 'pytest'
 lesson: 47
-description: "assert, parametrize, проверка исключений"
+description: 'assert, parametrize, проверка исключений'
 duration: 12
-complexity: "3"
-badge: "test_master"
-file: "47-pytest.html"
-layout: "layout.njk"
-permalink: "47-pytest.html"
-subtitle: "Проверяем, что код работает правильно"
-prevUrl: "46-type-hints.html"
-prevTitle: "Type Hints"
-nextUrl: "48-requests-api.html"
-nextTitle: "Requests и API"
+complexity: '3'
+badge: 'test_master'
+file: '47-pytest.html'
+layout: 'layout.njk'
+permalink: '47-pytest.html'
+subtitle: 'Проверяем, что код работает правильно'
+prevUrl: '46-type-hints.html'
+prevTitle: 'Type Hints'
+nextUrl: '48-requests-api.html'
+nextTitle: 'Requests и API'
 ---
 
 ## Зачем нужны тесты?
@@ -41,6 +41,7 @@ def test_double_zero():
 def test_double_negative():
     assert double(-3) == -6
 ```
+
 ```python
 # Запуск тестов в терминале:
 pytest test_mycode.py

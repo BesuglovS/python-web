@@ -4,68 +4,68 @@
 
 ## 📚 Содержание
 
-| №  | Тема                                         | Файл                          |
-|----|----------------------------------------------|-------------------------------|
-| 1  | История, обзор и области применения          | `01-history.html`             |
-| 2  | Настройка IDE: IDLE, VS Code                 | `02-ide-setup.html`           |
-| 3  | Переменные                                   | `03-variables.html`           |
-| 4  | Типы данных                                  | `04-data-types.html`          |
-| 5  | Приведение типов                             | `05-type-casting.html`        |
-| 6  | Ввод и вывод                                 | `06-io.html`                  |
-| 7  | f-строки и форматирование                    | `07-f-strings.html`           |
-| 8  | Операции над числами                         | `08-number-ops.html`          |
-| 9  | Булевы переменные                            | `09-booleans.html`            |
-| 10 | Условный оператор                            | `10-conditional.html`         |
-| 11 | Обработка ошибок                             | `11-try-except.html`          |
-| 12 | Сложные условия                              | `12-complex-conditions.html`  |
-| 13 | Вложенные структуры                          | `13-nested-structures.html`   |
-| 14 | Строки: индексация и срезы                   | `14-strings-index-slice.html` |
-| 15 | Операции над строками                        | `15-string-ops.html`          |
-| 16 | Регулярные выражения                         | `16-regex.html`               |
-| 17 | Цикл с предусловием                          | `17-while.html`               |
-| 18 | Цикл for                                     | `18-for.html`                 |
-| 19 | range()                                      | `19-range.html`               |
-| 20 | break и continue                             | `20-break-continue.html`      |
-| 21 | Вложенные циклы                              | `21-nested-loops.html`        |
-| 22 | Создание простейших функций                  | `22-functions.html`           |
-| 23 | Функции: продвинутые темы                    | `23-functions-advanced.html`  |
-| 24 | Отладка программ                             | `24-debugging.html`           |
-| 25 | Списки                                       | `25-lists.html`               |
-| 26 | Множества                                    | `26-sets.html`                |
-| 27 | Кортежи                                      | `27-tuples.html`              |
-| 28 | Словари                                      | `28-dicts.html`               |
-| 29 | split + join                                 | `29-split-join.html`          |
-| 30 | Списочные выражения                          | `30-list-comprehensions.html` |
-| 31 | Lambda-функции                               | `31-lambda.html`              |
-| 32 | Файлы: чтение и запись                       | `32-files.html`               |
-| 33 | JSON и CSV                                   | `33-json-csv.html`            |
-| 34 | Базы данных SQLite                           | `34-sqlite3.html`             |
-| 35 | Модули и import                              | `35-modules-import.html`      |
-| 36 | Модуль itertools                             | `36-itertools.html`           |
-| 37 | Виртуальные окружения и pip                  | `37-venv-pip.html`            |
-| 38 | Модули math и random                         | `38-math-random.html`         |
-| 39 | Модуль datetime                              | `39-datetime.html`            |
-| 40 | NumPy и Pandas                               | `40-numpy-pandas.html`        |
-| 41 | Введение в ООП                               | `41-oop-intro.html`           |
-| 42 | Наследование и полиморфизм                   | `42-inheritance.html`         |
-| 43 | Декораторы                                   | `43-decorators.html`          |
-| 44 | Генераторы                                   | `44-generators.html`          |
-| 45 | Многопоточность и asyncio                    | `45-threading-async.html`     |
-| 46 | Type Hints                                   | `46-type-hints.html`          |
-| 47 | Unit-тесты с pytest                          | `47-pytest.html`              |
-| 48 | Requests и API                               | `48-requests-api.html`        |
-| 49 | Веб-фреймворки: Flask                        | `49-flask.html`               |
-| 50 | Введение в Git                               | `50-git-intro.html`           |
+| №   | Тема                                | Файл                          |
+| --- | ----------------------------------- | ----------------------------- |
+| 1   | История, обзор и области применения | `01-history.html`             |
+| 2   | Настройка IDE: IDLE, VS Code        | `02-ide-setup.html`           |
+| 3   | Переменные                          | `03-variables.html`           |
+| 4   | Типы данных                         | `04-data-types.html`          |
+| 5   | Приведение типов                    | `05-type-casting.html`        |
+| 6   | Ввод и вывод                        | `06-io.html`                  |
+| 7   | f-строки и форматирование           | `07-f-strings.html`           |
+| 8   | Операции над числами                | `08-number-ops.html`          |
+| 9   | Булевы переменные                   | `09-booleans.html`            |
+| 10  | Условный оператор                   | `10-conditional.html`         |
+| 11  | Обработка ошибок                    | `11-try-except.html`          |
+| 12  | Сложные условия                     | `12-complex-conditions.html`  |
+| 13  | Вложенные структуры                 | `13-nested-structures.html`   |
+| 14  | Строки: индексация и срезы          | `14-strings-index-slice.html` |
+| 15  | Операции над строками               | `15-string-ops.html`          |
+| 16  | Регулярные выражения                | `16-regex.html`               |
+| 17  | Цикл с предусловием                 | `17-while.html`               |
+| 18  | Цикл for                            | `18-for.html`                 |
+| 19  | range()                             | `19-range.html`               |
+| 20  | break и continue                    | `20-break-continue.html`      |
+| 21  | Вложенные циклы                     | `21-nested-loops.html`        |
+| 22  | Создание простейших функций         | `22-functions.html`           |
+| 23  | Функции: продвинутые темы           | `23-functions-advanced.html`  |
+| 24  | Отладка программ                    | `24-debugging.html`           |
+| 25  | Списки                              | `25-lists.html`               |
+| 26  | Множества                           | `26-sets.html`                |
+| 27  | Кортежи                             | `27-tuples.html`              |
+| 28  | Словари                             | `28-dicts.html`               |
+| 29  | split + join                        | `29-split-join.html`          |
+| 30  | Списочные выражения                 | `30-list-comprehensions.html` |
+| 31  | Lambda-функции                      | `31-lambda.html`              |
+| 32  | Файлы: чтение и запись              | `32-files.html`               |
+| 33  | JSON и CSV                          | `33-json-csv.html`            |
+| 34  | Базы данных SQLite                  | `34-sqlite3.html`             |
+| 35  | Модули и import                     | `35-modules-import.html`      |
+| 36  | Модуль itertools                    | `36-itertools.html`           |
+| 37  | Виртуальные окружения и pip         | `37-venv-pip.html`            |
+| 38  | Модули math и random                | `38-math-random.html`         |
+| 39  | Модуль datetime                     | `39-datetime.html`            |
+| 40  | NumPy и Pandas                      | `40-numpy-pandas.html`        |
+| 41  | Введение в ООП                      | `41-oop-intro.html`           |
+| 42  | Наследование и полиморфизм          | `42-inheritance.html`         |
+| 43  | Декораторы                          | `43-decorators.html`          |
+| 44  | Генераторы                          | `44-generators.html`          |
+| 45  | Многопоточность и asyncio           | `45-threading-async.html`     |
+| 46  | Type Hints                          | `46-type-hints.html`          |
+| 47  | Unit-тесты с pytest                 | `47-pytest.html`              |
+| 48  | Requests и API                      | `48-requests-api.html`        |
+| 49  | Веб-фреймворки: Flask               | `49-flask.html`               |
+| 50  | Введение в Git                      | `50-git-intro.html`           |
 
 ## 🧭 Дополнительные страницы
 
-| Страница               | Файл               | Описание                                      |
-|------------------------|--------------------|-----------------------------------------------|
-| Главная (оглавление)   | `index.html`       | Навигация по всем 50 урокам с прогресс-баром  |
-| Интерактивная консоль  | `repl.html`        | Python REPL в браузере (Pyodide)              |
-| Итоговый тест          | `final-test.html`  | Проверка знаний по всем темам                 |
-| Шпаргалки              | `cheatsheets.html` | Краткие конспекты для печати                  |
-| Карта курса            | `mindmap.html`     | Визуальная схема всех тем                     |
+| Страница              | Файл               | Описание                                     |
+| --------------------- | ------------------ | -------------------------------------------- |
+| Главная (оглавление)  | `index.html`       | Навигация по всем 50 урокам с прогресс-баром |
+| Интерактивная консоль | `repl.html`        | Python REPL в браузере (Pyodide)             |
+| Итоговый тест         | `final-test.html`  | Проверка знаний по всем темам                |
+| Шпаргалки             | `cheatsheets.html` | Краткие конспекты для печати                 |
+| Карта курса           | `mindmap.html`     | Визуальная схема всех тем                    |
 
 ## 🚀 Как использовать
 
@@ -97,13 +97,13 @@ npm run watch       # сборка с автоперезагрузкой при 
 
 ### Форматы файлов
 
-| Роль | Формат | Расположение |
-|------|--------|--------------|
-| **Исходники уроков** | Markdown (.md) | `src/*.md` |
-| **Шаблон урока** | Nunjucks (.njk) | `src/_includes/layout.njk` |
-| **Шаблон главной** | Nunjucks (.njk) | `src/_includes/layout-index.njk` + `src/index.njk` |
-| **Данные курса** | JavaScript (.js) | `src/_data/lessonsData.js` (генерируется из `lessons.json`) |
-| **Собранные HTML** | HTML (.html) | Корень `python-web/` (перезаписываются при сборке) |
+| Роль                 | Формат           | Расположение                                                |
+| -------------------- | ---------------- | ----------------------------------------------------------- |
+| **Исходники уроков** | Markdown (.md)   | `src/*.md`                                                  |
+| **Шаблон урока**     | Nunjucks (.njk)  | `src/_includes/layout.njk`                                  |
+| **Шаблон главной**   | Nunjucks (.njk)  | `src/_includes/layout-index.njk` + `src/index.njk`          |
+| **Данные курса**     | JavaScript (.js) | `src/_data/lessonsData.js` (генерируется из `lessons.json`) |
+| **Собранные HTML**   | HTML (.html)     | Корень `python-web/` (перезаписываются при сборке)          |
 
 ### Структура Markdown-урока
 
@@ -111,27 +111,30 @@ npm run watch       # сборка с автоперезагрузкой при 
 
 ```markdown
 ---
-layout: "layout.njk"
+layout: 'layout.njk'
 lesson: 25
-title: "Списки"
-subtitle: "list, методы списков"
+title: 'Списки'
+subtitle: 'list, методы списков'
 duration: 15
 section: 5
 complexity: 2
-prev: "24-debugging.html"
-prevTitle: "Отладка программ"
-next: "26-sets.html"
-nextTitle: "Множества"
+prev: '24-debugging.html'
+prevTitle: 'Отладка программ'
+next: '26-sets.html'
+nextTitle: 'Множества'
 ---
 
 ## Создание списков
+
 Список — упорядоченная изменяемая коллекция:
 
 ## Индексация и срезы
+
 ...
 ```
 
 **Поля front matter:**
+
 - `layout` — подключаемый шаблон (всегда `layout.njk`)
 - `lesson` — номер урока (1–50)
 - `title` — название
@@ -231,33 +234,35 @@ npm run build
 ### Что отправлять на сервер
 
 Всё содержимое папки `python-web/`, **кроме**:
+
 - `node_modules/` — зависимости сборки
 - `src/` — исходные Markdown-файлы
-- `convert-lessons.js`, `.eleventy.js`, `package.json` — инструменты сборки
+- `.eleventy.js`, `package.json` — инструменты сборки
 - `ANALYSIS.md` — внутренняя документация
 
 **Важно:** `lessons.json`, `quizzes/` и `sandbox/` — обязательны на проде, они используются клиентским JS и PHP-песочницей.
 
 ### Требования к серверу
 
-| Компонент | Требование |
-|-----------|------------|
-| Веб-сервер | Apache 2.4+ или Nginx 1.18+ |
-| PHP | **7.4+** (для `sandbox/run.php`) |
-| Python | **3.10+** (песочница выполняет код пользователя) |
+| Компонент  | Требование                                       |
+| ---------- | ------------------------------------------------ |
+| Веб-сервер | Apache 2.4+ или Nginx 1.18+                      |
+| PHP        | **7.4+** (для `sandbox/run.php`)                 |
+| Python     | **3.10+** (песочница выполняет код пользователя) |
 
 ### Конфигурация сервера
 
 В проекте два конфигурационных файла — используйте тот, который соответствует вашему веб-серверу:
 
-| Файл | Сервер | Назначение |
-|------|--------|------------|
-| `python.nayanovaacademy.ru` | **Nginx** | Полный конфиг виртуального хоста |
-| `.htaccess` | **Apache** | Security headers, кэширование, сжатие |
+| Файл                        | Сервер     | Назначение                            |
+| --------------------------- | ---------- | ------------------------------------- |
+| `python.nayanovaacademy.ru` | **Nginx**  | Полный конфиг виртуального хоста      |
+| `.htaccess`                 | **Apache** | Security headers, кэширование, сжатие |
 
 **Nginx** не читает `.htaccess` — вся конфигурация должна быть в `python.nayanovaacademy.ru`.
 
 Оба файла содержат:
+
 - Security headers (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
 - Кэширование статики (CSS/JS/изображения — 1 год, HTML/JSON — 1 час)
 - Gzip-сжатие
@@ -266,13 +271,15 @@ npm run build
 ### Варианты деплоя
 
 **VPS / выделенный сервер:**
+
 ```bash
 rsync -avz --delete \
   --exclude='node_modules' --exclude='src' --exclude='.git' \
-  --exclude='convert-lessons.js' --exclude='ANALYSIS.md' \
+  --exclude='ANALYSIS.md' \
   --exclude='package.json' --exclude='package-lock.json' \
   ./python-web/ user@server:/var/www/python-web/
 ```
+
 → Apache/Nginx VirtualHost + Certbot для HTTPS
 
 **Обычный хостинг (Reg.ru, Timeweb, Beget):**

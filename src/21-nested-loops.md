@@ -1,18 +1,18 @@
 ---
-title: "Вложенные циклы"
+title: 'Вложенные циклы'
 lesson: 21
-description: "Циклы внутри циклов"
+description: 'Циклы внутри циклов'
 duration: 10
-complexity: "2"
-badge: "nested_looper"
-file: "21-nested-loops.html"
-layout: "layout.njk"
-permalink: "21-nested-loops.html"
-subtitle: "Циклы внутри циклов"
-prevUrl: "20-break-continue.html"
-prevTitle: "break и continue"
-nextUrl: "22-functions.html"
-nextTitle: "Создание простейших функций"
+complexity: '2'
+badge: 'nested_looper'
+file: '21-nested-loops.html'
+layout: 'layout.njk'
+permalink: '21-nested-loops.html'
+subtitle: 'Циклы внутри циклов'
+prevUrl: '20-break-continue.html'
+prevTitle: 'break и continue'
+nextUrl: '22-functions.html'
+nextTitle: 'Создание простейших функций'
 ---
 
 ## Вложенные циклы for

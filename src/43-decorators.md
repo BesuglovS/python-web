@@ -1,18 +1,18 @@
 ---
-title: "Декораторы"
+title: 'Декораторы'
 lesson: 43
-description: "@decorator, wraps, кастомные декораторы"
+description: '@decorator, wraps, кастомные декораторы'
 duration: 12
-complexity: "3"
-badge: "decorator_master"
-file: "43-decorators.html"
-layout: "layout.njk"
-permalink: "43-decorators.html"
-subtitle: "Модификация поведения функций без изменения их кода"
-prevUrl: "42-inheritance.html"
-prevTitle: "Наследование и полиморфизм"
-nextUrl: "44-generators.html"
-nextTitle: "Генераторы"
+complexity: '3'
+badge: 'decorator_master'
+file: '43-decorators.html'
+layout: 'layout.njk'
+permalink: '43-decorators.html'
+subtitle: 'Модификация поведения функций без изменения их кода'
+prevUrl: '42-inheritance.html'
+prevTitle: 'Наследование и полиморфизм'
+nextUrl: '44-generators.html'
+nextTitle: 'Генераторы'
 ---
 
 ## Что такое декоратор?

@@ -1,0 +1,25 @@
+node_modules/
+dist/
+
+# Минифицированные файлы (build output)
+*.min.js
+*.min.css
+highlight-py.min.js
+style.css
+script.js
+config.js
+repl.js
+ga.js
+mindmap.js
+sw.js
+
+# Сгенерированные HTML (из Eleventy)
+*.html
+index.html
+repl.html
+offline.html
+
+# Квизы и данные
+quizzes/
+lessons.json
+package-lock.json

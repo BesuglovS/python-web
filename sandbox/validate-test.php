@@ -101,16 +101,19 @@ foreach ($correctAnswers as $questionNum => $correctOption) {
 
 $percentage = round($score / $total * 100, 1);
 
-// Генерация сертификата (упрощённый UUID-v4, не криптографический)
+// Генерация сертификата (криптографически стойкий UUID v4)
 $certificate = null;
 if ($percentage >= 70) {
+    $bytes = random_bytes(16);
     $certificate = sprintf(
-        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-        mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0x0fff) | 0x4000,
-        mt_rand(0, 0x3fff) | 0x8000,
-        mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        '%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x',
+        $bytes[0], $bytes[1], $bytes[2], $bytes[3],
+        $bytes[4], $bytes[5],
+        ($bytes[6] & 0x0f) | 0x40,
+        $bytes[7],
+        ($bytes[8] & 0x3f) | 0x80,
+        $bytes[9],
+        $bytes[10], $bytes[11], $bytes[12], $bytes[13], $bytes[14], $bytes[15]
     );
 }
 
