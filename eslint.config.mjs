@@ -66,6 +66,8 @@ export default tseslint.config(
         hljs: 'readonly',
         // Cross-file globals
         safeGetItem: 'readonly',
+        location: 'readonly',
+        ym: 'readonly',
         safeSetItem: 'readonly',
         safeRemoveItem: 'readonly',
         LESSON_META: 'readonly',
