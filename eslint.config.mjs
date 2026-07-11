@@ -26,14 +26,14 @@ export default tseslint.config(
       '_site/**',
       'package-lock.json',
       // Build & config files
-      '.eleventy.js',
+      '.eleventy.cjs',
       'build-highlight.mjs',
       'build-sw.mjs',
-      'minify.js',
+      'minify.cjs',
       'playwright.config.js',
-      'src/_data/lessonsData.js',
+      'src/_data/lessonsData.cjs',
       // E2E tests using CommonJS
-      'e2e/**/*.js',
+      'e2e/**/*.cjs',
     ],
   },
   {
@@ -117,20 +117,32 @@ export default tseslint.config(
     },
   },
   {
-    files: [
-      'eslint.config.mjs',
-      'build-highlight.mjs',
-      'build-sw.mjs',
-      'minify.js',
-      'tests/**/*.js',
-      'tests/**/*.ts',
-    ],
+    files: ['**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+        process: 'readonly',
+        console: 'readonly',
+        Buffer: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
+    files: ['eslint.config.mjs', 'build-highlight.mjs', 'build-sw.mjs', 'tests/**/*.{js,mjs,ts}'],
     languageOptions: {
       sourceType: 'module',
     },
   },
   {
-    files: ['e2e/**/*.js', 'e2e/**/*.ts'],
+    files: ['e2e/**/*.{js,cjs,ts}'],
     languageOptions: {
       sourceType: 'module',
       globals: {
