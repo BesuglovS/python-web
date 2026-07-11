@@ -24,10 +24,6 @@ updates:
     ignore:
       - dependency-name: 'esbuild'
         versions: ['0.25.x'] # wait for 0.26+
-    automerged-updates:
-      - match:
-          dependency-type: 'dev'
-          update-type: 'version-update:semver-patch'
     groups:
       dev-dependencies:
         patterns:

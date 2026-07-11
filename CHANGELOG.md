@@ -38,6 +38,46 @@ All notable changes to this project will be documented in this file.
 
 - GA Measurement ID now configurable via `window.GA_MEASUREMENT_ID` instead of hardcoded
 
+## [1.2.0] — 2026-07-11
+
+### Added
+
+- Migration to Eleventy (11ty) static site generator
+- Nunjucks templates in `src/`, lesson content as Markdown (`.md`)
+- Modular JavaScript architecture in `src/js/modules/` (18 modules)
+- TypeScript configuration (`tsconfig.json`)
+- ESLint flat config (`eslint.config.mjs`)
+- Build pipeline: `build-assets-hash.mjs`, `build-config-meta.mjs`, `build-js.mjs`, `build-sw.mjs`
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`)
+- Dependabot configuration (`.github/dependabot.yml`)
+- Prettier config (`.prettierrc`, `.prettierignore`)
+- Environment variables example (`.env.example`)
+- Node version pinning (`.nvmrc`)
+- Sandbox common utilities extracted to `sandbox_common.php`
+- Sandbox internal test helpers (`_test_e2e.php`, `_test_stream_select.php`, `_test_wrapper.php`)
+- Unit tests: config, mindmap, repl, sandbox-client, sw, utils (Vitest)
+- Python AST validator unit tests (`tests/test_ast_validator.py`)
+- PHP sandbox test suite (`tests/test_sandbox.php`)
+- Open Graph image generation (`og-image.png`, build script)
+
+### Changed
+
+- Lesson HTML files replaced with Markdown sources in `src/`
+- `.eleventy.js` heavily extended for the new build process
+- JavaScript split into 18 focused modules with clean separation of concerns
+- `sandbox/repl.php` and `sandbox/run.php` significantly refactored
+- `manifest.json`, `sw.js`, `minify.js` updated for new architecture
+- `README.md` rewritten with up-to-date development instructions
+
+### Removed
+
+- Flat HTML lesson files (50 files) — migrated to `src/*.md`
+- `build.js`, `convert-lessons.js`, `extract-quizzes.js` — replaced by modular build pipeline
+- `cheatsheets.html`, `final-test.html`, `mindmap.html`, `repl.html` — removed or migrated
+- `mindmap.js`, `config.js`, `script.js` — replaced by modular JS sources
+- `highlight-py.min.js`, `ga.js`, `ym-init.js` — removed
+- `playwright.config.js` — removed
+
 ## [1.0.0] — 2026-06-01
 
 ### Added
