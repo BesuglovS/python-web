@@ -4,9 +4,11 @@ const { DateTime } = require('luxon');
 const PROJECT = __dirname;
 const SRC = path.join(PROJECT, 'src');
 
-module.exports = function (eleventyConfig) {
+module.exports = function(eleventyConfig) {
   // Passthrough copy — статические файлы, которые не обрабатываются сборкой
   eleventyConfig.addPassthroughCopy({ 'src/js/ym-init.js': 'ym-init.js' });
+  // CSS для dev-сборки (будет собран из модулей)
+  eleventyConfig.addPassthroughCopy({ 'src/css/index.css': 'style.css' });
 
   // Изображения
   eleventyConfig.addPassthroughCopy({ 'favicon.png': 'favicon.png' });
@@ -39,14 +41,14 @@ module.exports = function (eleventyConfig) {
 
   // Коллекция всех уроков (из Markdown файлов в src/)
   const lessonsGlob = path.join(SRC, '*.md');
-  eleventyConfig.addCollection('lessons', function (collectionApi) {
+  eleventyConfig.addCollection('lessons', function(collectionApi) {
     return collectionApi
       .getFilteredByGlob(lessonsGlob)
       .sort((a, b) => a.data.lesson - b.data.lesson);
   });
 
   // Коллекции по секциям для index.njk
-  eleventyConfig.addCollection('sections', function (collectionApi) {
+  eleventyConfig.addCollection('sections', function(collectionApi) {
     const lessons = collectionApi
       .getFilteredByGlob(lessonsGlob)
       .sort((a, b) => a.data.lesson - b.data.lesson);

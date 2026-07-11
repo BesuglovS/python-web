@@ -1,0 +1,129 @@
+/* Layout Components */
+.main-content, main {
+  flex: 1;
+  min-width: 0;
+}
+
+#toc {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  background: var(--toc-bg);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  border: 1px solid var(--border);
+  font-size: 0.88em;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+#toc-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--primary);
+  font-size: 1em;
+}
+
+#toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#toc li {
+  margin-bottom: 4px;
+}
+
+#toc li.toc-h3 {
+  padding-left: 14px;
+}
+
+#toc a {
+  color: var(--text-muted);
+  text-decoration: none;
+  display: block;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color var(--transition), background var(--transition);
+  font-size: 0.85em;
+  line-height: 1.35;
+}
+
+#toc a:hover {
+  color: var(--primary);
+  background: rgba(102, 126, 234, 0.08);
+}
+
+#toc a.toc-active {
+  color: var(--toc-active);
+  font-weight: 600;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.progress-bar-container {
+  background: var(--progress-bar-bg);
+  border-radius: 20px;
+  height: 10px;
+  margin: 14px 0 6px;
+  overflow: hidden;
+  transition: background var(--transition);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: var(--progress-bar-fill);
+  transition: width 0.6s;
+}
+
+.progress-info {
+  font-size: 0.88em;
+  color: var(--text-muted);
+}
+
+.section-anchor-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--card-bg);
+  border-bottom: 2px solid var(--border);
+  padding: 8px 16px;
+  margin: 0 -20px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.section-anchor-nav a {
+  display: inline-block;
+  padding: 5px 12px;
+  font-size: 0.82em;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 16px;
+  white-space: nowrap;
+  transition: all var(--transition);
+  border: 1px solid transparent;
+}
+
+.section-anchor-nav a:focus,
+.section-anchor-nav a:hover {
+  color: var(--primary);
+  background: rgba(102, 126, 234, 0.08);
+  border-color: var(--primary);
+}
+
+.section-anchor-nav a.active {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+}

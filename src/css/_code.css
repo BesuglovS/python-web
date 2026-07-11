@@ -1,0 +1,201 @@
+/* Code Blocks & Syntax Highlighting */
+pre, .code-block {
+  background: var(--code-bg);
+  color: var(--code-color);
+  padding: 18px 20px;
+  border-radius: var(--radius-sm);
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.9em;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+  font-variant-ligatures: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 14px 0 18px;
+}
+
+[data-theme=dark] pre,
+[data-theme=dark] .code-block {
+  background: #0d1117;
+}
+
+.code-wrapper {
+  position: relative;
+  margin: 14px 0 18px;
+}
+
+pre.code-block {
+  background: var(--code-bg);
+  color: var(--code-color);
+  padding: 18px 20px;
+  border-radius: var(--radius-sm);
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.9em;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+  font-variant-ligatures: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.code-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: #16162a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  flex-wrap: wrap;
+}
+
+[data-theme=dark] .code-toolbar {
+  background: #0d1117;
+}
+
+.copy-btn, .edit-btn, .run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.75em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.copy-btn .btn-label,
+.edit-btn .btn-label,
+.run-btn .btn-label {
+  font-size: 0.95em;
+}
+
+.copy-btn:hover,
+.edit-btn:hover,
+.run-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.run-btn {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+.run-btn:hover {
+  background: rgba(16, 185, 129, 0.25);
+  color: #fff;
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.edit-btn {
+  background: rgba(249, 168, 37, 0.1);
+  border-color: rgba(249, 168, 37, 0.15);
+  color: #fbbf24;
+}
+
+.edit-btn:hover {
+  background: rgba(249, 168, 37, 0.2);
+  color: #fff;
+  border-color: rgba(249, 168, 37, 0.35);
+}
+
+.edit-btn.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+.copy-btn.copied {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+.code-wrapper pre {
+  margin: 0 !important;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm) !important;
+}
+
+.code-wrapper pre.editing {
+  outline: rgba(249, 168, 37, 0.6) dashed 2px;
+  outline-offset: -2px;
+  cursor: text;
+  background: #0f0f1a !important;
+}
+
+[data-theme=dark] .code-wrapper pre.editing {
+  background: #06080d !important;
+}
+
+.py-keyword {
+  color: #c792ea;
+  font-weight: 600;
+}
+
+.py-string {
+  color: #c3e88d;
+}
+
+.py-fstring {
+  color: #ffcb6b;
+}
+
+.py-comment {
+  color: #676e95;
+  font-style: italic;
+}
+
+.py-number {
+  color: #f78c6c;
+}
+
+.py-builtin {
+  color: #82aaff;
+}
+
+.py-decorator {
+  color: #c792ea;
+}
+
+code {
+  background: var(--note-bg);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.9em;
+  color: var(--text-code);
+  font-variant-ligatures: none;
+}
+
+pre code {
+  background: 0 0;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: 0.6s linear infinite spin;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0); }
+  100%, to { transform: rotate(360deg); }
+}

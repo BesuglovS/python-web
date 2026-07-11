@@ -1,0 +1,63 @@
+/* Variables - Цветовая палитра, темы, отступы */
+:root {
+  --bg: #f0f2f5;
+  --bg-alt: #ffffff;
+  --text: #2c3e50;
+  --text-muted: #6b7280;
+  --text-code: #e74c3c;
+  --border: #e5e7eb;
+  --primary: #667eea;
+  --primary-dark: #5a6fd6;
+  --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --code-bg: #1e1e2e;
+  --code-color: #cdd6f4;
+  --note-bg: #fef3c7;
+  --note-border: #f59e0b;
+  --tip-bg: #d1fae5;
+  --tip-border: #10b981;
+  --warning-bg: #fee2e2;
+  --warning-border: #ef4444;
+  --table-hover: #f3f4f6;
+  --toc-bg: #f9fafb;
+  --toc-active: #667eea;
+  --search-bg: #ffffff;
+  --progress-bar-bg: #e5e7eb;
+  --progress-bar-fill: linear-gradient(135deg, #667eea, #764ba2);
+  --card-bg: rgba(255, 255, 255, 0.97);
+  --card-hover-bg: #ffffff;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme=dark] {
+  --bg: #111827;
+  --bg-alt: #1f2937;
+  --text: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-code: #fca5a5;
+  --border: #374151;
+  --primary: #818cf8;
+  --primary-dark: #6366f1;
+  --primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --code-bg: #0d1117;
+  --code-color: #c9d1d9;
+  --note-bg: #422006;
+  --note-border: #d97706;
+  --tip-bg: #064e3b;
+  --tip-border: #059669;
+  --warning-bg: #450a0a;
+  --warning-border: #dc2626;
+  --table-hover: #374151;
+  --toc-bg: #1f2937;
+  --search-bg: #1f2937;
+  --progress-bar-bg: #374151;
+  --card-bg: rgba(31, 41, 55, 0.97);
+  --card-hover-bg: #1f2937;
+}

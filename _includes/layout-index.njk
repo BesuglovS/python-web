@@ -1,0 +1,41 @@
+---
+layout: null
+---
+<!DOCTYPE html>
+<html lang="ru" data-theme="{{ data.theme }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ data.title }} — Python Web</title>
+  <meta name="description" content="{{ data.description }}">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" href="/favicon.png">
+  <link rel="icon" href="/favicon-192x192.png" type="image/png" sizes="192x192">
+  <link rel="icon" href="/favicon-512x512.png" type="image/png" sizes="512x512">
+  <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/highlight-theme.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="index-page {{ data.bodyclass }}">
+  <div class="container index-container">
+    <nav id="nav-index" class="index-nav">
+      {{ data.nav_index }}
+    </nav>
+
+    <main id="main" class="main index-main">
+      {{ content }}
+    </main>
+
+    <footer class="index-footer">
+      <p>
+        Курс по изучению программирования на Python.
+        <a href="https://github.com/your-repo/python-web">GitHub</a> ·
+        <a href="/robots.txt">robots.txt</a>
+      </p>
+    </footer>
+  </div>
+
+  <script src="/ym-init.js"></script>
+  {{ data.extra_js }}
+</html>
