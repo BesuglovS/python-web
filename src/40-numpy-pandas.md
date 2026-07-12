@@ -2,17 +2,11 @@
 title: 'NumPy и Pandas'
 lesson: 40
 description: 'ndarray, DataFrame, анализ данных'
-duration: 15
-complexity: '3'
 badge: 'data_scientist'
 file: '40-numpy-pandas.html'
 layout: 'layout.njk'
 permalink: '40-numpy-pandas.html'
 subtitle: 'Введение в анализ данных: массивы, таблицы, фильтрация и группировка'
-prevUrl: '39-datetime.html'
-prevTitle: 'Модуль datetime'
-nextUrl: '41-oop-intro.html'
-nextTitle: 'Введение в ООП'
 ---
 
 ## Введение

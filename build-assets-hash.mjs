@@ -1,5 +1,5 @@
 /**
- * Content-hash для статических ассетов (style.css, script.js, config.js, …).
+ * Content-hash для статических ассетов (style.css, script.js, …).
  *
  * Проблема: статика кэшируется на 1 год (CDN/браузер), поэтому после деплоя
  * новой версии клиенты могли получать старые файлы. Решение: добавляем в имя
@@ -14,6 +14,7 @@ import {
   writeFileSync,
   copyFileSync,
   unlinkSync,
+  chmodSync,
   existsSync,
 } from 'fs';
 import { join, extname, basename } from 'path';
@@ -24,7 +25,6 @@ const ROOT = join(process.cwd(), 'dist');
 const ASSETS = [
   'style.css',
   'script.js',
-  'config.js',
   'highlight-py.min.js',
   'mindmap.js',
   'repl.js',
@@ -73,9 +73,10 @@ for (const asset of ASSETS) {
     const re = new RegExp(`^${escapeRe(base)}\\.[a-f0-9]{8}\\${escapeRe(ext)}$`);
     if (re.test(entry)) {
       try {
+        chmodSync(join(ROOT, entry), 0o666);
         unlinkSync(join(ROOT, entry));
-      } catch {
-        /* ignore */
+      } catch (e) {
+        console.warn(`⚠ Не удалось удалить ${entry}: ${e.message}`);
       }
     }
   }

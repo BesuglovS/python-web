@@ -2,17 +2,11 @@
 title: 'Строки: индексация и срезы'
 lesson: 14
 description: 'Индексы, [start:stop:step]'
-duration: 12
-complexity: '2'
 badge: 'string_slicer'
 file: '14-strings-index-slice.html'
 layout: 'layout.njk'
 permalink: '14-strings-index-slice.html'
 subtitle: 'Индексы, [start:stop:step]'
-prevUrl: '13-nested-structures.html'
-prevTitle: 'Вложенные структуры'
-nextUrl: '15-string-ops.html'
-nextTitle: 'Операции над строками'
 ---
 
 ## Индексация строк

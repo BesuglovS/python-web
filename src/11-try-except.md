@@ -2,17 +2,11 @@
 title: 'Обработка исключений'
 lesson: 11
 description: 'try, except, finally, raise'
-duration: 10
-complexity: '2'
 badge: 'error_handler'
 file: '11-try-except.html'
 layout: 'layout.njk'
 permalink: '11-try-except.html'
 subtitle: 'try / except / finally / raise — как сделать программу устойчивой к ошибкам'
-prevUrl: '10-conditional.html'
-prevTitle: 'Условный оператор + Отступы'
-nextUrl: '12-complex-conditions.html'
-nextTitle: 'Сложные условия'
 ---
 
 ## Зачем нужна обработка ошибок?
@@ -41,7 +35,7 @@ except ZeroDivisionError:
     print("❌ На ноль делить нельзя!")
 ```
 
-> **⚠️ Важно:** **Важно:** как только в блоке `try` возникает ошибка, выполнение сразу переходит в соответствующий `except`. Оставшаяся часть `try` не выполняется.
+> **⚠️ Важно:** как только в блоке `try` возникает ошибка, выполнение сразу переходит в соответствующий `except`. Оставшаяся часть `try` не выполняется.
 
 ## Несколько типов исключений в одном except
 

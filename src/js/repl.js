@@ -1,21 +1,32 @@
 'use strict';
 
+import { safeGetItem, safeSetItem, safeRemoveItem } from './config/security.js';
+import {
+  MAX_REPL_HISTORY,
+  PERSISTED_REPL_HISTORY,
+  DEFAULT_SANDBOX_TIMEOUT,
+} from './config/constants.js';
+
 // ─── UUID generation for session isolation ───
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj && cryptoObj.randomUUID) return cryptoObj.randomUUID();
+  const arr = new Uint8Array(16);
+  cryptoObj.getRandomValues(arr);
+  arr[6] = (arr[6] & 0x0f) | 0x40;
+  arr[8] = (arr[8] & 0x3f) | 0x80;
+  let hex = '';
+  for (let i = 0; i < 16; i++) hex += arr[i].toString(16).padStart(2, '0');
+  return hex.substring(0, 8) + '-' + hex.substring(8, 12) + '-' + hex.substring(12, 16) + '-' + hex.substring(16, 20) + '-' + hex.substring(20);
 }
 
 let sessionId = uuidv4();
-let history = [];
+let replHistory = [];
 
 try {
   const saved = safeGetItem('python-repl-history');
   if (saved) {
-    history = JSON.parse(saved);
+    replHistory = JSON.parse(saved);
   }
 } catch (_e) {
   // ignore parse errors
@@ -39,7 +50,8 @@ async function runRepl() {
   if (btn) {
     btn.disabled = true;
     btn.classList.add('running');
-    btn.textContent = '⏳ Выполняется...';
+    btn.textContent = '\u23f3 \u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f...';
+    btn.setAttribute('aria-busy', 'true');
   }
 
   const entry = { code: code, output: '', error: '', time: Date.now() };
@@ -54,7 +66,7 @@ async function runRepl() {
       body: JSON.stringify({
         code: code,
         input: stdinData,
-        timeout: 5,
+        timeout: DEFAULT_SANDBOX_TIMEOUT,
         session_id: sessionId,
       }),
       signal: currentReplController.signal,
@@ -86,18 +98,21 @@ async function runRepl() {
     if (btn) {
       btn.disabled = false;
       btn.classList.remove('running');
-      btn.textContent = '▶ Запустить';
+      btn.textContent = '\u25b6 \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c';
+      btn.setAttribute('aria-busy', 'false');
     }
     currentReplController = null;
   }
 
-  history.push(entry);
-  if (history.length > 100) history.shift();
+  if (entry.output || entry.error) {
+    replHistory.push(entry);
+    if (replHistory.length > MAX_REPL_HISTORY) replHistory.shift();
 
-  try {
-    safeSetItem('python-repl-history', JSON.stringify(history.slice(-50)));
-  } catch (_e) {
-    // ignore
+    try {
+      safeSetItem('python-repl-history', JSON.stringify(replHistory.slice(-PERSISTED_REPL_HISTORY)));
+    } catch (_e) {
+      // ignore
+    }
   }
 
   renderHistory();
@@ -120,10 +135,11 @@ async function runEditor() {
   const btn = document.getElementById('editor-run-btn');
   if (btn) {
     btn.classList.add('running');
-    btn.textContent = '⏳ Выполняется...';
+    btn.textContent = '\u23f3 \u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f...';
+    btn.setAttribute('aria-busy', 'true');
   }
-  output.textContent = '⏳ Выполняется...';
-  output.style.color = 'var(--text-muted)';
+  output.textContent = '\u23f3 \u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f...';
+  output.setAttribute('aria-busy', 'true');
 
   try {
     const stdinEl = document.getElementById('editor-stdin');
@@ -185,8 +201,10 @@ async function runEditor() {
   } finally {
     if (btn) {
       btn.classList.remove('running');
-      btn.textContent = '▶ Запустить';
+      btn.textContent = '\u25b6 \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c';
+      btn.setAttribute('aria-busy', 'false');
     }
+    output.removeAttribute('aria-busy');
     currentEditorController = null;
   }
 }
@@ -200,19 +218,25 @@ function renderHistory() {
 
   if (!container) return;
 
+  if (!container.getAttribute('role')) {
+    container.setAttribute('role', 'log');
+    container.setAttribute('aria-label', '\u0418\u0441\u0442\u043e\u0440\u0438\u044f \u043a\u043e\u043c\u0430\u043d\u0434 REPL');
+    container.setAttribute('aria-live', 'polite');
+  }
+
   if (countEl) {
-    countEl.textContent = history.length + ' команд';
+    countEl.textContent = replHistory.length + ' команд';
   }
 
   // Full rebuild needed when history shrinks (clear) or on first render
-  if (_renderedHistoryCount > history.length || _renderedHistoryCount === 0) {
+  if (_renderedHistoryCount > replHistory.length || _renderedHistoryCount === 0) {
     container.textContent = '';
     _renderedHistoryCount = 0;
   }
 
   // Append only new entries (incremental)
-  for (let i = _renderedHistoryCount; i < history.length; i++) {
-    const entry = history[i];
+  for (let i = _renderedHistoryCount; i < replHistory.length; i++) {
+    const entry = replHistory[i];
     const entryDiv = document.createElement('div');
     entryDiv.className = 'repl-entry';
 
@@ -241,9 +265,9 @@ function renderHistory() {
     container.appendChild(entryDiv);
   }
 
-  _renderedHistoryCount = history.length;
+  _renderedHistoryCount = replHistory.length;
 
-  if (history.length > 0) {
+  if (replHistory.length > 0) {
     container.scrollTop = container.scrollHeight;
   } else {
     const placeholder = document.createElement('div');
@@ -284,6 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
       btn.className = 'repl-snippet';
       btn.setAttribute('data-code', s.code);
       btn.textContent = s.label;
+      btn.setAttribute('aria-label', '\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044c \u043f\u0440\u0438\u043c\u0435\u0440: ' + s.label);
       snippetsEl.appendChild(btn);
     });
 
@@ -299,7 +324,13 @@ document.addEventListener('DOMContentLoaded', function () {
   })();
 
   // Tab switching
+  var tabContainer = document.querySelector('.repl-toolbar .repl-tabs');
+  if (tabContainer) {
+    tabContainer.setAttribute('role', 'tablist');
+  }
   document.querySelectorAll('.repl-toolbar button[data-tab]').forEach(function (btn) {
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', btn.classList.contains('active') ? 'true' : 'false');
     btn.addEventListener('click', function () {
       const tab = btn.dataset.tab;
       const replTab = document.getElementById('tab-repl');
@@ -310,9 +341,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
       document.querySelectorAll('.repl-toolbar button[data-tab]').forEach(function (b) {
         b.classList.toggle('active', b.dataset.tab === tab);
+        b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false');
       });
     });
   });
+
+  // Set ARIA on tab panels
+  var replTabPanel = document.getElementById('tab-repl');
+  var editorTabPanel = document.getElementById('tab-editor');
+  if (replTabPanel) { replTabPanel.setAttribute('role', 'tabpanel'); replTabPanel.setAttribute('aria-label', 'REPL'); }
+  if (editorTabPanel) { editorTabPanel.setAttribute('role', 'tabpanel'); editorTabPanel.setAttribute('aria-label', '\u0420\u0435\u0434\u0430\u043a\u0442\u043e\u0440'); }
 
   // Keyboard shortcuts
   const replInput = document.getElementById('repl-input');
@@ -340,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ─── Public API ───
 window.clearHistory = function () {
-  history = [];
+  replHistory = [];
   _renderedHistoryCount = 0;
   safeRemoveItem('python-repl-history');
   renderHistory();

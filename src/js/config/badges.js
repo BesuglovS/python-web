@@ -1,157 +1,18 @@
 'use strict';
 
-// ─── Safe localStorage wrappers ───
-const SAFE_KEYS = new Set([
-  'python-web-theme',
-  'python-web-progress',
-  'python-repl-history',
-  'python-lessons-completed',
-  'python-lesson-badges',
-  'sw-version',
-  'python-web-quiz-scores',
-]);
-
-function safeGetItem(key) {
-  if (!SAFE_KEYS.has(key)) {
-    console.warn('localStorage: denied read for', key);
-    return null;
-  }
-  try {
-    return localStorage.getItem(key);
-  } catch (_e) {
-    return null;
-  }
-}
-
-function safeSetItem(key, value) {
-  if (SAFE_KEYS.has(key)) {
-    try {
-      if (typeof value === 'string' && value.length > 102400) throw new Error('Value too large');
-      localStorage.setItem(key, value);
-    } catch (_e) {
-      console.warn('localStorage: failed to save', key, '- progress may not persist');
-      try {
-        if (typeof CustomEvent !== 'undefined') {
-          const ev = new CustomEvent('storage-warning', { detail: { key: key } });
-          document.dispatchEvent(ev);
-        }
-      } catch (_e2) {
-        // non-browser environment
-      }
-    }
-  } else {
-    console.warn('localStorage: denied write for', key);
-  }
-}
-
-function safeRemoveItem(key) {
-  if (SAFE_KEYS.has(key)) {
-    try {
-      localStorage.removeItem(key);
-    } catch (_e) {
-      // silently fail
-    }
-  } else {
-    console.warn('localStorage: denied remove for', key);
-  }
-}
-
-// ─── Course Configuration ───
-const THEORY_CONTESTS = {
-  8: 7, 10: 8, 12: 10, 15: 9, 17: 12, 19: 13,
-  21: 14, 22: 11, 25: 16, 26: 15, 27: 17, 28: 20,
-  29: 18, 30: 19,
-};
-
-const CONTEST_BASE_URL = 'https://contest.nayanovaacademy.ru/index.php?page=contest&id=';
-const REPL_URL = 'sandbox/run.php';
-const TOTAL_LESSONS = 50;
-
-// LESSON_META генерируется из lessons.json скриптом build-config-meta.mjs.
-// Источник истины — lessons.json, НЕ этот файл.
-// Для обновления: node build-config-meta.mjs
-const LESSON_META = {
-   1: { duration: 10, complexity: 'beginner' },
-   2: { duration: 8, complexity: 'beginner' },
-   3: { duration: 10, complexity: 'beginner' },
-   4: { duration: 12, complexity: 'beginner' },
-   5: { duration: 8, complexity: 'beginner' },
-   6: { duration: 10, complexity: 'beginner' },
-   7: { duration: 10, complexity: 'beginner' },
-   8: { duration: 10, complexity: 'beginner' },
-   9: { duration: 8, complexity: 'beginner' },
-  10: { duration: 12, complexity: 'basic' },
-  11: { duration: 10, complexity: 'basic' },
-  12: { duration: 8, complexity: 'basic' },
-  13: { duration: 8, complexity: 'basic' },
-  14: { duration: 12, complexity: 'basic' },
-  15: { duration: 10, complexity: 'basic' },
-  16: { duration: 15, complexity: 'intermediate' },
-  17: { duration: 10, complexity: 'basic' },
-  18: { duration: 12, complexity: 'basic' },
-  19: { duration: 8, complexity: 'basic' },
-  20: { duration: 8, complexity: 'basic' },
-  21: { duration: 10, complexity: 'basic' },
-  22: { duration: 12, complexity: 'basic' },
-  23: { duration: 15, complexity: 'intermediate' },
-  24: { duration: 12, complexity: 'basic' },
-  25: { duration: 15, complexity: 'basic' },
-  26: { duration: 10, complexity: 'basic' },
-  27: { duration: 10, complexity: 'basic' },
-  28: { duration: 15, complexity: 'basic' },
-  29: { duration: 8, complexity: 'basic' },
-  30: { duration: 12, complexity: 'intermediate' },
-  31: { duration: 12, complexity: 'intermediate' },
-  32: { duration: 12, complexity: 'basic' },
-  33: { duration: 12, complexity: 'basic' },
-  34: { duration: 15, complexity: 'intermediate' },
-  35: { duration: 10, complexity: 'basic' },
-  36: { duration: 12, complexity: 'intermediate' },
-  37: { duration: 12, complexity: 'basic' },
-  38: { duration: 10, complexity: 'basic' },
-  39: { duration: 10, complexity: 'basic' },
-  40: { duration: 15, complexity: 'intermediate' },
-  41: { duration: 15, complexity: 'intermediate' },
-  42: { duration: 15, complexity: 'intermediate' },
-  43: { duration: 12, complexity: 'intermediate' },
-  44: { duration: 12, complexity: 'intermediate' },
-  45: { duration: 15, complexity: 'advanced' },
-  46: { duration: 10, complexity: 'basic' },
-  47: { duration: 12, complexity: 'intermediate' },
-  48: { duration: 12, complexity: 'intermediate' },
-  49: { duration: 15, complexity: 'intermediate' },
-  50: { duration: 12, complexity: 'basic' },
-};
-
-const COMPLEXITY_LABELS = {
-  beginner: '🚀 Начальный',
-  basic: '📘 Базовый',
-  intermediate: '📗 Средний',
-  advanced: '📙 Продвинутый',
-};
-
-// Expose globals to window for module access
-window.THEORY_CONTESTS = THEORY_CONTESTS;
-window.CONTEST_BASE_URL = CONTEST_BASE_URL;
-window.TOTAL_LESSONS = TOTAL_LESSONS;
-window.LESSON_META = LESSON_META;
-window.COMPLEXITY_LABELS = COMPLEXITY_LABELS;
-
-// ─── Helper: convert progress array to lesson-number lookup ───
-// Progress is stored as ["01-history.html", "02-variables.html", ...]
-// This builds {"1": true, "2": true, ...} for badge checks.
-function _buildLessonLookup(progress) {
-  const lookup = {};
-  if (!progress) return lookup;
-  const arr = Array.isArray(progress) ? progress : [];
-  for (let i = 0; i < arr.length; i++) {
-    const m = String(arr[i]).match(/^(\d+)/);
-    if (m) lookup[parseInt(m[1], 10)] = true;
-  }
-  return lookup;
-}
-
-// ─── Badges / Achievements ───
+/**
+ * Badge definitions for achievements and gamification
+ */
+import { _buildLessonLookup } from './security.js';
+import {
+  TOTAL_LESSONS,
+  HALFWAY_LESSONS_COUNT,
+  SPEEDRUN_LESSONS_COUNT,
+  REPL_EXPERIMENTER_RUNS,
+  QUIZ_CHAMPION_SCORE,
+  QUIZ_PERFECT_SCORE,
+  STREAK_DAYS,
+} from './constants.js';
 const BADGES = [
   {
     id: 'first_steps',
@@ -211,7 +72,7 @@ const BADGES = [
     check: function (completed) {
       if (!completed) return false;
       const arr = Array.isArray(completed) ? completed : [];
-      return arr.length >= 25;
+      return arr.length >= HALFWAY_LESSONS_COUNT;
     },
   },
   {
@@ -310,7 +171,7 @@ const BADGES = [
       for (const key in dates) {
         if (dates[key] && new Date(dates[key]).toDateString() === today) count++;
       }
-      return count >= 3;
+      return count >= SPEEDRUN_LESSONS_COUNT;
     },
   },
   {
@@ -319,7 +180,7 @@ const BADGES = [
     icon: '🏅',
     desc: 'Пройти итоговый тест на 90%+',
     check: function (_completed, meta) {
-      return meta && meta.finalTestScore >= 90;
+      return meta && meta.finalTestScore >= QUIZ_CHAMPION_SCORE;
     },
   },
   {
@@ -328,7 +189,7 @@ const BADGES = [
     icon: '🎯',
     desc: 'Пройти итоговый тест на 100%',
     check: function (_completed, meta) {
-      return meta && meta.finalTestScore >= 100;
+      return meta && meta.finalTestScore >= QUIZ_PERFECT_SCORE;
     },
   },
   {
@@ -337,7 +198,7 @@ const BADGES = [
     icon: '🔥',
     desc: 'Заниматься 7 дней подряд',
     check: function (_completed, meta) {
-      return !(!meta || !meta.streak) && meta.streak >= 7;
+      return !(!meta || !meta.streak) && meta.streak >= STREAK_DAYS;
     },
   },
   {
@@ -346,7 +207,7 @@ const BADGES = [
     icon: '🧪',
     desc: 'Выполнить 10+ примеров кода в REPL/упражнениях',
     check: function (_completed, meta) {
-      return meta && meta.codeRuns >= 10;
+      return meta && meta.codeRuns >= REPL_EXPERIMENTER_RUNS;
     },
   },
   {
@@ -360,3 +221,5 @@ const BADGES = [
     },
   },
 ];
+
+export { BADGES };

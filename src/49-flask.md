@@ -2,17 +2,11 @@
 title: 'Веб-фреймворки: Flask'
 lesson: 49
 description: 'Маршруты, шаблоны Jinja2, обработка форм, REST API'
-duration: 15
-complexity: '3'
 badge: 'web_builder'
 file: '49-flask.html'
 layout: 'layout.njk'
 permalink: '49-flask.html'
 subtitle: 'Микро-фреймворк для веб-приложений: маршруты, шаблоны, API'
-prevUrl: '48-requests-api.html'
-prevTitle: 'Requests и API'
-nextUrl: '50-git-intro.html'
-nextTitle: 'Введение в Git'
 ---
 
 ## Введение

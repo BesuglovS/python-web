@@ -2,17 +2,11 @@
 title: 'Кортежи'
 lesson: 27
 description: 'tuple, неизменяемые последовательности'
-duration: 10
-complexity: '2'
 badge: 'tuple_tamer'
 file: '27-tuples.html'
 layout: 'layout.njk'
 permalink: '27-tuples.html'
 subtitle: 'tuple, неизменяемые последовательности'
-prevUrl: '26-sets.html'
-prevTitle: 'Множества'
-nextUrl: '28-dicts.html'
-nextTitle: 'Словари'
 ---
 
 ## Создание кортежей

@@ -2,6 +2,7 @@
 
 /**
  * Scroll progress bar module
+ * Shows visual progress of page scroll
  */
 
 export function initScrollProgressBar() {

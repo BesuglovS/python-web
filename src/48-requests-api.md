@@ -2,22 +2,18 @@
 title: 'Requests + API'
 lesson: 48
 description: 'GET, POST, работа с JSON-сервисами'
-duration: 12
-complexity: '3'
 badge: 'api_explorer'
 file: '48-requests-api.html'
 layout: 'layout.njk'
 permalink: '48-requests-api.html'
 subtitle: 'Взаимодействие с веб-сервисами через HTTP'
-prevUrl: '47-pytest.html'
-prevTitle: 'Unit-тесты с pytest'
-nextUrl: '49-flask.html'
-nextTitle: 'Веб-фреймворки: Flask'
 ---
 
 ## Что такое API?
 
 API (Application Programming Interface) — способ взаимодействия программ друг с другом через HTTP-запросы. Библиотека `requests` — стандарт для отправки таких запросов в Python.
+
+<!-- norun -->
 
 ```python
 # Установка

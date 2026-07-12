@@ -2,15 +2,11 @@
 title: 'Git: введение'
 lesson: 50
 description: 'Коммиты, ветки, GitHub, .gitignore'
-duration: 12
-complexity: '2'
 badge: 'git_master'
 file: '50-git-intro.html'
 layout: 'layout.njk'
 permalink: '50-git-intro.html'
 subtitle: 'Система контроля версий: репозиторий, коммиты, ветки, GitHub'
-prevUrl: '49-flask.html'
-prevTitle: 'Веб-фреймворки: Flask'
 ---
 
 ## Введение
@@ -28,6 +24,8 @@ Git — самая популярная система контроля верс
 ## Основной материал
 
 Работа с Git начинается с `git init` в папке проекта. После изменений файлы подготавливаются к коммиту через `git add` (индексация), затем `git commit -m "сообщение"` фиксирует состояние. `git status` показывает текущее состояние, `git log` — историю коммитов. Ветки (`git branch feature`) изолируют разработку, `git merge` объединяет изменения. Удалённые репозитории подключаются через `git remote add origin URL`, `git push` отправляет изменения, `git pull` забирает новые.
+
+<!-- norun -->
 
 ```bash
 # Инициализация репозитория

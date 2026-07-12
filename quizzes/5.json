@@ -11,26 +11,26 @@
     "explanation": "int(\"123\") преобразует строку в целое число 123."
   },
   {
-    "question": "Что вернёт <code>float(\"3.14\")</code>?",
+    "question": "Что вернёт <code>int(True)</code>?",
     "options": [
-      "\"3.14\"",
-      "3",
-      "3.14",
+      "True",
+      "1",
+      "0",
       "Ошибка"
     ],
-    "correct": 2,
-    "explanation": "float() преобразует строку в число с плавающей точкой. float(\"3.14\") = 3.14."
+    "correct": 1,
+    "explanation": "bool — подтип int. True эквивалентен 1, поэтому int(True) = 1. Аналогично int(False) = 0."
   },
   {
-    "question": "Что произойдёт при выполнении <code>int(\"abc\")</code>?",
+    "question": "Что вернёт <code>str(None)</code>?",
     "options": [
-      "Вернётся 0",
-      "Вызовется ValueError",
-      "Вернётся None",
-      "Создастся переменная"
+      "None",
+      "\"None\"",
+      "\"\"",
+      "Ошибка"
     ],
     "correct": 1,
-    "explanation": "int() не может преобразовать строку \"abc\" в число и выбрасывает исключение ValueError."
+    "explanation": "str() преобразует любое значение в строку. str(None) вернёт строку \"None\" (4 символа)."
   },
   {
     "question": "Как проверить, является ли число целым?",
@@ -88,25 +88,25 @@
     "explanation": "Оператор / в Python всегда возвращает float, даже если числа целые."
   },
   {
-    "question": "Что вернёт <code>type(True)</code>?",
+    "question": "Что вернёт <code>float(\"inf\")</code>?",
     "options": [
-      "int",
-      "str",
-      "bool",
-      "NoneType"
+      "inf (бесконечность)",
+      "0",
+      "Ошибка",
+      "None"
     ],
-    "correct": 2,
-    "explanation": "True и False имеют тип bool (булевый тип данных)."
+    "correct": 0,
+    "explanation": "Строка \"inf\" преобразуется в специальное значение float — положительную бесконечность (inf)."
   },
   {
-    "question": "Какие значения преобразуются в False через bool()?",
+    "question": "Что произойдёт при выполнении <code>int(\"3.14\")</code>?",
     "options": [
-      "Только False",
-      "0, \"\", [], None, False",
-      "Только 0",
-      "Любые числа"
+      "3",
+      "3.14",
+      "Вызовется ValueError",
+      "4"
     ],
-    "correct": 1,
-    "explanation": "bool() возвращает False для пустых и нулевых значений: 0, 0.0, \"\", [], None и т.д."
+    "correct": 2,
+    "explanation": "int() не может напрямую преобразовать строку с точкой. Для дробных чисел сначала нужно использовать float(): int(float(\"3.14\"))."
   }
 ]

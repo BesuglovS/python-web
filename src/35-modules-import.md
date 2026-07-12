@@ -2,17 +2,11 @@
 title: 'Модули и import'
 lesson: 35
 description: 'import, from, as, стандартная библиотека'
-duration: 10
-complexity: '2'
 badge: 'module_importer'
 file: '35-modules-import.html'
 layout: 'layout.njk'
 permalink: '35-modules-import.html'
 subtitle: 'Как подключать готовый код: import, from...import, псевдонимы, стандартная библиотека'
-prevUrl: '34-sqlite3.html'
-prevTitle: 'Базы данных SQLite'
-nextUrl: '36-itertools.html'
-nextTitle: 'Модуль itertools'
 ---
 
 ## Зачем нужны модули?
@@ -118,7 +112,7 @@ print(utils.add(3, 5))      # 8
 print(utils.PI)             # 3.14159
 ```
 
-> **⚠️ Важно:** **Важно:** при импорте Python выполняет весь код модуля. Чтобы защитить исполняемый код от запуска при импорте, используйте конструкцию `if __name__ == '__main__':`.
+> **⚠️ Важно:** при импорте Python выполняет весь код модуля. Чтобы защитить исполняемый код от запуска при импорте, используйте конструкцию `if __name__ == '__main__':`.
 
 ```python
 # utils.py с защитой от запуска при импорте

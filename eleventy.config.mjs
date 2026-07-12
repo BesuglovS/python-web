@@ -1,14 +1,23 @@
-const path = require('path');
-const { DateTime } = require('luxon');
+import path from 'node:path';
+import fs from 'node:fs';
+import { execSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { DateTime } from 'luxon';
+import norunPlugin from './src/_plugins/norun.mjs';
 
-const PROJECT = __dirname;
+const __filename = fileURLToPath(import.meta.url);
+const PROJECT = path.dirname(__filename);
 const SRC = path.join(PROJECT, 'src');
 
-module.exports = function(eleventyConfig) {
+export default function (eleventyConfig) {
+  // markdown-it: enable raw HTML (needed for <!-- norun --> comments)
+  eleventyConfig.amendLibrary('md', (md) => {
+    md.set({ html: true });
+    md.use(norunPlugin);
+  });
   // Passthrough copy — статические файлы, которые не обрабатываются сборкой
-  eleventyConfig.addPassthroughCopy({ 'src/js/ym-init.js': 'ym-init.js' });
-  // CSS для dev-сборки (будет собран из модулей)
-  eleventyConfig.addPassthroughCopy({ 'src/css/index.css': 'style.css' });
+  // ym-init.js генерируется из src/ym-init.njk (Nunjucks шаблон с site.yandexMetrikaId)
+  // CSS собирается esbuild в minify.js / build:css → dist/style.css
 
   // Изображения
   eleventyConfig.addPassthroughCopy({ 'favicon.png': 'favicon.png' });
@@ -41,20 +50,22 @@ module.exports = function(eleventyConfig) {
 
   // Коллекция всех уроков (из Markdown файлов в src/)
   const lessonsGlob = path.join(SRC, '*.md');
-  eleventyConfig.addCollection('lessons', function(collectionApi) {
+  eleventyConfig.addCollection('lessons', function (collectionApi) {
     return collectionApi
       .getFilteredByGlob(lessonsGlob)
       .sort((a, b) => a.data.lesson - b.data.lesson);
   });
 
   // Коллекции по секциям для index.njk
-  eleventyConfig.addCollection('sections', function(collectionApi) {
+  eleventyConfig.addCollection('sections', function (collectionApi) {
     const lessons = collectionApi
       .getFilteredByGlob(lessonsGlob)
       .sort((a, b) => a.data.lesson - b.data.lesson);
 
     // Секции из lessons.json
-    const sections = require(path.join(PROJECT, 'lessons.json')).sections;
+    const sections = JSON.parse(
+      fs.readFileSync(path.join(PROJECT, 'lessons.json'), 'utf8'),
+    ).sections;
     return sections.map((section) => ({
       id: section.id,
       title: section.title,
@@ -68,6 +79,26 @@ module.exports = function(eleventyConfig) {
     }));
   });
 
+  // ─── Dev/serve: пересборка JS/CSS при изменении исходников ───
+  // `npm run build`/`build:prod` собирают JS/CSS/CSS-хайлайтер явно, но в
+  // режиме `watch` (eleventy --serve) Eleventy не пересобирает внешние
+  // ассеты. Отслеживаем src/js и src/css и пересобираем их после каждой
+  // пересборки Eleventy, чтобы dist/ оставался актуальным и браузер
+  // получал свежие script.js/config.js/style.css.
+  eleventyConfig.addWatchTarget('src/js');
+  eleventyConfig.addWatchTarget('src/css');
+
+  eleventyConfig.on('eleventy.after', () => {
+    try {
+      execSync('node build-css.mjs && node build-js.mjs && node minify.js', {
+        stdio: 'inherit',
+        shell: true,
+      });
+    } catch (_e) {
+      console.error('⚠ Не удалось пересобрать JS/CSS в режиме watch');
+    }
+  });
+
   return {
     dir: {
       input: SRC,
@@ -79,4 +110,4 @@ module.exports = function(eleventyConfig) {
     htmlTemplateEngine: 'njk',
     templateFormats: ['md', 'njk', 'html'],
   };
-};
+}

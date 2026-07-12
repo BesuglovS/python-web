@@ -2,17 +2,11 @@
 title: 'Булевы переменные'
 lesson: 9
 description: 'True, False, логические операции'
-duration: 12
-complexity: '1'
 badge: 'bool_master'
 file: '09-booleans.html'
 layout: 'layout.njk'
 permalink: '09-booleans.html'
 subtitle: 'True, False, bool(), truthy и falsy значения. Логические операторы'
-prevUrl: '08-number-ops.html'
-prevTitle: 'Операции над числами'
-nextUrl: '10-conditional.html'
-nextTitle: 'Условный оператор'
 ---
 
 ## Тип bool
@@ -108,4 +102,4 @@ print(True or True and False)  # True: True and False → False, затем True
 print(True or (True and False))  # True — то же самое, но понятнее
 ```
 
-> **💡 Совет:** **Совет:** всегда используйте скобки в сложных выражениях, даже если знаете приоритет. Код должен быть понятен другим.
+> **💡 Совет:** всегда используйте скобки в сложных выражениях, даже если знаете приоритет. Код должен быть понятен другим.

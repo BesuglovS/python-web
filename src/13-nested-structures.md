@@ -2,17 +2,11 @@
 title: 'Вложенные структуры'
 lesson: 13
 description: 'Условия внутри условий'
-duration: 8
-complexity: '2'
 badge: 'nested_navigator'
 file: '13-nested-structures.html'
 layout: 'layout.njk'
 permalink: '13-nested-structures.html'
 subtitle: 'Условия внутри условий, вложенные блоки'
-prevUrl: '12-complex-conditions.html'
-prevTitle: 'Сложные условия'
-nextUrl: '14-strings-index-slice.html'
-nextTitle: 'Строки: индексация и срезы'
 ---
 
 ## Вложенные условные операторы

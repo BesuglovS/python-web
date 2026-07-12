@@ -5,6 +5,11 @@ Thumbs.db
 *.swo
 *~
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
 # IDE
 .vscode/
 .idea/
@@ -39,9 +44,14 @@ highlight-py.min.js
 # Test artifacts
 playwright-report/
 test-results/
+.coverage
+coverage/
 
 # Environment
 .env
+
+# SSH keys
+ssh-private.key
 
 # Sandbox runtime files (generated at runtime)
 sandbox/.repl_sessions/

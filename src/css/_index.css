@@ -19,7 +19,6 @@ header.index-header {
   padding: 50px 30px 36px;
   background: var(--card-bg);
   border-radius: var(--radius);
-  margin-bottom: 32px;
   box-shadow: var(--shadow-lg);
   transition: background var(--transition), box-shadow var(--transition);
 }
@@ -94,7 +93,7 @@ nav.index-nav {
 .topic-card {
   background: var(--bg-alt);
   border-radius: 12px;
-  padding: 18px 22px;
+  padding: 10px 22px;
   text-decoration: none;
   color: var(--text);
   transition: all var(--transition);
@@ -111,6 +110,12 @@ nav.index-nav {
   box-shadow: var(--shadow-lg);
   background: var(--card-hover-bg);
   border-color: var(--primary);
+  text-decoration: none;
+}
+
+.topic-card:hover .topic-info h2,
+.topic-card:hover .topic-info p {
+  text-decoration: underline;
 }
 
 .topic-num {
@@ -173,8 +178,9 @@ footer.index-footer {
   margin-top: 4px;
 }
 
-.index-nav > .search-container {
-  margin-bottom: 24px;
+.index-header + .search-container {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 @media (max-width: 480px) {

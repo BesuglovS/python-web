@@ -2,17 +2,11 @@
 title: 'Сложные условия'
 lesson: 12
 description: 'and, or, not'
-duration: 8
-complexity: '2'
 badge: 'logician'
 file: '12-complex-conditions.html'
 layout: 'layout.njk'
 permalink: '12-complex-conditions.html'
 subtitle: 'and, or, not — логические операторы'
-prevUrl: '11-try-except.html'
-prevTitle: 'Обработка ошибок'
-nextUrl: '13-nested-structures.html'
-nextTitle: 'Вложенные структуры'
 ---
 
 ## Логический оператор and
@@ -92,3 +86,47 @@ if first() and second():
 if first() or second():
     pass
 ```
+
+## Законы де Моргана
+
+Законы де Моргана позволяют преобразовать отрицание сложного выражения. Они полезны для упрощения условий и проверки «обратных» ситуаций:
+<!-- norun -->
+
+```
+not (A and B)  →  (not A) or (not B)
+not (A or B)   →  (not A) and (not B)
+```
+
+На практике это работает так:
+
+```python
+# Проверка, что число НЕ в диапазоне [0, 10]
+x = 15
+
+# Вариант 1: напрямую
+if x < 0 or x > 10:
+    print("Вне диапазона")
+
+# Вариант 2: через отрицание и закон де Моргана
+if not (x >= 0 and x <= 10):
+    print("Вне диапазона")
+
+# Оба варианта эквивалентны!
+```
+
+Ещё пример:
+
+```python
+# Не пропускать пользователей, у которых нет билета ИЛИ они не VIP
+# Исходное условие: not (has_ticket and is_vip)
+# По закону де Моргана: (not has_ticket) or (not is_vip)
+
+if not (has_ticket and is_vip):
+    print("Доступ запрещён")
+
+# Эквивалентно:
+if not has_ticket or not is_vip:
+    print("Доступ запрещён")
+```
+
+> **💡 Совет:** Законы де Моргана часто используются, чтобы переписать условие в более читаемой форме или избежать двойного отрицания.

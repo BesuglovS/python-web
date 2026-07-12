@@ -2,17 +2,11 @@
 title: 'f-строки'
 lesson: 7
 description: 'f"{переменная=}", форматирование чисел'
-duration: 10
-complexity: '1'
 badge: 'fstring_guru'
 file: '07-f-strings.html'
 layout: 'layout.njk'
 permalink: '07-f-strings.html'
 subtitle: 'Современное форматирование текста в Python (f-strings)'
-prevUrl: '06-io.html'
-prevTitle: 'Ввод и вывод'
-nextUrl: '08-number-ops.html'
-nextTitle: 'Операции над числами'
 ---
 
 ## Что такое f-строки?

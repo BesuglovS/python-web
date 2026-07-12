@@ -2,17 +2,11 @@
 title: 'Условный оператор'
 lesson: 10
 description: 'if, elif, else, блоки кода, PEP 8'
-duration: 8
-complexity: '2'
 badge: 'decision_maker'
 file: '10-conditional.html'
 layout: 'layout.njk'
 permalink: '10-conditional.html'
 subtitle: 'if, elif, else — ветвление программы и правила отступов'
-prevUrl: '09-booleans.html'
-prevTitle: 'Булевы переменные'
-nextUrl: '11-try-except.html'
-nextTitle: 'Обработка ошибок'
 ---
 
 ## Отступы в Python
@@ -99,4 +93,4 @@ if True:
 print("Ошибка!")
 ```
 
-> **💡 Совет:** **Совет:** VS Code (Shift+Alt+F) и PyCharm (Ctrl+Alt+L) умеют автоформатировать отступы. Включите `Format On Save` в настройках редактора.
+> **💡 Совет:** VS Code (Shift+Alt+F) и PyCharm (Ctrl+Alt+L) умеют автоформатировать отступы. Включите `Format On Save` в настройках редактора.

@@ -2,17 +2,11 @@
 title: 'Многопоточность и asyncio'
 lesson: 45
 description: 'threading, multiprocessing, async/await'
-duration: 15
-complexity: '4'
 badge: 'async_master'
 file: '45-threading-async.html'
 layout: 'layout.njk'
 permalink: '45-threading-async.html'
 subtitle: 'Потоки, процессы, асинхронное программирование: три подхода к параллельному выполнению'
-prevUrl: '44-generators.html'
-prevTitle: 'Генераторы'
-nextUrl: '46-type-hints.html'
-nextTitle: 'Type Hints'
 ---
 
 ## Введение

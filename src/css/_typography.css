@@ -89,3 +89,51 @@ mark {
   border-radius: 4px;
   padding: 0 4px;
 }
+
+.main-content h2, main h2 {
+  font-size: 1.3em;
+  color: var(--text);
+  margin: 28px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--primary);
+}
+
+.main-content h3, main h3 {
+  font-size: 1.08em;
+  color: var(--text);
+  margin: 20px 0 8px;
+}
+
+.main-content p, main p {
+  margin-bottom: 10px;
+}
+
+.main-content blockquote, main blockquote {
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  margin: 14px 0 18px;
+  font-size: 0.93em;
+  line-height: 1.6;
+  transition: background var(--transition);
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+}
+
+.main-content blockquote p, main blockquote p {
+  margin: 0;
+}
+
+.main-content pre, main pre {
+  background: var(--code-bg);
+  color: var(--code-color);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.9em;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+  font-variant-ligatures: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 14px 0 18px;
+}

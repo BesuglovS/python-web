@@ -2,17 +2,11 @@
 title: 'break и continue'
 lesson: 20
 description: 'Прерывание и пропуск итераций'
-duration: 8
-complexity: '2'
 badge: 'flow_controller'
 file: '20-break-continue.html'
 layout: 'layout.njk'
 permalink: '20-break-continue.html'
 subtitle: 'Управление потоком цикла — прерывание и пропуск итераций'
-prevUrl: '19-range.html'
-prevTitle: 'range()'
-nextUrl: '21-nested-loops.html'
-nextTitle: 'Вложенные циклы'
 ---
 
 ## break: прерывание цикла

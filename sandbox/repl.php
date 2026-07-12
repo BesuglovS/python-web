@@ -68,7 +68,7 @@ if ($sessionId !== '' && preg_match($uuidPattern, $sessionId)) {
     $serverGenerated = true;
 }
 
-$SESSION_FILE = $SESSIONS_DIR . '/.repl_session_' . md5($sessionId) . '.json';
+$SESSION_FILE = $SESSIONS_DIR . '/.repl_session_' . hash('sha256', $sessionId) . '.json';
 
 $input = $data['input'] ?? '';
 $timeout = isset($data['timeout']) ? max(1, min(10, (int)$data['timeout'])) : SANDBOX_DEFAULT_TIMEOUT;
@@ -123,5 +123,14 @@ if (is_array($response)) {
     }
     echo json_encode($response, SANDBOX_JSON_OPT);
 } else {
-    echo $stdout;
+    // Raw stdout is not valid JSON — return error instead of leaking output
+    http_response_code(500);
+    $errorResponse = [
+        'ok' => false,
+        'stdout' => '',
+        'stderr' => 'Unexpected response format from Python',
+        'exit_code' => $exitCode
+    ];
+    if ($serverGenerated) $errorResponse['session_id'] = $sessionId;
+    echo json_encode($errorResponse, SANDBOX_JSON_OPT);
 }

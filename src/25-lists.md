@@ -2,17 +2,11 @@
 title: 'Списки'
 lesson: 25
 description: 'list, методы списков'
-duration: 15
-complexity: '2'
 badge: 'list_master'
 file: '25-lists.html'
 layout: 'layout.njk'
 permalink: '25-lists.html'
 subtitle: 'list, методы списков'
-prevUrl: '24-debugging.html'
-prevTitle: 'Отладка программ'
-nextUrl: '26-sets.html'
-nextTitle: 'Множества'
 ---
 
 ## Создание списков

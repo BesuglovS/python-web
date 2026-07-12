@@ -2,6 +2,7 @@
 
 /**
  * Table of Contents generation module
+ * Generates dynamic table of contents from page headings
  */
 
 export function initTableOfContents() {
@@ -56,5 +57,10 @@ export function initTableOfContents() {
 
   headings.forEach(function (h) {
     observer.observe(h);
+  });
+
+  // Disconnect on page unload to prevent memory leaks
+  window.addEventListener('beforeunload', function () {
+    observer.disconnect();
   });
 }

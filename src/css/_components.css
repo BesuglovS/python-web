@@ -119,3 +119,110 @@
   transform: scale(1.1);
   box-shadow: var(--shadow-lg);
 }
+
+.topic-footer {
+  margin: 28px 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.next-link,
+.prev-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 26px;
+  background: var(--primary-gradient);
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 0.95em;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.next-link:hover,
+.prev-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
+}
+
+.prev-link {
+  background: linear-gradient(135deg, #64748b, #475569);
+}
+
+.prev-link:hover {
+  box-shadow: 0 8px 24px rgba(100, 116, 139, 0.35);
+}
+
+.topic-meta {
+  margin-top: 6px;
+  font-size: 0.78em;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.meta-duration {
+  opacity: 0.8;
+}
+
+.meta-complexity {
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 0.92em;
+  white-space: nowrap;
+}
+
+.meta-complexity[data-level="1"],
+.meta-complexity[data-level=beginner] {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.meta-complexity[data-level="2"],
+.meta-complexity[data-level=basic] {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.meta-complexity[data-level="3"],
+.meta-complexity[data-level=intermediate] {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.meta-complexity[data-level="4"],
+.meta-complexity[data-level=advanced] {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+[data-theme=dark] .meta-complexity[data-level="1"],
+[data-theme=dark] .meta-complexity[data-level=beginner] {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+[data-theme=dark] .meta-complexity[data-level="2"],
+[data-theme=dark] .meta-complexity[data-level=basic] {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+
+[data-theme=dark] .meta-complexity[data-level="3"],
+[data-theme=dark] .meta-complexity[data-level=intermediate] {
+  background: #422006;
+  color: #fcd34d;
+}
+
+[data-theme=dark] .meta-complexity[data-level="4"],
+[data-theme=dark] .meta-complexity[data-level=advanced] {
+  background: #4a1942;
+  color: #f9a8d4;
+}

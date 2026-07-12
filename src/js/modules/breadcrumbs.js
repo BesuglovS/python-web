@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- * Breadcrumbs module
+ * Breadcrumbs navigation module
+ * Provides breadcrumb navigation with dynamic path generation
  */
 
 export function initBreadcrumbs() {

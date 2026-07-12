@@ -2,17 +2,11 @@
 title: 'Базы данных SQLite'
 lesson: 34
 description: 'CREATE TABLE, INSERT, SELECT, параметризованные запросы'
-duration: 15
-complexity: '3'
 badge: 'sql_master'
 file: '34-sqlite3.html'
 layout: 'layout.njk'
 permalink: '34-sqlite3.html'
 subtitle: 'Подключение, CRUD-операции, параметризованные запросы, транзакции'
-prevUrl: '33-json-csv.html'
-prevTitle: 'JSON и CSV'
-nextUrl: '35-modules-import.html'
-nextTitle: 'Модули и import'
 ---
 
 ## Введение

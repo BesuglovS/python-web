@@ -35,16 +35,16 @@
       "educationalLevel": "beginner",
       "numberOfLessons": "50",
       "inLanguage": "ru",
-      "hasCourseInstance": { "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }
+      "hasCourseInstance": [{ "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }]
     }
     </script>
     <!-- Yandex.Metrika -->
     <script defer src="ym-init.js"></script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/110596777" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript><div><img class="ym-pixel" src="https://mc.yandex.ru/watch/{{ site.yandexMetrikaId }}" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body class="index-page">
-    <noscript><div style="padding:40px;text-align:center;font-size:1.2em;">Для работы сайта необходим JavaScript.</div></noscript>
+    <noscript><div class="noscript-banner" role="alert">\u0414\u043b\u044f \u0440\u0430\u0431\u043e\u0442\u044b \u0441\u0430\u0439\u0442\u0430 \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c JavaScript.</div></noscript>
     <a href="#main-content" class="skip-link">Перейти к содержанию</a>
     <div class="container index-container">
       <header class="index-header">
@@ -54,7 +54,7 @@
         <span class="progress-info"></span>
         <a href="repl.html" class="repl-hero-btn">▶ Интерактивная консоль Python</a>
         <!-- Блок достижений (badges) -->
-        <div class="badges-section" id="badgesBlock" style="display:none;">
+        <div class="badges-section" id="badgesBlock" hidden>
           <div class="badges-title">🏆 Достижения</div>
           <div class="badges-grid" id="badgesGrid"></div>
         </div>
@@ -76,7 +76,7 @@
               <div class="topic-info">
                 <h2>{{ lesson.title }}</h2>
                 <p>{{ lesson.desc }}</p>
-                {% if lesson.duration %}<div class="topic-meta"><span class="meta-duration">⏱ {{ lesson.duration }} мин</span> · <span class="meta-complexity" data-level="{% if lesson.complexity == 'beginner' %}🚀 Начальный{% elif lesson.complexity == 'basic' %}📘 Базовый{% elif lesson.complexity == 'intermediate' %}🔷 Средний{% elif lesson.complexity == 'advanced' %}🏆 Продвинутый{% else %}{{ lesson.complexity }}{% endif %}">{% if lesson.complexity == 'beginner' %}🚀 Начальный{% elif lesson.complexity == 'basic' %}📘 Базовый{% elif lesson.complexity == 'intermediate' %}🔷 Средний{% elif lesson.complexity == 'advanced' %}🏆 Продвинутый{% else %}{{ lesson.complexity }}{% endif %}</span></div>{% endif %}
+                {% if lesson.duration %}<div class="topic-meta"><span class="meta-duration">⏱ {{ lesson.duration }} мин</span> · <span class="meta-complexity" data-level="{{ lesson.complexity }}">{% if lesson.complexity == 'beginner' %}🚀 Начальный{% elif lesson.complexity == 'basic' %}📘 Базовый{% elif lesson.complexity == 'intermediate' %}📗 Средний{% elif lesson.complexity == 'advanced' %}📙 Продвинутый{% else %}{{ lesson.complexity }}{% endif %}</span></div>{% endif %}
               </div>
             </a>
             {% endfor %}
@@ -90,7 +90,6 @@
     </div>
 
     <script defer src="highlight-py.min.js"></script>
-    <script defer src="config.js"></script>
-    <script defer src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>

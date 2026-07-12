@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="description" content="{% if description %}{{ description }}{% elif subtitle %}Урок {{ lesson }}: {{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
     <meta property="og:title" content="{{ lesson }}. {{ title }} — Python: основы" />
     <meta property="og:description" content="{% if description %}{{ description }}{% elif subtitle %}{{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
@@ -28,31 +28,33 @@
       "@type": "TechArticle",
       "headline": "{{ title }}",
       "description": "{% if description %}{{ description }}{% elif subtitle %}{{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}",
-      "educationalLevel": "beginner",
-      "proficiencyLevel": "{% if complexity == '1' %}Beginner{% elif complexity == '2' %}Basic{% elif complexity == '3' %}Intermediate{% elif complexity == '4' %}Advanced{% else %}Beginner{% endif %}",
+      "educationalLevel": "{% if complexity == 'advanced' %}advanced{% else %}beginner{% endif %}",
+      "proficiencyLevel": "{{ complexity | default('beginner') }}",
       "author": { "@type": "Organization", "name": "Python Web" },
       "publisher": { "@type": "Organization", "name": "Python Web" },
       "datePublished": "{% if date %}{{ date | date('YYYY-MM-DD') }}{% else %}{{ site.launchDate }}{% endif %}",
       "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ site.url }}/{{ page.fileSlug }}.html" },
       "isPartOf": { "@type": "Course", "name": "Python — Основы программирования" },
-      "timeRequired": "PT{{ duration }}M",
+      {% if duration %}"timeRequired": "PT{{ duration }}M",{% endif %}
       "inLanguage": "ru"
     }
     </script>
     <!-- Yandex.Metrika -->
     <script defer src="ym-init.js"></script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/110596777" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript><div><img class="ym-pixel" src="https://mc.yandex.ru/watch/{{ site.yandexMetrikaId }}" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body data-lesson="{{ lesson }}">
-    <noscript><div style="padding:40px;text-align:center;font-size:1.2em;">Для работы сайта необходим JavaScript.</div></noscript>
+    <noscript><div class="noscript-banner" role="alert">\u0414\u043b\u044f \u0440\u0430\u0431\u043e\u0442\u044b \u0441\u0430\u0439\u0442\u0430 \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c JavaScript.</div></noscript>
     <a href="#main-content" class="skip-link">Перейти к содержанию</a>
     <div class="container">
-      <header class="topic-header">
-        <div id="breadcrumbs" class="breadcrumbs"></div>
+      <header class="topic-header" aria-label="Заголовок урока">
+        <nav aria-label="Хлебные крошки">
+          <div id="breadcrumbs" class="breadcrumbs"></div>
+        </nav>
         <h1><span class="lesson-badge">Урок {{ lesson }}</span> {{ title }}</h1>
         {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
-        {% if duration %}<div class="lesson-meta-info"><span class="meta-duration">⏱ ~{{ duration }} мин чтения</span>{% if complexity %}<span class="meta-sep">·</span> <span class="meta-complexity" data-level="{{ complexity }}">{% if complexity == "1" %}🚀 Начальный{% elif complexity == "2" %}📘 Базовый{% elif complexity == "3" %}📗 Средний{% elif complexity == "4" %}📙 Продвинутый{% else %}{{ complexity }}{% endif %}</span>{% endif %}</div>{% endif %}
+        {% if duration %}<div class="lesson-meta-info"><span class="meta-duration">⏱ ~{{ duration }} мин чтения</span>{% if complexity %}<span class="meta-sep">·</span> <span class="meta-complexity" data-level="{{ complexity }}">{% if complexity == "beginner" %}🚀 Начальный{% elif complexity == "basic" %}📘 Базовый{% elif complexity == "intermediate" %}📗 Средний{% elif complexity == "advanced" %}📙 Продвинутый{% else %}{{ complexity }}{% endif %}</span>{% endif %}</div>{% endif %}
       </header>
       <div class="content-layout">
         <nav id="toc" aria-label="Содержание урока"></nav>
@@ -66,7 +68,6 @@
       </footer>
     </div>
     <script defer src="highlight-py.min.js"></script>
-    <script defer src="config.js"></script>
-    <script defer src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>

@@ -30,12 +30,14 @@ const SKIP_FILES =
 const HASHED_ASSET = /\.[a-f0-9]{8}\.(css|js|png|ico|woff2)$/;
 
 // File extensions to include in precache
-const INCLUDE_EXTS = new Set(['.html', '.css', '.js', '.json', '.png', '.ico', '.txt', '.woff2']);
+const INCLUDE_EXTS = new Set(['.html', '.css', '.js', '.json', '.png', '.ico', '.txt', '.woff2', '.webp']);
 
 // Files to always include (even if not found by scan)
 const ALWAYS_INCLUDE = [
   '/',
   '/offline.html',
+  '/404.html',
+  '/500.html',
   '/style.css',
   '/script.js',
   '/config.js',

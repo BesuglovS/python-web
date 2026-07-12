@@ -2,17 +2,11 @@
 title: 'lambda-функции'
 lesson: 31
 description: 'lambda, map(), filter(), sorted()'
-duration: 12
-complexity: '3'
 badge: 'lambda_wizard'
 file: '31-lambda.html'
 layout: 'layout.njk'
 permalink: '31-lambda.html'
 subtitle: 'Анонимные однострочные функции в Python'
-prevUrl: '30-list-comprehensions.html'
-prevTitle: 'Списочные выражения'
-nextUrl: '32-files.html'
-nextTitle: 'Файлы: чтение и запись'
 ---
 
 ## Что такое lambda-функция?

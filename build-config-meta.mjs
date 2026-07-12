@@ -1,9 +1,9 @@
 /**
- * Генерирует LESSON_META в src/js/config.js из lessons.json.
+ * Генерирует LESSON_META в src/js/config/courseData.js из lessons.json.
  * Запуск: node build-config-meta.mjs
  *
  * lessons.json остаётся единственным источником истины для метаданных уроков.
- * Этот скрипт обновляет блок LESSON_META в config.js, сохраняя остальной код.
+ * Этот скрипт обновляет блок LESSON_META в courseData.js, сохраняя остальной код.
  */
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
@@ -26,8 +26,8 @@ for (const [num, data] of Object.entries(meta).sort((a, b) => Number(a[0]) - Num
   lines.push(`  ${padded}: { duration: ${data.duration}, complexity: '${data.complexity}' },`);
 }
 
-// Читаем config.js и находим блок LESSON_META по строкам
-const configPath = join(ROOT, 'src', 'js', 'config.js');
+// Читаем courseData.js и находим блок LESSON_META по строкам
+const configPath = join(ROOT, 'src', 'js', 'config', 'courseData.js');
 const config = readFileSync(configPath, 'utf-8');
 const allLines = config.split('\n');
 
@@ -36,9 +36,8 @@ let startIdx = -1;
 let endIdx = -1;
 for (let i = 0; i < allLines.length; i++) {
   if (
-    allLines[i].includes(
-      '// LESSON_META генерируется из lessons.json скриптом build-config-meta.mjs.',
-    )
+    allLines[i].includes('LESSON_META') &&
+    (allLines[i].includes('is generated') || allLines[i].includes('генерируется'))
   ) {
     startIdx = i;
   }
@@ -49,7 +48,7 @@ for (let i = 0; i < allLines.length; i++) {
 }
 
 if (startIdx === -1 || endIdx === -1) {
-  console.error('Could not find LESSON_META block in config.js');
+  console.error('Could not find LESSON_META block in courseData.js');
   process.exit(1);
 }
 
@@ -68,5 +67,5 @@ const newLines = [...allLines.slice(0, startIdx), ...newBlock, ...allLines.slice
 
 writeFileSync(configPath, newLines.join('\n'), 'utf-8');
 console.log(
-  `✔ LESSON_META обновлён в config.js: ${Object.keys(meta).length} уроков из lessons.json`,
+  `✔ LESSON_META обновлён в courseData.js: ${Object.keys(meta).length} уроков из lessons.json`,
 );

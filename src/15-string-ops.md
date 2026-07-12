@@ -2,17 +2,11 @@
 title: 'Операции над строками'
 lesson: 15
 description: 'Конкатенация, умножение, методы'
-duration: 10
-complexity: '2'
 badge: 'string_master'
 file: '15-string-ops.html'
 layout: 'layout.njk'
 permalink: '15-string-ops.html'
 subtitle: 'Конкатенация, умножение, методы строк, форматирование'
-prevUrl: '14-strings-index-slice.html'
-prevTitle: 'Строки: индексация и срезы'
-nextUrl: '16-regex.html'
-nextTitle: 'Регулярные выражения'
 ---
 
 ## Конкатенация и умножение

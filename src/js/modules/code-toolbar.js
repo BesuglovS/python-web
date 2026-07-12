@@ -2,6 +2,7 @@
 
 /**
  * Code toolbar module (Copy, Edit, Run buttons)
+ * Provides interactive code editing and execution controls
  */
 
 import { runSandbox } from './sandbox-client.js';
@@ -9,6 +10,7 @@ import { highlightPythonFallback } from './syntax-highlight.js';
 
 /**
  * Re-highlight a code block
+ * @param {HTMLElement} preEl - The pre element containing code
  */
 function reHighlight(preEl) {
   const code = preEl.querySelector('code') || preEl;
@@ -24,7 +26,7 @@ function reHighlight(preEl) {
 
 export function initCodeToolbar() {
   document.querySelectorAll('main pre, .main-content pre, pre.code-block').forEach(function (pre) {
-    if (pre.parentElement.classList.contains('code-wrapper')) return;
+    if (!pre.parentElement || pre.parentElement.classList.contains('code-wrapper')) return;
 
     // Wrapper
     const wrapper = document.createElement('div');
@@ -54,13 +56,14 @@ export function initCodeToolbar() {
         ta.style.opacity = '0';
         document.body.appendChild(ta);
         ta.select();
+        let ok = false;
         try {
-          document.execCommand('copy');
+          ok = document.execCommand('copy');
         } catch (_e) {
           /* ignore */
         }
         document.body.removeChild(ta);
-        showCopied(copyBtn);
+        if (ok) showCopied(copyBtn);
       }
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -125,83 +128,85 @@ export function initCodeToolbar() {
 
     toolbar.appendChild(editBtn);
 
-    // ── Run Button ──
-    const runBtn = document.createElement('button');
-    runBtn.className = 'run-btn';
-    runBtn.textContent = '▶ Запустить';
-    runBtn.title = 'Запустить код в песочнице';
-    runBtn.setAttribute('aria-label', 'Запустить код в песочнице');
-    toolbar.appendChild(runBtn);
+    // ── Run Button (skipped for data-norun blocks) ──
+    if (!pre.closest('[data-norun]')) {
+      const runBtn = document.createElement('button');
+      runBtn.className = 'run-btn';
+      runBtn.textContent = '▶ Запустить';
+      runBtn.title = 'Запустить код в песочнице';
+      runBtn.setAttribute('aria-label', 'Запустить код в песочнице');
+      toolbar.appendChild(runBtn);
 
-    // ── Sandbox Input ──
-    const sandboxInput = document.createElement('textarea');
-    sandboxInput.className = 'sandbox-input';
-    sandboxInput.placeholder = 'Введите данные для input() — каждое значение на новой строке…';
-    sandboxInput.style.display = 'none';
-    wrapper.appendChild(sandboxInput);
-
-    // ── Exercise Buttons ──
-    const exerciseButtons = document.createElement('div');
-    exerciseButtons.className = 'exercise-buttons';
-    exerciseButtons.style.display = 'none';
-    wrapper.appendChild(exerciseButtons);
-
-    const exerciseRunBtn = document.createElement('button');
-    exerciseRunBtn.className = 'exercise-run-btn';
-    exerciseRunBtn.textContent = '▶ Выполнить';
-    exerciseButtons.appendChild(exerciseRunBtn);
-
-    const exerciseResetBtn = document.createElement('button');
-    exerciseResetBtn.className = 'exercise-reset-btn';
-    exerciseResetBtn.textContent = '✕ Сброс';
-    exerciseButtons.appendChild(exerciseResetBtn);
-
-    // ── Sandbox Output ──
-    const sandboxOutput = document.createElement('div');
-    sandboxOutput.className = 'sandbox-output';
-    sandboxOutput.style.display = 'none';
-    wrapper.appendChild(sandboxOutput);
-
-    // ── Run handler ──
-    runBtn.addEventListener('click', function () {
-      if (isEditing) {
-        isEditing = false;
-        pre.contentEditable = 'false';
-        pre.classList.remove('editing');
-        editBtn.classList.remove('active');
-        editBtn.textContent = '✎ Ред.';
-        reHighlight(pre);
-      }
-      const code = (pre.textContent || pre.innerText || '').trim();
-      if (/input\s*\(/.test(code)) {
-        exerciseButtons.style.display = 'flex';
-        sandboxOutput.style.display = 'none';
-        sandboxInput.style.display = 'block';
-        sandboxInput.focus();
-      } else {
-        exerciseButtons.style.display = 'none';
-        sandboxInput.style.display = 'none';
-        sandboxInput.value = '';
-        sandboxOutput.style.display = 'block';
-        runSandbox(sandboxOutput, code, '');
-      }
-    });
-
-    // ── Exercise run handler ──
-    exerciseRunBtn.addEventListener('click', function () {
-      const code = (pre.textContent || pre.innerText || '').trim();
-      const input = sandboxInput.value;
-      sandboxOutput.style.display = 'block';
-      runSandbox(sandboxOutput, code, input);
-    });
-
-    // ── Exercise reset handler ──
-    exerciseResetBtn.addEventListener('click', function () {
+      // ── Sandbox Input ──
+      const sandboxInput = document.createElement('textarea');
+      sandboxInput.className = 'sandbox-input';
+      sandboxInput.placeholder = 'Введите данные для input() — каждое значение на новой строке…';
       sandboxInput.style.display = 'none';
+      wrapper.appendChild(sandboxInput);
+
+      // ── Exercise Buttons ──
+      const exerciseButtons = document.createElement('div');
+      exerciseButtons.className = 'exercise-buttons';
       exerciseButtons.style.display = 'none';
+      wrapper.appendChild(exerciseButtons);
+
+      const exerciseRunBtn = document.createElement('button');
+      exerciseRunBtn.className = 'exercise-run-btn';
+      exerciseRunBtn.textContent = '▶ Выполнить';
+      exerciseButtons.appendChild(exerciseRunBtn);
+
+      const exerciseResetBtn = document.createElement('button');
+      exerciseResetBtn.className = 'exercise-reset-btn';
+      exerciseResetBtn.textContent = '✕ Сброс';
+      exerciseButtons.appendChild(exerciseResetBtn);
+
+      // ── Sandbox Output ──
+      const sandboxOutput = document.createElement('div');
+      sandboxOutput.className = 'sandbox-output';
       sandboxOutput.style.display = 'none';
-      sandboxInput.value = '';
-      sandboxOutput.textContent = '';
-    });
+      wrapper.appendChild(sandboxOutput);
+
+      // ── Run handler ──
+      runBtn.addEventListener('click', function () {
+        if (isEditing) {
+          isEditing = false;
+          pre.contentEditable = 'false';
+          pre.classList.remove('editing');
+          editBtn.classList.remove('active');
+          editBtn.textContent = '✎ Ред.';
+          reHighlight(pre);
+        }
+        const code = (pre.textContent || pre.innerText || '').trim();
+        if (/input\s*\(/.test(code)) {
+          exerciseButtons.style.display = 'flex';
+          sandboxOutput.style.display = 'none';
+          sandboxInput.style.display = 'block';
+          sandboxInput.focus();
+        } else {
+          exerciseButtons.style.display = 'none';
+          sandboxInput.style.display = 'none';
+          sandboxInput.value = '';
+          sandboxOutput.style.display = 'block';
+          runSandbox(sandboxOutput, code, '');
+        }
+      });
+
+      // ── Exercise run handler ──
+      exerciseRunBtn.addEventListener('click', function () {
+        const code = (pre.textContent || pre.innerText || '').trim();
+        const input = sandboxInput.value;
+        sandboxOutput.style.display = 'block';
+        runSandbox(sandboxOutput, code, input);
+      });
+
+      // ── Exercise reset handler ──
+      exerciseResetBtn.addEventListener('click', function () {
+        sandboxInput.style.display = 'none';
+        exerciseButtons.style.display = 'none';
+        sandboxOutput.style.display = 'none';
+        sandboxInput.value = '';
+        sandboxOutput.textContent = '';
+      });
+    }
   });
 }

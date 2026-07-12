@@ -2,17 +2,11 @@
 title: 'Операции над числами'
 lesson: 8
 description: '+, -, *, /, //, %, **'
-duration: 10
-complexity: '1'
 badge: 'math_wiz'
 file: '08-number-ops.html'
 layout: 'layout.njk'
 permalink: '08-number-ops.html'
 subtitle: '+, -, *, /, //, %, **, abs(), round(), divmod(), sqrt(), pow() — арифметика и приоритет операций'
-prevUrl: '07-f-strings.html'
-prevTitle: 'f-строки и форматирование'
-nextUrl: '09-booleans.html'
-nextTitle: 'Булевы переменные'
 ---
 
 ## Арифметические операции

@@ -2,17 +2,11 @@
 title: 'pytest'
 lesson: 47
 description: 'assert, parametrize, проверка исключений'
-duration: 12
-complexity: '3'
 badge: 'test_master'
 file: '47-pytest.html'
 layout: 'layout.njk'
 permalink: '47-pytest.html'
 subtitle: 'Проверяем, что код работает правильно'
-prevUrl: '46-type-hints.html'
-prevTitle: 'Type Hints'
-nextUrl: '48-requests-api.html'
-nextTitle: 'Requests и API'
 ---
 
 ## Зачем нужны тесты?
@@ -20,6 +14,8 @@ nextTitle: 'Requests и API'
 Тесты автоматически проверяют, что ваш код работает правильно. Особенно важно при изменениях: тесты сразу покажут, если что-то сломалось.
 
 ## Установка и первый тест
+
+<!-- norun -->
 
 ```python
 # Установка
@@ -41,6 +37,8 @@ def test_double_zero():
 def test_double_negative():
     assert double(-3) == -6
 ```
+
+<!-- norun -->
 
 ```python
 # Запуск тестов в терминале:

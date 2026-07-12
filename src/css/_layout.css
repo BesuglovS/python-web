@@ -1,7 +1,41 @@
 /* Layout Components */
+.content-layout {
+  display: flex;
+  gap: 24px;
+  position: relative;
+}
+
 .main-content, main {
   flex: 1;
   min-width: 0;
+}
+
+section {
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 26px 30px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+section h2 {
+  font-size: 1.3em;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--primary);
+}
+
+section h3 {
+  font-size: 1.08em;
+  color: var(--text);
+  margin: 16px 0 8px;
+}
+
+section p {
+  margin-bottom: 10px;
 }
 
 #toc {
@@ -126,4 +160,149 @@
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
+}
+
+.bottom-controls {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity .3s, visibility .3s, transform .3s;
+}
+
+.bottom-controls.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  color: #fff;
+  border: none;
+  font-size: 1.3em;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+  transition: transform var(--transition), box-shadow var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.55);
+}
+
+.page-loader-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #10b981);
+  z-index: 10000;
+  width: 0%;
+  transition: width .35s;
+  pointer-events: none;
+}
+
+.page-loader-bar.running {
+  animation: 1.5s ease-in-out infinite loader-pulse;
+}
+
+@keyframes loader-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.page-loader-bar.done {
+  width: 100%;
+  transition: width .2s ease-out;
+  animation: none;
+}
+
+.page-loader-bar.hide {
+  opacity: 0;
+  transition: opacity .35s .2s;
+}
+
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #007bff, #00d4ff);
+  z-index: 9999;
+  transition: width .1s linear;
+}
+
+/* Баннер без JS (заменяет инлайн-стиль, чтобы CSP не требовал 'unsafe-inline') */
+.noscript-banner {
+  padding: 40px;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+/* Пиксель Yandex.Метрики (скрыт за пределами экрана) */
+.ym-pixel {
+  position: absolute;
+  left: -9999px;
+}
+
+/* Карта курса — состояние загрузки и подвал */
+.mindmap-loading {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px;
+}
+
+.mindmap-footer {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+/* Страницы ошибок 404/500 (вынесено из инлайн-<style>, чтобы CSP
+   не требовал 'unsafe-inline' для style-src) */
+.error-page {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.error-code {
+  font-size: 6rem;
+  font-weight: 700;
+  color: #667eea;
+  margin: 0;
+}
+
+.error-msg {
+  font-size: 1.4rem;
+  color: #555;
+  margin: 16px 0 32px;
+}
+
+.error-link {
+  display: inline-block;
+  padding: 12px 32px;
+  background: #667eea;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.error-link:hover {
+  background: #5a6fd6;
 }

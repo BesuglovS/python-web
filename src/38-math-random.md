@@ -2,17 +2,11 @@
 title: 'math и random'
 lesson: 38
 description: 'Математика, случайные числа'
-duration: 10
-complexity: '2'
 badge: 'math_random'
 file: '38-math-random.html'
 layout: 'layout.njk'
 permalink: '38-math-random.html'
 subtitle: 'Математические вычисления и генерация случайных чисел'
-prevUrl: '37-venv-pip.html'
-prevTitle: 'Виртуальные окружения и pip'
-nextUrl: '39-datetime.html'
-nextTitle: 'Модуль datetime'
 ---
 
 ## Модуль math — математика в Python
@@ -103,7 +97,7 @@ print(math.hypot(3, 4))        # 5.0
 import random
 ```
 
-> **⚠️ Важно:** **Важно:** для криптографических целей используйте модуль `secrets`, а не `random`. `random` не обеспечивает криптографическую стойкость.
+> **⚠️ Важно:** для криптографических целей используйте модуль `secrets`, а не `random`. `random` не обеспечивает криптографическую стойкость.
 
 ## random.randint() и random.randrange()
 

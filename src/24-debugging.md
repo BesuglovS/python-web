@@ -2,17 +2,11 @@
 title: 'Отладка'
 lesson: 24
 description: 'pdb, print-отладка, assert, логирование'
-duration: 12
-complexity: '2'
 badge: 'debugger'
 file: '24-debugging.html'
 layout: 'layout.njk'
 permalink: '24-debugging.html'
 subtitle: 'print(), pdb, логирование — как находить и исправлять ошибки в коде'
-prevUrl: '23-functions-advanced.html'
-prevTitle: 'Функции: продвинутые темы'
-nextUrl: '25-lists.html'
-nextTitle: 'Списки'
 ---
 
 ## Зачем нужна отладка?
@@ -42,7 +36,7 @@ result = calculate_total([100, 200, 300], 0.1)
 print(f"Результат: {result}")
 ```
 
-> **💡 Совет:** **Совет:** используйте префикс `DEBUG:` или `>>>`, чтобы легко отличить отладочный вывод от основного и быстро удалить его потом.
+> **💡 Совет:** используйте префикс `DEBUG:` или `>>>`, чтобы легко отличить отладочный вывод от основного и быстро удалить его потом.
 
 ## f-строки для отладки (Python 3.8+)
 
@@ -114,6 +108,14 @@ print(divide(10, 0))   # None
 - `WARNING` — предупреждения
 - `ERROR` — ошибки
 - `CRITICAL` — критические ошибки
+
+## Горячие клавиши отладки в IDE
+
+Каждая среда разработки предоставляет горячие клавиши для отладки. Вот основные:
+
+<table><tbody><tr><th>Действие</th><th>IDLE</th><th>VS Code</th><th>PyCharm</th></tr><tr><td>Точка останова (breakpoint)</td><td>—</td><td><code>F9</code></td><td>Клик на номер строки</td></tr><tr><td>Запуск отладки</td><td>—</td><td><code>F5</code></td><td><code>Shift+F9</code></td></tr><tr><td>Следующая строка (Step Over)</td><td>—</td><td><code>F10</code></td><td><code>F8</code></td></tr><tr><td>Зайти внутрь (Step Into)</td><td>—</td><td><code>F11</code></td><td><code>F7</code></td></tr><tr><td>Выйти из функции (Step Out)</td><td>—</td><td><code>Shift+F11</code></td><td><code>Shift+F8</code></td></tr><tr><td>Продолжить до следующей точки (Continue)</td><td>—</td><td><code>F5</code></td><td><code>F9</code></td></tr><tr><td>Запуск файла</td><td><code>F5</code></td><td><code>Ctrl+F5</code> / кнопка ▶</td><td><code>Shift+F10</code></td></tr><tr><td>Остановка выполнения</td><td><code>Ctrl+C</code></td><td><code>Shift+F5</code></td><td><code>Ctrl+F2</code></td></tr><tr><td>Перезапуск</td><td><code>F5</code></td><td><code>Ctrl+Shift+F5</code></td><td><code>Ctrl+F5</code></td></tr></tbody></table>
+
+> **💡 Совет:** IDLE — простая среда без встроенного отладчика. Для пошаговой отладки используйте VS Code или PyCharm.
 
 ## Практические советы
 

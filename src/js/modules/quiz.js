@@ -2,7 +2,21 @@
 
 /**
  * Quiz system module
+ * Provides interactive quizzes for each lesson with full accessibility
  */
+
+import { safeGetItem, safeSetItem } from '../config/security.js';
+
+const CONSOLIDATED_PROGRESS_KEY = 'python-web-course-progress';
+
+const _QUIZ_ALLOWED_TAGS = /^<(\/)?(code|br|b|i|em|strong)(\s[^>]*)?>$/;
+
+function sanitizeHtml(html) {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, function (tag) {
+    return _QUIZ_ALLOWED_TAGS.test(tag) ? tag : '';
+  });
+}
 
 export function initQuizSystem() {
   const lessonAttr = document.body.getAttribute('data-lesson');
@@ -12,11 +26,14 @@ export function initQuizSystem() {
   const main = document.querySelector('main, .main-content');
   if (!main) return;
 
-  const quizContainer = document.createElement('div');
+  const quizContainer = document.createElement('section');
   quizContainer.className = 'quiz-container';
+  quizContainer.setAttribute('role', 'region');
+  quizContainer.setAttribute('aria-label', '\u041f\u0440\u043e\u0432\u0435\u0440\u044c \u0441\u0435\u0431\u044f');
+
   const loadingDiv = document.createElement('div');
   loadingDiv.className = 'quiz-loading';
-  loadingDiv.textContent = '⏳ Загрузка вопросов...';
+  loadingDiv.textContent = '\u23f3 \u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0432\u043e\u043f\u0440\u043e\u0441\u043e\u0432...';
   quizContainer.appendChild(loadingDiv);
 
   const completeToggle = main.querySelector('.lesson-complete-toggle');
@@ -34,11 +51,6 @@ export function initQuizSystem() {
     .then(function (questions) {
       if (!questions || !questions.length) return;
 
-      if (window.LESSON_QUIZZES === undefined) {
-        window.LESSON_QUIZZES = {};
-      }
-      window.LESSON_QUIZZES[lessonNum] = questions;
-
       let state = {
         idx: 0,
         correct: 0,
@@ -51,26 +63,34 @@ export function initQuizSystem() {
 
         quizContainer.textContent = '';
         const h3 = document.createElement('h3');
-        h3.textContent = '🧠 Проверь себя';
+        h3.id = 'quiz-heading';
+        h3.textContent = '\ud83e\udde0 \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u0441\u0435\u0431\u044f';
         quizContainer.appendChild(h3);
+        quizContainer.setAttribute('aria-labelledby', 'quiz-heading');
 
         const progressDiv = document.createElement('div');
         progressDiv.className = 'quiz-progress';
-        progressDiv.textContent = 'Вопрос ' + (state.idx + 1) + ' из ' + state.total;
+        progressDiv.setAttribute('role', 'status');
+        progressDiv.setAttribute('aria-live', 'polite');
+        progressDiv.textContent = '\u0412\u043e\u043f\u0440\u043e\u0441 ' + (state.idx + 1) + ' \u0438\u0437 ' + state.total;
         quizContainer.appendChild(progressDiv);
 
         const questionDiv = document.createElement('div');
         questionDiv.className = 'quiz-question';
-        questionDiv.textContent = q.question;
+        questionDiv.innerHTML = sanitizeHtml(q.question);
         quizContainer.appendChild(questionDiv);
 
         const optionsDiv = document.createElement('div');
         optionsDiv.className = 'quiz-options';
+        optionsDiv.setAttribute('role', 'radiogroup');
+        optionsDiv.setAttribute('aria-label', '\u0412\u0430\u0440\u0438\u0430\u043d\u0442\u044b \u043e\u0442\u0432\u0435\u0442\u0430');
 
         q.options.forEach(function (opt, i) {
           const optEl = document.createElement('button');
           optEl.type = 'button';
           optEl.className = 'quiz-option';
+          optEl.setAttribute('role', 'radio');
+          optEl.setAttribute('aria-checked', 'false');
           optEl.setAttribute('data-idx', String(i));
 
           const marker = document.createElement('span');
@@ -92,15 +112,17 @@ export function initQuizSystem() {
         const feedback = document.createElement('div');
         feedback.className = 'quiz-feedback';
         feedback.setAttribute('role', 'alert');
-        feedback.setAttribute('aria-live', 'polite');
+        feedback.setAttribute('aria-live', 'assertive');
         quizContainer.appendChild(feedback);
 
         const nextBtn = document.createElement('button');
         nextBtn.className = 'quiz-next-btn';
-        nextBtn.textContent = 'Далее →';
+        nextBtn.textContent = state.idx + 1 < state.total ? '\u0414\u0430\u043b\u0435\u0435 \u2192' : '\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442';
         quizContainer.appendChild(nextBtn);
 
         bindOptionHandlers(q);
+
+        h3.focus();
       }
 
       function bindOptionHandlers(currentQuestion) {
@@ -114,24 +136,48 @@ export function initQuizSystem() {
             state.answered = true;
 
             const selectedIdx = parseInt(optEl.getAttribute('data-idx'), 10);
+            optEl.setAttribute('aria-checked', 'true');
+
             if (selectedIdx === currentQuestion.correct) {
               state.correct++;
               optEl.classList.add('correct');
-              feedback.textContent = '✅ Правильно! ' + (currentQuestion.explanation || '');
+              feedback.textContent = '\u2705 \u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e! ' + (currentQuestion.explanation || '');
               feedback.className = 'quiz-feedback correct-fb show';
             } else {
               optEl.classList.add('incorrect');
               if (options[currentQuestion.correct]) {
                 options[currentQuestion.correct].classList.add('correct');
+                options[currentQuestion.correct].setAttribute('aria-checked', 'true');
               }
-              feedback.textContent = '❌ Неправильно. ' + (currentQuestion.explanation || '');
+              feedback.textContent = '\u274c \u041d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e. ' + (currentQuestion.explanation || '');
               feedback.className = 'quiz-feedback incorrect-fb show';
             }
 
             options.forEach(function (o) {
               o.classList.add('disabled');
+              o.setAttribute('aria-disabled', 'true');
+              o.setAttribute('tabindex', '-1');
             });
             nextBtn.classList.add('show');
+            nextBtn.setAttribute('tabindex', '0');
+            nextBtn.focus();
+          });
+
+          // Arrow key navigation within options
+          optEl.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+              e.preventDefault();
+              const next = optEl.nextElementSibling;
+              if (next && next.classList.contains('quiz-option') && !next.classList.contains('disabled')) {
+                next.focus();
+              }
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+              e.preventDefault();
+              const prev = optEl.previousElementSibling;
+              if (prev && prev.classList.contains('quiz-option') && !prev.classList.contains('disabled')) {
+                prev.focus();
+              }
+            }
           });
         });
 
@@ -148,20 +194,22 @@ export function initQuizSystem() {
 
       function showResults() {
         const scorePct = Math.round((state.correct / state.total) * 100);
-        const icon = scorePct === 100 ? '🥇' : scorePct >= 50 ? '👍' : '📚';
+        const icon = scorePct === 100 ? '\ud83e\udd47' : scorePct >= 50 ? '\ud83d\udc4d' : '\ud83d\udcda';
         const message =
           scorePct === 100
-            ? 'Великолепно! Ты отлично усвоил материал. Урок отмечен как пройденный!'
+            ? '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0443\u0441\u0432\u043e\u0438\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b. \u0423\u0440\u043e\u043a \u043e\u0442\u043c\u0435\u0447\u0435\u043d \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439!'
             : scorePct >= 50
-              ? 'Хорошо! Но есть куда расти — повтори материал.'
-              : 'Стоит перечитать урок и попробовать снова.';
+              ? '\u0425\u043e\u0440\u043e\u0448\u043e! \u041d\u043e \u0435\u0441\u0442\u044c \u043a\u0443\u0434\u0430 \u0440\u0430\u0441\u0442\u0438 \u2014 \u043f\u043e\u0432\u0442\u043e\u0440\u0438 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b.'
+              : '\u0421\u0442\u043e\u0438\u0442 \u043f\u0435\u0440\u0435\u0447\u0438\u0442\u0430\u0442\u044c \u0443\u0440\u043e\u043a \u0438 \u043f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c \u0441\u043d\u043e\u0432\u0430.';
 
         quizContainer.textContent = '';
         const resultsDiv = document.createElement('div');
         resultsDiv.className = 'quiz-results';
+        resultsDiv.setAttribute('role', 'status');
+        resultsDiv.setAttribute('aria-live', 'polite');
 
         const h3 = document.createElement('h3');
-        h3.textContent = icon + ' Результат';
+        h3.textContent = icon + ' \u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442';
         resultsDiv.appendChild(h3);
 
         const scoreDiv = document.createElement('div');
@@ -177,13 +225,13 @@ export function initQuizSystem() {
 
         const retryBtn = document.createElement('button');
         retryBtn.className = 'quiz-retry';
-        retryBtn.textContent = '🔄 Попробовать ещё раз';
+        retryBtn.setAttribute('aria-label', '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0442\u0435\u0441\u0442');
+        retryBtn.textContent = '\ud83d\udd04 \u041f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c \u0435\u0449\u0451 \u0440\u0430\u0437';
         resultsDiv.appendChild(retryBtn);
 
         quizContainer.appendChild(resultsDiv);
 
         if (scorePct === 100) {
-          // Save quiz score
           let quizScores;
           try {
             quizScores = JSON.parse(safeGetItem('python-web-quiz-scores') || '{}');
@@ -194,19 +242,17 @@ export function initQuizSystem() {
           quizScores[pageName] = 100;
           safeSetItem('python-web-quiz-scores', JSON.stringify(quizScores));
 
-          // Mark lesson as completed
           let completedLessons;
           try {
-            completedLessons = JSON.parse(safeGetItem('python-web-progress') || '[]');
+            completedLessons = JSON.parse(safeGetItem(CONSOLIDATED_PROGRESS_KEY) || '[]');
           } catch (_e) {
             completedLessons = [];
           }
           if (!completedLessons.includes(pageName)) {
             completedLessons.push(pageName);
           }
-          safeSetItem('python-web-progress', JSON.stringify(completedLessons));
+          safeSetItem(CONSOLIDATED_PROGRESS_KEY, JSON.stringify(completedLessons));
 
-          // Update UI
           const completeEl = document.querySelector('.lesson-complete-toggle');
           if (completeEl) {
             completeEl.textContent = '';
@@ -222,12 +268,14 @@ export function initQuizSystem() {
 
             const span = document.createElement('span');
             span.className = 'complete-text';
-            span.textContent = '✓ Урок пройден';
+            span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
             label.appendChild(span);
 
             completeEl.appendChild(label);
           }
         }
+
+        h3.focus();
 
         quizContainer.querySelector('.quiz-retry').addEventListener('click', function () {
           state = { idx: 0, correct: 0, answered: false, total: questions.length };

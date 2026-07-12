@@ -165,7 +165,6 @@ body.repl-page {
 }
 
 .repl-input-area textarea:focus {
-  outline: 0;
   border-color: var(--primary);
 }
 
@@ -198,7 +197,6 @@ body.repl-page {
 }
 
 .repl-stdin-row textarea:focus {
-  outline: 0;
   border-color: var(--primary);
 }
 

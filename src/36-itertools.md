@@ -2,17 +2,11 @@
 title: 'itertools'
 lesson: 36
 description: 'product, permutations, chain, groupby и другие функции'
-duration: 12
-complexity: '3'
 badge: 'itertools_guru'
 file: '36-itertools.html'
 layout: 'layout.njk'
 permalink: '36-itertools.html'
 subtitle: 'product, permutations, combinations, cycle, chain, groupby — комбинаторные генераторы'
-prevUrl: '35-modules-import.html'
-prevTitle: 'Модули и import'
-nextUrl: '37-venv-pip.html'
-nextTitle: 'Виртуальные окружения и pip'
 ---
 
 ## Что такое itertools?
@@ -35,7 +29,7 @@ from itertools import product, permutations, combinations
 import itertools
 ```
 
-> **⚠️ Важно:** **Важно:** все функции itertools возвращают **итераторы**, а не списки. Чтобы получить список, нужно обернуть вызов в `list()`. Итераторы экономят память, но пройти по ним можно только один раз.
+> **⚠️ Важно:** все функции itertools возвращают **итераторы**, а не списки. Чтобы получить список, нужно обернуть вызов в `list()`. Итераторы экономят память, но пройти по ним можно только один раз.
 
 ## product() — декартово произведение
 

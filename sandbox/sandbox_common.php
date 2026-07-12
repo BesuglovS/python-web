@@ -24,12 +24,35 @@ $SANDBOX_BASE_URL = getenv('SANDBOX_BASE_URL') ?: 'https://python.nayanovaacadem
 // Доверенные прокси (список IP через запятую)
 $SANDBOX_TRUSTED_PROXIES = array_filter(array_map('trim', explode(',', getenv('SANDBOX_TRUSTED_PROXIES') ?: '')));
 
-// Стандартные модули разрешённые для импорта в Python
+// Стандартные модули разрешённые для импорта в Python.
+// Этот список — единственный источник разрешённых импортов: AST-валидатор
+// (ast_validator.py) блокирует любой импорт вне списка. Ни в коем случае
+// не добавлять сюда os/sys/subprocess и прочие опасные модули — они также
+// заблокированы на уровне FORBIDDEN_MODULE_ATTRS валидатора.
 $SANDBOX_ALLOWED_IMPORTS = [
     'math', 'random', 'datetime', 'itertools', 'collections',
     'functools', 'json', 're', 'string', 'statistics',
     'decimal', 'fractions', 'copy', 'pprint',
 ];
+
+// Защита от ошибки конфигурации: никогда не разрешать заведомо опасные модули,
+// даже если они случайно попадут в SANDBOX_ALLOWED_IMPORTS (например, через env).
+$sandboxDeniedImports = [
+    'os', 'sys', 'subprocess', 'shutil', 'importlib', 'site', 'socket',
+    'ctypes', 'multiprocessing', 'threading', 'pickle', 'shelve', 'marshal',
+    'builtins', 'code', 'codeop', 'runpy', 'pkgutil', 'inspect', 'ast',
+    'urllib', 'http', 'ftplib', 'poplib', 'imaplib', 'smtplib', 'nntplib',
+    'telnetlib', 'xmlrpc', 'sqlite3', 'ssl',
+];
+foreach ($SANDBOX_ALLOWED_IMPORTS as $sandboxMod) {
+    if (in_array($sandboxMod, $sandboxDeniedImports, true)) {
+        error_log('SANDBOX_ALLOWED_IMPORTS содержит запрещённый модуль: ' . $sandboxMod);
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(500);
+        echo json_encode(['ok' => false, 'error' => 'Sandbox misconfiguration'], SANDBOX_JSON_OPT);
+        exit;
+    }
+}
 
 // ─── Security Headers ───
 header('Content-Type: application/json; charset=utf-8');
@@ -64,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
  * @return void завершает выполнение с HTTP 429 при превышении лимита
  */
 function sandbox_check_rate_limit(): void {
+    global $SANDBOX_TRUSTED_PROXIES;
     $rateDir = __DIR__ . '/.ratelimit';
 
     // Определяем клиентский IP. X-Forwarded-For используется только если
@@ -132,13 +156,19 @@ function sandbox_check_rate_limit(): void {
     flock($handle, LOCK_UN);
     fclose($handle);
 
-    // Периодическая очистка устаревших файлов (~1 из 100 запросов)
-    if (mt_rand(1, 100) === 1 && is_dir($rateDir)) {
-        $files = glob($rateDir . '/*.json');
-        if ($files && count($files) > 100) {
-            foreach ($files as $f) {
-                if (time() - filemtime($f) > SANDBOX_RATE_WINDOW * 2) {
-                    @unlink($f);
+    // Периодическая очистка устаревших файлов (раз в 5 минут)
+    $cleanupFile = $rateDir . '/.cleanup_ts';
+    $lastCleanup = @filemtime($cleanupFile);
+    if ($lastCleanup === false || ($now - $lastCleanup) > 300) {
+        @touch($cleanupFile);
+        if (is_dir($rateDir)) {
+            $files = glob($rateDir . '/*.json');
+            if ($files) {
+                foreach ($files as $f) {
+                    if (basename($f) === '.cleanup_ts') continue;
+                    if ($now - filemtime($f) > SANDBOX_RATE_WINDOW * 2) {
+                        @unlink($f);
+                    }
                 }
             }
         }
@@ -160,7 +190,7 @@ function sandbox_read_input(): array {
     }
 
     $data = json_decode($raw, true);
-    if (!is_array($data) || !isset($data['code'])) {
+    if (!is_array($data) || !isset($data['code']) || !is_string($data['code'])) {
         http_response_code(400);
         echo json_encode(['ok' => false, 'error' => 'Missing "code" field in JSON'], SANDBOX_JSON_OPT);
         exit;
@@ -207,14 +237,14 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
     try {
         $tmpFile = tempnam(sys_get_temp_dir(), 'py_');
 
-        // ─── Ограничение памяти (реальное, через setrlimit) ───
+        // ─── Ограничение памяти (реальное, через setrlimit на Linux/macOS) ───
         $memBytes = (int)($memoryMb * 1024 * 1024);
         $prelude =
             "try:\n" .
             "    import resource\n" .
             "    resource.setrlimit(resource.RLIMIT_AS, ($memBytes, $memBytes))\n" .
-            "except Exception:\n" .
-            "    pass\n";
+            "except (ImportError, ValueError, OSError):\n" .
+            "    pass  # Windows: resource module unavailable, memory limit skipped\n";
         $scriptContent = $prelude . $scriptContent;
 
         file_put_contents($tmpFile, $scriptContent);
@@ -242,7 +272,10 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
         }
 
         if (strlen($stdinData) > 0) {
-            fwrite($pipes[0], $stdinData);
+            $written = @fwrite($pipes[0], $stdinData);
+            if ($written === false || $written < strlen($stdinData)) {
+                // Partial write or failure — close and let process handle incomplete input
+            }
         }
         fclose($pipes[0]);
 
@@ -275,6 +308,9 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
             $sel = @stream_select($read, $write, $except, 1, 0);
 
             if ($sel === false) {
+                // stream_select interrupted (e.g. signal) — read remaining data and break
+                $stdout .= stream_get_contents($pipes[1]);
+                $stderr .= stream_get_contents($pipes[2]);
                 break;
             }
             if ($sel > 0) {
@@ -362,6 +398,8 @@ function sandbox_validate_ast(string $code, array $allowedImports): array {
         }
 
         $read = [$pipes[1], $pipes[2]];
+        $write = null;
+        $except = null;
         $sel = @stream_select($read, $write, $except, 1, 0);
         if ($sel === false) break;
         if ($sel > 0) {

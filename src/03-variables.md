@@ -2,17 +2,11 @@
 title: 'Переменные'
 lesson: 3
 description: 'Объявление, присваивание, имена'
-duration: 10
-complexity: '1'
 badge: 'var_master'
 file: '03-variables.html'
 layout: 'layout.njk'
 permalink: '03-variables.html'
 subtitle: 'Объявление, присваивание, соглашения об именах'
-prevUrl: '02-ide-setup.html'
-prevTitle: 'Настройка IDE: IDLE, VS Code и PyCharm'
-nextUrl: '04-data-types.html'
-nextTitle: 'Типы данных'
 ---
 
 ## Что такое переменная?

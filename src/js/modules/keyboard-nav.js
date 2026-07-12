@@ -2,6 +2,7 @@
 
 /**
  * Keyboard navigation (arrow keys for prev/next lesson)
+ * Provides keyboard shortcuts for lesson navigation
  */
 
 export function initKeyboardNavigation() {

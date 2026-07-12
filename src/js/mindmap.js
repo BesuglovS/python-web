@@ -1,9 +1,8 @@
 'use strict';
 
-const mmContainer = document.getElementById('mm-container');
-if (!mmContainer) {
-  // nothing to do
-} else {
+function initMindmap() {
+  const mmContainer = document.getElementById('mm-container');
+  if (!mmContainer) return;
   const sectionIcons = ['📖', '📚', '🔀', '🔁', '🔤', '🔄', '⚙️', '🗂️', 'λ', '💾', '🧰', '🏗️', '🚀', '🌐'];
 
   fetch('lessons.json')
@@ -136,3 +135,5 @@ if (!mmContainer) {
       mmContainer.appendChild(p);
     });
 }
+
+document.addEventListener('DOMContentLoaded', initMindmap);

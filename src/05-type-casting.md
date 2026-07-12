@@ -2,17 +2,11 @@
 title: 'Приведение типов'
 lesson: 5
 description: 'int(), float(), str(), bool()'
-duration: 8
-complexity: '1'
 badge: 'caster'
 file: '05-type-casting.html'
 layout: 'layout.njk'
 permalink: '05-type-casting.html'
 subtitle: 'int(), float(), str(), bool() — преобразование данных из одного типа в другой'
-prevUrl: '04-data-types.html'
-prevTitle: 'Типы данных'
-nextUrl: '06-io.html'
-nextTitle: 'Ввод и вывод'
 ---
 
 ## Зачем нужно приведение типов?

@@ -4,8 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import { sanitizeInput, showSandboxResult } from '../src/js/modules/utils.js';
 
-// ─── sanitizeInput (real implementation) ───
-
 describe('sanitizeInput', () => {
   it('strips HTML tags', () => {
     expect(sanitizeInput('<script>alert(1)</script>')).toBe('alert(1)');
@@ -39,8 +37,6 @@ describe('sanitizeInput', () => {
   });
 });
 
-// ─── showSandboxResult (real implementation) ───
-
 describe('showSandboxResult', () => {
   it('escapes stdout content', () => {
     const el = document.createElement('div');
@@ -67,23 +63,46 @@ describe('showSandboxResult', () => {
     showSandboxResult(el, { stdout: '', stderr: '', ok: false, exit_code: 1 });
     expect(el.innerHTML).toContain('1');
   });
+
+  it('sets display block and show class', () => {
+    const el = document.createElement('div');
+    showSandboxResult(el, { stdout: 'ok', stderr: '', ok: true });
+    expect(el.style.display).toBe('block');
+    expect(el.className).toContain('show');
+  });
+
+  it('adds error class on failure', () => {
+    const el = document.createElement('div');
+    showSandboxResult(el, { stdout: '', stderr: 'err', ok: false, exit_code: 1 });
+    expect(el.className).toContain('error');
+  });
 });
 
-// ─── _buildLessonLookup (from config.js) ───
-
-describe('_buildLessonLookup', () => {
-  const configSrc = fs.readFileSync(path.join(__dirname, '..', 'src', 'js', 'config.js'), 'utf-8');
+describe('_buildLessonLookup (from security module)', () => {
+  const securitySrc = fs.readFileSync(
+    path.join(__dirname, '..', 'src', 'js', 'config', 'security.js'),
+    'utf-8',
+  );
+  const stripped = securitySrc
+    .replace(/^import.*from.*constants\.js[\s\S]*?;/m, '')
+    .replace(/^export\s*\{[\s\S]*?\};?\s*$/m, '');
 
   function loadBuildLessonLookup() {
     const fn = new Function(
       'localStorage',
       'console',
+      'document',
       `
-      ${configSrc}
+      var MAX_STORAGE_VALUE_LENGTH = 102400;
+      ${stripped}
       return _buildLessonLookup;
       `,
     );
-    return fn({ getItem: () => null, setItem: () => {}, removeItem: () => {} }, { warn: () => {} });
+    return fn(
+      { getItem: () => null, setItem: () => {}, removeItem: () => {} },
+      { warn: () => {} },
+      { dispatchEvent: () => {} },
+    );
   }
 
   const buildLookup = loadBuildLessonLookup();

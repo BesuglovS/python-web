@@ -2,10 +2,20 @@
 
 /**
  * Utility functions shared across modules
+ * Provides common utilities for the Python-Web course application
  */
+
+import {
+  THEORY_CONTESTS,
+  CONTEST_BASE_URL,
+  COMPLEXITY_LABELS,
+} from '../config/courseData.js';
+import { MAX_INPUT_LENGTH } from '../config/constants.js';
 
 /**
  * Sanitize user input (strip HTML, limit length)
+ * @param {string} text - Input text to sanitize
+ * @returns {string} - Sanitized text
  */
 export function sanitizeInput(text) {
   if (!text || typeof text !== 'string') return '';
@@ -14,9 +24,8 @@ export function sanitizeInput(text) {
   textarea.innerHTML = cleaned;
   cleaned = textarea.value;
   cleaned = cleaned.replace(/\0/g, '');
-  const MAX_LEN = 102400;
-  if (cleaned.length > MAX_LEN) {
-    cleaned = cleaned.substring(0, MAX_LEN);
+  if (cleaned.length > MAX_INPUT_LENGTH) {
+    cleaned = cleaned.substring(0, MAX_INPUT_LENGTH);
   }
   return cleaned;
 }
@@ -27,6 +36,10 @@ export function sanitizeInput(text) {
 let _lessonsCache = null;
 let _lessonsCachePromise = null;
 
+/**
+ * Fetch lessons data with caching
+ * @returns {Promise<Object>} - Lessons data from lessons.json
+ */
 export function fetchLessonsData() {
   if (_lessonsCache) return Promise.resolve(_lessonsCache);
   if (_lessonsCachePromise) return _lessonsCachePromise;
@@ -48,11 +61,15 @@ export function fetchLessonsData() {
 
 /**
  * Create contest badge element
+ * @param {number} lessonNum - Lesson number
+ * @returns {HTMLElement|null} - Contest badge element or null
  */
 export function createContestBadge(lessonNum) {
-  if (!window.THEORY_CONTESTS || !window.THEORY_CONTESTS[lessonNum]) return null;
-  const contestId = window.THEORY_CONTESTS[lessonNum];
-  const baseUrl = (window.CONTEST_BASE_URL || 'https://contest.nayanovaacademy.ru/c/') + contestId;
+  if (!THEORY_CONTESTS || !THEORY_CONTESTS[lessonNum]) return null;
+  const contestId = THEORY_CONTESTS[lessonNum];
+  const baseUrl =
+    (CONTEST_BASE_URL || 'https://contest.nayanovaacademy.ru/index.php?page=contest&id=') +
+    contestId;
   const badge = document.createElement('a');
   badge.className = 'contest-badge';
   badge.href = baseUrl;
@@ -66,10 +83,13 @@ export function createContestBadge(lessonNum) {
 
 /**
  * Create meta info element (duration + complexity)
+ * @param {number} duration - Lesson duration in minutes
+ * @param {string} complexity - Lesson complexity level
+ * @returns {HTMLElement|null} - Meta info element or null
  */
 export function createMetaInfo(duration, complexity) {
-  if (typeof window.COMPLEXITY_LABELS === 'undefined') return null;
-  const label = window.COMPLEXITY_LABELS[complexity] || complexity;
+  if (typeof COMPLEXITY_LABELS === 'undefined') return null;
+  const label = COMPLEXITY_LABELS[complexity] || complexity;
   const metaDiv = document.createElement('div');
   metaDiv.className = 'topic-meta';
 
@@ -92,6 +112,8 @@ export function createMetaInfo(duration, complexity) {
 
 /**
  * Theme icon mapping
+ * @param {string} theme - Theme name (auto, dark, light)
+ * @returns {Object} - Icon data with icon and title
  */
 export function getThemeIconData(theme) {
   if (theme === 'auto') return { icon: '🔄', title: 'Авто' };
@@ -107,6 +129,8 @@ export function updateThemeIcon(btn, theme, effectiveTheme) {
 
 /**
  * Show sandbox result in output element
+ * @param {HTMLElement} outputEl - Output element
+ * @param {Object} result - Sandbox execution result
  */
 export function showSandboxResult(outputEl, result) {
   outputEl.textContent = '';
@@ -135,6 +159,7 @@ export function showSandboxResult(outputEl, result) {
     outputEl.appendChild(messageDiv);
   }
   outputEl.className = outputEl.className.replace(/\brunning\b/, '') + ' show';
+  outputEl.classList.remove('error');
   outputEl.style.display = 'block';
   if (!result.ok) {
     outputEl.classList.add('error');

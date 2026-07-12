@@ -2,17 +2,11 @@
 title: 'datetime'
 lesson: 39
 description: 'Даты, время, timedelta'
-duration: 10
-complexity: '2'
 badge: 'time_traveler'
 file: '39-datetime.html'
 layout: 'layout.njk'
 permalink: '39-datetime.html'
 subtitle: 'Работа с датами и временем: сейчас, завтра, через неделю, в любом формате'
-prevUrl: '38-math-random.html'
-prevTitle: 'Модули math и random'
-nextUrl: '40-numpy-pandas.html'
-nextTitle: 'NumPy и Pandas'
 ---
 
 ## Зачем нужен datetime?

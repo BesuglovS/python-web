@@ -2,17 +2,11 @@
 title: 'JSON и CSV'
 lesson: 33
 description: 'json.dump/load, csv.reader/writer'
-duration: 12
-complexity: '2'
 badge: 'data_formatter'
 file: '33-json-csv.html'
 layout: 'layout.njk'
 permalink: '33-json-csv.html'
 subtitle: 'Чтение и запись структурированных данных в популярных форматах'
-prevUrl: '32-files.html'
-prevTitle: 'Файлы: чтение и запись'
-nextUrl: '34-sqlite3.html'
-nextTitle: 'Базы данных SQLite'
 ---
 
 ## JSON — JavaScript Object Notation
@@ -34,6 +28,8 @@ print(data["hobbies"][0])    # доступ к спискам внутри
 ```
 
 Пример содержимого `data.json`:
+
+<!-- norun -->
 
 ```python
 {
@@ -91,6 +87,8 @@ print(json_str)              # {"name": "Борис", "age": 30}
 CSV — простой текстовый формат для табличных данных (строки и столбцы). Отлично открывается в Excel.
 
 Пример `students.csv`:
+
+<!-- norun -->
 
 ```python
 name,age,grade

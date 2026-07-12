@@ -2,17 +2,11 @@
 title: 'Цикл while'
 lesson: 17
 description: 'while'
-duration: 10
-complexity: '2'
 badge: 'looper'
 file: '17-while.html'
 layout: 'layout.njk'
 permalink: '17-while.html'
 subtitle: 'while — повторение пока условие истинно'
-prevUrl: '16-regex.html'
-prevTitle: 'Регулярные выражения'
-nextUrl: '18-for.html'
-nextTitle: 'Цикл for'
 ---
 
 ## Синтаксис while

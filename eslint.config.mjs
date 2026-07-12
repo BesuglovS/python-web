@@ -26,7 +26,7 @@ export default tseslint.config(
       '_site/**',
       'package-lock.json',
       // Build & config files
-      '.eleventy.js',
+      'eleventy.config.mjs',
       'build-highlight.mjs',
       'build-sw.mjs',
       'minify.js',
@@ -55,6 +55,7 @@ export default tseslint.config(
         AbortSignal: 'readonly',
         CustomEvent: 'readonly',
         IntersectionObserver: 'readonly',
+        MutationObserver: 'readonly',
         XMLHttpRequest: 'readonly',
         Blob: 'readonly',
         setTimeout: 'readonly',

@@ -2,24 +2,38 @@
 
 /**
  * Progress tracking module
+ * Tracks user progress through course lessons with consolidated storage
  */
 
 import { createMetaInfo, createContestBadge } from './utils.js';
+import { safeGetItem, safeSetItem } from '../config/security.js';
+import { TOTAL_LESSONS, COMPLEXITY_LABELS, LESSON_META } from '../config/courseData.js';
 
-const PROGRESS_KEY = 'python-web-progress';
+const CONSOLIDATED_PROGRESS_KEY = 'python-web-course-progress';
+const LEGACY_PROGRESS_KEY = 'python-web-progress';
 
 function getCompletedLessons() {
   try {
-    return JSON.parse(safeGetItem(PROGRESS_KEY) || '[]');
+    let progress = safeGetItem(CONSOLIDATED_PROGRESS_KEY);
+    if (!progress) {
+      progress = safeGetItem(LEGACY_PROGRESS_KEY);
+      if (progress) {
+        safeSetItem(CONSOLIDATED_PROGRESS_KEY, progress);
+      }
+    }
+    return progress ? JSON.parse(progress) : [];
   } catch (_e) {
     return [];
   }
 }
 
+function saveCompletedLessons(lessons) {
+  safeSetItem(CONSOLIDATED_PROGRESS_KEY, JSON.stringify(lessons));
+}
+
 export function initProgressTracking() {
   const pageName = window.location.pathname.split('/').pop() || '';
 
-  // Per-lesson completion toggle
   if (!pageName || pageName === 'index.html' || pageName === '') return;
 
   const footer = document.querySelector('.topic-footer');
@@ -32,45 +46,56 @@ export function initProgressTracking() {
     quizScores = {};
   }
 
-  const completed = getCompletedLessons().includes(pageName) || quizScores[pageName] === 100;
+  const manuallyCompleted = getCompletedLessons().includes(pageName);
   const quizPassed = quizScores[pageName] === 100;
+  const showToggle = manuallyCompleted || quizPassed;
 
   const toggleDiv = document.createElement('div');
   toggleDiv.className = 'lesson-complete-toggle';
 
-  if (quizPassed || completed) {
-    const label = document.createElement('label');
-    label.className = 'complete-label';
+  if (showToggle) {
+    if (quizPassed && !manuallyCompleted) {
+      const msg = document.createElement('div');
+      msg.className = 'complete-label';
+      const span = document.createElement('span');
+      span.className = 'complete-text';
+      span.textContent = '✓ Урок пройден (квиз)';
+      msg.appendChild(span);
+      toggleDiv.appendChild(msg);
+    } else {
+      const label = document.createElement('label');
+      label.className = 'complete-label';
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'complete-checkbox';
-    checkbox.checked = completed;
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(' '));
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'complete-checkbox';
+      checkbox.checked = manuallyCompleted;
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(' '));
 
-    const span = document.createElement('span');
-    span.className = 'complete-text';
-    span.textContent = completed ? '✓ Урок пройден' : 'Отметить как пройденный';
-    label.appendChild(span);
+      const span = document.createElement('span');
+      span.className = 'complete-text';
+      span.textContent = manuallyCompleted ? '✓ Урок пройден' : 'Отметить как пройденный';
+      label.appendChild(span);
 
-    label.querySelector('input').addEventListener('change', function (e) {
-      let lessons = getCompletedLessons();
-      if (e.target.checked) {
-        if (!lessons.includes(pageName)) {
-          lessons.push(pageName);
-          label.querySelector('.complete-text').textContent = '✓ Урок пройден';
+      label.querySelector('input').addEventListener('change', function (e) {
+        let lessons = getCompletedLessons();
+        if (e.target.checked) {
+          if (!lessons.includes(pageName)) {
+            lessons.push(pageName);
+            label.querySelector('.complete-text').textContent = '✓ Урок пройден';
+          }
+        } else {
+          lessons = lessons.filter(function (l) {
+            return l !== pageName;
+          });
+          label.querySelector('.complete-text').textContent = 'Отметить как пройденный';
         }
-      } else {
-        lessons = lessons.filter(function (l) {
-          return l !== pageName;
-        });
-        label.querySelector('.complete-text').textContent = 'Отметить как пройденный';
-      }
-      safeSetItem(PROGRESS_KEY, JSON.stringify(lessons));
-    });
+        saveCompletedLessons(lessons);
+      });
 
-    toggleDiv.appendChild(label);
+      toggleDiv.appendChild(label);
+    }
   } else {
     const msg = document.createElement('div');
     msg.className = 'quiz-required-msg';
@@ -95,7 +120,6 @@ export function initProgressTracking() {
     footer.appendChild(toggleDiv);
   }
 
-  // Index page: progress bar, topic cards, complexity labels
   if (pageName && pageName !== 'index.html' && pageName !== '') return;
 
   const completedLessons = getCompletedLessons();
@@ -105,11 +129,10 @@ export function initProgressTracking() {
   const headerParagraph = header.querySelector('p');
   if (headerParagraph) {
     const count = completedLessons.length;
-    const totalLessons = typeof window.TOTAL_LESSONS !== 'undefined' ? window.TOTAL_LESSONS : 50;
+    const totalLessons = typeof TOTAL_LESSONS !== 'undefined' ? TOTAL_LESSONS : 50;
     const pct = Math.round((count / totalLessons) * 100);
 
     if (headerParagraph.querySelector('.progress-info')) {
-      // Update existing
       const barContainer = headerParagraph.nextElementSibling;
       if (barContainer && barContainer.classList.contains('progress-bar-container')) {
         barContainer.querySelector('.progress-bar-fill').style.width = pct + '%';
@@ -156,17 +179,15 @@ export function initProgressTracking() {
     }
   }
 
-  // Complexity labels
-  if (typeof window.COMPLEXITY_LABELS !== 'undefined') {
+  if (typeof COMPLEXITY_LABELS !== 'undefined') {
     document.querySelectorAll('.meta-complexity').forEach(function (el) {
       const level = el.getAttribute('data-level');
-      if (level && window.COMPLEXITY_LABELS[level]) {
-        el.textContent = window.COMPLEXITY_LABELS[level];
+      if (level && COMPLEXITY_LABELS[level]) {
+        el.textContent = COMPLEXITY_LABELS[level];
       }
     });
   }
 
-  // Topic cards: mark completed, add metadata, contest badges
   document.querySelectorAll('.topic-card').forEach(function (card) {
     const href = card.getAttribute('href');
     if (href && completedLessons.includes(href)) {
@@ -177,9 +198,9 @@ export function initProgressTracking() {
       }
     }
 
-    const lessonNum = parseInt(card.getAttribute('data-lesson'));
-    if (typeof window.LESSON_META !== 'undefined') {
-      const meta = window.LESSON_META[lessonNum];
+    const lessonNum = parseInt(card.getAttribute('data-lesson'), 10);
+    if (typeof LESSON_META !== 'undefined') {
+      const meta = LESSON_META[lessonNum];
       if (meta) {
         const infoDiv = card.querySelector('.topic-info');
         if (infoDiv && !infoDiv.querySelector('.topic-meta')) {

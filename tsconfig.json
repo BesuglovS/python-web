@@ -7,11 +7,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "rootDir": ".",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "allowJs": true,
     "checkJs": false,
@@ -22,6 +17,6 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true
   },
-  "include": ["src/**/*", "tests/**/*", "*.ts", "*.js", "*.mjs"],
-  "exclude": ["node_modules", "dist", "build-*", "*.mjs"]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules", "dist", "build-*"]
 }

@@ -2,17 +2,11 @@
 title: 'ООП: введение'
 lesson: 41
 description: 'Классы, объекты, __init__, self'
-duration: 15
-complexity: '3'
 badge: 'oop_master'
 file: '41-oop-intro.html'
 layout: 'layout.njk'
 permalink: '41-oop-intro.html'
 subtitle: 'Классы, объекты, конструктор __init__, методы, self — первые шаги в ООП'
-prevUrl: '40-numpy-pandas.html'
-prevTitle: 'NumPy и Pandas'
-nextUrl: '42-inheritance.html'
-nextTitle: 'Наследование и полиморфизм'
 ---
 
 ## Что такое ООП и зачем оно нужно?

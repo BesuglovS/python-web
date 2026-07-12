@@ -2,17 +2,11 @@
 title: 'Type Hints'
 lesson: 46
 description: 'Аннотации типов, mypy'
-duration: 10
-complexity: '2'
 badge: 'type_hinter'
 file: '46-type-hints.html'
 layout: 'layout.njk'
 permalink: '46-type-hints.html'
 subtitle: 'Улучшаем читаемость кода с помощью аннотаций типов'
-prevUrl: '45-threading-async.html'
-prevTitle: 'Многопоточность и asyncio'
-nextUrl: '47-pytest.html'
-nextTitle: 'Unit-тесты с pytest'
 ---
 
 ## Что такое type hints?

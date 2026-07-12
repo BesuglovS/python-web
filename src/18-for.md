@@ -2,17 +2,11 @@
 title: 'Цикл for'
 lesson: 18
 description: 'Перебор элементов'
-duration: 12
-complexity: '2'
 badge: 'for_master'
 file: '18-for.html'
 layout: 'layout.njk'
 permalink: '18-for.html'
 subtitle: 'Перебор элементов последовательности'
-prevUrl: '17-while.html'
-prevTitle: 'Цикл с предусловием'
-nextUrl: '19-range.html'
-nextTitle: 'range()'
 ---
 
 ## Синтаксис for

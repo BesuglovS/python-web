@@ -2,6 +2,7 @@
 
 /**
  * Lesson metadata display module
+ * Displays lesson duration and complexity information in headers
  */
 
 export function initLessonMetadata() {

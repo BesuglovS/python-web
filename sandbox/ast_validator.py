@@ -19,8 +19,6 @@ import sys
 MAX_AST_NODES = 3000
 MAX_AST_DEPTH = 50
 
-code = sys.stdin.read()
-
 ALLOWED_NODES: set[str] = {
     "Module",
     "Expr", "Constant", "Name", "Load", "Store", "Del",
@@ -43,16 +41,21 @@ ALLOWED_NODES: set[str] = {
     "Try", "ExceptHandler",
     "With", "withitem",
     "Starred",
+    # Python 3.10+ structural pattern matching
+    "Match", "match_case",
+    "MatchValue", "MatchSingleton", "MatchSequence", "MatchMapping",
+    "MatchClass", "MatchStar", "MatchAs", "MatchOr",
 }
 
-ALLOWED_IMPORTS: set[str] = set(json.loads(sys.argv[1])) if len(sys.argv) > 1 else set()
+# Список разрешённых импортов задаётся при вызове validate()/main().
+# По умолчанию (импорт модуля) — пустой, чтобы при импорте не читался sys.argv.
 
 DANGEROUS_CALLS: set[str] = {
     "open", "exec", "eval", "compile", "__import__",
     "getattr", "setattr", "delattr", "hasattr",
     "globals", "locals", "vars", "dir",
     "type", "isinstance", "issubclass", "callable",
-    "breakpoint",
+    "breakpoint", "help", "memoryview",
 }
 
 # Запрещённые имена при обращении как к переменной
@@ -70,12 +73,13 @@ BLOCKED_DUNDER_ATTRS: set[str] = {
     "__globals__", "__code__", "__dict__",
     "__getattribute__", "__setattr__", "__delattr__",
     "__qualname__", "__module__",
+    "__reduce__", "__reduce_ex__",
 }
 
 # Запрещённые модули и их атрибуты — блокируют доступ к os.path, sys.path, subprocess.run и т.д.
 FORBIDDEN_MODULE_ATTRS: dict[str, set[str]] = {
-    "os": {"path", "environ", "system", "popen", "spawn", "fork", "kill", "remove", "rmdir", "mkdir", "rename", "chdir", "getcwd", "listdir", "walk", "stat", "access", "chmod", "chown", "link", "symlink", "readlink", "utime", "times", "wait", "waitpid", "execv", "execve", "execvp", "execvpe", "spawnv", "spawnve", "spawnvp", "spawnvpe", "startfile", "popen", "fdopen", "popen2", "popen3", "popen4", "tmpfile", "tempnam", "tmpnam", "ttyname", "isatty", "ttyname", "ctermid", "device_encoding", "getloadavg", "setpriority", "getpriority", "nice", "times", "uname", "sysconf", "confstr", "fpathconf", "pathconf", "getlogin", "getpid", "getppid", "getuid", "geteuid", "getgid", "getegid", "getgroups", "initgroups", "setuid", "setgid", "seteuid", "setegid", "setreuid", "setregid", "setresuid", "setresgid", "setgroups", "getpgid", "setpgid", "getsid", "setsid", "tcgetpgrp", "tcsetpgrp", "getlogin", "getpass", "getuser", "getenv", "putenv", "unsetenv", "clearenv", "load", "unload", "dlopen", "dlsym", "dlclose", "dlerror", "RTLD_LAZY", "RTLD_NOW", "RTLD_GLOBAL", "RTLD_LOCAL", "RTLD_NODELETE", "RTLD_NOLOAD", "RTLD_DEEPBIND"},
-    "sys": {"exit", "exit", "argv", "path", "modules", "stdin", "stdout", "stderr", "settrace", "setprofile", "setrecursionlimit", "getrecursionlimit", "getsizeof", "getrefcount", "getcheckinterval", "setcheckinterval", "getdlopenflags", "setdlopenflags", "getfilesystemencoding", "getfilesystemencodeerrors", "getdefaultencoding", "setdefaultencoding", "getprofile", "gettrace", "getswitchinterval", "setswitchinterval", "getcoroutineorigintrackingdepth", "setcoroutineorigintrackingdepth", "getasyncgenhooks", "setasyncgenhooks", "getcoroutinewrapper", "setcoroutinewrapper", "audit", "addaudithook", "flags", "float_info", "float_repr_style", "hash_info", "int_info", "long_info", "maxsize", "maxunicode", "version", "version_info", "hexversion", "api_version", "platform", "prefix", "exec_prefix", "base_prefix", "base_exec_prefix", "executable", "stdlib_module_names", "builtin_module_names", "version", "copyright", "license", "credits", "ps1", "ps2", "setprofile", "settrace", "getprofile", "gettrace", "setrecursionlimit", "getrecursionlimit", "getsizeof", "getrefcount", "getcheckinterval", "setcheckinterval", "getdlopenflags", "setdlopenflags", "getfilesystemencoding", "getfilesystemencodeerrors", "getdefaultencoding", "setdefaultencoding", "getswitchinterval", "setswitchinterval", "getcoroutineorigintrackingdepth", "setcoroutineorigintrackingdepth", "getasyncgenhooks", "setasyncgenhooks", "getcoroutinewrapper", "setcoroutinewrapper", "audit", "addaudithook", "breakpointhook", "__breakpointhook__", "__displayhook__", "__excepthook__", "__interactivehook__", "__stdin__", "__stdout__", "__stderr__"},
+    "os": {"path", "environ", "system", "popen", "spawn", "fork", "kill", "remove", "rmdir", "mkdir", "rename", "chdir", "getcwd", "listdir", "walk", "stat", "access", "chmod", "chown", "link", "symlink", "readlink", "utime", "times", "wait", "waitpid", "execv", "execve", "execvp", "execvpe", "spawnv", "spawnve", "spawnvp", "spawnvpe", "startfile", "fdopen", "popen2", "popen3", "popen4", "tmpfile", "tempnam", "tmpnam", "ttyname", "isatty", "ctermid", "device_encoding", "getloadavg", "setpriority", "getpriority", "nice", "uname", "sysconf", "confstr", "fpathconf", "pathconf", "getlogin", "getpid", "getppid", "getuid", "geteuid", "getgid", "getegid", "getgroups", "initgroups", "setuid", "setgid", "seteuid", "setegid", "setreuid", "setregid", "setresuid", "setresgid", "setgroups", "getpgid", "setpgid", "getsid", "setsid", "tcgetpgrp", "tcsetpgrp", "getpass", "getuser", "getenv", "putenv", "unsetenv", "clearenv", "load", "unload", "dlopen", "dlsym", "dlclose", "dlerror", "RTLD_LAZY", "RTLD_NOW", "RTLD_GLOBAL", "RTLD_LOCAL", "RTLD_NODELETE", "RTLD_NOLOAD", "RTLD_DEEPBIND"},
+    "sys": {"exit", "argv", "path", "modules", "stdin", "stdout", "stderr", "settrace", "setprofile", "setrecursionlimit", "getrecursionlimit", "getsizeof", "getrefcount", "getcheckinterval", "setcheckinterval", "getdlopenflags", "setdlopenflags", "getfilesystemencoding", "getfilesystemencodeerrors", "getdefaultencoding", "setdefaultencoding", "getprofile", "gettrace", "getswitchinterval", "setswitchinterval", "getcoroutineorigintrackingdepth", "setcoroutineorigintrackingdepth", "getasyncgenhooks", "setasyncgenhooks", "getcoroutinewrapper", "setcoroutinewrapper", "audit", "addaudithook", "flags", "float_info", "float_repr_style", "hash_info", "int_info", "long_info", "maxsize", "maxunicode", "version", "version_info", "hexversion", "api_version", "platform", "prefix", "exec_prefix", "base_prefix", "base_exec_prefix", "executable", "stdlib_module_names", "builtin_module_names", "copyright", "license", "credits", "ps1", "ps2", "breakpointhook", "__breakpointhook__", "__displayhook__", "__excepthook__", "__interactivehook__", "__stdin__", "__stdout__", "__stderr__"},
     "subprocess": {"run", "call", "check_call", "check_output", "Popen", "getstatusoutput", "getoutput", "DEVNULL", "PIPE", "STDOUT", "TimeoutExpired", "CalledProcessError", "CompletedProcess", "SubprocessError"},
     "shutil": {"copy", "copy2", "copyfile", "copyfileobj", "copymode", "copystat", "copyfileobj", "move", "rmtree", "make_archive", "unpack_archive", "get_archive_formats", "register_archive_format", "unregister_archive_format", "get_unpack_formats", "register_unpack_format", "unregister_unpack_format", "disk_usage", "which", "chown", "get_terminal_size"},
     "importlib": {"import_module", "reload", "invalidate_caches", "find_loader", "find_spec", "util"},
@@ -107,18 +111,9 @@ FORBIDDEN_MODULE_ATTRS: dict[str, set[str]] = {
     "inspect": {"getsource", "getsourcefile", "getsourcelines", "getfile", "getmodule", "getmodulename", "ismodule", "isclass", "ismethod", "isfunction", "isgeneratorfunction", "isgenerator", "iscoroutinefunction", "iscoroutine", "isawaitable", "isasyncgenfunction", "isasyncgen", "istraceback", "isframe", "iscode", "isbuiltin", "isroutine", "isabstract", "ismethoddescriptor", "isdatadescriptor", "isgetsetdescriptor", "ismemberdescriptor", "signature", "Signature", "Parameter", "BoundArguments", "get_annotations", "getcomments", "getdoc", "getfile", "getmodule", "getsource", "getsourcefile", "getsourcelines", "getabsfile", "getclasstree", "getargspec", "getfullargspec", "getcallargs", "formatargspec", "formatargvalues", "getmro", "getfile", "getmodule", "getsource", "getsourcefile", "getsourcelines", "isabstract", "isasyncgen", "isasyncgenfunction", "isawaitable", "isbuiltin", "isclass", "iscode", "iscoroutine", "iscoroutinefunction", "isdatadescriptor", "isfunction", "isgenerator", "isgeneratorfunction", "isgetsetdescriptor", "ismemberdescriptor", "ismethod", "ismethoddescriptor", "ismodule", "isroutine", "istraceback", "isbuiltin", "isclass", "iscode", "iscoroutine", "iscoroutinefunction", "isdatadescriptor", "isfunction", "isgenerator", "isgeneratorfunction", "isgetsetdescriptor", "ismemberdescriptor", "ismethod", "ismethoddescriptor", "ismodule", "isroutine", "istraceback"},
     "ast": {"parse", "literal_eval", "fix_missing_locations", "increment_lineno", "copy_location", "get_source_segment", "get_docstring", "NodeVisitor", "NodeTransformer", "dump", "unparse", "Module", "Expr", "Constant", "Name", "Load", "Store", "Del", "BinOp", "UnaryOp", "BoolOp", "Compare", "IfExp", "NamedExpr", "Add", "Sub", "Mult", "Div", "FloorDiv", "Mod", "Pow", "LShift", "RShift", "BitOr", "BitXor", "BitAnd", "And", "Or", "Not", "Invert", "Eq", "NotEq", "Lt", "LtE", "Gt", "GtE", "Is", "IsNot", "In", "NotIn", "Assign", "AugAssign", "AnnAssign", "For", "While", "Break", "Continue", "If", "Pass", "Delete", "Raise", "Assert", "Return", "Yield", "YieldFrom", "FunctionDef", "arguments", "arg", "Call", "keyword", "Lambda", "ClassDef", "List", "Tuple", "Set", "Dict", "ListComp", "SetComp", "DictComp", "GeneratorExp", "comprehension", "Subscript", "Slice", "Attribute", "JoinedStr", "FormattedValue", "Import", "ImportFrom", "alias", "Try", "ExceptHandler", "With", "withitem", "Starred"},
     "code": {"compile_command", "InteractiveInterpreter", "InteractiveConsole", "Interpreter"},
-    "codeop": {"compile_command", "compile_command", "Compile", "CommandCompiler"},
-    "builtins": {"open", "exec", "eval", "compile", "__import__", "getattr", "setattr", "delattr", "hasattr", "globals", "locals", "vars", "dir", "type", "isinstance", "issubclass", "callable", "breakpoint", "input", "print", "len", "range", "enumerate", "zip", "map", "filter", "sorted", "reversed", "sum", "min", "max", "abs", "round", "id", "hash", "help", "copyright", "license", "credits", "exit", "quit", "setattr", "delattr", "getattr", "hasattr", "object", "property", "staticmethod", "classmethod", "super", "type", "vars", "locals", "globals", "dir", "format", "repr", "ascii", "chr", "ord", "bytes", "bytearray", "memoryview", "complex", "float", "int", "bool", "str", "list", "tuple", "set", "frozenset", "dict", "slice", "property", "classmethod", "staticmethod", "super", "type", "object", "Ellipsis", "NotImplemented", "None", "True", "False", "__debug__", "__build_class__", "__import__", "__loader__", "__spec__", "__name__", "__package__", "__annotations__", "__doc__", "__file__", "__cached__", "__path__", "__loader__", "__spec__", "__name__", "__package__", "__annotations__", "__doc__", "__file__", "__cached__", "__path__"},
+    "codeop": {"compile_command", "Compile", "CommandCompiler"},
+    "builtins": {"open", "exec", "eval", "compile", "__import__", "getattr", "setattr", "delattr", "hasattr", "globals", "locals", "vars", "dir", "type", "isinstance", "issubclass", "callable", "breakpoint", "input", "print", "len", "range", "enumerate", "zip", "map", "filter", "sorted", "reversed", "sum", "min", "max", "abs", "round", "id", "hash", "help", "copyright", "license", "credits", "exit", "quit", "object", "property", "staticmethod", "classmethod", "super", "format", "repr", "ascii", "chr", "ord", "bytes", "bytearray", "memoryview", "complex", "float", "int", "bool", "str", "list", "tuple", "set", "frozenset", "dict", "slice", "Ellipsis", "NotImplemented", "None", "True", "False", "__debug__", "__build_class__", "__loader__", "__spec__", "__name__", "__package__", "__annotations__", "__doc__", "__file__", "__cached__", "__path__"},
 }
-
-try:
-    tree = ast.parse(code)
-except SyntaxError as e:
-    print(json.dumps({"ok": False, "error": "SyntaxError: " + str(e)}))
-    sys.exit(0)
-
-errors: list[str] = []
-
 
 def _max_depth(node: ast.AST, level: int = 0) -> int:
     child_depths = [level]
@@ -130,7 +125,12 @@ def _max_depth(node: ast.AST, level: int = 0) -> int:
 class SafeVisitor(ast.NodeVisitor):
     """Обходит AST-дерево и проверяет каждый узел на безопасность."""
 
+    def __init__(self, allowed_imports: set[str]):
+        self._node_count = 0
+        self._allowed_imports = allowed_imports
+
     def generic_visit(self, node: ast.AST) -> None:
+        self._node_count += 1
         node_type = type(node).__name__
         if node_type == "Module":
             super().generic_visit(node)
@@ -164,35 +164,74 @@ class SafeVisitor(ast.NodeVisitor):
                 f"(line {node.lineno})"
             )
         # Check for forbidden module attribute access (e.g., os.path.join, sys.exit, subprocess.run)
-        if isinstance(node.value, ast.Name):
-            module_name = node.value.id
-            if module_name in FORBIDDEN_MODULE_ATTRS and node.attr in FORBIDDEN_MODULE_ATTRS[module_name]:
-                errors.append(f"Forbidden module attribute access: {module_name}.{node.attr} (line {node.lineno})")
+        # Recursively extract root module name from chained attributes
+        root = node.value
+        attrs = [node.attr]
+        while isinstance(root, ast.Attribute):
+            attrs.append(root.attr)
+            root = root.value
+        if isinstance(root, ast.Name):
+            module_name = root.id
+            if module_name in FORBIDDEN_MODULE_ATTRS:
+                for attr in reversed(attrs):
+                    if attr in FORBIDDEN_MODULE_ATTRS[module_name]:
+                        full_path = module_name + '.' + '.'.join(reversed(attrs))
+                        errors.append(f"Forbidden module attribute access: {full_path} (line {node.lineno})")
+                        break
         self.generic_visit(node)
 
     def visit_Import(self, node: ast.Import) -> None:
         for alias in node.names:
-            if alias.name not in ALLOWED_IMPORTS:
+            if alias.name not in self._allowed_imports:
                 errors.append(f"Forbidden import: {alias.name} (line {node.lineno})")
         self.generic_visit(node)
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
-        if node.module and node.module not in ALLOWED_IMPORTS:
+        if node.module and node.module not in self._allowed_imports:
             errors.append(f"Forbidden import from: {node.module} (line {node.lineno})")
         self.generic_visit(node)
 
 
-visitor = SafeVisitor()
-visitor.visit(tree)
+# Глобальный накопитель ошибок (сбрасывается внутри validate())
+errors: list[str] = []
 
-# ─── Ограничения сложности ───
-node_count = sum(1 for _ in ast.walk(tree))
-if node_count > MAX_AST_NODES:
-    errors.append(f"Code too complex: too many AST nodes ({node_count} > {MAX_AST_NODES})")
-if _max_depth(tree) > MAX_AST_DEPTH:
-    errors.append(f"Code too complex: nesting depth exceeds {MAX_AST_DEPTH}")
 
-if errors:
-    print(json.dumps({"ok": False, "error": "; ".join(errors[:3])}))
-else:
-    print(json.dumps({"ok": True}))
+def validate(code: str, allowed_imports: set[str] | None = None) -> dict:
+    """Проверяет Python-код и возвращает {"ok": bool, "error"?: str}.
+
+    Выделено в функцию, чтобы логику можно было покрывать тестами
+    импортом (CI-покрытие), а не только запуском отдельным процессом.
+    """
+    if allowed_imports is None:
+        allowed_imports = set()
+    errors.clear()
+
+    try:
+        tree = ast.parse(code)
+    except SyntaxError as e:
+        return {"ok": False, "error": "SyntaxError: " + str(e)}
+
+    visitor = SafeVisitor(allowed_imports)
+    visitor.visit(tree)
+
+    # ─── Ограничения сложности (count nodes during visitor traversal) ───
+    node_count = visitor._node_count
+    if node_count > MAX_AST_NODES:
+        errors.append(f"Code too complex: too many AST nodes ({node_count} > {MAX_AST_NODES})")
+    if _max_depth(tree) > MAX_AST_DEPTH:
+        errors.append(f"Code too complex: nesting depth exceeds {MAX_AST_DEPTH}")
+
+    if errors:
+        return {"ok": False, "error": "; ".join(errors[:3])}
+    return {"ok": True}
+
+
+def main() -> None:
+    """Точка входа при запуске как отдельный процесс (код читается из stdin)."""
+    code = sys.stdin.read()
+    allowed = set(json.loads(sys.argv[1])) if len(sys.argv) > 1 else set()
+    print(json.dumps(validate(code, allowed)))
+
+
+if __name__ == "__main__":
+    main()

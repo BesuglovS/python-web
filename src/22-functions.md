@@ -2,17 +2,11 @@
 title: 'Функции'
 lesson: 22
 description: 'def, return, параметры'
-duration: 12
-complexity: '2'
 badge: 'func_creator'
 file: '22-functions.html'
 layout: 'layout.njk'
 permalink: '22-functions.html'
 subtitle: 'def, return, параметры, аргументы'
-prevUrl: '21-nested-loops.html'
-prevTitle: 'Вложенные циклы'
-nextUrl: '23-functions-advanced.html'
-nextTitle: 'Функции: продвинутые темы'
 ---
 
 ## Определение функции

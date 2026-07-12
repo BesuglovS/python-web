@@ -2,17 +2,11 @@
 title: 'Продвинутые функции'
 lesson: 23
 description: 'args/kwargs, области видимости, аннотации'
-duration: 15
-complexity: '3'
 badge: 'func_guru'
 file: '23-functions-advanced.html'
 layout: 'layout.njk'
 permalink: '23-functions-advanced.html'
 subtitle: '*args, **kwargs, области видимости, аннотации типов'
-prevUrl: '22-functions.html'
-prevTitle: 'Создание простейших функций'
-nextUrl: '24-debugging.html'
-nextTitle: 'Отладка программ'
 ---
 
 ## \*args — произвольное количество аргументов
@@ -112,4 +106,4 @@ result: int = add(5, 3)   # Аннотация переменной
 greet("Анна", 3)           # Аннотации не проверяются во время выполнения
 ```
 
-> **⚠️ Важно:** **Важно:** аннотации типов не проверяются интерпретатором. Для проверки используйте инструменты вроде `mypy`.
+> **⚠️ Важно:** аннотации типов не проверяются интерпретатором. Для проверки используйте инструменты вроде `mypy`.

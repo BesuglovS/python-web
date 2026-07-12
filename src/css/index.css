@@ -1,7 +1,11 @@
-/* Main Stylesheet - Development Build */
-/* Собирает все модули CSS */
+/* Main Stylesheet */
+/* Собирает все модули CSS через esbuild (bundle: true) */
+
+/* 1. Базовые настройки */
 @import './_variables.css';
 @import './_reset.css';
+
+/* 2. Типографика и элементы страницы */
 @import './_typography.css';
 @import './_layout.css';
 @import './_components.css';
@@ -10,5 +14,16 @@
 @import './_widgets.css';
 @import './_interactive.css';
 @import './_navigation.css';
+
+/* 3. Стили конкретных страниц */
+@import './_index.css';
+@import './_repl.css';
+@import './_mindmap.css';
+@import './_cheatsheets.css';
+
+/* 4. Навигационные элементы */
+@import './_hamburger.css';
+
+/* 5. Адаптивность и печать (в конце — перезаписывают при необходимости) */
 @import './_responsive.css';
 @import './_print.css';

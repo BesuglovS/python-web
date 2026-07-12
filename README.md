@@ -90,9 +90,14 @@ npm install
 
 ### Сборка
 
+Команда `npm run build` выполняет полный цикл: генерация метаданных, сборка
+CSS/JS/хайлайтера, рендер Eleventy и генерация Service Worker. Все результаты
+попадают в папку `dist/`.
+
 ```bash
-npm run build       # однократная сборка
-npm run watch       # сборка с автоперезагрузкой при изменениях (http://localhost:8080)
+npm run build       # полная однократная сборка в dist/
+npm run watch       # сборка с автоперезагрузкой (http://localhost:8080); JS/CSS пересобираются при изменениях
+npm run build:prod  # production-сборка с content-hash ассетов (для CDN/долгого кэширования)
 ```
 
 ### Форматы файлов
@@ -103,7 +108,7 @@ npm run watch       # сборка с автоперезагрузкой при 
 | **Шаблон урока**     | Nunjucks (.njk)  | `src/_includes/layout.njk`                                  |
 | **Шаблон главной**   | Nunjucks (.njk)  | `src/_includes/layout-index.njk` + `src/index.njk`          |
 | **Данные курса**     | JavaScript (.js) | `src/_data/lessonsData.js` (генерируется из `lessons.json`) |
-| **Собранные HTML**   | HTML (.html)     | Корень `python-web/` (перезаписываются при сборке)          |
+| **Собранные HTML**   | HTML (.html)     | Папка `dist/` (перезаписываются при сборке)                 |
 
 ### Структура Markdown-урока
 
@@ -115,13 +120,7 @@ layout: 'layout.njk'
 lesson: 25
 title: 'Списки'
 subtitle: 'list, методы списков'
-duration: 15
 section: 5
-complexity: 2
-prev: '24-debugging.html'
-prevTitle: 'Отладка программ'
-next: '26-sets.html'
-nextTitle: 'Множества'
 ---
 
 ## Создание списков
@@ -133,24 +132,27 @@ nextTitle: 'Множества'
 ...
 ```
 
+> **Метаданные уроков — единый источник `lessons.json`.** Поля `duration`,
+> `complexity` и навигация (`prev`/`next` + заголовки) **не указываются** в
+> front matter — они автоматически вычисляются при сборке из `lessons.json`
+> (см. `src/_data/eleventyComputed.js`). Правите `lessons.json`, а не `.md`.
+
 **Поля front matter:**
 
 - `layout` — подключаемый шаблон (всегда `layout.njk`)
 - `lesson` — номер урока (1–50)
 - `title` — название
 - `subtitle` — подзаголовок (meta description)
-- `duration` — примерное время чтения в минутах (отображается как «⏱ ~X мин чтения»)
 - `section` — номер раздела (1–12)
-- `complexity` — уровень сложности (1–3)
-- `prev` / `prevTitle` — ссылка на предыдущий урок
-- `next` / `nextTitle` — ссылка на следующий урок
+- `duration`, `complexity` — **авто** из `lessons.json` (`beginner`/`basic`/`intermediate`/`advanced`)
+- `prev` / `prevTitle` / `next` / `nextTitle` — **авто** из `lessons.json` (порядок уроков)
 
 ### Цикл редактирования контента
 
-1. Отредактировать Markdown-файл в `src/` (например, `src/25-lists.md`)
+1. Отредактировать Markdown-файл в `src/` (контент урока) и/или `lessons.json` (метаданные, навигация, сложность)
 2. Выполнить `npm run build` для генерации HTML
 3. Для разработки: `npm run watch` — автоматическая пересборка при сохранении
-4. Результат в корне: `25-lists.html`
+4. Результат в папке `dist/`: `25-lists.html`
 
 ### Процедура деплоя
 
@@ -229,16 +231,15 @@ npm install
 npm run build
 ```
 
-Результат: 51 HTML-файл (index + 50 уроков) в корне `python-web/`, готовых к загрузке на сервер.
+Результат: 51 HTML-файл (index + 50 уроков) и все ассеты в папке `dist/`, готовых к загрузке на сервер.
 
 ### Что отправлять на сервер
 
-Всё содержимое папки `python-web/`, **кроме**:
+Содержимое папки `dist/` целиком (результат `npm run build` или `npm run build:prod`), **кроме**:
 
 - `node_modules/` — зависимости сборки
-- `src/` — исходные Markdown-файлы
-- `.eleventy.js`, `package.json` — инструменты сборки
-- `ANALYSIS.md` — внутренняя документация
+- `src/` — исходные Markdown-файлы и модули
+- `eleventy.config.mjs`, `package.json` — инструменты сборки
 
 **Важно:** `lessons.json`, `quizzes/` и `sandbox/` — обязательны на проде, они используются клиентским JS и PHP-песочницей.
 
@@ -277,7 +278,7 @@ rsync -avz --delete \
   --exclude='node_modules' --exclude='src' --exclude='.git' \
   --exclude='ANALYSIS.md' \
   --exclude='package.json' --exclude='package-lock.json' \
-  ./python-web/ user@server:/var/www/python-web/
+  ./python-web/dist/ user@server:/var/www/python-web/
 ```
 
 → Apache/Nginx VirtualHost + Certbot для HTTPS

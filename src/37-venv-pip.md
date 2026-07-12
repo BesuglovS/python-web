@@ -2,22 +2,18 @@
 title: 'venv и pip'
 lesson: 37
 description: 'venv, pip install, requirements.txt'
-duration: 12
-complexity: '2'
 badge: 'venv_master'
 file: '37-venv-pip.html'
 layout: 'layout.njk'
 permalink: '37-venv-pip.html'
 subtitle: 'Установка библиотек и изоляция проектов'
-prevUrl: '36-itertools.html'
-prevTitle: 'Модуль itertools'
-nextUrl: '38-math-random.html'
-nextTitle: 'Модули math и random'
 ---
 
 ## pip — менеджер пакетов Python
 
 `pip` (Pip Installs Packages) — инструмент для установки библиотек из **PyPI** (Python Package Index). С его помощью вы можете добавить в проект тысячи готовых модулей.
+
+<!-- norun -->
 
 ```python
 # Основные команды pip (выполняются в терминале):
@@ -41,6 +37,8 @@ pip freeze > requirements.txt  # сохранить список зависим�
 
 ## Создание виртуального окружения (Windows)
 
+<!-- norun -->
+
 ```python
 # Создать виртуальное окружение
 python -m venv myenv
@@ -56,6 +54,8 @@ deactivate
 ```
 
 ## Создание виртуального окружения (Linux / macOS)
+
+<!-- norun -->
 
 ```python
 # Создать виртуальное окружение
@@ -75,12 +75,16 @@ deactivate
 
 Файл, в котором перечислены все библиотеки проекта с версиями:
 
+<!-- norun -->
+
 ```python
 # requirements.txt
 requests==2.31.0
 numpy==1.24.0
 pandas==2.0.0
 ```
+
+<!-- norun -->
 
 ```python
 # Сохранить текущие зависимости
@@ -97,6 +101,8 @@ pip install -r requirements.txt
 <table><tbody><tr><th>Библиотека</th><th>Назначение</th><th>pip install</th></tr><tr><td>requests</td><td>HTTP-запросы, работа с API</td><td><code>pip install requests</code></td></tr><tr><td>numpy</td><td>Научные вычисления, массивы</td><td><code>pip install numpy</code></td></tr><tr><td>pandas</td><td>Анализ данных, таблицы</td><td><code>pip install pandas</code></td></tr><tr><td>matplotlib</td><td>Построение графиков</td><td><code>pip install matplotlib</code></td></tr><tr><td>flask</td><td>Веб-фреймворк</td><td><code>pip install flask</code></td></tr><tr><td>pytest</td><td>Тестирование кода</td><td><code>pip install pytest</code></td></tr></tbody></table>
 
 ## Типичный workflow для нового проекта
+
+<!-- norun -->
 
 ```python
 # 1. Создать папку проекта

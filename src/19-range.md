@@ -2,17 +2,11 @@
 title: 'range()'
 lesson: 19
 description: 'Генерация последовательностей'
-duration: 8
-complexity: '2'
 badge: 'range_runner'
 file: '19-range.html'
 layout: 'layout.njk'
 permalink: '19-range.html'
 subtitle: 'Генерация последовательностей чисел'
-prevUrl: '18-for.html'
-prevTitle: 'Цикл for'
-nextUrl: '20-break-continue.html'
-nextTitle: 'break и continue'
 ---
 
 ## Три формы range()

@@ -29,11 +29,15 @@ export function initSearch() {
   }
 
   const input = document.getElementById('lesson-search');
-  const cards = mainContent.querySelectorAll('.topic-card');
+
+  function getCards() {
+    return mainContent.querySelectorAll('.topic-card');
+  }
 
   input.addEventListener('input', function () {
     const query = input.value.toLowerCase().trim();
     let visibleCount = 0;
+    const cards = getCards();
 
     cards.forEach(function (card) {
       const title = (card.querySelector('h2')?.textContent || '').toLowerCase();

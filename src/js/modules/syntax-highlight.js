@@ -10,17 +10,34 @@ export function highlightPythonFallback(el) {
   tempDiv.appendChild(document.createTextNode(text));
   let html = tempDiv.innerHTML;
 
-  // Strings (triple-quoted, single, double)
-  html = html
-    .replace(/('''[\s\S]*?'''|"""[\s\S]*?""")/g, '<span class="py-string">$1</span>')
-    .replace(/(?<!py-string[^>]*>)('[^'\n]*')/g, '<span class="py-string">$1</span>')
-    .replace(/(?<!py-string[^>]*>)("[^"\n]*")/g, '<span class="py-string">$1</span>')
-    .replace(/(?<!py-string[^>]*>)(f"[^"\n]*")/g, '<span class="py-fstring">$1</span>')
-    .replace(/(?<!py-string[^>]*>)(f'[^'\n]*')/g, '<span class="py-fstring">$1</span>')
-    // Comments
-    .replace(/(^|[^"'])(#.*$)/gm, '$1<span class="py-comment">$2</span>')
-    // Numbers
-    .replace(/\b(\d+\.?\d*(?:[eE][+-]?\d+)?j?)\b/g, '<span class="py-number">$1</span>');
+  // Strings — marker-based approach to avoid nested spans (Safari-compatible, no lookbehind)
+  let _s = 0;
+  const markers = {};
+  function _mark(m) {
+    const k = '\x00S' + _s++ + '\x00';
+    markers[k] = m;
+    return k;
+  }
+
+  html = html.replace(/('''[\s\S]*?'''|"""[\s\S]*?""")/g, function (m) {
+    return _mark('<span class="py-string">' + m + '</span>');
+  });
+  html = html.replace(/(f"[^"\n]*"|f'[^'\n]*')/g, function (m) {
+    return _mark('<span class="py-fstring">' + m + '</span>');
+  });
+  html = html.replace(/("[^"\n]*"|'[^'\n]*')/g, function (m) {
+    return _mark('<span class="py-string">' + m + '</span>');
+  });
+
+  // Comments
+  html = html.replace(/(^|[^"'])(#.*$)/gm, '$1<span class="py-comment">$2</span>');
+  // Numbers
+  html = html.replace(/\b(\d+\.?\d*(?:[eE][+-]?\d+)?j?)\b/g, '<span class="py-number">$1</span>');
+
+  // Restore string markers
+  for (const mk in markers) {
+    html = html.replace(mk, markers[mk]);
+  }
 
   // Keywords
   const keywords = [
