@@ -13,6 +13,8 @@ subtitle: 'True, False, bool(), truthy и falsy значения. Логичес
 
 `bool` — это подтип `int`. `True` = 1, `False` = 0:
 
+<!-- norun -->
+
 ```python
 is_active = True
 is_finished = False

@@ -22,7 +22,7 @@ MAX_AST_DEPTH = 50
 ALLOWED_NODES: set[str] = {
     "Module",
     "Expr", "Constant", "Name", "Load", "Store", "Del",
-    "BinOp", "UnaryOp", "BoolOp", "Compare", "IfExp", "NamedExpr",
+"BinOp", "UnaryOp", "UAdd", "USub", "BoolOp", "Compare", "IfExp", "NamedExpr",
     "Add", "Sub", "Mult", "Div", "FloorDiv", "Mod", "Pow",
     "LShift", "RShift", "BitOr", "BitXor", "BitAnd",
     "And", "Or", "Not", "Invert",

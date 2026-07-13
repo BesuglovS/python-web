@@ -29,11 +29,11 @@ export default tseslint.config(
       'eleventy.config.mjs',
       'build-highlight.mjs',
       'build-sw.mjs',
-      'minify.js',
-      'playwright.config.js',
-      'src/_data/lessonsData.js',
+      'minify.cjs',
+      'playwright.config.cjs',
+      'src/_data/lessonsData.cjs',
       // E2E tests using CommonJS
-      'e2e/**/*.js',
+      'e2e/**/*.cjs',
     ],
   },
   {

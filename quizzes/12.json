@@ -1,6 +1,6 @@
 [
   {
-    "question": "Когда <code>x > 0 and x < 10</code> истинно?",
+    "question": "Когда <code>x &gt; 0 and x &lt; 10</code> истинно?",
     "options": [
       "x = -5",
       "x = 0",
@@ -8,10 +8,10 @@
       "x = 15"
     ],
     "correct": 2,
-    "explanation": "Оба условия должны быть истинны: 5 > 0 и 5 < 10 — верно."
+    "explanation": "Оба условия должны быть истинны: 5 &gt; 0 и 5 &lt; 10 — верно."
   },
   {
-    "question": "Что выведет <code>3 > 5 or 8 > 6</code>?",
+    "question": "Что выведет <code>3 &gt; 5 or 8 &gt; 6</code>?",
     "options": [
       "True",
       "False",
@@ -19,10 +19,10 @@
       "8"
     ],
     "correct": 0,
-    "explanation": "or возвращает True, если хотя бы один операнд истинен. 8 > 6 — True."
+    "explanation": "or возвращает True, если хотя бы один операнд истинен. 8 &gt; 6 — True."
   },
   {
-    "question": "Что выведет: <code>print(not (10 > 5))</code>?",
+    "question": "Что выведет: <code>print(not (10 &gt; 5))</code>?",
     "options": [
       "True",
       "False",
@@ -30,7 +30,7 @@
       "5"
     ],
     "correct": 1,
-    "explanation": "10 > 5 = True. not True = False."
+    "explanation": "10 &gt; 5 = True. not True = False."
   },
   {
     "question": "Что выведет: <code>print(False or False or True)</code>?",
@@ -63,7 +63,7 @@
       "x == 1..100"
     ],
     "correct": 1,
-    "explanation": "Для включения границ используются >= и <=: x >= 1 and x <= 100."
+    "explanation": "Для включения границ используются &gt;= и &lt;=: x &gt;= 1 and x &lt;= 100."
   },
   {
     "question": "Что выведет: <code>print(not (True and False))</code>?",
@@ -88,7 +88,7 @@
     "explanation": "Два операнда, каждый может быть True или False: 2 × 2 = 4 комбинации. Только одна (True and True) даёт True."
   },
   {
-    "question": "Что выведет: <code>print(5 > 3 and 2 < 4 or 1 > 10)</code>?",
+    "question": "Что выведет: <code>print(5 &gt; 3 and 2 &lt; 4 or 1 &gt; 10)</code>?",
     "options": [
       "True",
       "False",
@@ -96,7 +96,7 @@
       "None"
     ],
     "correct": 0,
-    "explanation": "Сначала and: 5 > 3 = True, 2 < 4 = True, True and True = True. Затем or: True or False = True."
+    "explanation": "Сначала and: 5 &gt; 3 = True, 2 &lt; 4 = True, True and True = True. Затем or: True or False = True."
   },
   {
     "question": "Как проверить, что число НЕ находится в диапазоне от 0 до 10?",

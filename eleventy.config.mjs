@@ -90,7 +90,7 @@ export default function (eleventyConfig) {
 
   eleventyConfig.on('eleventy.after', () => {
     try {
-      execSync('node build-css.mjs && node build-js.mjs && node minify.js', {
+      execSync('node build-css.mjs && node build-js.mjs && node minify.cjs', {
         stdio: 'inherit',
         shell: true,
       });

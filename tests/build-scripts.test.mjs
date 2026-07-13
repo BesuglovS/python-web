@@ -140,10 +140,10 @@ describe('build-highlight.mjs', () => {
   });
 });
 
-// ─── minify.js ───
+// ─── minify.cjs ───
 
-describe('minify.js', () => {
-  const src = fs.readFileSync(path.join(ROOT, 'minify.js'), 'utf-8');
+describe('minify.cjs', () => {
+  const src = fs.readFileSync(path.join(ROOT, 'minify.cjs'), 'utf-8');
 
   it('minifies repl.js and mindmap.js via Terser', () => {
     expect(src).toContain("name: 'repl.js'");

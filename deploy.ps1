@@ -44,6 +44,9 @@ if (-not $sshHost -or -not $sshUser -or -not $remotePath) {
 }
 
 $identityFile = [Environment]::GetEnvironmentVariable('DEPLOY_SSH_KEY')
+if ($identityFile -and (Test-Path $identityFile)) {
+  $identityFile = (Resolve-Path $identityFile).Path
+}
 $identityArg = if ($identityFile) { "-i `"$identityFile`"" } else { '' }
 
 $remote = "${sshUser}@${sshHost}"
@@ -80,21 +83,59 @@ if (-not (Test-Path $distPath)) {
   exit 1
 }
 
-$tarCmd = "tar -czf - -C `"$distPath`" ."
-$sshCmd = "ssh $portArg $identityArg $remote `"rm -rf ${remotePath}/* ${remotePath}/.[!.]* 2>/dev/null; tar -xzf - -C $remotePath`""
+$sshArgStr = ""
+if ($sshPort -ne '22') { $sshArgStr += "-P $sshPort " }
+if ($identityFile) { $sshArgStr += "-i `"$identityFile`" " }
+$sshArgStr += "$remote `"rm -rf ${remotePath}/* ${remotePath}/.[!.]* 2>/dev/null; tar -xzf - -C $remotePath`""
 
 Write-Host "`n==> Deploying to ${remote}:${remotePath} ..." -ForegroundColor Cyan
 
 if ($DryRun) {
-  Write-Host "  [DryRun] $tarCmd | $sshCmd" -ForegroundColor Yellow
+  Write-Host "  [DryRun] tar -czf - -C `"$distPath`" --exclude __pycache__ . | ssh $sshArgStr" -ForegroundColor Yellow
 } else {
   Write-Host "  Archiving and transferring..." -ForegroundColor Gray
-  $pipe = "$tarCmd | $sshCmd"
-  cmd /c $pipe
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "Deploy failed (exit code: $LASTEXITCODE)" -ForegroundColor Red
-    exit 1
+
+  $targz = Join-Path $env:TEMP "deploy-$(Get-Random).tar.gz"
+  try {
+    & tar -czf $targz -C $distPath --exclude __pycache__ .
+    if ($LASTEXITCODE -ne 0) {
+      Write-Host "  Archive creation failed" -ForegroundColor Red
+      exit 1
+    }
+
+    $bytes = [System.IO.File]::ReadAllBytes($targz)
+
+    $psi = New-Object System.Diagnostics.ProcessStartInfo('ssh', $sshArgStr)
+    $psi.RedirectStandardInput = $true
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $proc = [System.Diagnostics.Process]::Start($psi)
+
+    try {
+      $proc.StandardInput.BaseStream.Write($bytes, 0, $bytes.Length)
+      $proc.StandardInput.Close()
+    } catch [System.IO.IOException] {
+      $stderr = $proc.StandardError.ReadToEnd()
+      $proc.WaitForExit()
+      Write-Host "  Deploy failed: $($_.Exception.Message)" -ForegroundColor Red
+      if ($stderr) { Write-Host "  SSH: $stderr" -ForegroundColor Red }
+      exit 1
+    }
+
+    $proc.WaitForExit()
+    $stderr = $proc.StandardError.ReadToEnd()
+
+    if ($proc.ExitCode -ne 0) {
+      Write-Host "  Deploy failed (exit code: $($proc.ExitCode))" -ForegroundColor Red
+      if ($stderr) { Write-Host "  SSH: $stderr" -ForegroundColor Red }
+      exit 1
+    }
+  } finally {
+    Remove-Item $targz -ErrorAction SilentlyContinue
   }
+
   Write-Host "  Done." -ForegroundColor Green
 }
 
