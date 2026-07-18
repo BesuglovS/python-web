@@ -47,8 +47,6 @@ test-results/
 .coverage
 coverage/
 
-# Environment
-.env
 
 # SSH keys
 ssh-private.key
