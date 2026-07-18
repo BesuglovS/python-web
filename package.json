@@ -47,7 +47,7 @@
     "clean-css": "^5.3.3",
     "esbuild": "^0.28.1",
     "eslint": "^9.28.0",
-    "globals": "^15.9.0",
+    "globals": "^17.7.0",
     "happy-dom": "^20.10.6",
     "highlight.js": "^11.11.1",
     "http-server": "^14.1.1",
