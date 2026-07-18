@@ -330,4 +330,6 @@ curl -X POST https://python.nayanovaacademy.ru/sandbox/run.php \
 
 ---
 
+Подробнее об архитектуре см. в [ARCHITECTURE.md](ARCHITECTURE.md).
+
 _Создано для изучения основ Python. Все примеры можно запустить в интерпретаторе._
