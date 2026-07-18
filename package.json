@@ -52,7 +52,7 @@
     "highlight.js": "^11.11.1",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
+    "lint-staged": "^17.0.8",
     "luxon": "^3.6.1",
     "prettier": "^3.5.3",
     "terser": "^5.49.0",
