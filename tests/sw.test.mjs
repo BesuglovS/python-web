@@ -26,8 +26,13 @@ describe('Service Worker', () => {
         /if\s*\(url\.pathname\.startsWith\('\/sandbox\/'\)\) return;/,
       );
       expect(fetchHandlerMatch).not.toBeNull();
-      const quizMatch = swSrc.match(/if\s*\(url\.pathname\.startsWith\('\/quizzes\/'\)\) return;/);
-      expect(quizMatch).not.toBeNull();
+    });
+
+    it('should cache quizzes with network-first strategy', () => {
+      const quizNetworkFirst = swSrc.match(
+        /if\s*\(url\.pathname\.startsWith\('\/quizzes\/'\)\)\s*\{[\s\S]*?networkFirst/,
+      );
+      expect(quizNetworkFirst).not.toBeNull();
     });
   });
 

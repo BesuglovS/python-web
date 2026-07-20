@@ -60,6 +60,40 @@ describe('lessons.json', () => {
         expect(typeof lesson.desc).toBe('string');
         expect(typeof lesson.duration).toBe('number');
         expect(['beginner', 'basic', 'intermediate', 'advanced']).toContain(lesson.complexity);
+        expect(typeof lesson.badge).toBe('string');
+      }
+    }
+  });
+
+  it('every lesson has tags array', () => {
+    for (const section of lessons.sections) {
+      for (const lesson of section.lessons) {
+        expect(Array.isArray(lesson.tags), `lesson ${lesson.num} must have tags array`).toBe(true);
+        expect(lesson.tags.length, `lesson ${lesson.num} must have at least 1 tag`).toBeGreaterThanOrEqual(1);
+        lesson.tags.forEach((tag) => {
+          expect(typeof tag, `lesson ${lesson.num} tag must be string`).toBe('string');
+        });
+      }
+    }
+  });
+
+  it('every lesson has type field', () => {
+    for (const section of lessons.sections) {
+      for (const lesson of section.lessons) {
+        expect(['theory', 'practice', 'mixed']).toContain(lesson.type);
+      }
+    }
+  });
+
+  it('every lesson has interactive object', () => {
+    for (const section of lessons.sections) {
+      for (const lesson of section.lessons) {
+        expect(typeof lesson.interactive, `lesson ${lesson.num} must have interactive object`).toBe('object');
+        expect(lesson.interactive !== null, `lesson ${lesson.num} interactive must not be null`).toBe(true);
+        expect(typeof lesson.interactive.exercise, `lesson ${lesson.num} interactive.exercise must be boolean`).toBe('boolean');
+        expect(typeof lesson.interactive.quiz, `lesson ${lesson.num} interactive.quiz must be boolean`).toBe('boolean');
+        expect(typeof lesson.interactive.dragDrop, `lesson ${lesson.num} interactive.dragDrop must be boolean`).toBe('boolean');
+        expect(typeof lesson.interactive.game, `lesson ${lesson.num} interactive.game must be boolean`).toBe('boolean');
       }
     }
   });
@@ -158,8 +192,9 @@ describe('minify.cjs', () => {
 // ─── Quiz files ───
 
 describe('quiz files', () => {
+  const quizzesDir = path.join(ROOT, 'quizzes');
+
   it('has quizzes for lessons 1-50', () => {
-    const quizzesDir = path.join(ROOT, 'quizzes');
     for (let i = 1; i <= 50; i++) {
       const quizFile = path.join(quizzesDir, `${i}.json`);
       expect(fs.existsSync(quizFile), `quizzes/${i}.json missing`).toBe(true);
@@ -167,11 +202,10 @@ describe('quiz files', () => {
   });
 
   it('has final-test.json', () => {
-    expect(fs.existsSync(path.join(ROOT, 'quizzes', 'final-test.json'))).toBe(true);
+    expect(fs.existsSync(path.join(quizzesDir, 'final-test.json'))).toBe(true);
   });
 
   it('each quiz has valid structure', () => {
-    const quizzesDir = path.join(ROOT, 'quizzes');
     for (let i = 1; i <= 50; i++) {
       const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8'));
       expect(Array.isArray(quiz)).toBe(true);
@@ -183,5 +217,125 @@ describe('quiz files', () => {
         expect(typeof q.correct).toBe('number');
       }
     }
+  });
+});
+
+// ─── Quiz JSON Schema validation ───
+
+describe('quiz JSON schema validation', () => {
+  const quizzesDir = path.join(ROOT, 'quizzes');
+
+  function validateQuizQuestion(q, quizFile, idx) {
+    expect(typeof q.question, `${quizFile}[${idx}].question must be string`).toBe('string');
+    expect(q.question.length, `${quizFile}[${idx}].question must not be empty`).toBeGreaterThan(0);
+
+    expect(Array.isArray(q.options), `${quizFile}[${idx}].options must be array`).toBe(true);
+    expect(q.options.length, `${quizFile}[${idx}].options must have 2+ items`).toBeGreaterThanOrEqual(2);
+    expect(q.options.length, `${quizFile}[${idx}].options must have at most 6 items`).toBeLessThanOrEqual(6);
+    q.options.forEach((opt, oi) => {
+      expect(typeof opt, `${quizFile}[${idx}].options[${oi}] must be string`).toBe('string');
+      expect(opt.length, `${quizFile}[${idx}].options[${oi}] must not be empty`).toBeGreaterThan(0);
+    });
+
+    expect(typeof q.correct, `${quizFile}[${idx}].correct must be number`).toBe('number');
+    expect(Number.isInteger(q.correct), `${quizFile}[${idx}].correct must be integer`).toBe(true);
+    expect(q.correct, `${quizFile}[${idx}].correct must be >= 0`).toBeGreaterThanOrEqual(0);
+    expect(q.correct, `${quizFile}[${idx}].correct must be < options.length`).toBeLessThan(q.options.length);
+
+    if (q.explanation !== undefined) {
+      expect(typeof q.explanation, `${quizFile}[${idx}].explanation must be string`).toBe('string');
+    }
+  }
+
+  it('all quiz questions pass JSON schema validation', () => {
+    for (let i = 1; i <= 50; i++) {
+      const file = `${i}.json`;
+      const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, file), 'utf-8'));
+      quiz.forEach((q, idx) => validateQuizQuestion(q, file, idx));
+    }
+  });
+
+  it('final-test.json passes JSON schema validation', () => {
+    const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, 'final-test.json'), 'utf-8'));
+    quiz.forEach((q, idx) => validateQuizQuestion(q, 'final-test.json', idx));
+  });
+
+  it('lesson quizzes have exactly 10 questions', () => {
+    for (let i = 1; i <= 50; i++) {
+      const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8'));
+      expect(quiz.length, `quizzes/${i}.json must have 10 questions`).toBe(10);
+    }
+  });
+
+  it('final-test.json has 50 questions', () => {
+    const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, 'final-test.json'), 'utf-8'));
+    expect(quiz.length, 'final-test.json must have 50 questions').toBe(50);
+  });
+
+  it('no quiz has duplicate correct answers in a single question', () => {
+    for (let i = 1; i <= 50; i++) {
+      const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8'));
+      quiz.forEach((q, idx) => {
+        expect(
+          q.options.indexOf(q.options[q.correct]),
+          `quizzes/${i}.json[${idx}]: correct answer must match options[correct]`,
+        ).toBe(q.correct);
+      });
+    }
+  });
+
+  it('no quiz has empty option strings', () => {
+    for (let i = 1; i <= 50; i++) {
+      const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8'));
+      quiz.forEach((q, idx) => {
+        q.options.forEach((opt, oi) => {
+          expect(
+            opt.trim().length > 0,
+            `quizzes/${i}.json[${idx}].options[${oi}] must not be empty/whitespace`,
+          ).toBe(true);
+        });
+      });
+    }
+  });
+
+  it('no quiz has duplicate option text within a single question', () => {
+    for (let i = 1; i <= 50; i++) {
+      const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8'));
+      quiz.forEach((q, idx) => {
+        const unique = new Set(q.options);
+        expect(
+          unique.size,
+          `quizzes/${i}.json[${idx}]: options must be unique`,
+        ).toBe(q.options.length);
+      });
+    }
+  });
+
+  it('all quizzes are valid JSON (no parse errors)', () => {
+    for (let i = 1; i <= 50; i++) {
+      const raw = fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8');
+      expect(() => JSON.parse(raw), `quizzes/${i}.json must be valid JSON`).not.toThrow();
+    }
+    const raw = fs.readFileSync(path.join(quizzesDir, 'final-test.json'), 'utf-8');
+    expect(() => JSON.parse(raw), 'final-test.json must be valid JSON').not.toThrow();
+  });
+
+  it('all quizzes have explanation field on every question', () => {
+    for (let i = 1; i <= 50; i++) {
+      const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8'));
+      quiz.forEach((q, idx) => {
+        expect(
+          typeof q.explanation === 'string' && q.explanation.length > 0,
+          `quizzes/${i}.json[${idx}] must have non-empty explanation`,
+        ).toBe(true);
+      });
+    }
+    const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, 'final-test.json'), 'utf-8'));
+    quiz.forEach((q, idx) => {
+      expect(
+        typeof q.explanation === 'string' && q.explanation.length > 0,
+        `final-test.json[${idx}] must have non-empty explanation`,
+      ).toBe(true);
+    });
   });
 });

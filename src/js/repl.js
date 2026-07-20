@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
   })();
 
   // Tab switching
-  var tabContainer = document.querySelector('.repl-toolbar .repl-tabs');
+  const tabContainer = document.querySelector('.repl-toolbar .repl-tabs');
   if (tabContainer) {
     tabContainer.setAttribute('role', 'tablist');
   }
@@ -347,8 +347,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Set ARIA on tab panels
-  var replTabPanel = document.getElementById('tab-repl');
-  var editorTabPanel = document.getElementById('tab-editor');
+  const replTabPanel = document.getElementById('tab-repl');
+  const editorTabPanel = document.getElementById('tab-editor');
   if (replTabPanel) { replTabPanel.setAttribute('role', 'tabpanel'); replTabPanel.setAttribute('aria-label', 'REPL'); }
   if (editorTabPanel) { editorTabPanel.setAttribute('role', 'tabpanel'); editorTabPanel.setAttribute('aria-label', '\u0420\u0435\u0434\u0430\u043a\u0442\u043e\u0440'); }
 

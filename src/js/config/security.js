@@ -15,6 +15,8 @@ const SAFE_KEYS = new Set([
   'python-lesson-badges',
   'sw-version',
   'python-web-quiz-scores',
+  'python-web-dragdrop-completed',
+  'python-web-scroll-positions',
 ]);
 
 function safeGetItem(key) {

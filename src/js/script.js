@@ -21,6 +21,9 @@ import { initSmoothScroll } from './modules/smooth-scroll.js';
 import { initContestLinkInjection } from './modules/contest-link.js';
 import { initHamburgerMenu } from './modules/hamburger-menu.js';
 import { initQuizSystem } from './modules/quiz.js';
+import { initBadgesRendering } from './modules/badges-render.js';
+import { initDragDropExercises } from './modules/drag-drop.js';
+import { initScrollRestore } from './modules/scroll-restore.js';
 import { initErrorTracking } from './modules/error-tracking.js';
 
 // Service Worker Registration
@@ -54,6 +57,9 @@ function initializeApplication() {
     Promise.resolve(initContestLinkInjection()),
     Promise.resolve(initHamburgerMenu()),
     Promise.resolve(initQuizSystem()),
+    Promise.resolve(initBadgesRendering()),
+    Promise.resolve(initDragDropExercises()),
+    Promise.resolve(initScrollRestore()),
   ];
 
   return Promise.allSettled(initPromises)
@@ -65,7 +71,7 @@ function initializeApplication() {
             'Error Tracking', 'Theme System', 'Theme Toggle', 'Progress Tracking',
             'Syntax Highlighting', 'Keyboard Navigation', 'Breadcrumbs', 'Lesson Metadata',
             'Table of Contents', 'Code Toolbar', 'Scroll Progress', 'Search',
-            'Section Navigation', 'Smooth Scroll', 'Contest Links', 'Hamburger Menu', 'Quiz System'
+            'Section Navigation', 'Smooth Scroll', 'Contest Links', 'Hamburger Menu', 'Quiz System', 'Badges Rendering', 'Drag-Drop Exercises', 'Scroll Restore'
           ];
           errors.push(moduleNames[index] + ': ' + (result.reason?.message || 'Unknown error'));
           console.error('Failed to initialize:', moduleNames[index], result.reason);

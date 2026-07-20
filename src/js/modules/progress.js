@@ -12,7 +12,7 @@ import { TOTAL_LESSONS, COMPLEXITY_LABELS, LESSON_META } from '../config/courseD
 const CONSOLIDATED_PROGRESS_KEY = 'python-web-course-progress';
 const LEGACY_PROGRESS_KEY = 'python-web-progress';
 
-function getCompletedLessons() {
+export function getCompletedLessons() {
   try {
     let progress = safeGetItem(CONSOLIDATED_PROGRESS_KEY);
     if (!progress) {

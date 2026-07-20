@@ -59,3 +59,6 @@ export const QUIZ_PERFECT_SCORE = 100;
 
 /** Minimum streak days for "streak_7" badge */
 export const STREAK_DAYS = 7;
+
+/** Total number of lessons in the course */
+export const TOTAL_LESSONS = 50;

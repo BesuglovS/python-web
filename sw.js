@@ -178,7 +178,12 @@ self.addEventListener('fetch', (event) => {
 
   // Не кэшируем запросы к песочнице и API
   if (url.pathname.startsWith('/sandbox/')) return;
-  if (url.pathname.startsWith('/quizzes/')) return;
+
+  // Квизы кэшируем отдельно (Network-first для свежести)
+  if (url.pathname.startsWith('/quizzes/')) {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
 
   // Для HTML-страниц используем Network-first (всегда свежий контент)
   if (event.request.destination === 'document' ||

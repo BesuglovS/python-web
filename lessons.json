@@ -14,7 +14,15 @@
           "desc": "История Python, философия, ключевые особенности",
           "duration": 10,
           "complexity": "beginner",
-          "badge": "historian"
+          "badge": "historian",
+          "type": "theory",
+          "tags": ["python", "история", "обзор", "philosophy"],
+          "interactive": {
+            "exercise": false,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 2,
@@ -23,7 +31,15 @@
           "desc": "Запуск в IDLE, установка, создание проекта",
           "duration": 8,
           "complexity": "beginner",
-          "badge": "ide_pioneer"
+          "badge": "ide_pioneer",
+          "type": "practice",
+          "tags": ["IDE", "установка", "VS Code", "PyCharm", "IDLE", "настройка"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         }
       ]
     },
@@ -38,7 +54,15 @@
           "desc": "Объявление, присваивание, имена",
           "duration": 10,
           "complexity": "beginner",
-          "badge": "var_master"
+          "badge": "var_master",
+          "type": "mixed",
+          "tags": ["переменные", "присваивание", "имена", "basics"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 4,
@@ -47,7 +71,15 @@
           "desc": "int, float, str, bool, NoneType",
           "duration": 12,
           "complexity": "beginner",
-          "badge": "type_explorer"
+          "badge": "type_explorer",
+          "type": "theory",
+          "tags": ["типы данных", "int", "float", "str", "bool", "None", "basics"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 5,
@@ -56,7 +88,15 @@
           "desc": "int(), float(), str(), bool()",
           "duration": 8,
           "complexity": "beginner",
-          "badge": "caster"
+          "badge": "caster",
+          "type": "practice",
+          "tags": ["приведение типов", "int()", "float()", "str()", "bool()", "basics"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 6,
@@ -65,7 +105,15 @@
           "desc": "print(), input(), форматирование",
           "duration": 10,
           "complexity": "beginner",
-          "badge": "io_master"
+          "badge": "io_master",
+          "type": "practice",
+          "tags": ["ввод", "вывод", "print", "input", "форматирование", "basics"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 7,
@@ -74,7 +122,15 @@
           "desc": "f\"{переменная=}\", форматирование чисел",
           "duration": 10,
           "complexity": "beginner",
-          "badge": "fstring_guru"
+          "badge": "fstring_guru",
+          "type": "practice",
+          "tags": ["f-строки", "форматирование", "строки", "interpolation"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 8,
@@ -83,7 +139,15 @@
           "desc": "+, -, *, /, //, %, **",
           "duration": 10,
           "complexity": "beginner",
-          "badge": "math_wiz"
+          "badge": "math_wiz",
+          "type": "practice",
+          "tags": ["арифметика", "операторы", "числа", "математика", "basics"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": true
+          }
         }
       ]
     },
@@ -98,7 +162,15 @@
           "desc": "True, False, логические операции",
           "duration": 8,
           "complexity": "beginner",
-          "badge": "bool_master"
+          "badge": "bool_master",
+          "type": "theory",
+          "tags": ["bool", "True", "False", "логика", "булевы"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 10,
@@ -107,7 +179,15 @@
           "desc": "if, elif, else, блоки кода, PEP 8",
           "duration": 12,
           "complexity": "basic",
-          "badge": "decision_maker"
+          "badge": "decision_maker",
+          "type": "mixed",
+          "tags": ["if", "elif", "else", "условия", "отступы", "PEP 8"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 11,
@@ -116,7 +196,15 @@
           "desc": "try, except, finally, raise",
           "duration": 10,
           "complexity": "basic",
-          "badge": "error_handler"
+          "badge": "error_handler",
+          "type": "mixed",
+          "tags": ["try", "except", "finally", "raise", "ошибки", "исключения"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 12,
@@ -125,7 +213,15 @@
           "desc": "and, or, not",
           "duration": 8,
           "complexity": "basic",
-          "badge": "logician"
+          "badge": "logician",
+          "type": "theory",
+          "tags": ["and", "or", "not", "логические операторы", "условия"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": true
+          }
         },
         {
           "num": 13,
@@ -134,7 +230,15 @@
           "desc": "Условия внутри условий",
           "duration": 8,
           "complexity": "basic",
-          "badge": "nested_navigator"
+          "badge": "nested_navigator",
+          "type": "practice",
+          "tags": ["вложенность", "условия", "вложенные конструкции"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         }
       ]
     },
@@ -149,7 +253,15 @@
           "desc": "Индексы, [start:stop:step]",
           "duration": 12,
           "complexity": "basic",
-          "badge": "string_slicer"
+          "badge": "string_slicer",
+          "type": "mixed",
+          "tags": ["строки", "индексация", "срезы", "slice", "index"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 15,
@@ -158,7 +270,15 @@
           "desc": "Конкатенация, умножение, методы",
           "duration": 10,
           "complexity": "basic",
-          "badge": "string_master"
+          "badge": "string_master",
+          "type": "practice",
+          "tags": ["строки", "методы", "конкатенация", "upper", "lower", "split"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 16,
@@ -167,7 +287,15 @@
           "desc": "re: поиск, замена, группы, шаблоны",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "regex_wizard"
+          "badge": "regex_wizard",
+          "type": "mixed",
+          "tags": ["regex", "re", "регулярные выражения", "поиск", "замена"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         }
       ]
     },
@@ -182,7 +310,15 @@
           "desc": "while",
           "duration": 10,
           "complexity": "basic",
-          "badge": "looper"
+          "badge": "looper",
+          "type": "mixed",
+          "tags": ["while", "циклы", "предусловие", "итерация"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 18,
@@ -191,7 +327,15 @@
           "desc": "Перебор элементов",
           "duration": 12,
           "complexity": "basic",
-          "badge": "for_master"
+          "badge": "for_master",
+          "type": "mixed",
+          "tags": ["for", "циклы", "перебор", "итерация"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 19,
@@ -200,7 +344,15 @@
           "desc": "Генерация последовательностей",
           "duration": 8,
           "complexity": "basic",
-          "badge": "range_runner"
+          "badge": "range_runner",
+          "type": "practice",
+          "tags": ["range", "последовательности", "циклы", "итерация"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 20,
@@ -209,7 +361,15 @@
           "desc": "Прерывание и пропуск итераций",
           "duration": 8,
           "complexity": "basic",
-          "badge": "flow_controller"
+          "badge": "flow_controller",
+          "type": "theory",
+          "tags": ["break", "continue", "циклы", "управление потоком"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": true
+          }
         },
         {
           "num": 21,
@@ -218,7 +378,15 @@
           "desc": "Циклы внутри циклов",
           "duration": 10,
           "complexity": "basic",
-          "badge": "nested_looper"
+          "badge": "nested_looper",
+          "type": "practice",
+          "tags": ["вложенные циклы", "циклы", "итерация", "матрицы"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         }
       ]
     },
@@ -233,7 +401,15 @@
           "desc": "def, return, параметры",
           "duration": 12,
           "complexity": "basic",
-          "badge": "func_creator"
+          "badge": "func_creator",
+          "type": "mixed",
+          "tags": ["функции", "def", "return", "параметры", "аргументы"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 23,
@@ -242,7 +418,15 @@
           "desc": "args/kwargs, области видимости, аннотации",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "func_guru"
+          "badge": "func_guru",
+          "type": "mixed",
+          "tags": ["args", "kwargs", "области видимости", "аннотации", "функции"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 24,
@@ -251,7 +435,15 @@
           "desc": "pdb, print-отладка, assert, логирование",
           "duration": 12,
           "complexity": "basic",
-          "badge": "debugger"
+          "badge": "debugger",
+          "type": "practice",
+          "tags": ["отладка", "pdb", "debug", "assert", "логирование"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         }
       ]
     },
@@ -266,7 +458,15 @@
           "desc": "list, методы списков",
           "duration": 15,
           "complexity": "basic",
-          "badge": "list_master"
+          "badge": "list_master",
+          "type": "mixed",
+          "tags": ["списки", "list", "методы", "append", "sort"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 26,
@@ -275,7 +475,15 @@
           "desc": "set(), операции над множествами",
           "duration": 10,
           "complexity": "basic",
-          "badge": "set_specialist"
+          "badge": "set_specialist",
+          "type": "theory",
+          "tags": ["множества", "set", "union", "intersection", "difference"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 27,
@@ -284,7 +492,15 @@
           "desc": "tuple, неизменяемые последовательности",
           "duration": 10,
           "complexity": "basic",
-          "badge": "tuple_tamer"
+          "badge": "tuple_tamer",
+          "type": "theory",
+          "tags": ["кортежи", "tuple", "неизменяемые", "immutable"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 28,
@@ -293,7 +509,15 @@
           "desc": "dict, ключи и значения",
           "duration": 15,
           "complexity": "basic",
-          "badge": "dict_master"
+          "badge": "dict_master",
+          "type": "mixed",
+          "tags": ["словари", "dict", "ключи", "значения", "методы"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 29,
@@ -302,7 +526,15 @@
           "desc": "Разделение и объединение строк",
           "duration": 8,
           "complexity": "basic",
-          "badge": "string_splitter"
+          "badge": "string_splitter",
+          "type": "practice",
+          "tags": ["split", "join", "строки", "разделение", "объединение"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 30,
@@ -311,7 +543,15 @@
           "desc": "[x for x in ... if ...]",
           "duration": 12,
           "complexity": "intermediate",
-          "badge": "comprehension_master"
+          "badge": "comprehension_master",
+          "type": "mixed",
+          "tags": ["list comprehension", "списочные выражения", "итерации", "функции"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 31,
@@ -320,7 +560,15 @@
           "desc": "lambda, map(), filter(), sorted()",
           "duration": 12,
           "complexity": "intermediate",
-          "badge": "lambda_wizard"
+          "badge": "lambda_wizard",
+          "type": "mixed",
+          "tags": ["lambda", "map", "filter", "sorted", "функции"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         }
       ]
     },
@@ -335,7 +583,15 @@
           "desc": "open(), with, построчное чтение, разбор чисел",
           "duration": 12,
           "complexity": "basic",
-          "badge": "file_handler"
+          "badge": "file_handler",
+          "type": "practice",
+          "tags": ["файлы", "open", "with", "чтение", "запись"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 33,
@@ -344,7 +600,15 @@
           "desc": "json.dump/load, csv.reader/writer",
           "duration": 12,
           "complexity": "basic",
-          "badge": "data_formatter"
+          "badge": "data_formatter",
+          "type": "practice",
+          "tags": ["JSON", "CSV", "данные", "сериализация", "файлы"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 34,
@@ -353,7 +617,15 @@
           "desc": "CREATE TABLE, INSERT, SELECT, параметризованные запросы",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "sql_master"
+          "badge": "sql_master",
+          "type": "mixed",
+          "tags": ["SQLite", "SQL", "базы данных", "CREATE", "INSERT", "SELECT"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         }
       ]
     },
@@ -368,7 +640,15 @@
           "desc": "import, from, as, стандартная библиотека",
           "duration": 10,
           "complexity": "basic",
-          "badge": "module_importer"
+          "badge": "module_importer",
+          "type": "theory",
+          "tags": ["модули", "import", "from", "as", "стандартная библиотека"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 36,
@@ -377,7 +657,15 @@
           "desc": "product, permutations, chain, groupby и другие функции",
           "duration": 12,
           "complexity": "intermediate",
-          "badge": "itertools_guru"
+          "badge": "itertools_guru",
+          "type": "theory",
+          "tags": ["itertools", "product", "permutations", "chain", "groupby"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 37,
@@ -386,7 +674,15 @@
           "desc": "venv, pip install, requirements.txt",
           "duration": 12,
           "complexity": "basic",
-          "badge": "venv_master"
+          "badge": "venv_master",
+          "type": "practice",
+          "tags": ["venv", "pip", "виртуальные окружения", "requirements", "установка"],
+          "interactive": {
+            "exercise": false,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 38,
@@ -395,7 +691,15 @@
           "desc": "Математика, случайные числа",
           "duration": 10,
           "complexity": "basic",
-          "badge": "math_random"
+          "badge": "math_random",
+          "type": "practice",
+          "tags": ["math", "random", "модули", "математика", "случайные числа"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": true
+          }
         },
         {
           "num": 39,
@@ -404,7 +708,15 @@
           "desc": "Даты, время, timedelta",
           "duration": 10,
           "complexity": "basic",
-          "badge": "time_traveler"
+          "badge": "time_traveler",
+          "type": "practice",
+          "tags": ["datetime", "даты", "время", "timedelta", "модули"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 40,
@@ -413,7 +725,15 @@
           "desc": "ndarray, DataFrame, анализ данных",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "data_scientist"
+          "badge": "data_scientist",
+          "type": "mixed",
+          "tags": ["NumPy", "Pandas", "данные", "анализ", "DataFrame", "ndarray"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         }
       ]
     },
@@ -428,7 +748,15 @@
           "desc": "Классы, объекты, __init__, self",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "oop_master"
+          "badge": "oop_master",
+          "type": "theory",
+          "tags": ["ООП", "классы", "объекты", "__init__", "self"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 42,
@@ -437,7 +765,15 @@
           "desc": "class Child(Parent), super(), переопределение",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "inheritance_guru"
+          "badge": "inheritance_guru",
+          "type": "theory",
+          "tags": ["наследование", "полиморфизм", "super()", "ООП", "классы"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         }
       ]
     },
@@ -452,7 +788,15 @@
           "desc": "@decorator, wraps, кастомные декораторы",
           "duration": 12,
           "complexity": "intermediate",
-          "badge": "decorator_master"
+          "badge": "decorator_master",
+          "type": "theory",
+          "tags": ["декораторы", "@decorator", "wraps", "функции"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 44,
@@ -461,7 +805,15 @@
           "desc": "yield, ленивые вычисления, generator expressions",
           "duration": 12,
           "complexity": "intermediate",
-          "badge": "generator_guru"
+          "badge": "generator_guru",
+          "type": "theory",
+          "tags": ["генераторы", "yield", "итераторы", "ленивые вычисления"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 45,
@@ -470,7 +822,15 @@
           "desc": "threading, multiprocessing, async/await",
           "duration": 15,
           "complexity": "advanced",
-          "badge": "async_master"
+          "badge": "async_master",
+          "type": "theory",
+          "tags": ["threading", "asyncio", "многопоточность", "async", "await", "multiprocessing"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         }
       ]
     },
@@ -485,7 +845,15 @@
           "desc": "Аннотации типов, mypy",
           "duration": 10,
           "complexity": "basic",
-          "badge": "type_hinter"
+          "badge": "type_hinter",
+          "type": "theory",
+          "tags": ["Type Hints", "аннотации типов", "mypy", "типизация"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": true,
+            "game": false
+          }
         },
         {
           "num": 47,
@@ -494,7 +862,15 @@
           "desc": "assert, parametrize, проверка исключений",
           "duration": 12,
           "complexity": "intermediate",
-          "badge": "test_master"
+          "badge": "test_master",
+          "type": "practice",
+          "tags": ["pytest", "тесты", "assert", "parametrize", " unit-тесты"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 48,
@@ -503,7 +879,15 @@
           "desc": "GET, POST, работа с JSON-сервисами",
           "duration": 12,
           "complexity": "intermediate",
-          "badge": "api_explorer"
+          "badge": "api_explorer",
+          "type": "practice",
+          "tags": ["requests", "API", "GET", "POST", "HTTP", "JSON"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 49,
@@ -512,7 +896,15 @@
           "desc": "Маршруты, шаблоны Jinja2, обработка форм, REST API",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "web_builder"
+          "badge": "web_builder",
+          "type": "practice",
+          "tags": ["Flask", "веб", "маршруты", "Jinja2", "REST API"],
+          "interactive": {
+            "exercise": true,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         },
         {
           "num": 50,
@@ -521,7 +913,15 @@
           "desc": "Коммиты, ветки, GitHub, .gitignore",
           "duration": 12,
           "complexity": "basic",
-          "badge": "git_master"
+          "badge": "git_master",
+          "type": "theory",
+          "tags": ["Git", "GitHub", "коммиты", "ветки", ".gitignore"],
+          "interactive": {
+            "exercise": false,
+            "quiz": true,
+            "dragDrop": false,
+            "game": false
+          }
         }
       ]
     }

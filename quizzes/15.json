@@ -97,5 +97,16 @@
     ],
     "correct": 1,
     "explanation": "len() считает все символы, включая пробел и знаки препинания. \"Hello, World!\" — 13 символов."
+  },
+  {
+    "question": "Что вернёт <code>\"python\".startswith(\"py\")</code>?",
+    "options": [
+      "True",
+      "False",
+      "python",
+      "Ошибка"
+    ],
+    "correct": 0,
+    "explanation": "Метод startswith() проверяет, начинается ли строка с указанной подстроки. \"python\" начинается с \"py\", поэтому результат True."
   }
 ]
