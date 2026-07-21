@@ -5,6 +5,7 @@
  * Provides interactive quizzes for each lesson with full accessibility
  */
 
+import { saveProgress, checkBadges } from './api-client.js';
 import { safeGetItem, safeSetItem } from '../config/security.js';
 
 const CONSOLIDATED_PROGRESS_KEY = 'python-web-course-progress';
@@ -15,6 +16,22 @@ function sanitizeHtml(html) {
   if (!html) return '';
   return html.replace(/<[^>]*>/g, function (tag) {
     return _QUIZ_ALLOWED_TAGS.test(tag) ? tag : '';
+  });
+}
+
+function lessonNumberFromPage() {
+  const attr = document.body.getAttribute('data-lesson');
+  if (attr !== null) {
+    const num = parseInt(attr, 10);
+    if (!isNaN(num)) return num;
+  }
+  return null;
+}
+
+function syncQuizToServer(lessonNumber, score) {
+  if (lessonNumber === null) return;
+  saveProgress(lessonNumber, true, score).catch(function () {
+    // Silent fail
   });
 }
 
@@ -231,51 +248,60 @@ export function initQuizSystem() {
 
         quizContainer.appendChild(resultsDiv);
 
-        if (scorePct === 100) {
+          const lessonNumber = lessonNumberFromPage();
+          const pageName = window.location.pathname.split('/').pop() || '';
+
+          // Always save score to localStorage and server
           let quizScores;
           try {
             quizScores = JSON.parse(safeGetItem('python-web-quiz-scores') || '{}');
           } catch (_e) {
             quizScores = {};
           }
-          const pageName = window.location.pathname.split('/').pop() || '';
-          quizScores[pageName] = 100;
+          quizScores[pageName] = scorePct;
           safeSetItem('python-web-quiz-scores', JSON.stringify(quizScores));
 
-          let completedLessons;
-          try {
-            completedLessons = JSON.parse(safeGetItem(CONSOLIDATED_PROGRESS_KEY) || '[]');
-          } catch (_e) {
-            completedLessons = [];
+          // Sync to server (save any score)
+          syncQuizToServer(lessonNumber, scorePct);
+
+          if (scorePct === 100) {
+            let completedLessons;
+            try {
+              completedLessons = JSON.parse(safeGetItem(CONSOLIDATED_PROGRESS_KEY) || '[]');
+            } catch (_e) {
+              completedLessons = [];
+            }
+            if (!completedLessons.includes(pageName)) {
+              completedLessons.push(pageName);
+            }
+            safeSetItem(CONSOLIDATED_PROGRESS_KEY, JSON.stringify(completedLessons));
+
+            const completeEl = document.querySelector('.lesson-complete-toggle');
+            if (completeEl) {
+              completeEl.textContent = '';
+              const label = document.createElement('label');
+              label.className = 'complete-label';
+
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.className = 'complete-checkbox';
+              checkbox.checked = true;
+              label.appendChild(checkbox);
+              label.appendChild(document.createTextNode(' '));
+
+              const span = document.createElement('span');
+              span.className = 'complete-text';
+              span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
+              label.appendChild(span);
+
+              completeEl.appendChild(label);
+            }
           }
-          if (!completedLessons.includes(pageName)) {
-            completedLessons.push(pageName);
-          }
-          safeSetItem(CONSOLIDATED_PROGRESS_KEY, JSON.stringify(completedLessons));
 
-          const completeEl = document.querySelector('.lesson-complete-toggle');
-          if (completeEl) {
-            completeEl.textContent = '';
-            const label = document.createElement('label');
-            label.className = 'complete-label';
+          // Check badges after quiz
+          checkBadges();
 
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.className = 'complete-checkbox';
-            checkbox.checked = true;
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(' '));
-
-            const span = document.createElement('span');
-            span.className = 'complete-text';
-            span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
-            label.appendChild(span);
-
-            completeEl.appendChild(label);
-          }
-        }
-
-        h3.focus();
+          h3.focus();
 
         quizContainer.querySelector('.quiz-retry').addEventListener('click', function () {
           state = { idx: 0, correct: 0, answered: false, total: questions.length };

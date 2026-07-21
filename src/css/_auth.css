@@ -1,0 +1,100 @@
+/* Auth UI styles */
+.auth-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.auth-user {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.auth-link {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.auth-login {
+  background: #6366f1;
+  color: #fff;
+}
+
+.auth-login:hover {
+  background: #4f46e5;
+}
+
+.auth-logout {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+.auth-logout:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* Auth gate overlay */
+.auth-gate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.auth-gate-form {
+  background: #fff;
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.auth-gate-form h1 {
+  font-size: 24px;
+  margin: 0 0 12px;
+  color: #1e293b;
+}
+
+.auth-gate-form p {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0 0 28px;
+}
+
+.auth-gate-login {
+  display: inline-block;
+  padding: 14px 32px;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.auth-gate-login:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.auth-gate-login:active {
+  transform: translateY(0);
+}

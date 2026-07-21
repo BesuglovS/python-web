@@ -38,7 +38,7 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru https://auth.nayanovaacademy.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru" always;
 
     # --- Сжатие gzip ---
     gzip on;
@@ -86,7 +86,7 @@ server {
     }
 
     # 3b. Блокировка служебных файлов песочницы (ответы теста, AST-валидатор, скрипты).
-    location ~ ^/sandbox/(validate-test\.php|_test_.*\.php|ast_validator\.py|permissions\.sh|sandbox_common\.php|nginx-sandbox\.conf)$ {
+    location ~ ^/sandbox/(validate-test\.php|_test_.*\.php|ast_validator\.py|permissions\.sh|sandbox_common\.php|nginx-sandbox\.conf|config\.php|Database\.php|Auth\.php)$ {
         deny all;
         access_log off;
         log_not_found off;

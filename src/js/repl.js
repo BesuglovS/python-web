@@ -1,6 +1,7 @@
 'use strict';
 
 import { safeGetItem, safeSetItem, safeRemoveItem } from './config/security.js';
+import { incrementCodeRuns } from './modules/api-client.js';
 import {
   MAX_REPL_HISTORY,
   PERSISTED_REPL_HISTORY,
@@ -113,6 +114,8 @@ async function runRepl() {
     } catch (_e) {
       // ignore
     }
+
+    incrementCodeRuns();
   }
 
   renderHistory();
@@ -207,6 +210,8 @@ async function runEditor() {
     output.removeAttribute('aria-busy');
     currentEditorController = null;
   }
+
+  incrementCodeRuns();
 }
 
 // ─── Render history (DOM API, incremental update) ───

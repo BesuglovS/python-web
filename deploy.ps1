@@ -78,6 +78,7 @@ if (-not $SkipBuild) {
 
 # ─── 3. Deploy via tar + ssh ───
 $distPath = Join-Path $PSScriptRoot 'dist'
+$dataPath = Join-Path $PSScriptRoot 'data'
 if (-not (Test-Path $distPath)) {
   Write-Host "ERROR: dist/ not found. Run build first." -ForegroundColor Red
   exit 1
@@ -86,7 +87,8 @@ if (-not (Test-Path $distPath)) {
 $sshArgStr = ""
 if ($sshPort -ne '22') { $sshArgStr += "-P $sshPort " }
 if ($identityFile) { $sshArgStr += "-i `"$identityFile`" " }
-$sshArgStr += "$remote `"rm -rf ${remotePath}/* ${remotePath}/.[!.]* 2>/dev/null; tar -xzf - -C $remotePath`""
+# Сохраняем data/ на сервере перед очисткой, восстанавливаем после распаковки
+$sshArgStr += "$remote `"cp -r ${remotePath}/data /tmp/.deploy-data 2>/dev/null; rm -rf ${remotePath}/* ${remotePath}/.[!.]* 2>/dev/null; mkdir -p ${remotePath}/data 2>/dev/null; cp -r /tmp/.deploy-data/* ${remotePath}/data/ 2>/dev/null; rm -rf /tmp/.deploy-data; tar -xzf - -C $remotePath; chown -R www-data:www-data ${remotePath}/data 2>/dev/null; chmod -R 775 ${remotePath}/data 2>/dev/null`""
 
 Write-Host "`n==> Deploying to ${remote}:${remotePath} ..." -ForegroundColor Cyan
 
@@ -96,8 +98,17 @@ if ($DryRun) {
   Write-Host "  Archiving and transferring..." -ForegroundColor Gray
 
   $targz = Join-Path $env:TEMP "deploy-$(Get-Random).tar.gz"
+  $scriptsDir = Join-Path $PSScriptRoot 'scripts'
   try {
-    & tar -czf $targz -C $distPath --exclude __pycache__ .
+    # Создаём временную папку, объединяем dist + scripts
+    $tmpDir = Join-Path $env:TEMP "deploy-tmp-$(Get-Random)"
+    New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
+    Copy-Item -Recurse -Path "$distPath\*" -Destination $tmpDir
+    if (Test-Path $scriptsDir) {
+      Copy-Item -Recurse -Path $scriptsDir -Destination $tmpDir
+    }
+
+    & tar -czf $targz -C $tmpDir --exclude __pycache__ .
     if ($LASTEXITCODE -ne 0) {
       Write-Host "  Archive creation failed" -ForegroundColor Red
       exit 1
@@ -124,16 +135,21 @@ if ($DryRun) {
       exit 1
     }
 
+    $stdoutTask = $proc.StandardOutput.ReadToEndAsync()
+    $stderrTask = $proc.StandardError.ReadToEndAsync()
     $proc.WaitForExit()
-    $stderr = $proc.StandardError.ReadToEnd()
+    $stdout = $stdoutTask.Result
+    $stderr = $stderrTask.Result
 
     if ($proc.ExitCode -ne 0) {
       Write-Host "  Deploy failed (exit code: $($proc.ExitCode))" -ForegroundColor Red
-      if ($stderr) { Write-Host "  SSH: $stderr" -ForegroundColor Red }
+      if ($stdout) { Write-Host "  SSH stdout: $stdout" -ForegroundColor Red }
+      if ($stderr) { Write-Host "  SSH stderr: $stderr" -ForegroundColor Red }
       exit 1
     }
   } finally {
     Remove-Item $targz -ErrorAction SilentlyContinue
+    Remove-Item -Recurse -Path $tmpDir -ErrorAction SilentlyContinue
   }
 
   Write-Host "  Done." -ForegroundColor Green

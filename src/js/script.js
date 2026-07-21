@@ -25,6 +25,7 @@ import { initBadgesRendering } from './modules/badges-render.js';
 import { initDragDropExercises } from './modules/drag-drop.js';
 import { initScrollRestore } from './modules/scroll-restore.js';
 import { initErrorTracking } from './modules/error-tracking.js';
+import { initAuth } from './modules/auth.js';
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
@@ -60,6 +61,7 @@ function initializeApplication() {
     Promise.resolve(initBadgesRendering()),
     Promise.resolve(initDragDropExercises()),
     Promise.resolve(initScrollRestore()),
+    Promise.resolve(initAuth()),
   ];
 
   return Promise.allSettled(initPromises)
@@ -71,7 +73,7 @@ function initializeApplication() {
             'Error Tracking', 'Theme System', 'Theme Toggle', 'Progress Tracking',
             'Syntax Highlighting', 'Keyboard Navigation', 'Breadcrumbs', 'Lesson Metadata',
             'Table of Contents', 'Code Toolbar', 'Scroll Progress', 'Search',
-            'Section Navigation', 'Smooth Scroll', 'Contest Links', 'Hamburger Menu', 'Quiz System', 'Badges Rendering', 'Drag-Drop Exercises', 'Scroll Restore'
+            'Section Navigation', 'Smooth Scroll', 'Contest Links', 'Hamburger Menu', 'Quiz System', 'Badges Rendering', 'Drag-Drop Exercises', 'Scroll Restore', 'Auth'
           ];
           errors.push(moduleNames[index] + ': ' + (result.reason?.message || 'Unknown error'));
           console.error('Failed to initialize:', moduleNames[index], result.reason);

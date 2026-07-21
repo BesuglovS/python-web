@@ -142,7 +142,6 @@ describe('config/courseData.js', () => {
 
 describe('config/badges.js', () => {
   const badgesSrc = fs.readFileSync(path.join(configDir, 'badges.js'), 'utf-8');
-  const sec = loadSecurity();
 
   function stripModuleSyntax(src) {
     return src
@@ -152,18 +151,11 @@ describe('config/badges.js', () => {
   }
 
   const stripped = stripModuleSyntax(badgesSrc);
-  const fn = new Function('_buildLessonLookup', `
-    var TOTAL_LESSONS = 50;
-    var HALFWAY_LESSONS_COUNT = 25;
-    var SPEEDRUN_LESSONS_COUNT = 3;
-    var REPL_EXPERIMENTER_RUNS = 10;
-    var QUIZ_CHAMPION_SCORE = 90;
-    var QUIZ_PERFECT_SCORE = 100;
-    var STREAK_DAYS = 7;
+  const fn = new Function(`
     ${stripped};
     return { BADGES };
   `);
-  const badges = fn(sec._buildLessonLookup);
+  const badges = fn();
 
   it('has at least 10 badges', () => {
     expect(badges.BADGES.length).toBeGreaterThanOrEqual(10);
@@ -174,47 +166,12 @@ describe('config/badges.js', () => {
       expect(badge.id).toBeTruthy();
       expect(badge.name).toBeTruthy();
       expect(badge.icon).toBeTruthy();
-      expect(typeof badge.check).toBe('function');
+      expect(badge.desc).toBeTruthy();
     });
   });
 
-  it('first_steps badge works correctly', () => {
-    const badge = badges.BADGES.find((b) => b.id === 'first_steps');
-    const completed5 = [
-      '01-history.html',
-      '02-ide-setup.html',
-      '03-variables.html',
-      '04-data-types.html',
-      '05-type-casting.html',
-    ];
-    expect(badge.check(completed5)).toBe(true);
-    expect(badge.check(['01-history.html', '02-ide-setup.html'])).toBe(false);
-  });
-
-  it('all_lessons badge works correctly', () => {
-    const badge = badges.BADGES.find((b) => b.id === 'all_lessons');
-    const allCompleted = [];
-    for (let i = 1; i <= 50; i++) {
-      const num = String(i).padStart(2, '0');
-      allCompleted.push(num + '-lesson.html');
-    }
-    expect(badge.check(allCompleted)).toBe(true);
-    expect(badge.check(['01-lesson.html'])).toBe(false);
-  });
-
-  it('halfway badge counts array length', () => {
-    const badge = badges.BADGES.find((b) => b.id === 'halfway');
-    const twentyFive = [];
-    for (let i = 1; i <= 25; i++) twentyFive.push(i + '-lesson.html');
-    expect(badge.check(twentyFive)).toBe(true);
-    expect(badge.check(['01-lesson.html'])).toBe(false);
-  });
-
-  it('badges handle null/undefined progress gracefully', () => {
-    badges.BADGES.forEach((badge) => {
-      expect(badge.check(null)).toBeFalsy();
-      expect(badge.check(undefined)).toBeFalsy();
-      expect(badge.check([])).toBeFalsy();
-    });
+  it('all badge ids are unique', () => {
+    const ids = badges.BADGES.map((b) => b.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });

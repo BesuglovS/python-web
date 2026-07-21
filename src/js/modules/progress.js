@@ -2,9 +2,10 @@
 
 /**
  * Progress tracking module
- * Tracks user progress through course lessons with consolidated storage
+ * Tracks user progress through course lessons with server sync
  */
 
+import { saveProgress, checkBadges } from './api-client.js';
 import { createMetaInfo, createContestBadge } from './utils.js';
 import { safeGetItem, safeSetItem } from '../config/security.js';
 import { TOTAL_LESSONS, COMPLEXITY_LABELS, LESSON_META } from '../config/courseData.js';
@@ -29,6 +30,22 @@ export function getCompletedLessons() {
 
 function saveCompletedLessons(lessons) {
   safeSetItem(CONSOLIDATED_PROGRESS_KEY, JSON.stringify(lessons));
+}
+
+function lessonNumberFromPage() {
+  const attr = document.body.getAttribute('data-lesson');
+  if (attr !== null) {
+    const num = parseInt(attr, 10);
+    if (!isNaN(num)) return num;
+  }
+  return null;
+}
+
+function syncToServer(lessonNumber, completed, quizScore) {
+  if (lessonNumber === null) return;
+  saveProgress(lessonNumber, completed, quizScore).catch(function () {
+    // Silent fail — offline or network error
+  });
 }
 
 export function initProgressTracking() {
@@ -80,16 +97,21 @@ export function initProgressTracking() {
 
       label.querySelector('input').addEventListener('change', function (e) {
         let lessons = getCompletedLessons();
+        const lessonNumber = lessonNumberFromPage();
+        const wasCompleted = lessons.includes(pageName);
         if (e.target.checked) {
-          if (!lessons.includes(pageName)) {
+          if (!wasCompleted) {
             lessons.push(pageName);
             label.querySelector('.complete-text').textContent = '✓ Урок пройден';
           }
+          syncToServer(lessonNumber, true, null);
+          if (!wasCompleted) checkBadges();
         } else {
           lessons = lessons.filter(function (l) {
             return l !== pageName;
           });
           label.querySelector('.complete-text').textContent = 'Отметить как пройденный';
+          syncToServer(lessonNumber, false, null);
         }
         saveCompletedLessons(lessons);
       });
