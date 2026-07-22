@@ -23,7 +23,7 @@ Flask — микро-фреймворк для создания веб-прил�
 
 ## Основной материал
 
-Flask-приложение начинается с создания экземпляра `Flask(__name__)`. Декоратор `@app.route("/")` связывает URL с функцией-обработчиком. Параметры в URL передаются через . Шаблоны Jinja2 (папка `templates/`) используют `{{ }}` для вывода и `{% %}` для циклов и условий. Метод `render_template()` рендерит HTML с данными. Для REST API возвращайте словарь через `jsonify()`. Запуск: `flask run` или `app.run(debug=True)`.
+Flask-приложение начинается с создания экземпляра `Flask(__name__)`. Декоратор `@app.route("/")` связывает URL с функцией-обработчиком. Параметры в URL передаются через `< >` в шаблоне маршрута. Шаблоны Jinja2 (папка `templates/`) используют `{{ }}` для вывода и `{% %}` для циклов и условий. Метод `render_template()` рендерит HTML с данными. Для REST API возвращайте словарь через `jsonify()`. Запуск: `flask run` или `app.run(debug=True)`.
 
 ```python
 from flask import Flask, render_template, request, jsonify
@@ -36,7 +36,7 @@ def index():
     return render_template('index.html', title='Главная')
 
 # Маршрут с параметром
-@app.route('/user/')
+@app.route('/user/<username>')
 def user(username):
     return f"Профиль: {username}"
 

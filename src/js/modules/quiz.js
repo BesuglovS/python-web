@@ -6,9 +6,7 @@
  */
 
 import { saveProgress, checkBadges } from './api-client.js';
-import { safeGetItem, safeSetItem } from '../config/security.js';
-
-const CONSOLIDATED_PROGRESS_KEY = 'python-web-course-progress';
+import { updateLocalProgress } from './progress.js';
 
 const _QUIZ_ALLOWED_TAGS = /^<(\/)?(code|br|b|i|em|strong)(\s[^>]*)?>$/;
 
@@ -249,33 +247,12 @@ export function initQuizSystem() {
         quizContainer.appendChild(resultsDiv);
 
           const lessonNumber = lessonNumberFromPage();
-          const pageName = window.location.pathname.split('/').pop() || '';
 
-          // Always save score to localStorage and server
-          let quizScores;
-          try {
-            quizScores = JSON.parse(safeGetItem('python-web-quiz-scores') || '{}');
-          } catch (_e) {
-            quizScores = {};
-          }
-          quizScores[pageName] = scorePct;
-          safeSetItem('python-web-quiz-scores', JSON.stringify(quizScores));
-
-          // Sync to server (save any score)
+          // Update server and in-memory state
           syncQuizToServer(lessonNumber, scorePct);
+          updateLocalProgress(lessonNumber, scorePct === 100, scorePct);
 
           if (scorePct === 100) {
-            let completedLessons;
-            try {
-              completedLessons = JSON.parse(safeGetItem(CONSOLIDATED_PROGRESS_KEY) || '[]');
-            } catch (_e) {
-              completedLessons = [];
-            }
-            if (!completedLessons.includes(pageName)) {
-              completedLessons.push(pageName);
-            }
-            safeSetItem(CONSOLIDATED_PROGRESS_KEY, JSON.stringify(completedLessons));
-
             const completeEl = document.querySelector('.lesson-complete-toggle');
             if (completeEl) {
               completeEl.textContent = '';

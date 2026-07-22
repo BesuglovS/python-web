@@ -17,10 +17,12 @@ subtitle: 'Проверяем, что код работает правильно
 
 <!-- norun -->
 
-```python
+```bash
 # Установка
 pip install pytest
+```
 
+```python
 # Файл: mycode.py
 def double(x):
     return x * 2
@@ -40,7 +42,7 @@ def test_double_negative():
 
 <!-- norun -->
 
-```python
+```bash
 # Запуск тестов в терминале:
 pytest test_mycode.py
 

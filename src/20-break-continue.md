@@ -109,7 +109,7 @@ for i in range(5):
 def find_first_even(limit):
     for num in range(limit + 1):
         if num % 2 == 0:
-  return num  # завершает функцию
+            return num  # завершает функцию
     return None
 ```
 

@@ -66,6 +66,19 @@ conn.commit()
 conn.close()
 ```
 
+Контекстный менеджер `with` автоматически управляет транзакциями и закрывает соединение:
+
+```python
+import sqlite3
+
+with sqlite3.connect('library.db') as conn:
+    cur = conn.cursor()
+    cur.execute("SELECT title FROM books")
+    for row in cur.fetchall():
+        print(row[0])
+# Соединение закрывается автоматически
+```
+
 ## Практика
 
 **📝 Задание:** Создайте базу данных "students.db" с таблицей students (id, name, grade, age). Добавьте 5 студентов. Напишите запрос для отбора студентов с grade > 4 и возрастом < 20. Выведите результат в консоль.

@@ -46,7 +46,7 @@ break/continue действуют только на ближайший цикл:
 for i in range(3):
     for j in range(3):
         if j == 1:
-  break  # прерывает только внутренний цикл
+            break  # прерывает только внутренний цикл
         print(f"({i},{j})", end=" ")
     print()
 

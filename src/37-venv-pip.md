@@ -15,7 +15,7 @@ subtitle: 'Установка библиотек и изоляция проек�
 
 <!-- norun -->
 
-```python
+```bash
 # Основные команды pip (выполняются в терминале):
 pip install requests           # установить библиотеку
 pip install numpy==1.24.0      # установить конкретную версию
@@ -39,7 +39,7 @@ pip freeze > requirements.txt  # сохранить список зависим�
 
 <!-- norun -->
 
-```python
+```bash
 # Создать виртуальное окружение
 python -m venv myenv
 
@@ -57,7 +57,7 @@ deactivate
 
 <!-- norun -->
 
-```python
+```bash
 # Создать виртуальное окружение
 python3 -m venv myenv
 
@@ -77,7 +77,7 @@ deactivate
 
 <!-- norun -->
 
-```python
+```text
 # requirements.txt
 requests==2.31.0
 numpy==1.24.0
@@ -86,7 +86,7 @@ pandas==2.0.0
 
 <!-- norun -->
 
-```python
+```bash
 # Сохранить текущие зависимости
 pip freeze > requirements.txt
 
@@ -104,7 +104,7 @@ pip install -r requirements.txt
 
 <!-- norun -->
 
-```python
+```bash
 # 1. Создать папку проекта
 mkdir myproject
 cd myproject

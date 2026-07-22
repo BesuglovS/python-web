@@ -9,6 +9,35 @@
   box-shadow: var(--shadow);
 }
 
+.topic-header .auth-container {
+  position: absolute;
+  top: 12px;
+  right: 24px;
+}
+
+.topic-header .auth-user {
+  color: #fff;
+}
+
+.topic-header .auth-login {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.topic-header .auth-login:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.topic-header .auth-logout {
+  color: #fca5a5;
+  border-color: #fca5a5;
+}
+
+.topic-header .auth-logout:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
 .topic-header h1 {
   font-size: 1.8em;
   margin-bottom: 6px;

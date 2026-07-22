@@ -40,9 +40,17 @@ header.index-header p {
   transition: color var(--transition);
 }
 
+.repl-auth-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
 .repl-hero-btn {
   display: inline-block;
-  margin-top: 16px;
+  margin-top: 0;
   padding: 10px 24px;
   background: var(--primary-gradient);
   color: #fff;
@@ -135,11 +143,16 @@ nav.index-nav {
 
 .topic-card.completed,
 .topic-num.completed-num {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: #ecfdf5;
+}
+
+.topic-num.completed-num {
+  color: #065f46;
+  border: 2px solid #6ee7b7;
 }
 
 .topic-card.completed {
-  border-left: 4px solid #10b981;
+  border-left: 4px solid #6ee7b7;
 }
 
 .topic-info h2 {

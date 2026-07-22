@@ -34,9 +34,9 @@ result = None    # NoneType — отсутствие значения
 Узнать тип переменной:
 
 ```python
-print(type(10))          #
-print(type("hello"))     #
-print(type(True))        #
+print(type(10))          # <class 'int'>
+print(type("hello"))     # <class 'str'>
+print(type(True))        # <class 'bool'>
 
 # isinstance — проверка принадлежности типу
 print(isinstance(10, int))       # True
@@ -85,7 +85,7 @@ print(float("3"))      # 3.0  (float допускает целое в строк
 
 ### Преобразование в bool
 
-Любое значение можно превратить в `bool`. Правило простое: «пустые» значения дают `False`, всё остальное — `True`. Подробнее о truthy и falsy значениях — в уроке 8.
+Любое значение можно превратить в `bool`. Правило простое: «пустые» значения дают `False`, всё остальное — `True`. Подробнее о truthy и falsy значениях — в уроке 9.
 
 ```python
 print(bool(1))         # True

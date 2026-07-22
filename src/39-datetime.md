@@ -82,7 +82,7 @@ print(now.strftime("%H:%M:%S")) # 14:30:15
 print(now.strftime("%d %B %Y года, %A")) # 23 June 2026 года, Tuesday
 print(now.strftime("%Y-%m-%d %H:%M")) # 2026-06-23 14:30 (ISO-формат)
 
-````
+```
 
 ## strptime() — разбор строки в дату
 
@@ -104,7 +104,7 @@ print(dt)  # 2026-06-23 14:30:00
 # Разбор нестандартного формата
 dt2 = datetime.strptime("23 June 2026, 2:30 PM", "%d %B %Y, %I:%M %p")
 print(dt2)  # 2026-06-23 14:30:00
-````
+```
 
 ## timedelta — разница между датами
 
@@ -155,7 +155,7 @@ def calculate_age(birth_date_str):
     return age
 
 print(f"Возраст: {calculate_age('15.05.1995')} лет")
-# Пример: Возраст: 31 лет
+# Пример: Возраст: 31 год
 ```
 
 ## Итоги

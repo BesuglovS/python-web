@@ -178,10 +178,10 @@ def calculate(a: float, b: float, operation: str = "+") -> float:
         return a * b
     elif operation == "/":
         if b != 0:
-  return a / b
+            return a / b
         else:
-  print("Ошибка: деление на ноль!")
-  return None
+            print("Ошибка: деление на ноль!")
+            return None
     else:
         print(f"Неизвестная операция: {operation}")
         return None

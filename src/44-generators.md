@@ -74,7 +74,7 @@ print(sys.getsizeof(big_gen))                     # 200
 def read_large_file(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
         for line in f:
-  yield line.strip()
+            yield line.strip()
 
 for line in read_large_file("huge_log.txt"):
     if "ERROR" in line:

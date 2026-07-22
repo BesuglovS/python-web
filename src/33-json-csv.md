@@ -71,7 +71,7 @@ import json
 json_str = '{"name": "Анна", "score": 95}'
 data = json.loads(json_str)
 print(data["name"])          # Анна
-print(type(data))            #
+print(type(data))            # <class 'dict'>
 
 # Из Python в строку JSON
 person = {"name": "Борис", "age": 30}
@@ -109,7 +109,7 @@ with open("students.csv", "r", encoding="utf-8") as f:
 
 # Вывод:
 # Анна: 20 лет, оценка 5
-# Борис: 21 лет, оценка 4
+# Борис: 21 год, оценка 4
 # Вика: 19 лет, оценка 5
 ```
 
@@ -151,9 +151,9 @@ with open("users.csv", "w", encoding="utf-8", newline="") as f:
     writer.writeheader()
     for user in users:
         writer.writerow({
-  "name": user["name"],
-  "email": user["email"],
-  "age": user["age"]
+            "name": user["name"],
+            "email": user["email"],
+            "age": user["age"]
         })
 
 print("Конвертация завершена!")

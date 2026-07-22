@@ -63,8 +63,8 @@ slow_function()
 def repeat(n):
     def decorator(func):
         def wrapper(*args, **kwargs):
-  for _ in range(n):
-      func(*args, **kwargs)
+            for _ in range(n):
+                func(*args, **kwargs)
         return wrapper
     return decorator
 
@@ -104,12 +104,14 @@ print(add.__doc__)       # Складывает два числа.
 
 ```python
 # Кэширование результатов
+from functools import wraps
+
 def cache(func):
     memo = {}
     @wraps(func)
     def wrapper(*args):
         if args not in memo:
-  memo[args] = func(*args)
+            memo[args] = func(*args)
         return memo[args]
     return wrapper
 

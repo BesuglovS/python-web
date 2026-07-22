@@ -90,8 +90,8 @@ with open("poem.txt", "r") as f:
 Прочитаем числа из файла в список
 
 ```python
-f = open('nums.txt')
-a = [int(s) for s in f]
+with open('numbers.txt', 'r') as f:
+    a = [int(s) for s in f]
 ```
 
 Списочное выражение для каждой строчки в файле `for s in f` помещает в список строку преобразованную в число `int(s)`.
@@ -136,8 +136,8 @@ with open("pairs.txt", "r") as f:
 Прочитаем матрицу в список списков
 
 ```python
-f = open('nums.txt')
-a = [[int(x) for x in s.split()] for s in f]
+with open('matrix.txt', 'r') as f:
+    a = [[int(x) for x in s.split()] for s in f]
 
 # rows = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]
 ```
@@ -205,7 +205,7 @@ print("Матрица записана в matrix_out.txt")
 
 ## Обработка ошибок при работе с файлами
 
-При открытии файла может возникнуть ошибка — например, файл не существует. Используем `try/except` (урок 27):
+При открытии файла может возникнуть ошибка — например, файл не существует. Используем `try/except` (урок 11):
 
 ```python
 try:

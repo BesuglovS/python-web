@@ -2,7 +2,7 @@
 
 /**
  * Main entry point for Python-Web interactive course
- * Imports and initializes all modules using promise-based initialization
+ * Imports and initializes all modules using sequential initialization
  */
 
 // Module initializers
@@ -14,7 +14,7 @@ import { initTableOfContents } from './modules/toc.js';
 import { initCodeToolbar } from './modules/code-toolbar.js';
 import { initScrollProgressBar } from './modules/scroll-progress.js';
 import { initThemeSystem, initBackToTopAndThemeToggle } from './modules/theme.js';
-import { initProgressTracking } from './modules/progress.js';
+import { initProgressTracking, loadProgressFromServer } from './modules/progress.js';
 import { initSearch } from './modules/search.js';
 import { initSectionNavigation } from './modules/section-nav.js';
 import { initSmoothScroll } from './modules/smooth-scroll.js';
@@ -37,58 +37,50 @@ if ('serviceWorker' in navigator) {
 }
 
 /**
- * Initialize application modules with error handling and prioritization
+ * Initialize application modules with sequential ordering.
+ *
+ * Critical path: fast sync modules → auth → load progress → render progress UI → everything else.
+ * Auth must complete before progress loading; progress must load before UI rendering.
  */
-function initializeApplication() {
-  const initPromises = [
-    Promise.resolve(initErrorTracking()),
-    Promise.resolve(initThemeSystem()),
-    Promise.resolve(initBackToTopAndThemeToggle()),
-    Promise.resolve(initProgressTracking()),
-    Promise.resolve(initSyntaxHighlighting()),
-    Promise.resolve(initKeyboardNavigation()),
-    Promise.resolve(initBreadcrumbs()),
-    Promise.resolve(initLessonMetadata()),
-    Promise.resolve(initTableOfContents()),
-    Promise.resolve(initCodeToolbar()),
-    Promise.resolve(initScrollProgressBar()),
-    Promise.resolve(initSearch()),
-    Promise.resolve(initSectionNavigation()),
-    Promise.resolve(initSmoothScroll()),
-    Promise.resolve(initContestLinkInjection()),
-    Promise.resolve(initHamburgerMenu()),
-    Promise.resolve(initQuizSystem()),
-    Promise.resolve(initBadgesRendering()),
-    Promise.resolve(initDragDropExercises()),
-    Promise.resolve(initScrollRestore()),
-    Promise.resolve(initAuth()),
-  ];
+async function initializeApplication() {
+  try {
+    // 1. Fast synchronous modules (no deps)
+    initErrorTracking();
+    initThemeSystem();
+    initBackToTopAndThemeToggle();
 
-  return Promise.allSettled(initPromises)
-    .then(function (results) {
-      const errors = [];
-      results.forEach(function (result, index) {
-        if (result.status === 'rejected') {
-          const moduleNames = [
-            'Error Tracking', 'Theme System', 'Theme Toggle', 'Progress Tracking',
-            'Syntax Highlighting', 'Keyboard Navigation', 'Breadcrumbs', 'Lesson Metadata',
-            'Table of Contents', 'Code Toolbar', 'Scroll Progress', 'Search',
-            'Section Navigation', 'Smooth Scroll', 'Contest Links', 'Hamburger Menu', 'Quiz System', 'Badges Rendering', 'Drag-Drop Exercises', 'Scroll Restore', 'Auth'
-          ];
-          errors.push(moduleNames[index] + ': ' + (result.reason?.message || 'Unknown error'));
-          console.error('Failed to initialize:', moduleNames[index], result.reason);
-        }
-      });
+    // 2. Authentication (must complete first)
+    const user = await initAuth();
+    if (!user) return; // Auth gate shown, stop here
 
-      if (errors.length > 0) {
-        console.warn('Some modules failed to initialize:', errors.join(', '));
-      }
+    // 3. Load progress from server DB
+    await loadProgressFromServer();
 
-      console.log('Application initialization complete');
-    })
-    .catch(function (error) {
-      console.error('Critical initialization error:', error);
-    });
+    // 4. Render progress UI (data is now available)
+    initProgressTracking();
+
+    // 5. All remaining modules (can run concurrently)
+    await Promise.allSettled([
+      initSyntaxHighlighting(),
+      initKeyboardNavigation(),
+      initBreadcrumbs(),
+      initLessonMetadata(),
+      initTableOfContents(),
+      initCodeToolbar(),
+      initScrollProgressBar(),
+      initSearch(),
+      initSectionNavigation(),
+      initSmoothScroll(),
+      initContestLinkInjection(),
+      initHamburgerMenu(),
+      initQuizSystem(),
+      initBadgesRendering(),
+      initDragDropExercises(),
+      initScrollRestore(),
+    ]);
+  } catch (error) {
+    console.error('Critical initialization error:', error);
+  }
 }
 
 // Initialize application on DOM ready

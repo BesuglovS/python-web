@@ -82,13 +82,15 @@ else:
 `finally` выполняется **всегда** — была ошибка или нет. Используется для очистки ресурсов (закрытие файлов, соединений):
 
 ```python
+f = None
 try:
     f = open("data.txt", "r")
     content = f.read()
 except FileNotFoundError:
     print("Файл не найден!")
 finally:
-    f.close()        # Выполнится всегда
+    if f:
+        f.close()        # Выполнится всегда
     print("Файл закрыт")
 ```
 
@@ -165,9 +167,9 @@ def get_number(prompt="Введите число: "):
     """Запрашивает число, пока не будет введено корректное"""
     while True:
         try:
-  return int(input(prompt))
+            return int(input(prompt))
         except ValueError:
-  print("❌ Это не число! Попробуйте ещё раз.")
+            print("❌ Это не число! Попробуйте ещё раз.")
 
 age = get_number("Ваш возраст: ")
 print(f"Ваш возраст: {age}")
@@ -217,7 +219,7 @@ except ValueError as original_error:
 - `raise` — вызвать исключение вручную
 - Свои исключения — наследование от `Exception`
 
-> **⚠️ Важно:** **Золотое правило:** перехватывайте только те исключения, которые можете осмысленно обработать. Не используйте голый `except:` без крайней необходимости.
+> **⚠️ Важно:** Перехватывайте только те исключения, которые можете осмысленно обработать. Не используйте голый `except:` без крайней необходимости.
 
 ### ✏️ Упражнение: Безопасный ввод
 
@@ -226,4 +228,17 @@ except ValueError as original_error:
 1.  Пользователь ввёл не число (`ValueError`)
 2.  Деление на ноль (`ZeroDivisionError`)
 
-\# ВАШ КОД — напишите функцию safe\_calculator() def safe\_calculator(): try: a = float(input("Первое число: ")) b = float(input("Второе число: ")) # Ваш код здесь... except ValueError: print("Ошибка: нужно ввести число!") except ZeroDivisionError: print("Ошибка: на ноль делить нельзя!") safe\_calculator() ▶ Запустить ↺ Сброс
+```python
+# ВАШ КОД — напишите функцию safe_calculator()
+def safe_calculator():
+    try:
+        a = float(input("Первое число: "))
+        b = float(input("Второе число: "))
+        print(f"Результат: {a / b}")
+    except ValueError:
+        print("Ошибка: нужно ввести число!")
+    except ZeroDivisionError:
+        print("Ошибка: на ноль делить нельзя!")
+
+safe_calculator()
+```

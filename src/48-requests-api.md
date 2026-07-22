@@ -15,7 +15,7 @@ API (Application Programming Interface) — способ взаимодейст�
 
 <!-- norun -->
 
-```python
+```bash
 # Установка
 pip install requests
 ```

@@ -90,7 +90,8 @@ class Circle(Shape):
         self.radius = radius
 
     def area(self):                   # переопределяем!
-        return 3.14159 * self.radius ** 2
+        import math
+        return math.pi * self.radius ** 2
 
 shapes = [Rectangle(10, 5), Circle(7)]
 for shape in shapes:
@@ -98,7 +99,7 @@ for shape in shapes:
 
 # Вывод:
 # Фигура с площадью 50
-# Фигура с площадью 153.93791
+# Фигура с площадью 153.93804002589985
 ```
 
 ## Полиморфизм
@@ -141,7 +142,7 @@ print(duck.swim())   # Я плыву!
 print(duck.speak())  # Кря!
 ```
 
-> **💡 Совет:** **MRO (Method Resolution Order):** Python ищет методы слева направо по цепочке наследования.
+> **💡 Совет:** MRO (Method Resolution Order) — Python ищет методы слева направо по цепочке наследования.
 
 ## isinstance() и issubclass()
 

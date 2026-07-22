@@ -48,6 +48,10 @@ export default function (eleventyConfig) {
     return DateTime.fromJSDate(dateObj, { zone: 'utc' }).toFormat('dd.MM.yyyy');
   });
 
+  eleventyConfig.addFilter('date', (dateObj, format) => {
+    return DateTime.fromJSDate(dateObj, { zone: 'utc' }).toFormat(format);
+  });
+
   // Коллекция всех уроков (из Markdown файлов в src/)
   const lessonsGlob = path.join(SRC, '*.md');
   eleventyConfig.addCollection('lessons', function (collectionApi) {

@@ -43,32 +43,32 @@ data: dict[str, int] = {"x": 10, "y": 20}
 ## Сложные типы
 
 ```python
-from typing import List, Dict, Tuple, Optional, Union
-
 # Список строк
-def get_names() -> List[str]:
+def get_names() -> list[str]:
     return ["Анна", "Борис"]
 
 # Словарь: строки → числа
-def get_grades() -> Dict[str, int]:
+def get_grades() -> dict[str, int]:
     return {"Анна": 95, "Борис": 82}
 
 # Кортеж из трёх элементов
-def get_point() -> Tuple[int, int, int]:
+def get_point() -> tuple[int, int, int]:
     return (10, 20, 30)
 
 # Опциональное значение (может быть None)
-def find_user(id: int) -> Optional[str]:
+def find_user(id: int) -> str | None:
     if id == 1:
         return "Анна"
     return None
 
 # Один из нескольких типов
-def process(value: Union[int, str]) -> str:
+def process(value: int | str) -> str:
     return str(value)
 ```
 
 ## Практическая ценность
+
+> **💡 Примечание:** В старых примерах кода (до Python 3.9) можно встретить импорт `from typing import List, Dict, Tuple, Optional, Union`. Современный синтаксис (`list`, `dict`, `tuple`, `X | None`, `X | Y`) предпочтительнее и не требует импорта.
 
 - IDE (VS Code, PyCharm) показывает автодополнение и предупреждения
 - Код становится самодокументированным

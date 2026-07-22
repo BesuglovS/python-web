@@ -58,7 +58,7 @@ async def main():
     results = await asyncio.gather(*tasks)
     print(results)
 
-# asyncio.run(main()) — запуск в одиночном режиме
+asyncio.run(main())  # запуск главной корутины
 ```
 
 ## Практика

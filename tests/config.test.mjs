@@ -53,8 +53,8 @@ describe('config/security.js', () => {
 
     it('allows read/write for whitelisted keys', () => {
       expect(sec.SAFE_KEYS.has('python-web-theme')).toBe(true);
-      expect(sec.SAFE_KEYS.has('python-web-course-progress')).toBe(true);
-      expect(sec.SAFE_KEYS.has('python-web-quiz-scores')).toBe(true);
+      expect(sec.SAFE_KEYS.has('python-web-dragdrop-completed')).toBe(true);
+      expect(sec.SAFE_KEYS.has('python-web-scroll-positions')).toBe(true);
     });
 
     it('persists values for allowed keys', () => {

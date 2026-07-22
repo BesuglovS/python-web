@@ -5,8 +5,6 @@
  * If not authenticated, hides page content and shows login form.
  */
 
-import { loadProgress, bulkSaveProgress } from './api-client.js';
-
 const AUTH_CHECK_URL = 'sandbox/auth_check.php';
 const AUTH_LOGIN_URL = 'https://auth.nayanovaacademy.ru/index.php?page=login&redirect=';
 const AUTH_LOGOUT_URL = 'https://auth.nayanovaacademy.ru/api/logout.php?redirect=';
@@ -35,9 +33,9 @@ function showAuthGate() {
   gate.className = 'auth-gate';
   gate.innerHTML =
     '<div class="auth-gate-form">' +
-      '<h1>🐍 Python — основы программирования</h1>' +
-      '<p>Для доступа к урокам необходимо войти в систему</p>' +
-      '<a href="' + loginUrl + '" class="auth-gate-login">Войти через аккаунт</a>' +
+      '<h1>\ud83d\udc0d Python — \u043e\u0441\u043d\u043e\u0432\u044b \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f</h1>' +
+      '<p>\u0414\u043b\u044f \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043a \u0443\u0440\u043e\u043a\u0430\u043c \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e \u0432\u043e\u0439\u0442\u0438 \u0432 \u0441\u0438\u0441\u0442\u0435\u043c\u0443</p>' +
+      '<a href="' + loginUrl + '" class="auth-gate-login">\u0412\u043e\u0439\u0442\u0438 \u0447\u0435\u0440\u0435\u0437 \u0430\u043a\u043a\u0430\u0443\u043d\u0442</a>' +
     '</div>';
 
   document.body.appendChild(gate);
@@ -61,17 +59,22 @@ function renderAuthUI(user) {
   if (!container) {
     container = document.createElement('div');
     container.className = 'auth-container';
-    header.appendChild(container);
+    const wrapper = header.querySelector('.repl-auth-wrapper');
+    if (wrapper) {
+      wrapper.appendChild(container);
+    } else {
+      header.appendChild(container);
+    }
   }
 
   if (user) {
     container.innerHTML =
       '<span class="auth-user">' + escapeHtml(user.display_name) + '</span>' +
-      '<a href="#" class="auth-link auth-logout" id="auth-logout-btn">Выйти';
+      '<a href="#" class="auth-link auth-logout" id="auth-logout-btn">\u0412\u044b\u0439\u0442\u0438';
   } else {
     const currentUrl = encodeURIComponent(window.location.href);
     container.innerHTML =
-      '<a href="' + AUTH_LOGIN_URL + currentUrl + '" class="auth-link auth-login">Войти</a>';
+      '<a href="' + AUTH_LOGIN_URL + currentUrl + '" class="auth-link auth-login">\u0412\u043e\u0439\u0442\u0438</a>';
   }
 
   const logoutBtn = container.querySelector('#auth-logout-btn');
@@ -90,54 +93,6 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-async function migrateLocalStorageToServer() {
-  try {
-    const progressKey = 'python-web-course-progress';
-    const legacyKey = 'python-web-progress';
-    const quizKey = 'python-web-quiz-scores';
-
-    let completedLessons = [];
-    try {
-      const raw = localStorage.getItem(progressKey) || localStorage.getItem(legacyKey);
-      if (raw) completedLessons = JSON.parse(raw);
-    } catch (_e) {}
-
-    let quizScores = {};
-    try {
-      const raw = localStorage.getItem(quizKey);
-      if (raw) quizScores = JSON.parse(raw);
-    } catch (_e) {}
-
-    if (completedLessons.length === 0 && Object.keys(quizScores).length === 0) return;
-
-    const items = [];
-    const allSlugs = new Set(completedLessons);
-
-    for (const slug of Object.keys(quizScores)) {
-      allSlugs.add(slug);
-    }
-
-    for (const slug of allSlugs) {
-      const isCompleted = completedLessons.includes(slug);
-      const score = quizScores[slug] || null;
-      const lessonNumber = slugToLessonNumber(slug);
-      if (lessonNumber === null) continue;
-      items.push({ lesson_number: lessonNumber, completed: isCompleted, quiz_score: score });
-    }
-
-    await bulkSaveProgress(items);
-  } catch (_e) {
-    console.warn('Failed to migrate localStorage to server:', _e);
-  }
-}
-
-function slugToLessonNumber(slug) {
-  if (slug === 'final-exam.html') return -1;
-  const match = slug.match(/^(\d+)/);
-  if (match) return parseInt(match[1], 10);
-  return null;
-}
-
 export async function initAuth() {
   currentUser = await checkAuth();
 
@@ -150,45 +105,6 @@ export async function initAuth() {
 
   showContent();
   renderAuthUI(currentUser);
-
-  // Sync server progress to localStorage
-  let serverHasData = false;
-  try {
-    const data = await loadProgress();
-    if (data && data.progress) {
-      const completedLessons = [];
-      const quizScores = {};
-
-      for (const row of data.progress) {
-        const num = parseInt(row.lesson_number, 10);
-        if (isNaN(num)) continue;
-        const pageName = String(num).padStart(2, '0') + '.html';
-
-        if (row.completed) {
-          completedLessons.push(pageName);
-        }
-        if (row.quiz_score !== null && row.quiz_score !== undefined) {
-          quizScores[pageName] = row.quiz_score;
-        }
-      }
-
-      if (completedLessons.length > 0) {
-        localStorage.setItem('python-web-course-progress', JSON.stringify(completedLessons));
-        serverHasData = true;
-      }
-      if (Object.keys(quizScores).length > 0) {
-        localStorage.setItem('python-web-quiz-scores', JSON.stringify(quizScores));
-        serverHasData = true;
-      }
-    }
-  } catch (_e) {
-    console.warn('Failed to load progress from server:', _e);
-  }
-
-  // Migrate localStorage → server only if server had no data (first login from anonymous)
-  if (!serverHasData) {
-    migrateLocalStorageToServer();
-  }
 
   return currentUser;
 }

@@ -34,15 +34,15 @@ class Car:
 my_car = Car()
 friends_car = Car()
 
-print(type(my_car))      #
-print(type(friends_car)) #  — оба одного класса
+print(type(my_car))      # <class '__main__.Car'>
+print(type(friends_car)) # <class '__main__.Car'> — оба одного класса
 ```
 
 Ключевое слово `class` объявляет новый класс. `pass` — заглушка («ничего не делай»), нужна чтобы класс был синтаксически корректным.
 
-## \_\_init\_\_ — конструктор
+## \_\_init\_\_ — инициализатор
 
-`__init__` — специальный метод (конструктор), который вызывается автоматически при создании объекта. Он инициализирует начальное состояние объекта.
+`__init__` — специальный метод (инициализатор), который вызывается автоматически при создании объекта. Он инициализирует начальное состояние объекта. (Настоящий конструктор в Python — это `__new__`, но на практике почти всегда используется `__init__`.)
 
 ```python
 class Car:
@@ -123,15 +123,15 @@ class Student:
     def add_grade(self, grade):
         """Добавить оценку (2-5)."""
         if 2 <= grade <= 5:
-  self.grades.append(grade)
-  print(f"Оценка {grade} добавлена для {self.name}")
+            self.grades.append(grade)
+            print(f"Оценка {grade} добавлена для {self.name}")
         else:
-  print(f"Ошибка: оценка {grade} недопустима. Допустимы 2-5.")
+            print(f"Ошибка: оценка {grade} недопустима. Допустимы 2-5.")
 
     def average(self):
         """Средний балл."""
         if not self.grades:
-  return 0
+            return 0
         return sum(self.grades) / len(self.grades)
 
     def info(self):
@@ -168,7 +168,7 @@ class Point:
     def __eq__(self, other):
         """Вызывается при сравнении ==."""
         if not isinstance(other, Point):
-  return False
+            return False
         return self.x == other.x and self.y == other.y
 
 p1 = Point(3, 4)

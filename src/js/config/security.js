@@ -8,13 +8,8 @@ import { MAX_STORAGE_VALUE_LENGTH } from './constants.js';
 
 const SAFE_KEYS = new Set([
   'python-web-theme',
-  'python-web-progress',
-  'python-web-course-progress',
   'python-repl-history',
-  'python-lessons-completed',
-  'python-lesson-badges',
   'sw-version',
-  'python-web-quiz-scores',
   'python-web-dragdrop-completed',
   'python-web-scroll-positions',
 ]);

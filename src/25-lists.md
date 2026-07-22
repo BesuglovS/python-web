@@ -56,6 +56,6 @@ popped = nums.pop()   # 6 — удалить и вернуть последни�
 popped = nums.pop(0)  # 0 — удалить и вернуть по индексу
 nums.sort()           # сортировка
 nums.reverse()        # разворот
-print(nums.index(4))  # 2 — индекс элемента
+print(nums.index(4))  # 1 — индекс элемента
 print(nums.count(2))  # 1 — количество вхождений
 ```

@@ -79,7 +79,7 @@ print(status)  # Взрослый
 
 ## Операторы сравнения
 
-<table><tbody><tr><th>Оператор</th><th>Значение</th><th>Пример</th></tr><tr><td><code>==</code></td><td>Равно</td><td><code>5 == 5</code> > True</td></tr><tr><td><code>!=</code></td><td>Не равно</td><td><code>5 != 3</code> > True</td></tr><tr><td><code>></code></td><td>Больше</td><td><code>5 > 3</code> > True</td></tr><tr><td><code><</code></td><td>Меньше</td><td><code>5 < 3</code> > False</td></tr><tr><td><code>>=</code></td><td>Больше или равно</td><td><code>5 >= 5</code> > True</td></tr><tr><td><code><=</code></td><td>Меньше или равно</td><td><code>5 <= 3</code> > False</td></tr></tbody></table>
+<table><tbody><tr><th>Оператор</th><th>Значение</th><th>Пример</th></tr><tr><td><code>==</code></td><td>Равно</td><td><code>5 == 5</code> → True</td></tr><tr><td><code>!=</code></td><td>Не равно</td><td><code>5 != 3</code> → True</td></tr><tr><td><code>></code></td><td>Больше</td><td><code>5 > 3</code> → True</td></tr><tr><td><code><</code></td><td>Меньше</td><td><code>5 < 3</code> → False</td></tr><tr><td><code>>=</code></td><td>Больше или равно</td><td><code>5 >= 5</code> → True</td></tr><tr><td><code><=</code></td><td>Меньше или равно</td><td><code>5 <= 3</code> → False</td></tr></tbody></table>
 
 ## Распространённые ошибки с отступами
 
