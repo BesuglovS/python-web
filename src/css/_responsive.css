@@ -149,6 +149,19 @@
     padding: 5px 10px;
   }
 
+  .badges-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .achievements-modal {
+    max-width: 95%;
+  }
+
+  .achievements-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .note, .tip, .warning {
     font-size: 0.88em;
     padding: 10px 14px;
@@ -225,6 +238,10 @@
   .badges-grid {
     flex-direction: column;
     align-items: center;
+  }
+
+  .achievements-grid {
+    grid-template-columns: 1fr;
   }
 
   .badge-item {

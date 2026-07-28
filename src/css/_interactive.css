@@ -274,69 +274,37 @@ label {
 }
 
 /* ─── Badges Section ─── */
-.badges-section {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: var(--card-bg);
-  border-radius: 12px;
-  border: 1px solid var(--border);
+.badges-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 0.75rem;
 }
 
 .badges-title {
   font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
   color: var(--text);
+  margin: 0;
 }
 
-.badges-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.badge-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: 20px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  font-size: 0.82rem;
-  cursor: default;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-
-.badge-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-.badge-item.earned {
-  background: linear-gradient(135deg, #fff9c4, #ffe082);
-  border-color: #fdd835;
-}
-
-.dark .badge-item.earned {
-  background: linear-gradient(135deg, #3e2723, #4e342e);
-  border-color: #ff8f00;
-}
-
-.badge-icon {
-  font-size: 1.1rem;
-}
-
-.badge-name {
+.badges-all-btn {
+  padding: 5px 14px;
+  background: var(--primary-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  font-size: 0.78em;
   font-weight: 600;
-  color: var(--text);
+  cursor: pointer;
+  transition: opacity var(--transition), transform var(--transition);
+  white-space: nowrap;
 }
 
-.badge-summary {
-  margin-top: 0.5rem;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  text-align: center;
+.badges-all-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
 }
 
 /* ─── Quiz Touch Optimizations ─── */

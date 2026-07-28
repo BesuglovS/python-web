@@ -29,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $rows = $stmt->fetchAll();
 
     $badgeIds = array_map(function ($r) { return $r['badge_id']; }, $rows);
-    jsonResponse(['badges' => $badgeIds]);
+    $progress = computeAllBadgeProgress($db, $userId);
+    jsonResponse(['badges' => $badgeIds, 'progress' => $progress]);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'check') {
         $earned = recalculateBadges($db, $userId);
-        jsonResponse(['badges' => $earned]);
+        $progress = computeAllBadgeProgress($db, $userId);
+        jsonResponse(['badges' => $earned, 'progress' => $progress]);
     }
 
     if ($action === 'increment_code_runs') {
@@ -268,4 +270,79 @@ function everyLesson(array $completed, array $lessons): bool {
         if (!in_array($n, $completed)) return false;
     }
     return true;
+}
+
+function countCompleted(array $completed, array $lessons): int {
+    $count = 0;
+    foreach ($lessons as $n) {
+        if (in_array($n, $completed)) $count++;
+    }
+    return $count;
+}
+
+function computeAllBadgeProgress(PDO $db, int $userId): array {
+    $progress = getCompletedProgress($db, $userId);
+    $runCount = getRunCount($db, $userId);
+
+    $completed = $progress['completed'];
+    $quizScores = $progress['quizScores'];
+    $dates = $progress['dates'];
+    $totalCompleted = count($completed);
+
+    $result = [];
+
+    $result['first_complete'] = ['current' => in_array(1, $completed) ? 1 : 0, 'required' => 1];
+    $result['first_steps'] = ['current' => countCompleted($completed, [1,2,3,4,5]), 'required' => 5];
+    $result['condition_master'] = ['current' => countCompleted($completed, [9,10,11,12,13]), 'required' => 5];
+    $result['string_ninja'] = ['current' => countCompleted($completed, [7,14,15,16]), 'required' => 4];
+    $result['loop_hero'] = ['current' => countCompleted($completed, [17,18,19,20,21]), 'required' => 5];
+    $result['data_wizard'] = ['current' => countCompleted($completed, [25,26,27,28,29,30,31]), 'required' => 7];
+    $result['halfway'] = ['current' => $totalCompleted, 'required' => 25];
+    $result['func_guru'] = ['current' => countCompleted($completed, [22,23,24]), 'required' => 3];
+    $result['module_explorer'] = ['current' => countCompleted($completed, [35,36,37,38,39,40]), 'required' => 6];
+    $result['error_handler'] = ['current' => in_array(11, $completed) ? 1 : 0, 'required' => 1];
+    $result['oop_master'] = ['current' => countCompleted($completed, [41,42]), 'required' => 2];
+    $result['file_master'] = ['current' => countCompleted($completed, [32,33,34]), 'required' => 3];
+    $result['tool_master'] = ['current' => countCompleted($completed, [47,48,49,50]), 'required' => 4];
+    $result['intermediate'] = ['current' => countCompleted($completed, [21,25,30]), 'required' => 3];
+    $result['all_lessons'] = ['current' => $totalCompleted, 'required' => 50];
+
+    // speedrun: count lessons completed today
+    $todayCount = 0;
+    $today = date('Y-m-d');
+    foreach ($dates as $dateStr) {
+        if ($dateStr === $today) $todayCount++;
+    }
+    $result['speedrun'] = ['current' => $todayCount, 'required' => 3];
+
+    // quiz scores
+    $quizScore = isset($quizScores[-1]) ? $quizScores[-1] : 0;
+    $result['quiz_champion'] = ['current' => $quizScore, 'required' => 90];
+    $result['quiz_perfect'] = ['current' => $quizScore, 'required' => 100];
+
+    // streak: current consecutive day count
+    $currentStreak = 0;
+    if (count($dates) > 0) {
+        $uniqueDates = array_unique($dates);
+        rsort($uniqueDates);
+        $todayDt = new DateTime($today);
+        $expectedDt = clone $todayDt;
+        foreach ($uniqueDates as $d) {
+            $dDt = new DateTime($d);
+            $diff = $expectedDt->diff($dDt)->days;
+            if ($diff === 0 && $dDt <= $todayDt) {
+                $currentStreak++;
+                $expectedDt->modify('-1 day');
+            } elseif ($diff === 1 && $dDt < $expectedDt) {
+                $currentStreak++;
+                $expectedDt->modify('-1 day');
+            } else {
+                break;
+            }
+        }
+    }
+    $result['streak_7'] = ['current' => $currentStreak, 'required' => 7];
+    $result['repl_10'] = ['current' => $runCount, 'required' => 10];
+
+    return $result;
 }
