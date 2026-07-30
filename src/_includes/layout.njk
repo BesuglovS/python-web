@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru https://auth.nayanovaacademy.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests" />
     <meta name="description" content="{% if description %}{{ description }}{% elif subtitle %}Урок {{ lesson }}: {{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
     <meta property="og:title" content="{{ lesson }}. {{ title }} — Python: основы" />
     <meta property="og:description" content="{% if description %}{{ description }}{% elif subtitle %}{{ subtitle }}{% else %}Урок {{ lesson }} курса Python{% endif %}" />
