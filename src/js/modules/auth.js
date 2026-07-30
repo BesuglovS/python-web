@@ -20,7 +20,7 @@ async function checkAuth() {
       return data.user;
     }
   } catch (_e) {
-    // Auth service unavailable — treat as anonymous
+    console.warn('Auth check failed — treating as anonymous');
   }
   return null;
 }

@@ -12,6 +12,7 @@ const SAFE_KEYS = new Set([
   'sw-version',
   'python-web-dragdrop-completed',
   'python-web-scroll-positions',
+  'python-web-course-progress',
 ]);
 
 function safeGetItem(key) {
@@ -64,7 +65,7 @@ function safeRemoveItem(key) {
 // ─── Helper: convert progress array to lesson-number lookup ───
 // Progress is stored as ["01-history.html", "02-variables.html", ...]
 // This builds {"1": true, "2": true, ...} for badge checks.
-function _buildLessonLookup(progress) {
+export function buildLessonLookup(progress) {
   const lookup = {};
   if (!progress) return lookup;
   const arr = Array.isArray(progress) ? progress : [];
@@ -79,5 +80,4 @@ export {
   safeGetItem,
   safeSetItem,
   safeRemoveItem,
-  _buildLessonLookup,
 };

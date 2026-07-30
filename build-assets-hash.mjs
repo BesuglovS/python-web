@@ -81,8 +81,13 @@ for (const asset of ASSETS) {
     }
   }
 
-  copyFileSync(src, join(ROOT, hashed));
-  console.log(`✔ ${asset} → ${hashed}`);
+  try {
+    copyFileSync(src, join(ROOT, hashed));
+    console.log(`✔ ${asset} → ${hashed}`);
+  } catch (e) {
+    console.error(`✖ Failed to copy ${asset}: ${e.message}`);
+    process.exit(1);
+  }
 }
 
 // ─── 2. Обновляем ссылки во всех собранных файлах ───

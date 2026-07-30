@@ -43,14 +43,22 @@ function getScrollPosition(pageName) {
   }
 }
 
+function tryParseScrollData(raw) {
+  try {
+    return raw ? JSON.parse(raw) : {};
+  } catch (_e) {
+    return {};
+  }
+}
+
 function saveScrollPosition(pageName, y) {
   try {
     const raw = safeGetItem(SCROLL_STORAGE_KEY);
-    const positions = raw ? JSON.parse(raw) : {};
+    const positions = tryParseScrollData(raw);
     positions[pageName] = y;
     safeSetItem(SCROLL_STORAGE_KEY, JSON.stringify(positions));
   } catch (_e) {
-    // ignore
+    console.warn('Failed to save scroll position');
   }
 }
 

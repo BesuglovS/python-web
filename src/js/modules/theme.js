@@ -56,18 +56,25 @@ function updateThemeToggleIcon(saved) {
   updateThemeIcon(btn, saved || 'auto', getSystemTheme());
 }
 
+let _prefersDarkListener = null;
+
 export function initThemeSystem() {
   const saved = getSavedTheme();
   applyTheme(getEffectiveTheme());
   updateThemeToggleIcon(saved || 'auto');
 
   if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    _prefersDarkListener = function () {
       if (!getSavedTheme()) {
         applyTheme(getSystemTheme());
         updateThemeToggleIcon('auto');
       }
-    });
+    };
+    mq.addEventListener('change', _prefersDarkListener);
+    window.__mqCleanup = function () {
+      mq.removeEventListener('change', _prefersDarkListener);
+    };
   }
 
   // Expose for other modules

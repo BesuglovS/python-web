@@ -186,19 +186,25 @@ function checkOrderExercise(container) {
   }
 }
 
+function tryParseDragDropData(raw) {
+  try {
+    return raw ? JSON.parse(raw) : {};
+  } catch (_e) {
+    return {};
+  }
+}
+
 function markDragDropCompleted() {
   const lessonId = document.body.getAttribute('data-lesson');
   if (!lessonId) return;
 
   try {
-    let completed = {};
-    const raw = safeGetItem(DRAG_DROP_STORAGE_KEY);
-    if (raw) completed = JSON.parse(raw);
+    const completed = tryParseDragDropData(safeGetItem(DRAG_DROP_STORAGE_KEY));
     if (!completed[lessonId]) {
       completed[lessonId] = Date.now();
       safeSetItem(DRAG_DROP_STORAGE_KEY, JSON.stringify(completed));
     }
   } catch (_e) {
-    // ignore
+    console.warn('Failed to save drag-drop progress');
   }
 }

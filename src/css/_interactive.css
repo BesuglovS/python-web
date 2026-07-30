@@ -233,6 +233,8 @@ label {
 
 .lesson-complete-toggle {
   text-align: center;
+  flex: 0 0 100%;
+  order: 3;
 }
 
 .complete-label {

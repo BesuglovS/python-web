@@ -4,6 +4,9 @@
  * Подключается через require_once в run.php и repl.php.
  */
 
+error_reporting(0);
+ini_set('display_errors', '0');
+
 // ─── Конфигурация (читает из env, с фоллбэками на дефолты) ───
 define('SANDBOX_MAX_CODE_LENGTH', (int)(getenv('SANDBOX_MAX_CODE_LENGTH') ?: 65536));
 define('SANDBOX_MAX_INPUT_LENGTH', (int)(getenv('SANDBOX_MAX_INPUT_LENGTH') ?: 102400));
@@ -215,11 +218,16 @@ function sandbox_read_input(): array {
 
 /**
  * Возвращает системную команду для запуска Python.
+ * Приоритет: SANDBOX_PYTHON_CMD из env, затем 'python3' на Unix, 'py -3' на Windows.
  *
- * @return string 'python' на Windows, 'python3' на Unix
+ * @return string команда для запуска Python
  */
 function sandbox_python_cmd(): string {
-    return DIRECTORY_SEPARATOR === '\\' ? 'python' : 'python3';
+    $envCmd = getenv('SANDBOX_PYTHON_CMD');
+    if ($envCmd !== false && $envCmd !== '') {
+        return $envCmd;
+    }
+    return DIRECTORY_SEPARATOR === '\\' ? 'py -3' : 'python3';
 }
 
 /**
@@ -272,9 +280,8 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
         }
 
         if (strlen($stdinData) > 0) {
-            $written = @fwrite($pipes[0], $stdinData);
-            if ($written === false || $written < strlen($stdinData)) {
-                // Partial write or failure — close and let process handle incomplete input
+            if (@fwrite($pipes[0], $stdinData) === false) {
+                // Write failure — close and let process handle incomplete input
             }
         }
         fclose($pipes[0]);

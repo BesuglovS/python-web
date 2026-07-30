@@ -8,6 +8,40 @@
 import { runSandbox } from './sandbox-client.js';
 import { highlightPythonFallback } from './syntax-highlight.js';
 
+function showCopied(btn) {
+  btn.textContent = '✓ Скопировано';
+  btn.classList.add('copied');
+  setTimeout(function () {
+    btn.textContent = '📋 Копировать';
+    btn.classList.remove('copied');
+  }, 2000);
+}
+
+function handleCodeTabKey(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const start = e.target.selectionStart;
+    const end = e.target.selectionEnd;
+    const value = e.target.value;
+    if (value !== undefined) {
+      // Это textarea — вставляем табуляцию
+      e.target.value = value.substring(0, start) + '    ' + value.substring(end);
+      e.target.selectionStart = e.target.selectionEnd = start + 4;
+    } else {
+      // Это contentEditable — вставляем 4 пробела
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount) {
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(document.createTextNode('    '));
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }
+  }
+}
+
 /**
  * Re-highlight a code block
  * @param {HTMLElement} preEl - The pre element containing code
@@ -60,7 +94,7 @@ export function initCodeToolbar() {
         try {
           ok = document.execCommand('copy');
         } catch (_e) {
-          /* ignore */
+          console.warn('Fallback copy failed');
         }
         document.body.removeChild(ta);
         if (ok) showCopied(copyBtn);
@@ -77,15 +111,6 @@ export function initCodeToolbar() {
         fallbackCopy();
       }
     });
-
-    function showCopied(btn) {
-      btn.textContent = '✓ Скопировано';
-      btn.classList.add('copied');
-      setTimeout(function () {
-        btn.textContent = '📋 Копировать';
-        btn.classList.remove('copied');
-      }, 2000);
-    }
 
     toolbar.appendChild(copyBtn);
 
@@ -107,10 +132,12 @@ export function initCodeToolbar() {
         editBtn.classList.add('active');
         editBtn.textContent = '✓ Готово';
         pre.focus();
+        pre.addEventListener('keydown', handleCodeTabKey);
       } else {
         pre.classList.remove('editing');
         editBtn.classList.remove('active');
         editBtn.textContent = '✎ Ред.';
+        pre.removeEventListener('keydown', handleCodeTabKey);
         reHighlight(pre);
       }
     });
@@ -124,6 +151,7 @@ export function initCodeToolbar() {
       editBtn.classList.add('active');
       editBtn.textContent = '✓ Готово';
       pre.focus();
+      pre.addEventListener('keydown', handleCodeTabKey);
     });
 
     toolbar.appendChild(editBtn);

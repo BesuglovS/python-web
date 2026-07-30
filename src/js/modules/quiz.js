@@ -5,8 +5,9 @@
  * Provides interactive quizzes for each lesson with full accessibility
  */
 
-import { saveProgress, checkBadges } from './api-client.js';
+import { saveProgress, checkBadges, checkContestProgress } from './api-client.js';
 import { updateLocalProgress } from './progress.js';
+import { lessonNumberFromPage } from './utils.js';
 
 const _QUIZ_ALLOWED_TAGS = /^<(\/)?(code|br|b|i|em|strong)(\s[^>]*)?>$/;
 
@@ -17,19 +18,10 @@ function sanitizeHtml(html) {
   });
 }
 
-function lessonNumberFromPage() {
-  const attr = document.body.getAttribute('data-lesson');
-  if (attr !== null) {
-    const num = parseInt(attr, 10);
-    if (!isNaN(num)) return num;
-  }
-  return null;
-}
-
-function syncQuizToServer(lessonNumber, score) {
+function syncQuizToServer(lessonNumber, score, completed) {
   if (lessonNumber === null) return;
-  saveProgress(lessonNumber, true, score).catch(function () {
-    // Silent fail
+  saveProgress(lessonNumber, completed !== undefined ? completed : true, score).catch(function (err) {
+    console.warn('Quiz progress sync failed:', err);
   });
 }
 
@@ -210,9 +202,14 @@ export function initQuizSystem() {
       function showResults() {
         const scorePct = Math.round((state.correct / state.total) * 100);
         const icon = scorePct === 100 ? '\ud83e\udd47' : scorePct >= 50 ? '\ud83d\udc4d' : '\ud83d\udcda';
+        const lessonNumber = lessonNumberFromPage();
+        const contestId = window.THEORY_CONTESTS ? window.THEORY_CONTESTS[lessonNumber] : null;
+        const hasContest = !!contestId;
         const message =
           scorePct === 100
-            ? '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0443\u0441\u0432\u043e\u0438\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b. \u0423\u0440\u043e\u043a \u043e\u0442\u043c\u0435\u0447\u0435\u043d \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439!'
+            ? hasContest
+              ? '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0443\u0441\u0432\u043e\u0438\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b. \u0422\u0435\u043f\u0435\u0440\u044c \u0440\u0435\u0448\u0438 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430!'
+              : '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0443\u0441\u0432\u043e\u0438\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b. \u0423\u0440\u043e\u043a \u043e\u0442\u043c\u0435\u0447\u0435\u043d \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439!'
             : scorePct >= 50
               ? '\u0425\u043e\u0440\u043e\u0448\u043e! \u041d\u043e \u0435\u0441\u0442\u044c \u043a\u0443\u0434\u0430 \u0440\u0430\u0441\u0442\u0438 \u2014 \u043f\u043e\u0432\u0442\u043e\u0440\u0438 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b.'
               : '\u0421\u0442\u043e\u0438\u0442 \u043f\u0435\u0440\u0435\u0447\u0438\u0442\u0430\u0442\u044c \u0443\u0440\u043e\u043a \u0438 \u043f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c \u0441\u043d\u043e\u0432\u0430.';
@@ -246,33 +243,92 @@ export function initQuizSystem() {
 
         quizContainer.appendChild(resultsDiv);
 
-          const lessonNumber = lessonNumberFromPage();
-
-          // Update server and in-memory state
-          syncQuizToServer(lessonNumber, scorePct);
-          updateLocalProgress(lessonNumber, scorePct === 100, scorePct);
-
           if (scorePct === 100) {
-            const completeEl = document.querySelector('.lesson-complete-toggle');
-            if (completeEl) {
-              completeEl.textContent = '';
-              const label = document.createElement('label');
-              label.className = 'complete-label';
+            if (contestId) {
+              syncQuizToServer(lessonNumber, scorePct, false);
+              updateLocalProgress(lessonNumber, false, scorePct);
 
-              const checkbox = document.createElement('input');
-              checkbox.type = 'checkbox';
-              checkbox.className = 'complete-checkbox';
-              checkbox.checked = true;
-              label.appendChild(checkbox);
-              label.appendChild(document.createTextNode(' '));
+              checkContestProgress(contestId).then(function (contestData) {
+                if (contestData && contestData.completed) {
+                  updateLocalProgress(lessonNumber, true, scorePct);
+                  saveProgress(lessonNumber, true, undefined);
 
-              const span = document.createElement('span');
-              span.className = 'complete-text';
-              span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
-              label.appendChild(span);
+                  const completeEl = document.querySelector('.lesson-complete-toggle');
+                  if (completeEl) {
+                    completeEl.textContent = '';
+                    const label = document.createElement('label');
+                    label.className = 'complete-label';
 
-              completeEl.appendChild(label);
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'complete-checkbox';
+                    checkbox.checked = true;
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(' '));
+
+                    const span = document.createElement('span');
+                    span.className = 'complete-text';
+                    span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
+                    label.appendChild(span);
+
+                    completeEl.appendChild(label);
+                  }
+
+                  checkBadges();
+                } else {
+                  const completeEl = document.querySelector('.lesson-complete-toggle');
+                  if (completeEl) {
+                    completeEl.textContent = '';
+                    const msg = document.createElement('div');
+                    msg.className = 'quiz-required-msg';
+                    const line1 = document.createTextNode('\ud83c\udfc6 \u041a\u0432\u0438\u0437 \u043f\u0440\u043e\u0439\u0434\u0435\u043d!');
+                    const br = document.createElement('br');
+                    const line2 = document.createElement('span');
+                    line2.appendChild(document.createTextNode('\u0420\u0435\u0448\u0438 \u0432\u0441\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c'));
+                    msg.appendChild(line1);
+                    msg.appendChild(br);
+                    msg.appendChild(line2);
+                    completeEl.appendChild(msg);
+                  }
+                }
+              }).catch(function () {
+                const completeEl = document.querySelector('.lesson-complete-toggle');
+                if (completeEl) {
+                  completeEl.textContent = '';
+                  const msg = document.createElement('div');
+                  msg.className = 'quiz-required-msg';
+                  msg.textContent = '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u043f\u043e\u0437\u0436\u0435.';
+                  completeEl.appendChild(msg);
+                }
+              });
+            } else {
+              syncQuizToServer(lessonNumber, scorePct);
+              updateLocalProgress(lessonNumber, true, scorePct);
+
+              const completeEl = document.querySelector('.lesson-complete-toggle');
+              if (completeEl) {
+                completeEl.textContent = '';
+                const label = document.createElement('label');
+                label.className = 'complete-label';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'complete-checkbox';
+                checkbox.checked = true;
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(' '));
+
+                const span = document.createElement('span');
+                span.className = 'complete-text';
+                span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
+                label.appendChild(span);
+
+                completeEl.appendChild(label);
+              }
             }
+          } else {
+            syncQuizToServer(lessonNumber, scorePct);
+            updateLocalProgress(lessonNumber, false, scorePct);
           }
 
           // Check badges after quiz

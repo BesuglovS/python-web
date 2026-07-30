@@ -78,14 +78,15 @@ describe('showSandboxResult', () => {
   });
 });
 
-describe('_buildLessonLookup (from security module)', () => {
+describe('buildLessonLookup (from security module)', () => {
   const securitySrc = fs.readFileSync(
     path.join(__dirname, '..', 'src', 'js', 'config', 'security.js'),
     'utf-8',
   );
   const stripped = securitySrc
     .replace(/^import.*from.*constants\.js[\s\S]*?;/m, '')
-    .replace(/^export\s*\{[\s\S]*?\};?\s*$/m, '');
+    .replace(/^export\s*\{[\s\S]*?\};?\s*$/m, '')
+    .replace(/^export\s+function\s+(\w+)/gm, 'function $1');
 
   function loadBuildLessonLookup() {
     const fn = new Function(
@@ -95,7 +96,7 @@ describe('_buildLessonLookup (from security module)', () => {
       `
       var MAX_STORAGE_VALUE_LENGTH = 102400;
       ${stripped}
-      return _buildLessonLookup;
+      return buildLessonLookup;
       `,
     );
     return fn(

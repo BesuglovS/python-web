@@ -6,9 +6,9 @@
  * All data keyed by lesson number (integer), no slugs or localStorage.
  */
 
-import { apiGet, saveProgress, checkBadges } from './api-client.js';
-import { createMetaInfo, createContestBadge } from './utils.js';
-import { TOTAL_LESSONS, COMPLEXITY_LABELS, LESSON_META } from '../config/courseData.js';
+import { apiGet, saveProgress, checkBadges, checkContestProgress } from './api-client.js';
+import { createMetaInfo, createContestBadge, lessonNumberFromPage } from './utils.js';
+import { TOTAL_LESSONS, COMPLEXITY_LABELS, LESSON_META, THEORY_CONTESTS } from '../config/courseData.js';
 
 const PROGRESS_URL = 'sandbox/progress.php';
 
@@ -29,7 +29,7 @@ export async function loadProgressFromServer() {
       }
     }
   } catch (_e) {
-    // Server unavailable — progress stays empty
+    console.warn('Progress server unavailable — starting empty');
   }
 }
 
@@ -59,19 +59,10 @@ export function updateLocalProgress(lessonNumber, completed, quizScore) {
   });
 }
 
-function lessonNumberFromPage() {
-  const attr = document.body.getAttribute('data-lesson');
-  if (attr !== null) {
-    const num = parseInt(attr, 10);
-    if (!isNaN(num)) return num;
-  }
-  return null;
-}
-
 function syncToServer(lessonNumber, completed, quizScore) {
   if (lessonNumber === null) return;
-  saveProgress(lessonNumber, completed, quizScore).catch(function () {
-    // Silent fail — offline or network error
+  saveProgress(lessonNumber, completed, quizScore).catch(function (err) {
+    console.warn('Progress sync failed (offline?):', err);
   });
 }
 
@@ -86,6 +77,67 @@ export function initProgressTracking() {
   renderIndexPage();
 }
 
+function buildCompleteToggle(container, lessonNum, completed) {
+  container.className = 'lesson-complete-toggle';
+
+  const label = document.createElement('label');
+  label.className = 'complete-label';
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.className = 'complete-checkbox';
+  checkbox.checked = completed;
+  label.appendChild(checkbox);
+  label.appendChild(document.createTextNode(' '));
+
+  const span = document.createElement('span');
+  span.className = 'complete-text';
+  span.textContent = completed ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d' : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
+  label.appendChild(span);
+
+  label.querySelector('input').addEventListener('change', function (e) {
+    const isChecked = e.target.checked;
+    updateLocalProgress(lessonNum, isChecked, undefined);
+    syncToServer(lessonNum, isChecked, undefined);
+    span.textContent = isChecked ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d' : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
+    if (isChecked) checkBadges();
+  });
+
+  container.appendChild(label);
+}
+
+function buildContestRequiredMsg(container) {
+  container.className = 'lesson-complete-toggle';
+  const msg = document.createElement('div');
+  msg.className = 'quiz-required-msg';
+  const line1 = document.createTextNode('\ud83c\udfc6 \u041a\u0432\u0438\u0437 \u043f\u0440\u043e\u0439\u0434\u0435\u043d!');
+  const br = document.createElement('br');
+  const line2 = document.createElement('span');
+  line2.appendChild(document.createTextNode('\u0420\u0435\u0448\u0438 \u0432\u0441\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c'));
+  msg.appendChild(line1);
+  msg.appendChild(br);
+  msg.appendChild(line2);
+  container.appendChild(msg);
+}
+
+function buildQuizRequiredMsg(container) {
+  container.className = 'lesson-complete-toggle';
+  const msg = document.createElement('div');
+  msg.className = 'quiz-required-msg';
+  const line1 = document.createTextNode('\ud83d\udd12 \u0427\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c,');
+  const br = document.createElement('br');
+  const line2 = document.createElement('span');
+  line2.appendChild(document.createTextNode('\u043d\u0430\u0431\u0435\u0440\u0438\u0442\u0435 '));
+  const strong100 = document.createElement('strong');
+  strong100.textContent = '100%';
+  line2.appendChild(strong100);
+  line2.appendChild(document.createTextNode(' \u0432 \u043a\u0432\u0438\u0437\u0435'));
+  msg.appendChild(line1);
+  msg.appendChild(br);
+  msg.appendChild(line2);
+  container.appendChild(msg);
+}
+
 function renderLessonPage() {
   const lessonNum = lessonNumberFromPage();
   if (lessonNum === null) return;
@@ -96,61 +148,20 @@ function renderLessonPage() {
   const completed = isLessonCompleted(lessonNum);
   const quizScore = getQuizScore(lessonNum);
   const quizPassed = quizScore === 100;
-  const showToggle = completed || quizPassed;
+
+  const contestId = THEORY_CONTESTS ? THEORY_CONTESTS[lessonNum] : null;
 
   const toggleDiv = document.createElement('div');
   toggleDiv.className = 'lesson-complete-toggle';
 
-  if (showToggle) {
-    if (quizPassed && !completed) {
-      const msg = document.createElement('div');
-      msg.className = 'complete-label';
-      const span = document.createElement('span');
-      span.className = 'complete-text';
-      span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d (\u043a\u0432\u0438\u0437)';
-      msg.appendChild(span);
-      toggleDiv.appendChild(msg);
-    } else {
-      const label = document.createElement('label');
-      label.className = 'complete-label';
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'complete-checkbox';
-      checkbox.checked = completed;
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(' '));
-
-      const span = document.createElement('span');
-      span.className = 'complete-text';
-      span.textContent = completed ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d' : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
-      label.appendChild(span);
-
-      label.querySelector('input').addEventListener('change', function (e) {
-        const isChecked = e.target.checked;
-        updateLocalProgress(lessonNum, isChecked, undefined);
-        syncToServer(lessonNum, isChecked, undefined);
-        span.textContent = isChecked ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d' : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
-        if (isChecked) checkBadges();
-      });
-
-      toggleDiv.appendChild(label);
-    }
+  if (completed) {
+    buildCompleteToggle(toggleDiv, lessonNum, true);
+  } else if (quizPassed && !contestId) {
+    buildCompleteToggle(toggleDiv, lessonNum, false);
+  } else if (quizPassed && contestId) {
+    toggleDiv.textContent = '\u23f3 \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430...';
   } else {
-    const msg = document.createElement('div');
-    msg.className = 'quiz-required-msg';
-    const line1 = document.createTextNode('\ud83d\udd12 \u0427\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c,');
-    const br = document.createElement('br');
-    const line2 = document.createElement('span');
-    line2.appendChild(document.createTextNode('\u043d\u0430\u0431\u0435\u0440\u0438\u0442\u0435 '));
-    const strong100 = document.createElement('strong');
-    strong100.textContent = '100%';
-    line2.appendChild(strong100);
-    line2.appendChild(document.createTextNode(' \u0432 \u043a\u0432\u0438\u0437\u0435'));
-    msg.appendChild(line1);
-    msg.appendChild(br);
-    msg.appendChild(line2);
-    toggleDiv.appendChild(msg);
+    buildQuizRequiredMsg(toggleDiv);
   }
 
   const nextLink = footer.querySelector('.next-link');
@@ -158,6 +169,24 @@ function renderLessonPage() {
     footer.insertBefore(toggleDiv, nextLink);
   } else {
     footer.appendChild(toggleDiv);
+  }
+
+  if (quizPassed && contestId && !completed) {
+    checkContestProgress(contestId).then(function (contestData) {
+      if (contestData && contestData.completed) {
+        updateLocalProgress(lessonNum, true, undefined);
+        syncToServer(lessonNum, true, undefined);
+        toggleDiv.textContent = '';
+        buildCompleteToggle(toggleDiv, lessonNum, true);
+        checkBadges();
+      } else {
+        toggleDiv.textContent = '';
+        buildContestRequiredMsg(toggleDiv);
+      }
+    }).catch(function () {
+      toggleDiv.textContent = '';
+      buildContestRequiredMsg(toggleDiv);
+    });
   }
 }
 

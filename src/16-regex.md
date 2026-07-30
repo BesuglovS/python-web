@@ -353,7 +353,7 @@ phone_pattern = re.compile(r"""
 pattern = re.compile(r'python', re.IGNORECASE | re.MULTILINE)
 ```
 
-## Lookahead и Lookbehind (опережающая и ретроспективная проверки)
+## Lookahead и Lookbehind (опережающая и ретроспективная проверка)
 
 Проверяют, что перед или после совпадения находится определённый шаблон, но **не включают его в результат**:
 

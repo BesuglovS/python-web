@@ -3,7 +3,7 @@
 function initMindmap() {
   const mmContainer = document.getElementById('mm-container');
   if (!mmContainer) return;
-  const sectionIcons = ['📖', '📚', '🔀', '🔁', '🔤', '🔄', '⚙️', '🗂️', 'λ', '💾', '🧰', '🏗️', '🚀', '🌐'];
+  const SECTION_ICONS = ['📖', '📚', '🔀', '🔁', '🔤', '🔄', '⚙️', '🗂️', 'λ', '💾', '🧰', '🏗️', '🚀', '🌐'];
 
   fetch('lessons.json')
     .then(function (response) {
@@ -17,7 +17,7 @@ function initMindmap() {
       const fragment = document.createDocumentFragment();
 
       sections.forEach(function (section, idx) {
-        const icon = sectionIcons[idx] || '📖';
+        const icon = idx < SECTION_ICONS.length ? SECTION_ICONS[idx] : '📖';
         const lessons = section.lessons;
         if (!lessons || !lessons.length) return;
 

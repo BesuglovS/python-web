@@ -12,6 +12,15 @@ import {
 } from '../config/courseData.js';
 import { MAX_INPUT_LENGTH } from '../config/constants.js';
 
+export function lessonNumberFromPage() {
+  const attr = document.body.getAttribute('data-lesson');
+  if (attr !== null) {
+    const num = parseInt(attr, 10);
+    if (!isNaN(num)) return num;
+  }
+  return null;
+}
+
 /**
  * Sanitize user input (strip HTML, limit length)
  * @param {string} text - Input text to sanitize

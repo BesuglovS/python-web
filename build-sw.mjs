@@ -40,7 +40,6 @@ const ALWAYS_INCLUDE = [
   '/500.html',
   '/style.css',
   '/script.js',
-  '/config.js',
   '/repl.js',
   '/mindmap.js',
   '/highlight-theme.min.css',

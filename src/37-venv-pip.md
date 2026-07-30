@@ -94,7 +94,7 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
-> **💡 Совет:** **Добавьте `venv/` в `.gitignore`** — виртуальное окружение не должно попадать в Git. В репозиторий кладите только `requirements.txt`.
+> **💡 Совет:** добавьте `venv/` в `.gitignore` — виртуальное окружение не должно попадать в Git. В репозиторий кладите только `requirements.txt`.
 
 ## Популярные библиотеки для старта
 

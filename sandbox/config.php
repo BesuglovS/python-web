@@ -4,6 +4,9 @@
  * Читает переменные окружения, стартует сессию, определяет хелперы.
  */
 
+error_reporting(0);
+ini_set('display_errors', '0');
+
 define('PYTHON_BASE_URL', getenv('SANDBOX_BASE_URL') ?: 'https://python.nayanovaacademy.ru');
 define('PYTHON_DB_PATH', __DIR__ . '/../data/python.db');
 define('AUTH_URL', 'https://auth.nayanovaacademy.ru');

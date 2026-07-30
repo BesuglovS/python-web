@@ -3,22 +3,33 @@
  * Эндпоинт для проверки авторизации через auth-web
  * Вызывается из JavaScript python-web
  */
+error_reporting(0);
+ini_set('display_errors', '0');
+
 header('Content-Type: application/json; charset=utf-8');
 
 $allowedOrigin = 'https://python.nayanovaacademy.ru';
+$allowedHost = parse_url($allowedOrigin, PHP_URL_HOST);
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $referer = $_SERVER['HTTP_REFERER'] ?? '';
 $refererHost = parse_url($referer, PHP_URL_HOST) ?? '';
 
-if ($origin !== '' && $origin !== $allowedOrigin) {
+function authDenied(): void {
     http_response_code(403);
     echo json_encode(['error' => 'Forbidden']);
     exit;
 }
-if ($origin === '' && $refererHost !== parse_url($allowedOrigin, PHP_URL_HOST)) {
-    http_response_code(403);
-    echo json_encode(['error' => 'Forbidden']);
-    exit;
+
+// Проверка Origin — строгое совпадение с доверенным
+if ($origin !== '') {
+    if ($origin !== $allowedOrigin) {
+        authDenied();
+    }
+} else {
+    // Без Origin (same-origin fetch) проверяем Referer
+    if ($refererHost !== $allowedHost) {
+        authDenied();
+    }
 }
 
 header('Access-Control-Allow-Origin: ' . $allowedOrigin);

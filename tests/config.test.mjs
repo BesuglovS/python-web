@@ -19,13 +19,14 @@ function loadSecurity() {
   const src = fs.readFileSync(path.join(configDir, 'security.js'), 'utf-8');
   const stripped = src
     .replace(/^import.*from.*constants\.js[\s\S]*?;/m, '')
-    .replace(/^export\s*\{[\s\S]*?\};?\s*$/m, '');
+    .replace(/^export\s*\{[\s\S]*?\};?\s*$/m, '')
+    .replace(/^export\s+function\s+(\w+)/gm, 'function $1');
   const ls = createLocalStorage();
   const ctx = { localStorage: ls, console: { warn: () => {} }, CustomEvent: undefined, document: { dispatchEvent: () => {} }, MAX_STORAGE_VALUE_LENGTH: 102400 };
   const fn = new Function('localStorage', 'console', 'document', 'CustomEvent', `
     var MAX_STORAGE_VALUE_LENGTH = 102400;
     ${stripped};
-    return { SAFE_KEYS, safeGetItem, safeSetItem, safeRemoveItem, _buildLessonLookup };
+    return { SAFE_KEYS, safeGetItem, safeSetItem, safeRemoveItem, buildLessonLookup };
   `);
   return { ...fn(ctx.localStorage, ctx.console, ctx.document, ctx.CustomEvent), _ls: ls };
 }
@@ -76,22 +77,22 @@ describe('config/security.js', () => {
     });
   });
 
-  describe('_buildLessonLookup', () => {
+  describe('buildLessonLookup', () => {
     it('converts filename array to lesson-number lookup', () => {
-      const result = sec._buildLessonLookup(['01-history.html', '05-type-casting.html']);
+      const result = sec.buildLessonLookup(['01-history.html', '05-type-casting.html']);
       expect(result[1]).toBe(true);
       expect(result[5]).toBe(true);
       expect(result[2]).toBeUndefined();
     });
 
     it('handles null/undefined/empty input', () => {
-      expect(sec._buildLessonLookup(null)).toEqual({});
-      expect(sec._buildLessonLookup(undefined)).toEqual({});
-      expect(sec._buildLessonLookup([])).toEqual({});
+      expect(sec.buildLessonLookup(null)).toEqual({});
+      expect(sec.buildLessonLookup(undefined)).toEqual({});
+      expect(sec.buildLessonLookup([])).toEqual({});
     });
 
     it('handles non-array input', () => {
-      expect(sec._buildLessonLookup('not-an-array')).toEqual({});
+      expect(sec.buildLessonLookup('not-an-array')).toEqual({});
     });
   });
 });

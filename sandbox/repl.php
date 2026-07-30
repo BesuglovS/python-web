@@ -39,8 +39,8 @@ if (!is_dir($SESSIONS_DIR)) {
     }
 }
 
-// ─── Очистка устаревших сессий (~1 из 50 запросов) ───
-$SANDBOX_SESSION_MAX_AGE = 3600; // 1 час
+// ─── Очистка устаревших сессий (вероятностная, ~1 из 50 запросов) ───
+$SANDBOX_SESSION_MAX_AGE = (int)(getenv('SANDBOX_SESSION_MAX_AGE') ?: 3600);
 if (mt_rand(1, 50) === 1 && is_dir($SESSIONS_DIR)) {
     $oldSessions = glob($SESSIONS_DIR . '/.repl_session_*.json');
     if ($oldSessions) {

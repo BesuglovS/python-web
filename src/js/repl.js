@@ -336,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.repl-toolbar button[data-tab]').forEach(function (btn) {
     btn.setAttribute('role', 'tab');
     btn.setAttribute('aria-selected', btn.classList.contains('active') ? 'true' : 'false');
+    btn.setAttribute('aria-controls', 'tab-' + btn.dataset.tab);
     btn.addEventListener('click', function () {
       const tab = btn.dataset.tab;
       const replTab = document.getElementById('tab-repl');
@@ -401,7 +402,19 @@ window.runRepl = runRepl;
 window.runEditor = runEditor;
 
 // Reset session on page unload
-window.addEventListener('beforeunload', function () {
+let _resetAttempted = false;
+window.addEventListener('pagehide', function () {
+  if (_resetAttempted) return;
+  _resetAttempted = true;
   const data = JSON.stringify({ code: '', reset: true, session_id: sessionId });
-  navigator.sendBeacon('sandbox/repl.php', new Blob([data], { type: 'application/json' }));
+  try {
+    navigator.sendBeacon('sandbox/repl.php', new Blob([data], { type: 'application/json' }));
+  } catch (_e) {
+    fetch('sandbox/repl.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: data,
+      keepalive: true,
+    }).catch(function () {});
+  }
 });

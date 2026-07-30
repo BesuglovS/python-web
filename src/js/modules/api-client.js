@@ -9,6 +9,7 @@ export async function apiGet(url) {
     if (!response.ok) return null;
     return await response.json();
   } catch (_e) {
+    console.warn('API GET failed:', _e);
     return null;
   }
 }
@@ -24,6 +25,7 @@ export async function apiPost(url, data) {
     if (!response.ok) return null;
     return await response.json();
   } catch (_e) {
+    console.warn('API POST failed:', _e);
     return null;
   }
 }
@@ -58,4 +60,20 @@ export async function checkBadges() {
 
 export async function incrementCodeRuns() {
   return apiPost(BADGES_URL, { action: 'increment_code_runs' });
+}
+
+const CONTEST_API_BASE = 'https://contest.nayanovaacademy.ru';
+
+export async function checkContestProgress(contestId) {
+  try {
+    const response = await fetch(
+      CONTEST_API_BASE + '/index.php?page=api&endpoint=contest_progress&contest_id=' + contestId,
+      { credentials: 'include' },
+    );
+    if (!response.ok) return null;
+    return await response.json();
+  } catch (_e) {
+    console.warn('Contest progress check failed:', _e);
+    return null;
+  }
 }
