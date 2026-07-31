@@ -27,8 +27,11 @@ function syncQuizToServer(lessonNumber, score, completed) {
 
 export function initQuizSystem() {
   const lessonAttr = document.body.getAttribute('data-lesson');
-  const lessonNum = parseInt(lessonAttr, 10);
-  if (isNaN(lessonNum) || !lessonNum) return;
+  const isFinalTest = lessonAttr === 'final-test';
+  const lessonNum = isFinalTest ? null : parseInt(lessonAttr, 10);
+  if (!isFinalTest && (isNaN(lessonNum) || !lessonNum)) return;
+
+  const quizFile = isFinalTest ? 'quizzes/final-test.json' : 'quizzes/' + lessonNum + '.json';
 
   const main = document.querySelector('main, .main-content');
   if (!main) return;
@@ -50,7 +53,7 @@ export function initQuizSystem() {
     main.appendChild(quizContainer);
   }
 
-  fetch('quizzes/' + lessonNum + '.json')
+  fetch(quizFile)
     .then(function (response) {
       if (!response.ok) throw new Error('Quiz not found');
       return response.json();

@@ -4,10 +4,24 @@
  * Course configuration data from lessons.json
  * This is the single source of truth for course metadata
  */
+// THEORY_CONTESTS генерируется из lessons.json (поле contest) скриптом build-config-meta.mjs.
+// Источник истины — lessons.json, НЕ этот файл.
+// Для обновления: node build-config-meta.mjs
 const THEORY_CONTESTS = {
-  8: 7, 10: 8, 12: 10, 15: 9, 17: 12, 19: 13,
-  21: 14, 22: 11, 25: 16, 26: 15, 27: 17, 28: 20,
-  29: 18, 30: 19,
+   8: 7,
+  10: 8,
+  12: 10,
+  15: 9,
+  17: 12,
+  19: 13,
+  21: 14,
+  22: 11,
+  25: 16,
+  26: 15,
+  27: 17,
+  28: 20,
+  29: 18,
+  30: 19,
 };
 
 const CONTEST_BASE_URL = 'https://contest.nayanovaacademy.ru/index.php?page=contest&id=';

@@ -1,0 +1,84 @@
+---
+layout: null
+permalink: repl.html
+---
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+  <meta name="description" content="Интерактивная Python-консоль — пиши код и сразу видь результат." />
+  <meta property="og:title" content="Python REPL — Интерактивная консоль" />
+  <meta property="og:description" content="Интерактивная Python-консоль — пиши код и сразу видь результат." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="{{ site.url }}/og-image.png" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="{{ site.url }}/repl.html" />
+  <title>🐍 Python REPL — Интерактивная консоль</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script defer src="ym-init.js"></script>
+  <noscript><div><img class="ym-pixel" src="https://mc.yandex.ru/watch/{{ site.yandexMetrikaId }}" alt="" /></div></noscript>
+</head>
+<body class="repl-page">
+  <noscript><div class="noscript-banner" role="alert">Для работы консоли необходим JavaScript.</div></noscript>
+  <a href="#main-content" class="skip-link">Перейти к содержанию</a>
+
+  <div class="container repl-container" id="main-content">
+    <div class="repl-header">
+      <h1>🐍 Python REPL</h1>
+      <p>Интерактивная консоль — вводи Python-код и сразу смотри результат</p>
+      <a class="back-link" href="index.html">← На главную</a>
+    </div>
+
+    <div class="repl-panel" id="repl-panel">
+      <div class="repl-toolbar">
+        <div class="repl-tabs" role="tablist">
+          <button type="button" data-tab="repl" class="active">🐍 REPL</button>
+          <button type="button" data-tab="editor">📝 Многострочный редактор</button>
+        </div>
+        <span class="repl-tab-count" id="history-count" aria-live="polite">0 команд</span>
+        <button type="button" id="repl-clear-btn" class="repl-clear-btn">🗑 Очистить</button>
+      </div>
+
+      <!-- Панель REPL -->
+      <div id="tab-repl" role="tabpanel" aria-label="REPL">
+        <div class="repl-history" id="repl-history"></div>
+        <div class="repl-snippets" id="repl-snippets"></div>
+        <div class="repl-input-area">
+          <label class="repl-input-label" for="repl-input">Ввод Python-кода</label>
+          <textarea id="repl-input" rows="3" placeholder="print('Привет, мир!')" autofocus></textarea>
+          <div class="repl-stdin-row">
+            <label for="repl-stdin" class="repl-stdin-label">📥 input():</label>
+            <textarea id="repl-stdin" placeholder="Ввод для input() — каждое значение на новой строке"></textarea>
+            <button type="button" id="repl-run-btn" class="repl-run-btn">▶ Выполнить</button>
+          </div>
+        </div>
+        <div class="repl-multiline-hint">
+          <strong>Enter</strong> — выполнить код &nbsp;|&nbsp; <strong>Shift+Enter</strong> — новая строка
+        </div>
+      </div>
+
+      <!-- Панель многострочного редактора -->
+      <div id="tab-editor" style="display: none;" role="tabpanel" aria-label="Редактор">
+        <div class="repl-input-area">
+          <label class="repl-input-label" for="editor-input">Python-код</label>
+          <textarea id="editor-input" rows="10" placeholder="print('Hello')\nfor i in range(5):\n    print(i)"></textarea>
+          <div class="repl-stdin-row">
+            <label for="editor-stdin" class="repl-stdin-label">📥 input():</label>
+            <textarea id="editor-stdin" placeholder="Ввод для input() — каждое значение на новой строке"></textarea>
+            <button type="button" id="editor-run-btn" class="repl-run-btn">▶ Выполнить</button>
+          </div>
+        </div>
+        <div id="editor-output" aria-live="polite"></div>
+        <div class="repl-multiline-hint">
+          <strong>Ctrl+Enter</strong> — выполнить код
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="repl.js"></script>
+</body>
+</html>

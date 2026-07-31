@@ -40,8 +40,9 @@ python-web/
 │   ├── js/
 │   │   ├── script.js             # Точка входа JS
 │   │   ├── config.js             # Обратная совместимость (реэкспорт)
-│   │   ├── repl.js               # Python REPL (Pyodide)
+│   │   ├── repl.js               # Python REPL (серверная сессия PHP)
 │   │   ├── mindmap.js            # Mindmap
+│   │   ├── cheatsheets.js        # Печать шпаргалок
 │   │   ├── config/
 │   │   │   ├── security.js       # Безопасные обёртки localStorage
 │   │   │   ├── courseData.js     # Данные курса (уроки, мета, сложность)
@@ -67,7 +68,7 @@ python-web/
 │   │       └── utils.js          # Общие утилиты
 │   └── _plugins/
 │       └── norun.mjs             # Плагин Eleventy
-├── quizzes/                      # JSON-файлы квизов (1-50)
+├── quizzes/                      # JSON-файлы квизов (1-50 + final-test.json)
 ├── sandbox/                      # Серверная песочница (PHP)
 ├── tests/                        # Тесты
 ├── dist/                         # Собранные файлы (out)
@@ -79,20 +80,23 @@ python-web/
 ├── build-sw.mjs                  # Генерация Service Worker
 ├── build-config-meta.mjs         # Генерация LESSON_META из lessons.json
 ├── build-assets-hash.mjs         # Контент-хэширование ассетов
-└── minify.js                     # Минификация HTML
+└── minify.cjs                    # CSS-бандл + страничные скрипты (esbuild IIFE)
 ```
 
 ## Конвейер сборки
 
 ```
 npm run build →
-  1. build-config-meta.mjs    → src/js/config/courseData.js (LESSON_META)
+  1. build-config-meta.mjs    → src/js/config/courseData.js (LESSON_META, THEORY_CONTESTS)
   2. build-highlight.mjs      → highlight-py.min.js
-  3. build-css.mjs             → dist/style.css (esbuild, CSS bundling)
-  4. eleventy                  → dist/*.html (Markdown → HTML)
-  5. build-js.mjs              → dist/*.min.js (esbuild, JS bundling)
-  6. minify.js                 → Минификация HTML
-  7. build-sw.mjs              → dist/sw.js (Service Worker)
+  3. build-css.mjs            → dist/style.css (esbuild, CSS bundling)
+  4. eleventy                 → dist/*.html (Markdown/HTML → HTML)
+  5. build-js.mjs             → dist/script.js (esbuild, IIFE бандл всех модулей)
+  6. minify.cjs               → dist/style.css + бандл repl.js/mindmap.js/cheatsheets.js
+  7. build-sw.mjs             → dist/sw.js (Service Worker)
+
+npm run build:prod дополнительно →
+  8. build-assets-hash.mjs    → хэширует ассеты и переписывает ссылки в HTML/sw.js
 ```
 
 ## Архитектура JavaScript
@@ -117,11 +121,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ### Хранение данных
 
+Прогресс уроков и результаты квизов хранятся на сервере (SQLite `data/python.db`, ключ — глобальный `user_id` из auth-web). В `localStorage` остаются только предпочтения и локальное состояние:
+
 | Ключ | Назначение |
 |------|-----------|
-| `python-web-course-progress` | Пройденные уроки (консолидированный ключ) |
+| `python-web-course-progress` | Локальный кэш прогресса (источник — сервер) |
 | `python-web-theme` | Предпочтения темы |
-| `python-web-quiz-scores` | Результаты квизов |
+| `python-web-quiz-scores` | Локальный кэш результатов квизов |
 | `python-repl-history` | История REPL |
 | `sw-version` | Версия Service Worker |
 
@@ -146,6 +152,24 @@ safeSetItem('python-web-course-progress', JSON.stringify(lessons));
 - **Python 3.10+** — интерпретатор
 - **AST-валидация** (`sandbox/ast_validator.py`) — проверка безопасности
 - Ограничения: `open_basedir`, `disable_functions`, `max_execution_time`
+
+## Интеграция с внешними сервисами
+
+### Авторизация (auth.nayanovaacademy.ru)
+
+Единый вход (SSO) через общую куку `auth_session` на домене `.nayanovaacademy.ru`, которую выставляет сервис auth-web:
+
+- Браузер → `sandbox/auth_check.php` (same-origin прокси с проверкой Origin/Referer) → cURL `auth.nayanovaacademy.ru/api/check.php` с кукой `auth_session`.
+- `sandbox/Auth.php` кэширует результат в PHP-сессии (`python_session`) на 5 минут; кэш привязан к значению куки `auth_session`.
+- Вход: `auth.nayanovaacademy.ru/index.php?page=login&redirect=…`; выход: `/api/logout.php?redirect=…` (редиректы ограничены доменом nayanovaacademy.ru).
+- Прогресс/бейджи требуют `Auth::requireLogin()` серверно; сам статический HTML доступен и без авторизации.
+
+### Контесты (contest.nayanovaacademy.ru)
+
+- Связка урок→контест: поле `contest` в `lessons.json`; клиентский `THEORY_CONTESTS` в `src/js/config/courseData.js` генерируется скриптом `build-config-meta.mjs`. Серверный дубль — `sandbox/contest_map.php`.
+- Ссылки на контесты: `contest-link.js` (страницы уроков, бейджи на главной).
+- Проверка прогресса: `checkContestProgress()` (`modules/api-client.js`) → кросс-доменный GET `contest.nayanovaacademy.ru/index.php?page=api&endpoint=contest_progress&contest_id=N` с `credentials: 'include'`.
+- Гейт «урок пройден»: квиз 100% **и** все задачи контеста решены (проверяется и на клиенте, и на сервере в `sandbox/progress.php` через `sandbox/contest_map.php`).
 
 ## Тестирование
 

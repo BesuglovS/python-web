@@ -358,6 +358,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (replTabPanel) { replTabPanel.setAttribute('role', 'tabpanel'); replTabPanel.setAttribute('aria-label', 'REPL'); }
   if (editorTabPanel) { editorTabPanel.setAttribute('role', 'tabpanel'); editorTabPanel.setAttribute('aria-label', '\u0420\u0435\u0434\u0430\u043a\u0442\u043e\u0440'); }
 
+  // Button bindings (no inline handlers — CSP script-src 'self' blocks them)
+  const replRunBtn = document.getElementById('repl-run-btn');
+  if (replRunBtn) replRunBtn.addEventListener('click', runRepl);
+  const editorRunBtn = document.getElementById('editor-run-btn');
+  if (editorRunBtn) editorRunBtn.addEventListener('click', runEditor);
+  const clearBtn = document.getElementById('repl-clear-btn');
+  if (clearBtn) clearBtn.addEventListener('click', clearHistory);
+
   // Keyboard shortcuts
   const replInput = document.getElementById('repl-input');
   if (replInput) {
@@ -383,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // ─── Public API ───
-window.clearHistory = function () {
+function clearHistory() {
   replHistory = [];
   _renderedHistoryCount = 0;
   safeRemoveItem('python-repl-history');
@@ -396,7 +404,9 @@ window.clearHistory = function () {
   }).catch(function () {
     // ignore
   });
-};
+}
+
+window.clearHistory = clearHistory;
 
 window.runRepl = runRepl;
 window.runEditor = runEditor;

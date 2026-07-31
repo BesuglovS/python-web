@@ -179,13 +179,16 @@ describe('build-highlight.mjs', () => {
 describe('minify.cjs', () => {
   const src = fs.readFileSync(path.join(ROOT, 'minify.cjs'), 'utf-8');
 
-  it('minifies repl.js and mindmap.js via Terser', () => {
+  it('bundles page scripts via esbuild', () => {
     expect(src).toContain("name: 'repl.js'");
     expect(src).toContain("name: 'mindmap.js'");
+    expect(src).toContain("name: 'cheatsheets.js'");
   });
 
-  it('preserves window globals in repl.js minification', () => {
-    expect(src).toContain("reserved: ['clearHistory', 'runRepl', 'runEditor']");
+  it('bundles repl.js (IIFE) so module imports are resolved', () => {
+    expect(src).toContain("format: 'iife'");
+    expect(src).toContain('bundle: true');
+    expect(src).not.toContain('Terser');
   });
 });
 

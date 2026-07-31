@@ -7,6 +7,7 @@
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/Auth.php';
+require_once __DIR__ . '/contest_map.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -44,6 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($lessonNumber === null) {
             jsonResponse(['error' => 'lesson_number обязателен'], 400);
+        }
+
+        $contestId = contestIdForLesson($lessonNumber);
+        if ($completed && $contestId !== null) {
+            $contestOk = checkContestCompleted($contestId);
+            if ($contestOk === false) {
+                $completed = 0;
+            }
         }
 
         $stmt = $db->prepare(
@@ -114,6 +123,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($lessonNumber === null) continue;
             $completed = !empty($item['completed']) ? 1 : 0;
             $quizScore = isset($item['quiz_score']) ? (int) $item['quiz_score'] : null;
+
+            $contestId = contestIdForLesson($lessonNumber);
+            if ($completed && $contestId !== null) {
+                $contestOk = checkContestCompleted($contestId);
+                if ($contestOk === false) {
+                    $completed = 0;
+                }
+            }
+
             $stmt->execute([$userId, $lessonNumber, $completed, $quizScore, $completed]);
             $count++;
         }

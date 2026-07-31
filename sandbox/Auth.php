@@ -65,34 +65,8 @@ class Auth
         }
 
         $user = $response['user'];
-        self::syncCurrentUser($user);
         self::setCachedUser($user);
         return $user;
-    }
-
-    private static function syncCurrentUser(array $user): void
-    {
-        try {
-            Database::initialize();
-            $db = Database::getInstance();
-            $stmt = $db->prepare(
-                "INSERT INTO users (id, login, display_name, is_admin, created_at)
-                 VALUES (?, ?, ?, ?, ?)
-                 ON CONFLICT(id) DO UPDATE SET
-                   login = excluded.login,
-                   display_name = excluded.display_name,
-                   is_admin = excluded.is_admin"
-            );
-            $stmt->execute([
-                (int) $user['id'],
-                $user['login'] ?? '',
-                $user['display_name'] ?? $user['login'] ?? '',
-                (int) ($user['is_admin'] ?? 0),
-                $user['created_at'] ?? gmdate('Y-m-d H:i:s'),
-            ]);
-        } catch (\Throwable $e) {
-            // Если БД недоступна — не блокируем авторизацию
-        }
     }
 
     private static function apiGet(string $path): ?array
@@ -137,6 +111,9 @@ class Auth
         if (time() - $cachedAt > self::$cacheTtl) {
             return null;
         }
+        if (($_SESSION['auth_cookie_hash'] ?? '') !== self::getCookieHash()) {
+            return null;
+        }
         return $_SESSION['auth_user'];
     }
 
@@ -144,10 +121,16 @@ class Auth
     {
         $_SESSION['auth_user'] = $user;
         $_SESSION['auth_user_cached_at'] = time();
+        $_SESSION['auth_cookie_hash'] = self::getCookieHash();
     }
 
     public static function clearCache(): void
     {
-        unset($_SESSION['auth_user'], $_SESSION['auth_user_cached_at']);
+        unset($_SESSION['auth_user'], $_SESSION['auth_user_cached_at'], $_SESSION['auth_cookie_hash']);
+    }
+
+    private static function getCookieHash(): string
+    {
+        return hash('sha256', $_COOKIE['auth_session'] ?? '');
     }
 }

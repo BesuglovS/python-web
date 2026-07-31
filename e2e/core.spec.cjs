@@ -1,5 +1,20 @@
 const { test, expect } = require('@playwright/test');
 
+// Статический http-server не выполняет PHP, поэтому подменяем проверку
+// авторизации: контент сайта скрыт auth-гейтом, пока пользователь не вошёл.
+test.beforeEach(async ({ page }) => {
+  await page.route('**/sandbox/auth_check.php', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        authenticated: true,
+        user: { username: 'e2e', display_name: 'E2E Тест' },
+      }),
+    })
+  );
+});
+
 test.describe('Главная страница', () => {
   test('загружается с правильным заголовком', async ({ page }) => {
     await page.goto('/');
@@ -146,7 +161,7 @@ test.describe('REPL', () => {
 test.describe('Финальный тест', () => {
   test('страница финального теста загружается', async ({ page }) => {
     await page.goto('/final-test.html');
-    await expect(page.locator('h1')).toContainText('Итоговый тест');
+    await expect(page.locator('.topic-header h1')).toContainText('Итоговый тест');
   });
 });
 

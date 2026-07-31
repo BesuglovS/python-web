@@ -1,14 +1,15 @@
 /**
- * Пост-билд сборка CSS и минификация JS.
+ * Пост-билд сборка CSS и JS.
  * Запускается после Eleventy.
  *
  * CSS: esbuild бандлит модули из src/css/index.css → dist/style.css
- * JS:  Terser минифицирует repl.js и mindmap.js
+ * JS:  esbuild бандлит + минифицирует страничные скрипты
+ *      (repl.js, mindmap.js, cheatsheets.js) → dist/*.js
+ *      Бандлинг обязателен: repl.js импортирует ./config/* и ./modules/*.
  */
 const fs = require('fs');
 const path = require('path');
 const esbuild = require('esbuild');
-const Terser = require('terser');
 
 const PROJECT = __dirname;
 const SRC_JS = path.join(PROJECT, 'src', 'js');
@@ -17,10 +18,11 @@ const SRC_CSS = path.join(PROJECT, 'src', 'css');
 const CSS_ENTRY = path.join(SRC_CSS, 'index.css');
 const CSS_OUT = path.join(PROJECT, 'dist', 'style.css');
 
-// Файлы JS для минификации (classic scripts)
+// Файлы JS для бандлинга (классические скрипты, доступны глобально на своих страницах)
 const JS_FILES = [
-  { name: 'repl.js', srcDir: SRC_JS, reserved: ['clearHistory', 'runRepl', 'runEditor'] },
-  { name: 'mindmap.js', srcDir: SRC_JS, reserved: [] },
+  { name: 'repl.js' },
+  { name: 'mindmap.js' },
+  { name: 'cheatsheets.js' },
 ];
 
 /**
@@ -53,11 +55,11 @@ async function buildCSS() {
 }
 
 /**
- * Минифицирует JS файлы через Terser
+ * Бандлит и минифицирует страничные JS-скрипты через esbuild (IIFE).
  */
 async function processJSFiles() {
   for (const file of JS_FILES) {
-    const srcPath = path.join(file.srcDir, file.name);
+    const srcPath = path.join(SRC_JS, file.name);
     const destPath = path.join(PROJECT, 'dist', file.name);
 
     if (!fs.existsSync(srcPath)) {
@@ -65,21 +67,22 @@ async function processJSFiles() {
       continue;
     }
 
-    const content = fs.readFileSync(srcPath, 'utf-8');
-
-    const result = await Terser.minify(content, {
-      compress: { passes: 2 },
-      mangle: { reserved: file.reserved || [] },
-    });
-
-    if (result.error) {
-      console.error(`✖ ${file.name} JS error:`, result.error);
-      continue;
+    try {
+      await esbuild.build({
+        entryPoints: [srcPath],
+        bundle: true,
+        minify: true,
+        sourcemap: false,
+        format: 'iife',
+        target: ['es2018'],
+        platform: 'browser',
+        outfile: destPath,
+        legalComments: 'none',
+      });
+      console.log(`✔ ${file.name}: bundled → dist/${file.name}`);
+    } catch (err) {
+      console.error(`✖ ${file.name} bundle error:`, err);
     }
-
-    fs.writeFileSync(destPath, result.code, 'utf-8');
-    const saved = (((content.length - result.code.length) / content.length) * 100).toFixed(1);
-    console.log(`✔ ${file.name}: ${content.length} → ${result.code.length} bytes (${saved}%)`);
   }
 }
 

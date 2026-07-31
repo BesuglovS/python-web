@@ -16,7 +16,12 @@
           "complexity": "beginner",
           "badge": "historian",
           "type": "theory",
-          "tags": ["python", "история", "обзор", "philosophy"],
+          "tags": [
+            "python",
+            "история",
+            "обзор",
+            "philosophy"
+          ],
           "interactive": {
             "exercise": false,
             "quiz": true,
@@ -33,7 +38,14 @@
           "complexity": "beginner",
           "badge": "ide_pioneer",
           "type": "practice",
-          "tags": ["IDE", "установка", "VS Code", "PyCharm", "IDLE", "настройка"],
+          "tags": [
+            "IDE",
+            "установка",
+            "VS Code",
+            "PyCharm",
+            "IDLE",
+            "настройка"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -56,7 +68,12 @@
           "complexity": "beginner",
           "badge": "var_master",
           "type": "mixed",
-          "tags": ["переменные", "присваивание", "имена", "basics"],
+          "tags": [
+            "переменные",
+            "присваивание",
+            "имена",
+            "basics"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -73,7 +90,15 @@
           "complexity": "beginner",
           "badge": "type_explorer",
           "type": "theory",
-          "tags": ["типы данных", "int", "float", "str", "bool", "None", "basics"],
+          "tags": [
+            "типы данных",
+            "int",
+            "float",
+            "str",
+            "bool",
+            "None",
+            "basics"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -90,7 +115,14 @@
           "complexity": "beginner",
           "badge": "caster",
           "type": "practice",
-          "tags": ["приведение типов", "int()", "float()", "str()", "bool()", "basics"],
+          "tags": [
+            "приведение типов",
+            "int()",
+            "float()",
+            "str()",
+            "bool()",
+            "basics"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -107,7 +139,14 @@
           "complexity": "beginner",
           "badge": "io_master",
           "type": "practice",
-          "tags": ["ввод", "вывод", "print", "input", "форматирование", "basics"],
+          "tags": [
+            "ввод",
+            "вывод",
+            "print",
+            "input",
+            "форматирование",
+            "basics"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -124,7 +163,12 @@
           "complexity": "beginner",
           "badge": "fstring_guru",
           "type": "practice",
-          "tags": ["f-строки", "форматирование", "строки", "interpolation"],
+          "tags": [
+            "f-строки",
+            "форматирование",
+            "строки",
+            "interpolation"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -141,13 +185,20 @@
           "complexity": "beginner",
           "badge": "math_wiz",
           "type": "practice",
-          "tags": ["арифметика", "операторы", "числа", "математика", "basics"],
+          "tags": [
+            "арифметика",
+            "операторы",
+            "числа",
+            "математика",
+            "basics"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": true
-          }
+          },
+          "contest": 7
         }
       ]
     },
@@ -164,7 +215,13 @@
           "complexity": "beginner",
           "badge": "bool_master",
           "type": "theory",
-          "tags": ["bool", "True", "False", "логика", "булевы"],
+          "tags": [
+            "bool",
+            "True",
+            "False",
+            "логика",
+            "булевы"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -181,13 +238,21 @@
           "complexity": "basic",
           "badge": "decision_maker",
           "type": "mixed",
-          "tags": ["if", "elif", "else", "условия", "отступы", "PEP 8"],
+          "tags": [
+            "if",
+            "elif",
+            "else",
+            "условия",
+            "отступы",
+            "PEP 8"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 8
         },
         {
           "num": 11,
@@ -198,7 +263,14 @@
           "complexity": "basic",
           "badge": "error_handler",
           "type": "mixed",
-          "tags": ["try", "except", "finally", "raise", "ошибки", "исключения"],
+          "tags": [
+            "try",
+            "except",
+            "finally",
+            "raise",
+            "ошибки",
+            "исключения"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -215,13 +287,20 @@
           "complexity": "basic",
           "badge": "logician",
           "type": "theory",
-          "tags": ["and", "or", "not", "логические операторы", "условия"],
+          "tags": [
+            "and",
+            "or",
+            "not",
+            "логические операторы",
+            "условия"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": false,
             "game": true
-          }
+          },
+          "contest": 10
         },
         {
           "num": 13,
@@ -232,7 +311,11 @@
           "complexity": "basic",
           "badge": "nested_navigator",
           "type": "practice",
-          "tags": ["вложенность", "условия", "вложенные конструкции"],
+          "tags": [
+            "вложенность",
+            "условия",
+            "вложенные конструкции"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -255,7 +338,13 @@
           "complexity": "basic",
           "badge": "string_slicer",
           "type": "mixed",
-          "tags": ["строки", "индексация", "срезы", "slice", "index"],
+          "tags": [
+            "строки",
+            "индексация",
+            "срезы",
+            "slice",
+            "index"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -272,13 +361,21 @@
           "complexity": "basic",
           "badge": "string_master",
           "type": "practice",
-          "tags": ["строки", "методы", "конкатенация", "upper", "lower", "split"],
+          "tags": [
+            "строки",
+            "методы",
+            "конкатенация",
+            "upper",
+            "lower",
+            "split"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": false,
             "game": false
-          }
+          },
+          "contest": 9
         },
         {
           "num": 16,
@@ -289,7 +386,13 @@
           "complexity": "intermediate",
           "badge": "regex_wizard",
           "type": "mixed",
-          "tags": ["regex", "re", "регулярные выражения", "поиск", "замена"],
+          "tags": [
+            "regex",
+            "re",
+            "регулярные выражения",
+            "поиск",
+            "замена"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -312,13 +415,19 @@
           "complexity": "basic",
           "badge": "looper",
           "type": "mixed",
-          "tags": ["while", "циклы", "предусловие", "итерация"],
+          "tags": [
+            "while",
+            "циклы",
+            "предусловие",
+            "итерация"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 12
         },
         {
           "num": 18,
@@ -329,7 +438,12 @@
           "complexity": "basic",
           "badge": "for_master",
           "type": "mixed",
-          "tags": ["for", "циклы", "перебор", "итерация"],
+          "tags": [
+            "for",
+            "циклы",
+            "перебор",
+            "итерация"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -346,13 +460,19 @@
           "complexity": "basic",
           "badge": "range_runner",
           "type": "practice",
-          "tags": ["range", "последовательности", "циклы", "итерация"],
+          "tags": [
+            "range",
+            "последовательности",
+            "циклы",
+            "итерация"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": false,
             "game": false
-          }
+          },
+          "contest": 13
         },
         {
           "num": 20,
@@ -363,7 +483,12 @@
           "complexity": "basic",
           "badge": "flow_controller",
           "type": "theory",
-          "tags": ["break", "continue", "циклы", "управление потоком"],
+          "tags": [
+            "break",
+            "continue",
+            "циклы",
+            "управление потоком"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -380,13 +505,19 @@
           "complexity": "basic",
           "badge": "nested_looper",
           "type": "practice",
-          "tags": ["вложенные циклы", "циклы", "итерация", "матрицы"],
+          "tags": [
+            "вложенные циклы",
+            "циклы",
+            "итерация",
+            "матрицы"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 14
         }
       ]
     },
@@ -403,13 +534,20 @@
           "complexity": "basic",
           "badge": "func_creator",
           "type": "mixed",
-          "tags": ["функции", "def", "return", "параметры", "аргументы"],
+          "tags": [
+            "функции",
+            "def",
+            "return",
+            "параметры",
+            "аргументы"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 11
         },
         {
           "num": 23,
@@ -420,7 +558,13 @@
           "complexity": "intermediate",
           "badge": "func_guru",
           "type": "mixed",
-          "tags": ["args", "kwargs", "области видимости", "аннотации", "функции"],
+          "tags": [
+            "args",
+            "kwargs",
+            "области видимости",
+            "аннотации",
+            "функции"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -437,7 +581,13 @@
           "complexity": "basic",
           "badge": "debugger",
           "type": "practice",
-          "tags": ["отладка", "pdb", "debug", "assert", "логирование"],
+          "tags": [
+            "отладка",
+            "pdb",
+            "debug",
+            "assert",
+            "логирование"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -460,13 +610,20 @@
           "complexity": "basic",
           "badge": "list_master",
           "type": "mixed",
-          "tags": ["списки", "list", "методы", "append", "sort"],
+          "tags": [
+            "списки",
+            "list",
+            "методы",
+            "append",
+            "sort"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 16
         },
         {
           "num": 26,
@@ -477,13 +634,20 @@
           "complexity": "basic",
           "badge": "set_specialist",
           "type": "theory",
-          "tags": ["множества", "set", "union", "intersection", "difference"],
+          "tags": [
+            "множества",
+            "set",
+            "union",
+            "intersection",
+            "difference"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 15
         },
         {
           "num": 27,
@@ -494,13 +658,19 @@
           "complexity": "basic",
           "badge": "tuple_tamer",
           "type": "theory",
-          "tags": ["кортежи", "tuple", "неизменяемые", "immutable"],
+          "tags": [
+            "кортежи",
+            "tuple",
+            "неизменяемые",
+            "immutable"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": false,
             "game": false
-          }
+          },
+          "contest": 17
         },
         {
           "num": 28,
@@ -511,13 +681,20 @@
           "complexity": "basic",
           "badge": "dict_master",
           "type": "mixed",
-          "tags": ["словари", "dict", "ключи", "значения", "методы"],
+          "tags": [
+            "словари",
+            "dict",
+            "ключи",
+            "значения",
+            "методы"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 20
         },
         {
           "num": 29,
@@ -528,13 +705,20 @@
           "complexity": "basic",
           "badge": "string_splitter",
           "type": "practice",
-          "tags": ["split", "join", "строки", "разделение", "объединение"],
+          "tags": [
+            "split",
+            "join",
+            "строки",
+            "разделение",
+            "объединение"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": false,
             "game": false
-          }
+          },
+          "contest": 18
         },
         {
           "num": 30,
@@ -545,13 +729,19 @@
           "complexity": "intermediate",
           "badge": "comprehension_master",
           "type": "mixed",
-          "tags": ["list comprehension", "списочные выражения", "итерации", "функции"],
+          "tags": [
+            "list comprehension",
+            "списочные выражения",
+            "итерации",
+            "функции"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
             "dragDrop": true,
             "game": false
-          }
+          },
+          "contest": 19
         },
         {
           "num": 31,
@@ -562,7 +752,13 @@
           "complexity": "intermediate",
           "badge": "lambda_wizard",
           "type": "mixed",
-          "tags": ["lambda", "map", "filter", "sorted", "функции"],
+          "tags": [
+            "lambda",
+            "map",
+            "filter",
+            "sorted",
+            "функции"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -585,7 +781,13 @@
           "complexity": "basic",
           "badge": "file_handler",
           "type": "practice",
-          "tags": ["файлы", "open", "with", "чтение", "запись"],
+          "tags": [
+            "файлы",
+            "open",
+            "with",
+            "чтение",
+            "запись"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -602,7 +804,13 @@
           "complexity": "basic",
           "badge": "data_formatter",
           "type": "practice",
-          "tags": ["JSON", "CSV", "данные", "сериализация", "файлы"],
+          "tags": [
+            "JSON",
+            "CSV",
+            "данные",
+            "сериализация",
+            "файлы"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -619,7 +827,14 @@
           "complexity": "intermediate",
           "badge": "sql_master",
           "type": "mixed",
-          "tags": ["SQLite", "SQL", "базы данных", "CREATE", "INSERT", "SELECT"],
+          "tags": [
+            "SQLite",
+            "SQL",
+            "базы данных",
+            "CREATE",
+            "INSERT",
+            "SELECT"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -642,7 +857,13 @@
           "complexity": "basic",
           "badge": "module_importer",
           "type": "theory",
-          "tags": ["модули", "import", "from", "as", "стандартная библиотека"],
+          "tags": [
+            "модули",
+            "import",
+            "from",
+            "as",
+            "стандартная библиотека"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -659,7 +880,13 @@
           "complexity": "intermediate",
           "badge": "itertools_guru",
           "type": "theory",
-          "tags": ["itertools", "product", "permutations", "chain", "groupby"],
+          "tags": [
+            "itertools",
+            "product",
+            "permutations",
+            "chain",
+            "groupby"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -676,7 +903,13 @@
           "complexity": "basic",
           "badge": "venv_master",
           "type": "practice",
-          "tags": ["venv", "pip", "виртуальные окружения", "requirements", "установка"],
+          "tags": [
+            "venv",
+            "pip",
+            "виртуальные окружения",
+            "requirements",
+            "установка"
+          ],
           "interactive": {
             "exercise": false,
             "quiz": true,
@@ -693,7 +926,13 @@
           "complexity": "basic",
           "badge": "math_random",
           "type": "practice",
-          "tags": ["math", "random", "модули", "математика", "случайные числа"],
+          "tags": [
+            "math",
+            "random",
+            "модули",
+            "математика",
+            "случайные числа"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -710,7 +949,13 @@
           "complexity": "basic",
           "badge": "time_traveler",
           "type": "practice",
-          "tags": ["datetime", "даты", "время", "timedelta", "модули"],
+          "tags": [
+            "datetime",
+            "даты",
+            "время",
+            "timedelta",
+            "модули"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -727,7 +972,14 @@
           "complexity": "intermediate",
           "badge": "data_scientist",
           "type": "mixed",
-          "tags": ["NumPy", "Pandas", "данные", "анализ", "DataFrame", "ndarray"],
+          "tags": [
+            "NumPy",
+            "Pandas",
+            "данные",
+            "анализ",
+            "DataFrame",
+            "ndarray"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -750,7 +1002,13 @@
           "complexity": "intermediate",
           "badge": "oop_master",
           "type": "theory",
-          "tags": ["ООП", "классы", "объекты", "__init__", "self"],
+          "tags": [
+            "ООП",
+            "классы",
+            "объекты",
+            "__init__",
+            "self"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -767,7 +1025,13 @@
           "complexity": "intermediate",
           "badge": "inheritance_guru",
           "type": "theory",
-          "tags": ["наследование", "полиморфизм", "super()", "ООП", "классы"],
+          "tags": [
+            "наследование",
+            "полиморфизм",
+            "super()",
+            "ООП",
+            "классы"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -790,7 +1054,12 @@
           "complexity": "intermediate",
           "badge": "decorator_master",
           "type": "theory",
-          "tags": ["декораторы", "@decorator", "wraps", "функции"],
+          "tags": [
+            "декораторы",
+            "@decorator",
+            "wraps",
+            "функции"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -807,7 +1076,12 @@
           "complexity": "intermediate",
           "badge": "generator_guru",
           "type": "theory",
-          "tags": ["генераторы", "yield", "итераторы", "ленивые вычисления"],
+          "tags": [
+            "генераторы",
+            "yield",
+            "итераторы",
+            "ленивые вычисления"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -824,7 +1098,14 @@
           "complexity": "advanced",
           "badge": "async_master",
           "type": "theory",
-          "tags": ["threading", "asyncio", "многопоточность", "async", "await", "multiprocessing"],
+          "tags": [
+            "threading",
+            "asyncio",
+            "многопоточность",
+            "async",
+            "await",
+            "multiprocessing"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -847,7 +1128,12 @@
           "complexity": "basic",
           "badge": "type_hinter",
           "type": "theory",
-          "tags": ["Type Hints", "аннотации типов", "mypy", "типизация"],
+          "tags": [
+            "Type Hints",
+            "аннотации типов",
+            "mypy",
+            "типизация"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -864,7 +1150,13 @@
           "complexity": "intermediate",
           "badge": "test_master",
           "type": "practice",
-          "tags": ["pytest", "тесты", "assert", "parametrize", " unit-тесты"],
+          "tags": [
+            "pytest",
+            "тесты",
+            "assert",
+            "parametrize",
+            " unit-тесты"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -881,7 +1173,14 @@
           "complexity": "intermediate",
           "badge": "api_explorer",
           "type": "practice",
-          "tags": ["requests", "API", "GET", "POST", "HTTP", "JSON"],
+          "tags": [
+            "requests",
+            "API",
+            "GET",
+            "POST",
+            "HTTP",
+            "JSON"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -898,7 +1197,13 @@
           "complexity": "intermediate",
           "badge": "web_builder",
           "type": "practice",
-          "tags": ["Flask", "веб", "маршруты", "Jinja2", "REST API"],
+          "tags": [
+            "Flask",
+            "веб",
+            "маршруты",
+            "Jinja2",
+            "REST API"
+          ],
           "interactive": {
             "exercise": true,
             "quiz": true,
@@ -915,7 +1220,13 @@
           "complexity": "basic",
           "badge": "git_master",
           "type": "theory",
-          "tags": ["Git", "GitHub", "коммиты", "ветки", ".gitignore"],
+          "tags": [
+            "Git",
+            "GitHub",
+            "коммиты",
+            "ветки",
+            ".gitignore"
+          ],
           "interactive": {
             "exercise": false,
             "quiz": true,

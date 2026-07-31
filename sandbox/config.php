@@ -10,6 +10,7 @@ ini_set('display_errors', '0');
 define('PYTHON_BASE_URL', getenv('SANDBOX_BASE_URL') ?: 'https://python.nayanovaacademy.ru');
 define('PYTHON_DB_PATH', __DIR__ . '/../data/python.db');
 define('AUTH_URL', 'https://auth.nayanovaacademy.ru');
+define('CONTEST_URL', 'https://contest.nayanovaacademy.ru');
 define('SESSION_LIFETIME', 86400 * 30);
 
 define('ALLOWED_ORIGINS', [

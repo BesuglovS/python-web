@@ -95,7 +95,14 @@ $inputJson = json_encode([
     'max_output' => SANDBOX_MAX_OUTPUT_SIZE,
 ], JSON_UNESCAPED_UNICODE);
 
-list($stdout, $stderr, $exitCode) = sandbox_run_python($PYTHON_RUNNER, $inputJson, $timeout, SANDBOX_MEMORY_LIMIT_MB);
+$runnerCode = file_get_contents($PYTHON_RUNNER);
+if ($runnerCode === false) {
+    http_response_code(500);
+    echo json_encode(['ok' => false, 'error' => 'REPL runner unavailable'], SANDBOX_JSON_OPT);
+    exit;
+}
+
+list($stdout, $stderr, $exitCode) = sandbox_run_python($runnerCode, $inputJson, $timeout, SANDBOX_MEMORY_LIMIT_MB);
 
 // Проверяем размер файла сессии
 if (file_exists($SESSION_FILE) && filesize($SESSION_FILE) > $MAX_SESSION_SIZE) {

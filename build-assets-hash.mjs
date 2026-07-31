@@ -28,6 +28,7 @@ const ASSETS = [
   'highlight-py.min.js',
   'mindmap.js',
   'repl.js',
+  'cheatsheets.js',
   'highlight-theme.min.css',
 ];
 
