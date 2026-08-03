@@ -55,7 +55,7 @@
     "explanation": "flask.jsonify(data) возвращает JSON-ответ с правильным Content-Type."
   },
   {
-    "question": "Как получить параметр из URL (например, /user/<id>)?",
+    "question": "Как получить параметр из URL (например, /user/&lt;id&gt;)?",
     "options": [
       "request.args.get(\"id\")",
       "Параметр функции: def show(id):",

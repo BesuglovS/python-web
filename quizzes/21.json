@@ -11,7 +11,7 @@
     "explanation": "Вложенный цикл — это цикл, находящийся в теле другого цикла. Внутренний цикл полностью выполняется на каждой итерации внешнего."
   },
   {
-    "question": "Сколько раз выполнится print во вложенных циклах: for i in range(2): for j in range(3): print(i,j)?",
+    "question": "Сколько раз выполнится print?<br><code>for i in range(2):<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(i,j)</code>",
     "options": [
       "2",
       "3",

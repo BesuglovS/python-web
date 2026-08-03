@@ -341,4 +341,23 @@ describe('quiz JSON schema validation', () => {
       ).toBe(true);
     });
   });
+
+  it('no question text contains unescaped < or unknown tags', () => {
+    const allowedTag = /^<\/?(code|br|b|i|em|strong)(\s[^>]*)?>$/;
+    const files = [];
+    for (let i = 1; i <= 50; i++) files.push(`${i}.json`);
+    files.push('final-test.json');
+    for (const file of files) {
+      const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, file), 'utf-8'));
+      quiz.forEach((q, idx) => {
+        const matches = q.question.match(/<[^>]*>/g) || [];
+        matches.forEach((m) => {
+          expect(
+            allowedTag.test(m),
+            `${file}[${idx}]: unescaped tag/expression ${JSON.stringify(m)} in question — escape comparison signs as &lt;/&gt;`,
+          ).toBe(true);
+        });
+      });
+    }
+  });
 });

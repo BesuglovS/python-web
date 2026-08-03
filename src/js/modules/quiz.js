@@ -9,13 +9,27 @@ import { saveProgress, checkBadges, checkContestProgress } from './api-client.js
 import { updateLocalProgress } from './progress.js';
 import { lessonNumberFromPage } from './utils.js';
 
-const _QUIZ_ALLOWED_TAGS = /^<(\/)?(code|br|b|i|em|strong)(\s[^>]*)?>$/;
+const _QUIZ_ALLOWED_TAG_RE = /<\/?(code|br|b|i|em|strong)(\s[^>]*)?>/g;
 
-function sanitizeHtml(html) {
-  if (!html) return '';
-  return html.replace(/<[^>]*>/g, function (tag) {
-    return _QUIZ_ALLOWED_TAGS.test(tag) ? tag : '';
+function _escapeHtmlChars(str) {
+  return str.replace(/[<>]/g, function (ch) {
+    return ch === '<' ? '&lt;' : '&gt;';
   });
+}
+
+export function sanitizeHtml(html) {
+  if (!html) return '';
+  const out = [];
+  let lastIndex = 0;
+  let match;
+  const tagRe = new RegExp(_QUIZ_ALLOWED_TAG_RE.source, 'g');
+  while ((match = tagRe.exec(html)) !== null) {
+    out.push(_escapeHtmlChars(html.slice(lastIndex, match.index)));
+    out.push(match[0]);
+    lastIndex = tagRe.lastIndex;
+  }
+  out.push(_escapeHtmlChars(html.slice(lastIndex)));
+  return out.join('');
 }
 
 function syncQuizToServer(lessonNumber, score, completed) {

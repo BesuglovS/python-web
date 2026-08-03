@@ -11,15 +11,15 @@
     "explanation": "Цикл for перебирает элементы последовательности напрямую — отдельные символы строки."
   },
   {
-    "question": "Что выведет <code>for i in [10, 20, 30]: print(i)</code>?",
+    "question": "Что выведет код?<br><code>for ch in \"Python\":<br>&nbsp;&nbsp;&nbsp;&nbsp;print(ch, end=\"-\")</code>",
     "options": [
-      "0 1 2",
-      "10 20 30",
-      "[10, 20, 30]",
-      "0, 1, 2"
+      "P y t h o n",
+      "P-y-t-h-o-n",
+      "P-y-t-h-o-n-",
+      "Python"
     ],
-    "correct": 1,
-    "explanation": "for перебирает значения списка: сначала 10, потом 20, потом 30."
+    "correct": 2,
+    "explanation": "Цикл перебирает строку посимвольно и печатает каждый символ, а end=\"-\" добавляет дефис после каждого символа, включая последний."
   },
   {
     "question": "Когда выполняется блок else в цикле for?",
@@ -33,15 +33,15 @@
     "explanation": "Блок else в for выполняется только при нормальном завершении цикла. Если был break — else не выполняется."
   },
   {
-    "question": "Что выведет код?<br><code>total = 0<br>for n in [1, 2, 3, 4, 5]:<br>&nbsp;&nbsp;&nbsp;&nbsp;total += n<br>print(total)</code>",
+    "question": "Что выведет код?<br><code>s = \"\"<br>for ch in \"abc\":<br>&nbsp;&nbsp;&nbsp;&nbsp;s += ch.upper()<br>print(s)</code>",
     "options": [
-      "15",
-      "10",
-      "12345",
-      "5"
+      "abc",
+      "ABC",
+      "aAbBcC",
+      "Ошибка"
     ],
-    "correct": 0,
-    "explanation": "Цикл суммирует элементы списка: 1 + 2 + 3 + 4 + 5 = 15."
+    "correct": 1,
+    "explanation": "На каждой итерации символ в верхнем регистре добавляется к строке s: A, затем B, затем C. Выводится \"ABC\"."
   },
   {
     "question": "Что выведет код?<br><code>for char in \"Python\":<br>&nbsp;&nbsp;&nbsp;&nbsp;if char == \"t\":<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>&nbsp;&nbsp;&nbsp;&nbsp;print(char, end=\"\")</code>",
@@ -55,15 +55,15 @@
     "explanation": "Цикл выводит \"P\", \"y\". При char = \"t\" срабатывает break и цикл завершается."
   },
   {
-    "question": "Что выведет код?<br><code>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 2:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</code>",
+    "question": "Что выведет код?<br><code>for letter in \"ABC\":<br>&nbsp;&nbsp;&nbsp;&nbsp;pass<br>print(letter)</code>",
     "options": [
-      "0 1 2 3 4",
-      "0 1 3 4",
-      "2",
-      "0 1 2"
+      "A",
+      "B",
+      "C",
+      "Ошибка"
     ],
-    "correct": 1,
-    "explanation": "При i = 2 срабатывает continue, print(2) пропускается. Вывод: 0 1 3 4."
+    "correct": 2,
+    "explanation": "Переменная цикла сохраняет последнее значение и после завершения цикла — выводится C."
   },
   {
     "question": "Какая переменная-счётчик чаще всего используется в циклах for?",
@@ -77,15 +77,15 @@
     "explanation": "По традиции в циклах for чаще всего используются i, j, k в качестве переменных-счётчиков."
   },
   {
-    "question": "Что выведет код?<br><code>for i in \"ab\":<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in \"12\":<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(i + j, end=\" \")</code>",
+    "question": "Что выведет код?<br><code>text = \"программирование\"<br>count = 0<br>for char in text:<br>&nbsp;&nbsp;&nbsp;&nbsp;if char == \"р\":<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count += 1<br>print(count)</code>",
     "options": [
-      "a b 1 2",
-      "a1 a2 b1 b2",
-      "ab 12",
-      "a1 b2"
+      "2",
+      "3",
+      "4",
+      "Ошибка"
     ],
     "correct": 1,
-    "explanation": "Внешний цикл: a, b. Для каждого внутренний: 1, 2. Комбинации: \"a1\", \"a2\", \"b1\", \"b2\"."
+    "explanation": "Счётчик увеличивается при каждой встреченной букве \"р\". В слове \"программирование\" буква \"р\" встречается 3 раза."
   },
   {
     "question": "Что выведет код?<br><code>for i in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"конец\")</code>",

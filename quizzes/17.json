@@ -1,6 +1,6 @@
 [
   {
-    "question": "Сколько раз выполнится тело цикла?<br><code>i = 0<br>while i < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1</code>",
+    "question": "Сколько раз выполнится тело цикла?<br><code>i = 0<br>while i &lt; 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1</code>",
     "options": [
       "2",
       "3",
@@ -77,18 +77,18 @@
     "explanation": "Цикл выводит 10, 9, 8, 7, 6. Когда x становится 5, срабатывает break и цикл завершается."
   },
   {
-    "question": "Что выведет код?<br><code>i = 0<br>while i < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 2:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code>",
+    "question": "Что выведет код?<br><code>x = 1<br>while x &lt; 10:<br>&nbsp;&nbsp;&nbsp;&nbsp;x = x * 2<br>print(x)</code>",
     "options": [
-      "1 2 3",
-      "1 3",
-      "2",
-      "1 2"
+      "8",
+      "16",
+      "10",
+      "Бесконечный цикл"
     ],
     "correct": 1,
-    "explanation": "При i = 2 срабатывает continue, итерация прерывается, print(2) не выполняется. Вывод: 1 и 3."
+    "explanation": "x последовательно удваивается: 2, 4, 8, 16. При x = 16 условие x &lt; 10 ложно, цикл завершается. Выводится 16."
   },
   {
-    "question": "Что выведет код?<br><code>n = 0<br>while n < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;n += 1<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Готово\")</code>",
+    "question": "Что выведет код?<br><code>n = 0<br>while n &lt; 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;n += 1<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Готово\")</code>",
     "options": [
       "Ошибка",
       "Готово",

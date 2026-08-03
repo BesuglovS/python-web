@@ -11,7 +11,7 @@
     "explanation": "continue пропускает оставшуюся часть тела цикла для текущей итерации и переходит к проверке условия (или следующему элементу)."
   },
   {
-    "question": "Что выведет код: <code>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 2: continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code>?",
+    "question": "Что выведет код?<br><code>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 2: continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code>",
     "options": [
       "0 1 2 3 4",
       "0 1 3 4",
@@ -77,18 +77,18 @@
     "explanation": "continue пропускает чётные числа (i % 2 == 0). Выводятся только нечётные: 1, 3, 5, 7, 9."
   },
   {
-    "question": "Что выведет код?<br><code>for n in range(2, 10):<br>&nbsp;&nbsp;&nbsp;&nbsp;for d in range(2, n):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if n % d == 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(n, end=\" \")</code>",
+    "question": "Что выведет код?<br><code>num = 0<br>while num &lt; 10:<br>&nbsp;&nbsp;&nbsp;&nbsp;num += 1<br>&nbsp;&nbsp;&nbsp;&nbsp;if num % 3 == 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(num, end=\" \")</code>",
     "options": [
-      "2 3 5 7",
-      "4 6 8 9",
-      "2 3 4 5 6 7 8 9",
-      "2 3 5 7 9"
+      "1 2 4 5 7 8 10",
+      "1 2 3 4 5 6 7 8 9 10",
+      "3 6 9",
+      "1 2 4 5 7 8"
     ],
     "correct": 0,
-    "explanation": "Код находит простые числа от 2 до 9. Если делитель не найден (else после for), число простое: 2, 3, 5, 7."
+    "explanation": "num обновляется ДО проверки continue, поэтому бесконечного цикла нет. continue пропускает числа, кратные 3. Вывод: 1 2 4 5 7 8 10."
   },
   {
-    "question": "Что выведет код?<br><code>i = 0<br>while i < 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Цикл завершён\")</code>",
+    "question": "Что выведет код?<br><code>i = 0<br>while i &lt; 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Цикл завершён\")</code>",
     "options": [
       "Цикл завершён",
       "Ничего не выведется",
