@@ -113,9 +113,27 @@ print(divide(10, 0))   # None
 
 Каждая среда разработки предоставляет горячие клавиши для отладки. Вот основные:
 
-<table><tbody><tr><th>Действие</th><th>IDLE</th><th>VS Code</th><th>PyCharm</th></tr><tr><td>Точка останова (breakpoint)</td><td>—</td><td><code>F9</code></td><td>Клик на номер строки</td></tr><tr><td>Запуск отладки</td><td>—</td><td><code>F5</code></td><td><code>Shift+F9</code></td></tr><tr><td>Следующая строка (Step Over)</td><td>—</td><td><code>F10</code></td><td><code>F8</code></td></tr><tr><td>Зайти внутрь (Step Into)</td><td>—</td><td><code>F11</code></td><td><code>F7</code></td></tr><tr><td>Выйти из функции (Step Out)</td><td>—</td><td><code>Shift+F11</code></td><td><code>Shift+F8</code></td></tr><tr><td>Продолжить до следующей точки (Continue)</td><td>—</td><td><code>F5</code></td><td><code>F9</code></td></tr><tr><td>Запуск файла</td><td><code>F5</code></td><td><code>Ctrl+F5</code> / кнопка ▶</td><td><code>Shift+F10</code></td></tr><tr><td>Остановка выполнения</td><td><code>Ctrl+C</code></td><td><code>Shift+F5</code></td><td><code>Ctrl+F2</code></td></tr><tr><td>Перезапуск</td><td><code>F5</code></td><td><code>Ctrl+Shift+F5</code></td><td><code>Ctrl+F5</code></td></tr></tbody></table>
+<table><tbody><tr><th>Действие</th><th>IDLE</th><th>VS Code</th><th>PyCharm</th></tr><tr><td>Точка останова (breakpoint)</td><td>—</td><td><code>F9</code></td><td>Клик на номер строки</td></tr><tr><td>Запуск отладки</td><td>—</td><td><code>F5</code></td><td><code>Shift+F9</code></td></tr><tr><td>Следующая строка (Step Over)</td><td>—</td><td><code>F10</code></td><td><code>F8</code></td></tr><tr><td>Зайти внутрь (Step Into)</td><td>—</td><td><code>F11</code></td><td><code>F7</code></td></tr><tr><td>Выйти из функции (Step Out)</td><td>—</td><td><code>Shift+F11</code></td><td><code>Shift+F8</code></td></tr><tr><td>Продолжить до следующей точки (Continue)</td><td>—</td><td><code>F5</code></td><td><code>F9</code></td></tr><tr><td>Запуск файла</td><td><code>F5</code></td><td><code>Ctrl+F5</code></td><td><code>Shift+F10</code></td></tr><tr><td>Остановка выполнения</td><td><code>Ctrl+C</code></td><td><code>Shift+F5</code></td><td><code>Ctrl+F2</code></td></tr><tr><td>Перезапуск</td><td><code>F5</code></td><td><code>Ctrl+Shift+F5</code></td><td><code>Ctrl+F5</code></td></tr></tbody></table>
+
+Основные команды пошагового выполнения:
+
+- **Step Over** (шаг с обходом, `F10` в VS Code) — выполняет текущую строку. Если это вызов функции — выполняет её целиком, не заходя внутрь, и останавливается на следующей строке.
+- **Step Into** (шаг с заходом, `F11` в VS Code) — заходит внутрь вызываемой функции и останавливается на её первой строке.
+- **Step Out** (выйти из функции, `Shift+F11` в VS Code) — выполняет оставшийся код функции до конца и возвращается в вызывающий код.
 
 > **💡 Совет:** IDLE — простая среда без встроенного отладчика. Для пошаговой отладки используйте VS Code или PyCharm.
+
+## Панель Watch (наблюдение за переменными)
+
+В отладчике (VS Code, PyCharm) есть панель **Watch**. В неё можно добавить интересующие переменные или выражения, и отладчик будет показывать их актуальные значения на каждом шаге выполнения:
+
+```python
+def calc(x, y):
+    result = x * y    # добавьте x, y и result в панель Watch
+    return result
+```
+
+Панель Watch особенно полезна, когда нужно отследить, как меняется значение переменной во время выполнения циклов или вложенных вызовов функций.
 
 ## Практические советы
 
@@ -124,3 +142,4 @@ print(divide(10, 0))   # None
 - **Упрощайте** — если не можете найти ошибку в большом коде, выделите проблемный участок и проверьте его отдельно
 - **Используйте метод резиновой уточки (rubber duck)** — объясняя код вслух, вы часто сами находите ошибку
 - **Git** — делайте коммиты после каждой работающей версии, чтобы можно было откатиться
+- **PEP 8** — руководство по стилю оформления кода Python (отступы, именование переменных). Это не инструмент отладки, а свод правил для написания читаемого кода

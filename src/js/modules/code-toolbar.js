@@ -52,6 +52,7 @@ function reHighlight(preEl) {
   code.textContent = text;
   if (typeof hljs !== 'undefined') {
     preEl.classList.add('language-python');
+    delete code.dataset.highlighted;
     hljs.highlightElement(code);
   } else {
     highlightPythonFallback(code);

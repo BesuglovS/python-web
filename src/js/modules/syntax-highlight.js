@@ -185,11 +185,13 @@ export function initSyntaxHighlighting() {
       if (typeof hljs !== 'undefined') {
         preElements.forEach(function (pre) {
           const code = pre.querySelector('code');
+          const target = code || pre;
           if (code && code.querySelector('.py-keyword')) {
             // eslint-disable-next-line no-self-assign
             code.textContent = code.textContent;
           }
-          hljs.highlightElement(code || pre);
+          delete target.dataset.highlighted;
+          hljs.highlightElement(target);
         });
       }
     }, 500);
