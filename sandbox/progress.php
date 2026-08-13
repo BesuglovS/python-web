@@ -8,6 +8,7 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/Auth.php';
 require_once __DIR__ . '/contest_map.php';
+require_once __DIR__ . '/ProgressReporter.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -23,6 +24,29 @@ Auth::requireLogin();
 
 $userId = Auth::getUserId();
 $db = Database::getInstance();
+
+/**
+ * Отчёт курса в единый API прогресса (auth-web) для сводной карточки ученика.
+ */
+function reportCourseSummary(int $userId): void {
+    try {
+        $lessonsFile = __DIR__ . '/../lessons.json';
+        $total = 50;
+        if (is_file($lessonsFile)) {
+            $meta = json_decode((string) file_get_contents($lessonsFile), true);
+            $total = (int) ($meta['total'] ?? 50);
+        }
+        if ($total < 1) {
+            return;
+        }
+        $stmt = Database::getInstance()->prepare("SELECT COUNT(*) FROM progress WHERE user_id = ? AND completed = 1");
+        $stmt->execute([$userId]);
+        $completed = (int) $stmt->fetchColumn();
+        ProgressReporter::report($userId, 'python', $completed, $total);
+    } catch (Throwable $e) {
+        // Не ломаем основной флоу при сбое отчёта
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $stmt = $db->prepare("SELECT lesson_number, completed, quiz_score FROM progress WHERE user_id = ?");
@@ -82,6 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         $stmt->execute([$userId, $lessonNumber, $completed, $quizScore, $completed]);
 
+        reportCourseSummary($userId);
+
         jsonResponse(['success' => true]);
     }
 
@@ -135,6 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$userId, $lessonNumber, $completed, $quizScore, $completed]);
             $count++;
         }
+
+        reportCourseSummary($userId);
 
         jsonResponse(['success' => true, 'saved' => $count]);
     }
