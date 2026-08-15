@@ -26,6 +26,7 @@ import { initDragDropExercises } from './modules/drag-drop.js';
 import { initScrollRestore } from './modules/scroll-restore.js';
 import { initErrorTracking } from './modules/error-tracking.js';
 import { initAuth } from './modules/auth.js';
+import { initSetsVisual } from './modules/sets-visual.js';
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
@@ -76,6 +77,7 @@ async function initializeApplication() {
       initQuizSystem(),
       initBadgesRendering(),
       initDragDropExercises(),
+      initSetsVisual(),
       initScrollRestore(),
     ]);
   } catch (error) {

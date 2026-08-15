@@ -3,31 +3,31 @@
     "question": "Что такое list comprehension?",
     "options": [
       "Копирование списка",
-      "Сжатый способ создания списка из итератора в одну строку",
+      "Удаление дубликатов",
       "Сортировка списка",
-      "Удаление дубликатов"
+      "Компактный способ создать новый список одной строкой: [выражение for элемент in коллекция]"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "List comprehension — это компактный синтаксис для создания списков: [выражение for элемент in итератор if условие]."
   },
   {
     "question": "Что создаст <code>[x**2 for x in range(5) if x % 2 == 0]</code>?",
     "options": [
-      "[0, 4, 16]",
-      "[0, 1, 4, 9, 16]",
       "[1, 9]",
-      "[0, 2, 4]"
+      "[0, 1, 4, 9, 16]",
+      "[0, 2, 4]",
+      "[0, 4, 16]"
     ],
-    "correct": 0,
+    "correct": 3,
     "explanation": "range(5) → 0,1,2,3,4. Фильтр x % 2 == 0 оставляет 0,2,4. Возведение в квадрат даёт [0, 4, 16]."
   },
   {
     "question": "Что создаст <code>[x * 2 for x in range(5)]</code>?",
     "options": [
       "[0, 2, 4, 6, 8]",
-      "[2, 4, 6, 8, 10]",
+      "Ошибка",
       "[0, 1, 2, 3, 4]",
-      "Ошибка"
+      "[2, 4, 6, 8, 10]"
     ],
     "correct": 0,
     "explanation": "range(5) = 0,1,2,3,4. Умножение на 2: 0, 2, 4, 6, 8."
@@ -35,78 +35,78 @@
   {
     "question": "Что создаст <code>[x for x in range(10) if x > 5]</code>?",
     "options": [
-      "[0, 1, 2, 3, 4, 5]",
       "[6, 7, 8, 9]",
-      "[5, 6, 7, 8, 9]",
-      "[]"
+      "[0, 1, 2, 3, 4, 5]",
+      "[]",
+      "[5, 6, 7, 8, 9]"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "range(10) = 0-9. Фильтр x > 5 оставляет 6, 7, 8, 9."
   },
   {
     "question": "Что выведет код?<br><code>words = [\"hello\", \"world\", \"python\"]<br>upper = [w.upper() for w in words]<br>print(upper)</code>",
     "options": [
-      "[\"HELLO\", \"WORLD\", \"PYTHON\"]",
       "[\"hello\", \"world\", \"python\"]",
-      "[\"Hello\", \"World\", \"Python\"]",
-      "Ошибка"
+      "Ошибка",
+      "[\"HELLO\", \"WORLD\", \"PYTHON\"]",
+      "[\"Hello\", \"World\", \"Python\"]"
     ],
-    "correct": 0,
+    "correct": 2,
     "explanation": "List comprehension применяет .upper() к каждому слову: \"hello\" → \"HELLO\", \"world\" → \"WORLD\", \"python\" → \"PYTHON\"."
   },
   {
     "question": "Как переписать цикл, создающий список квадратов, через list comprehension?",
     "options": [
+      "for x in range(5): x**2",
       "[x^2 for x in range(5)]",
       "[x**2 for x in range(5)]",
-      "square(x) for x in range(5)",
-      "for x in range(5): x**2"
+      "square(x) for x in range(5)"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "list comprehension: [выражение for элемент in итератор]. Квадраты: [x**2 for x in range(5)]."
   },
   {
     "question": "Можно ли использовать list comprehension со словарями?",
     "options": [
-      "Нет",
-      "Да, можно создавать словари через dict comprehension",
+      "Только в Python 2",
       "Только с ключами",
-      "Только в Python 2"
+      "Нет",
+      "Да, можно создавать словари через dict comprehension"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "Словарные включения (dict comprehension): {ключ: значение for элемент in итератор}. Например: {x: x**2 for x in range(5)}."
   },
   {
     "question": "Как отфильтровать только положительные числа из списка через list comprehension?",
     "options": [
+      "[x for x in nums while x > 0]",
       "[x for x in nums if x > 0]",
-      "[x > 0 for x in nums]",
       "[if x > 0 for x in nums]",
-      "[x for x in nums while x > 0]"
+      "[x > 0 for x in nums]"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "Фильтр в list comprehension пишется после цикла: [x for x in nums if x > 0]."
   },
   {
     "question": "Что выведет код?<br><code>matrix = [[1, 2], [3, 4], [5, 6]]<br>flat = [x for row in matrix for x in row]<br>print(flat)</code>",
     "options": [
-      "[[1, 2], [3, 4], [5, 6]]",
       "[1, 2, 3, 4, 5, 6]",
+      "[[1, 2], [3, 4], [5, 6]]",
       "Ошибка",
       "[[1, 2, 3, 4, 5, 6]]"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Вложенный list comprehension «разворачивает» матрицу: все элементы всех строк в один список."
   },
   {
     "question": "Что выведет код?<br><code>print([i * j for i in range(1, 4) for j in range(1, 4)])</code>",
     "options": [
-      "[1, 2, 3, 2, 4, 6, 3, 6, 9]",
+      "Ошибка",
       "[1, 4, 9]",
-      "[[1,2,3],[2,4,6],[3,6,9]]",
-      "Ошибка"
+      "[1, 2, 3, 2, 4, 6, 3, 6, 9]",
+      "[[1,2,3],[2,4,6],[3,6,9]]"
     ],
-    "correct": 0,
+    "correct": 2,
     "explanation": "Вложенный list comprehension: i=1→j=1,2,3; i=2→j=1,2,3; i=3→j=1,2,3. Результат таблицы умножения: [1,2,3,2,4,6,3,6,9]."
   }
 ]

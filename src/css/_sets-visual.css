@@ -1,0 +1,158 @@
+/* Интерактивная диаграмма Эйлера для операций над множествами */
+.sets-visual {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.25rem 1.5rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.sets-visual svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.sets-visual .region {
+  fill: transparent;
+  transition: fill var(--transition), fill-opacity var(--transition);
+}
+
+.sets-visual .region-a-only.shaded {
+  fill: #3b82f6;
+  fill-opacity: 0.22;
+}
+
+.sets-visual .region-inter.shaded {
+  fill: #a855f7;
+  fill-opacity: 0.22;
+}
+
+.sets-visual .region-b-only.shaded {
+  fill: #22c55e;
+  fill-opacity: 0.22;
+}
+
+.sets-visual .circle-outline {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.sets-visual .circle-a {
+  stroke: #3b82f6;
+}
+
+.sets-visual .circle-b {
+  stroke: #22c55e;
+}
+
+.sets-visual .set-label {
+  font-size: 20px;
+  font-weight: 700;
+  fill: var(--text);
+}
+
+.sets-visual .num-bubble circle {
+  fill: var(--card-bg);
+  stroke: var(--border);
+  stroke-width: 1.5;
+  transition: fill var(--transition), stroke var(--transition);
+}
+
+.sets-visual .num-bubble text {
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--text);
+  text-anchor: middle;
+  dominant-baseline: central;
+  user-select: none;
+}
+
+.sets-visual .num-bubble.in-a.active circle {
+  fill: #3b82f6;
+  stroke: #3b82f6;
+}
+
+.sets-visual .num-bubble.in-inter.active circle {
+  fill: #a855f7;
+  stroke: #a855f7;
+}
+
+.sets-visual .num-bubble.in-b.active circle {
+  fill: #22c55e;
+  stroke: #22c55e;
+}
+
+.sets-visual .num-bubble.active text {
+  fill: #fff;
+}
+
+.sets-visual-sets {
+  margin: 0.75rem 0 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95em;
+  font-weight: 500;
+}
+
+.sets-visual-result {
+  margin: 0.5rem 0 0;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: 600;
+  min-height: 1.5em;
+  color: var(--text);
+}
+
+.sets-visual-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 0.85rem;
+}
+
+.sets-visual .sets-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: 0.92em;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  user-select: none;
+}
+
+.sets-visual .sets-btn:hover {
+  border-color: var(--primary);
+}
+
+.sets-visual .sets-btn.active {
+  background: var(--primary-gradient);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.35);
+}
+
+.sets-visual .sets-btn.sets-btn-reset {
+  color: var(--text-muted);
+  border-style: dashed;
+}
+
+.sets-visual .sets-btn.sets-btn-reset.active {
+  color: var(--text);
+  border-color: var(--border);
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+}

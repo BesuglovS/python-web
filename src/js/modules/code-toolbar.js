@@ -17,7 +17,166 @@ function showCopied(btn) {
   }, 2000);
 }
 
-function handleCodeTabKey(e) {
+/**
+ * Extract editable code text, removing the zero-width space used as a
+ * plain-text caret anchor while editing.
+ * @param {HTMLElement} preEl - The pre element containing code
+ */
+function cleanCodeText(preEl) {
+  return (preEl.textContent || '').replace(/\u200B/g, '');
+}
+
+/**
+ * Merge <code> elements back into one. contentEditable can split the <code>
+ * element (e.g. when pressing Enter), carrying stale highlight markup.
+ * @param {HTMLElement} preEl - The pre element containing code
+ * @returns {HTMLElement} The single code element (or pre as fallback)
+ */
+function mergeCodeElements(preEl) {
+  const codeEls = preEl.querySelectorAll('code');
+  if (codeEls.length > 1) {
+    const fullText = preEl.textContent || '';
+    for (let i = codeEls.length - 1; i > 0; i--) {
+      codeEls[i].parentNode.removeChild(codeEls[i]);
+    }
+    codeEls[0].textContent = fullText;
+  }
+  return preEl.querySelector('code') || preEl;
+}
+
+/**
+ * Apply syntax highlighting to a code element (hljs when available, else fallback).
+ * @param {HTMLElement} preEl - The pre element (used to set the language class)
+ * @param {HTMLElement} code - The code element to highlight
+ */
+function applyHighlight(preEl, code) {
+  if (typeof hljs !== 'undefined') {
+    preEl.classList.add('language-python');
+    delete code.dataset.highlighted;
+    hljs.highlightElement(code);
+  } else {
+    highlightPythonFallback(code);
+  }
+}
+
+/**
+ * Re-highlight a code block after editing.
+ * @param {HTMLElement} preEl - The pre element containing code
+ */
+function reHighlight(preEl) {
+  const code = mergeCodeElements(preEl);
+  code.textContent = (code.textContent || '').replace(/\u200B/g, '');
+  applyHighlight(preEl, code);
+}
+
+/**
+ * Save the caret position as a character offset into the plain code text
+ * (zero-width anchors excluded so the offset matches the re-highlighted text).
+ * @param {HTMLElement} code - The code element
+ * @returns {number} Caret offset, or -1 if the caret is not in a text node
+ */
+function saveCaretOffset(code) {
+  const sel = window.getSelection();
+  if (!sel || !sel.rangeCount) return -1;
+  const range = sel.getRangeAt(0);
+  const tgt = range.startContainer;
+  const toff = range.startOffset;
+  if (tgt.nodeType !== Node.TEXT_NODE) return -1;
+  let off = 0;
+  const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+  let n;
+  while ((n = walker.nextNode())) {
+    if (n === tgt) {
+      const upTo = n.data.slice(0, Math.min(toff, n.length)).replace(/\u200B/g, '');
+      return off + upTo.length;
+    }
+    off += n.data.replace(/\u200B/g, '').length;
+  }
+  return off;
+}
+
+/**
+ * Restore the caret to the given character offset into the code text.
+ * @param {HTMLElement} code - The code element
+ * @param {number} offset - Character offset to place the caret at
+ */
+function restoreCaretOffset(code, offset) {
+  if (offset < 0) return;
+  const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+  let acc = 0;
+  let last = null;
+  let n;
+  while ((n = walker.nextNode())) {
+    if (acc + n.length >= offset) {
+      const r = document.createRange();
+      r.setStart(n, Math.max(0, offset - acc));
+      r.collapse(true);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+      return;
+    }
+    last = n;
+    acc += n.length;
+  }
+  if (last) {
+    const r = document.createRange();
+    r.setStart(last, last.length);
+    r.collapse(true);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+}
+
+/**
+ * Insert a line break at the caret, escaping highlighted spans so that the
+ * following line doesn't inherit their styling, and leaving a non-empty plain
+ * text anchor for Chromium to keep typing outside the spans.
+ * @param {HTMLElement} pre - The pre element being edited
+ */
+function insertLineBreak(pre) {
+  const sel = window.getSelection();
+  if (!sel || !sel.rangeCount) return;
+  let range = sel.getRangeAt(0);
+  if (!range.collapsed) {
+    range.deleteContents();
+    range = sel.getRangeAt(0);
+  }
+  const node = range.startContainer;
+  const offset = range.startOffset;
+  let nl;
+  if (node.nodeType === Node.TEXT_NODE) {
+    let span = null;
+    let el = node.parentElement;
+    while (el && el !== pre) {
+      if (el.tagName === 'SPAN' && /hljs-/.test(el.className || '')) span = el;
+      el = el.parentElement;
+    }
+    const tail = node.splitText(offset);
+    nl = document.createTextNode('\n');
+    if (span) {
+      const codeEl = span.parentNode;
+      codeEl.insertBefore(nl, span.nextSibling);
+      codeEl.insertBefore(tail, nl.nextSibling);
+    } else {
+      tail.parentNode.insertBefore(nl, tail);
+    }
+  } else {
+    nl = document.createTextNode('\n');
+    node.insertBefore(nl, node.childNodes[offset] || null);
+  }
+  // Non-empty plain anchor so Chromium types outside highlighted spans
+  const anchor = document.createTextNode('\u200B');
+  nl.parentNode.insertBefore(anchor, nl.nextSibling);
+  const r = document.createRange();
+  r.setStart(anchor, 0);
+  r.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(r);
+}
+
+function handleCodeKeyDown(e) {
   if (e.key === 'Tab') {
     e.preventDefault();
     const start = e.target.selectionStart;
@@ -39,23 +198,9 @@ function handleCodeTabKey(e) {
         sel.addRange(range);
       }
     }
-  }
-}
-
-/**
- * Re-highlight a code block
- * @param {HTMLElement} preEl - The pre element containing code
- */
-function reHighlight(preEl) {
-  const code = preEl.querySelector('code') || preEl;
-  const text = code.textContent || '';
-  code.textContent = text;
-  if (typeof hljs !== 'undefined') {
-    preEl.classList.add('language-python');
-    delete code.dataset.highlighted;
-    hljs.highlightElement(code);
-  } else {
-    highlightPythonFallback(code);
+  } else if (e.key === 'Enter' && !e.isComposing) {
+    e.preventDefault();
+    insertLineBreak(e.currentTarget);
   }
 }
 
@@ -82,7 +227,7 @@ export function initCodeToolbar() {
     copyBtn.setAttribute('aria-label', 'Копировать код');
 
     copyBtn.addEventListener('click', function () {
-      const text = pre.textContent || pre.innerText || '';
+      const text = cleanCodeText(pre);
 
       function fallbackCopy() {
         const ta = document.createElement('textarea');
@@ -122,40 +267,89 @@ export function initCodeToolbar() {
     editBtn.title = 'Редактировать код';
     editBtn.setAttribute('aria-label', 'Редактировать код');
 
+    toolbar.appendChild(editBtn);
+
     let isEditing = false;
+    let liveTimer = null;
 
-    editBtn.addEventListener('click', function () {
-      isEditing = !isEditing;
-      pre.contentEditable = isEditing ? 'true' : 'false';
-      pre.spellcheck = false;
-      if (isEditing) {
-        pre.classList.add('editing');
-        editBtn.classList.add('active');
-        editBtn.textContent = '✓ Готово';
-        pre.focus();
-        pre.addEventListener('keydown', handleCodeTabKey);
-      } else {
-        pre.classList.remove('editing');
-        editBtn.classList.remove('active');
-        editBtn.textContent = '✎ Ред.';
-        pre.removeEventListener('keydown', handleCodeTabKey);
-        reHighlight(pre);
+    function cancelLiveHighlight() {
+      if (liveTimer !== null) {
+        clearTimeout(liveTimer);
+        liveTimer = null;
       }
-    });
+    }
 
-    pre.addEventListener('dblclick', function () {
-      if (isEditing) return;
+    function runLiveHighlight() {
+      liveTimer = null;
+      if (!isEditing) return;
+      const code = pre.querySelector('code') || pre;
+      const sel = window.getSelection();
+      const caretInside =
+        sel && sel.rangeCount && code.contains(sel.getRangeAt(0).startContainer);
+      const offset = caretInside ? saveCaretOffset(code) : -1;
+      mergeCodeElements(pre);
+      code.textContent = (code.textContent || '').replace(/\u200B/g, '');
+      applyHighlight(pre, code);
+      if (offset >= 0) restoreCaretOffset(code, offset);
+    }
+
+    function scheduleLiveHighlight() {
+      if (liveTimer !== null) clearTimeout(liveTimer);
+      liveTimer = setTimeout(runLiveHighlight, 150);
+    }
+
+    function onCodeInput(e) {
+      if (e.isComposing) return;
+      scheduleLiveHighlight();
+    }
+
+    function onCodePaste(e) {
+      e.preventDefault();
+      const text = (e.clipboardData && e.clipboardData.getData('text/plain')) || '';
+      if (text) {
+        document.execCommand('insertText', false, text);
+      }
+      scheduleLiveHighlight();
+    }
+
+    function enterEditMode() {
       isEditing = true;
       pre.contentEditable = 'true';
       pre.spellcheck = false;
       pre.classList.add('editing');
       editBtn.classList.add('active');
       editBtn.textContent = '✓ Готово';
+      pre.addEventListener('keydown', handleCodeKeyDown);
+      pre.addEventListener('input', onCodeInput);
+      pre.addEventListener('paste', onCodePaste);
       pre.focus();
-      pre.addEventListener('keydown', handleCodeTabKey);
+    }
+
+    function exitEditMode() {
+      isEditing = false;
+      pre.contentEditable = 'false';
+      pre.classList.remove('editing');
+      editBtn.classList.remove('active');
+      editBtn.textContent = '✎ Ред.';
+      pre.removeEventListener('keydown', handleCodeKeyDown);
+      pre.removeEventListener('input', onCodeInput);
+      pre.removeEventListener('paste', onCodePaste);
+      cancelLiveHighlight();
+      reHighlight(pre);
+    }
+
+    editBtn.addEventListener('click', function () {
+      if (isEditing) {
+        exitEditMode();
+      } else {
+        enterEditMode();
+      }
     });
 
-    toolbar.appendChild(editBtn);
+    pre.addEventListener('dblclick', function () {
+      if (isEditing) return;
+      enterEditMode();
+    });
 
     // ── Run Button (skipped for data-norun blocks) ──
     if (!pre.closest('[data-norun]')) {
@@ -198,14 +392,9 @@ export function initCodeToolbar() {
       // ── Run handler ──
       runBtn.addEventListener('click', function () {
         if (isEditing) {
-          isEditing = false;
-          pre.contentEditable = 'false';
-          pre.classList.remove('editing');
-          editBtn.classList.remove('active');
-          editBtn.textContent = '✎ Ред.';
-          reHighlight(pre);
+          exitEditMode();
         }
-        const code = (pre.textContent || pre.innerText || '').trim();
+        const code = cleanCodeText(pre).trim();
         if (/input\s*\(/.test(code)) {
           exerciseButtons.style.display = 'flex';
           sandboxOutput.style.display = 'none';
@@ -222,7 +411,7 @@ export function initCodeToolbar() {
 
       // ── Exercise run handler ──
       exerciseRunBtn.addEventListener('click', function () {
-        const code = (pre.textContent || pre.innerText || '').trim();
+        const code = cleanCodeText(pre).trim();
         const input = sandboxInput.value;
         sandboxOutput.style.display = 'block';
         runSandbox(sandboxOutput, code, input);

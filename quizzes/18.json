@@ -15,32 +15,32 @@
     "options": [
       "P y t h o n",
       "P-y-t-h-o-n",
-      "P-y-t-h-o-n-",
-      "Python"
+      "Python",
+      "P-y-t-h-o-n-"
     ],
-    "correct": 2,
+    "correct": 3,
     "explanation": "Цикл перебирает строку посимвольно и печатает каждый символ, а end=\"-\" добавляет дефис после каждого символа, включая последний."
   },
   {
     "question": "Когда выполняется блок else в цикле for?",
     "options": [
-      "Когда срабатывает break",
       "Когда цикл завершился нормально (без break)",
+      "Когда срабатывает break",
       "Всегда",
       "Никогда"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Блок else в for выполняется только при нормальном завершении цикла. Если был break — else не выполняется."
   },
   {
     "question": "Что выведет код?<br><code>s = \"\"<br>for ch in \"abc\":<br>&nbsp;&nbsp;&nbsp;&nbsp;s += ch.upper()<br>print(s)</code>",
     "options": [
       "abc",
-      "ABC",
       "aAbBcC",
+      "ABC",
       "Ошибка"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "На каждой итерации символ в верхнем регистре добавляется к строке s: A, затем B, затем C. Выводится \"ABC\"."
   },
   {
@@ -59,10 +59,10 @@
     "options": [
       "A",
       "B",
-      "C",
-      "Ошибка"
+      "Ошибка",
+      "C"
     ],
-    "correct": 2,
+    "correct": 3,
     "explanation": "Переменная цикла сохраняет последнее значение и после завершения цикла — выводится C."
   },
   {
@@ -80,23 +80,23 @@
     "question": "Что выведет код?<br><code>text = \"программирование\"<br>count = 0<br>for char in text:<br>&nbsp;&nbsp;&nbsp;&nbsp;if char == \"р\":<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count += 1<br>print(count)</code>",
     "options": [
       "2",
-      "3",
       "4",
+      "3",
       "Ошибка"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "Счётчик увеличивается при каждой встреченной букве \"р\". В слове \"программирование\" буква \"р\" встречается 3 раза."
   },
   {
-    "question": "Что выведет код?<br><code>for i in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"конец\")</code>",
+    "question": "Что выведет код?<br><code>for ch in \"ab\":<br>&nbsp;&nbsp;&nbsp;&nbsp;print(ch, end=\" \")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"конец\")</code>",
     "options": [
-      "0 1 2",
-      "0 1 2 конец",
+      "a b",
       "конец",
-      "0 1 2 3 конец"
+      "a b a b конец",
+      "a b конец"
     ],
-    "correct": 1,
-    "explanation": "Цикл выводит 0, 1, 2. Завершается нормально, выполняется else: выводится \"конец\"."
+    "correct": 3,
+    "explanation": "Цикл выводит a, b. Завершается нормально, выполняется else: выводится \"конец\"."
   },
   {
     "question": "Что такое итерируемый объект?",

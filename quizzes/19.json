@@ -3,11 +3,11 @@
     "question": "Что генерирует <code>range(3)</code>?",
     "options": [
       "1, 2, 3",
-      "0, 1, 2",
       "0, 1, 2, 3",
+      "0, 1, 2",
       "3"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "range(n) генерирует числа от 0 до n-1 включительно."
   },
   {
@@ -25,44 +25,44 @@
     "question": "Что генерирует <code>range(0, 10, 2)</code>?",
     "options": [
       "0, 2, 4, 6, 8, 10",
-      "0, 2, 4, 6, 8",
       "2, 4, 6, 8",
-      "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10"
+      "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+      "0, 2, 4, 6, 8"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "range(start, stop, step) с шагом 2: 0, 2, 4, 6, 8."
   },
   {
-    "question": "Что вернёт <code>list(range(5))</code>?",
+    "question": "Что вернёт <code>len(range(10))</code>?",
     "options": [
-      "[1, 2, 3, 4, 5]",
-      "[0, 1, 2, 3, 4]",
-      "[0, 1, 2, 3, 4, 5]",
-      "[5]"
+      "10",
+      "9",
+      "11",
+      "Ошибка"
     ],
-    "correct": 1,
-    "explanation": "list() преобразует range(5) в список [0, 1, 2, 3, 4]."
+    "correct": 0,
+    "explanation": "len(range(10)) возвращает количество элементов range(10) — числа от 0 до 9, то есть 10."
   },
   {
-    "question": "Что вернёт <code>list(range(10, 0, -2))</code>?",
+    "question": "Сколько элементов в последовательности <code>range(2, 11, 2)</code>?",
     "options": [
-      "[10, 8, 6, 4, 2, 0]",
-      "[10, 8, 6, 4, 2]",
-      "[9, 7, 5, 3, 1]",
-      "[]"
+      "4",
+      "6",
+      "5",
+      "9"
     ],
-    "correct": 1,
-    "explanation": "Отрицательный шаг -2 от 10 до 0 (невключительно): 10, 8, 6, 4, 2."
+    "correct": 2,
+    "explanation": "range(2, 11, 2) даёт 2, 4, 6, 8, 10 — 5 элементов."
   },
   {
     "question": "Что такое ленивые вычисления (lazy evaluation) range?",
     "options": [
-      "range хранит все числа в памяти",
       "range генерирует числа по одному при итерации, не храня все сразу",
+      "range хранит все числа в памяти",
       "range работает медленно",
       "range нельзя использовать в цикле"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "range — ленивый: он не создаёт список всех чисел, а генерирует их по одному при необходимости. Экономит память."
   },
   {
@@ -80,29 +80,29 @@
     "question": "Что выведет код?<br><code>for i in range(5, 0, -1):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</code>",
     "options": [
       "5 4 3 2 1 0",
-      "5 4 3 2 1",
       "0 1 2 3 4 5",
-      "1 2 3 4 5"
+      "1 2 3 4 5",
+      "5 4 3 2 1"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "range(5, 0, -1) даёт 5, 4, 3, 2, 1 (от 5 до 1, не включая 0)."
   },
   {
-    "question": "Что выведет код?<br><code>words = [\"яблоко\", \"банан\", \"вишня\"]<br>for i in range(len(words)):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, words[i])</code>",
+    "question": "Что выведет код?<br><code>word = \"привет\"<br>for i in range(len(word)):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, word[i])</code>",
     "options": [
-      "Только индексы",
-      "Только слова",
-      "0 яблоко, 1 банан, 2 вишня",
+      "п р и в е т",
+      "0 1 2 3 4 5",
+      "0 п\n1 р\n2 и\n3 в\n4 е\n5 т",
       "Ошибка"
     ],
     "correct": 2,
-    "explanation": "range(len(words)) = range(3) = 0, 1, 2. Выводятся индекс и соответствующий элемент списка."
+    "explanation": "range(len(word)) = range(6) = 0, 1, 2, 3, 4, 5. Выводятся индекс и соответствующий символ строки."
   },
   {
     "question": "Что выведет код?<br><code>for i in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code>",
     "options": [
       "1 2 3",
-      "0 1 2",
+      "0\n1\n2",
       "0 1 2 3",
       "1 2"
     ],

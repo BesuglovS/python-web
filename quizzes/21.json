@@ -2,12 +2,12 @@
   {
     "question": "Что такое вложенный цикл?",
     "options": [
-      "Цикл, который выполняется один раз",
       "Цикл внутри другого цикла",
+      "Цикл, который выполняется один раз",
       "Цикл без условия",
       "Бесконечный цикл"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Вложенный цикл — это цикл, находящийся в теле другого цикла. Внутренний цикл полностью выполняется на каждой итерации внешнего."
   },
   {
@@ -33,80 +33,80 @@
     "explanation": "Таблица умножения 3×3: 1×1=1, 1×2=2, 1×3=3, 2×1=2, 2×2=4, 2×3=6, 3×1=3, 3×2=6, 3×3=9."
   },
   {
-    "question": "Что такое матрица в программировании?",
+    "question": "На какой цикл действует <code>break</code>, если он находится внутри вложенного цикла?",
     "options": [
-      "Таблица чисел (список списков)",
-      "Функция для вычислений",
-      "Тип переменной",
-      "Цикл внутри цикла"
+      "Сразу на все циклы",
+      "Только на внешний",
+      "Только на ближайший (внутренний)",
+      "break нельзя использовать во вложенных циклах"
     ],
-    "correct": 0,
-    "explanation": "Матрица — это двумерная структура данных, реализуемая как список списков. Каждый внутренний список — строка матрицы."
+    "correct": 2,
+    "explanation": "break завершает только ближайший цикл, в котором находится. Чтобы выйти сразу из всех, используют флаг."
   },
   {
-    "question": "Как обратиться к элементу матрицы matrix на строке i, столбце j?",
+    "question": "Что выведет код?<br><code>for i in range(2):<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f\"{i}{j}\", end=\" \")<br>&nbsp;&nbsp;&nbsp;&nbsp;print()</code>",
     "options": [
-      "matrix[i][j]",
-      "matrix(i, j)",
-      "matrix[i, j]",
-      "matrix[i] + [j]"
+      "00 01 02\\n10 11 12",
+      "00 01 02 10 11 12",
+      "0 1 2 0 1 2",
+      "00 10 01 11 02 12"
     ],
     "correct": 0,
-    "explanation": "matrix[i] даёт i-ю строку (список), matrix[i][j] — j-й элемент в i-й строке."
+    "explanation": "Внешний цикл задаёт строку, внутренний — столбец. Получается сетка координат: 00 01 02, затем 10 11 12."
   },
   {
     "question": "Что выведет код?<br><code>for i in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if i == j:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(1, end=\" \")<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(0, end=\" \")<br>&nbsp;&nbsp;&nbsp;&nbsp;print()</code>",
     "options": [
       "1 0 0 0 1 0 0 0 1",
-      "1 0 0\\n0 1 0\\n0 0 1",
       "1 1 1\\n1 1 1\\n1 1 1",
+      "1 0 0\\n0 1 0\\n0 0 1",
       "0 0 0\\n0 0 0\\n0 0 0"
     ],
-    "correct": 1,
-    "explanation": "Код выводит единичную матрицу 3×3: единицы на главной диагонали (i == j), нули в остальных позициях."
+    "correct": 2,
+    "explanation": "Код выводит узор с диагональю 3×3: единицы на главной диагонали (i == j), нули в остальных позициях."
   },
   {
     "question": "Сколько раз выполнится print?<br><code>for i in range(4):<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(i):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(\"*\", end=\"\")</code>",
     "options": [
       "4",
-      "6",
       "10",
-      "0"
+      "0",
+      "6"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "При i=0: range(0) пуст. i=1: 1 раз. i=2: 2 раза. i=3: 3 раза. Всего 0+1+2+3 = 6."
   },
   {
     "question": "Какая временная сложность у вложенных циклов (N итераций внешнего, M — внутреннего)?",
     "options": [
       "O(N)",
-      "O(N + M)",
       "O(N × M)",
+      "O(N + M)",
       "O(N²)"
     ],
-    "correct": 2,
+    "correct": 1,
     "explanation": "Вложенные циклы выполняются N × M раз. Если N = M, то O(N²)."
   },
   {
     "question": "Как выйти сразу из всех вложенных циклов?",
     "options": [
-      "Двойной break",
       "Использовать флаг (переменную-индикатор) и проверять её в условии",
+      "Двойной break",
       "Нельзя",
       "continue"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "break выходит только из одного цикла. Для выхода из всех используют флаг: found = True; после внутреннего: if found: break во внешнем цикле."
   },
   {
     "question": "Что выведет код?<br><code>for i in range(1, 4):<br>&nbsp;&nbsp;&nbsp;&nbsp;row = \"\"<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(1, i + 1):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;row += str(j) + \" \"<br>&nbsp;&nbsp;&nbsp;&nbsp;print(row.strip())</code>",
     "options": [
-      "1\\n1 2\\n1 2 3",
       "1 2 3\\n1 2\\n1",
       "1\\n1 2\\n1 2 3\\n1 2 3 4",
+      "1\\n1 2\\n1 2 3",
       "3\\n2 3\\n1 2 3"
     ],
-    "correct": 0,
+    "correct": 2,
     "explanation": "Треугольник чисел: i=1 → \"1\", i=2 → \"1 2\", i=3 → \"1 2 3\"."
   }
 ]

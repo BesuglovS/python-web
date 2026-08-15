@@ -123,7 +123,7 @@ export function initQuizSystem() {
 
           const text = document.createElement('span');
           text.className = 'quiz-opt-text';
-          text.textContent = opt;
+          text.textContent = opt.replace(/\n/g, '\\n');
 
           optEl.appendChild(marker);
           optEl.appendChild(text);

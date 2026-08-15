@@ -54,6 +54,8 @@ export default tseslint.config(
         AbortController: 'readonly',
         AbortSignal: 'readonly',
         CustomEvent: 'readonly',
+        Node: 'readonly',
+        NodeFilter: 'readonly',
         IntersectionObserver: 'readonly',
         MutationObserver: 'readonly',
         XMLHttpRequest: 'readonly',

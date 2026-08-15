@@ -3,33 +3,33 @@
     "question": "Что делает оператор continue в цикле?",
     "options": [
       "Завершает цикл",
-      "Пропускает текущую итерацию и переходит к следующей",
       "Перезапускает цикл с начала",
-      "Удаляет переменную цикла"
+      "Удаляет переменную цикла",
+      "Пропускает текущую итерацию и переходит к следующей"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "continue пропускает оставшуюся часть тела цикла для текущей итерации и переходит к проверке условия (или следующему элементу)."
   },
   {
     "question": "Что выведет код?<br><code>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 2: continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code>",
     "options": [
+      "0\n1\n3\n4",
       "0 1 2 3 4",
-      "0 1 3 4",
       "2",
       "0 1 2"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "При i = 2 срабатывает continue, итерация прерывается, print(2) не выполняется. Остальные числа выводятся."
   },
   {
     "question": "Что выведет код?<br><code>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</code>",
     "options": [
       "0 1 2 3",
-      "0 1 2",
       "0 1 2 3 4",
+      "0 1 2",
       "3"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "Цикл выводит 0, 1, 2. При i = 3 срабатывает break, цикл завершается."
   },
   {
@@ -47,11 +47,11 @@
     "question": "Чем break отличается от continue?",
     "options": [
       "Ничем",
-      "break завершает цикл, continue пропускает только текущую итерацию",
       "continue завершает цикл, break пропускает итерацию",
-      "Оба завершают цикл"
+      "Оба завершают цикл",
+      "break завершает цикл, continue пропускает только текущую итерацию"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "break полностью завершает цикл. continue пропускает только оставшуюся часть текущей итерации."
   },
   {
@@ -69,11 +69,11 @@
     "question": "Что выведет код?<br><code>for i in range(10):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i % 2 == 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</code>",
     "options": [
       "0 2 4 6 8",
-      "1 3 5 7 9",
       "0 1 2 3 4 5 6 7 8 9",
+      "1 3 5 7 9",
       "10"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "continue пропускает чётные числа (i % 2 == 0). Выводятся только нечётные: 1, 3, 5, 7, 9."
   },
   {
@@ -91,11 +91,11 @@
     "question": "Что выведет код?<br><code>i = 0<br>while i &lt; 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Цикл завершён\")</code>",
     "options": [
       "Цикл завершён",
-      "Ничего не выведется",
       "3",
-      "Ошибка"
+      "Ошибка",
+      "Ничего не выведется"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "Срабатывает break при i = 3. Так как цикл прерван break, блок else не выполняется."
   },
   {

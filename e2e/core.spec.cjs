@@ -102,6 +102,21 @@ test.describe('Уроки', () => {
       await expect(quiz).toBeVisible();
     }
   });
+
+  test('диаграмма Эйлера множеств отображается и реагирует на кнопки', async ({ page }) => {
+    await page.goto('/26-sets.html');
+    const diagram = page.locator('.sets-visual');
+    await expect(diagram).toBeVisible();
+    await expect(page.locator('.sets-visual .num-bubble')).toHaveCount(6);
+
+    await page.locator('.sets-visual [data-op="intersection"]').click();
+    await expect(page.locator('.sets-visual .sets-visual-result')).toHaveText('A ∩ B = {3, 4}');
+    await expect(page.locator('.sets-visual .num-bubble.active')).toHaveCount(2);
+
+    await page.locator('.sets-visual [data-op="union"]').click();
+    await expect(page.locator('.sets-visual .sets-visual-result')).toHaveText('A ∪ B = {1, 2, 3, 4, 5, 6}');
+    await expect(page.locator('.sets-visual .num-bubble.active')).toHaveCount(6);
+  });
 });
 
 test.describe('Тема', () => {

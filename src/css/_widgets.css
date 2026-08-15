@@ -262,11 +262,18 @@
   color: var(--text);
   font-size: 0.95em;
   text-align: left;
+  white-space: normal;
 }
 
 .quiz-option:hover {
   border-color: var(--primary);
   background: rgba(102, 126, 234, 0.05);
+}
+
+.quiz-opt-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .quiz-option.correct {

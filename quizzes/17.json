@@ -2,23 +2,23 @@
   {
     "question": "Сколько раз выполнится тело цикла?<br><code>i = 0<br>while i &lt; 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)<br>&nbsp;&nbsp;&nbsp;&nbsp;i += 1</code>",
     "options": [
-      "2",
       "3",
+      "2",
       "4",
       "Бесконечно"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Цикл выполнится для i = 0, 1, 2 — три итерации. При i = 3 условие i < 3 ложно."
   },
   {
     "question": "Что делает <code>break</code> внутри while?",
     "options": [
       "Пропускает итерацию",
-      "Завершает цикл",
       "Начинает заново",
+      "Завершает цикл",
       "Ничего"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "break немедленно прерывает выполнение цикла."
   },
   {
@@ -36,11 +36,11 @@
     "question": "Когда выполняется блок else в цикле while?",
     "options": [
       "Когда срабатывает break",
-      "Когда условие становится False (нормальное завершение)",
       "Всегда",
-      "Никогда"
+      "Никогда",
+      "Когда условие становится False (нормальное завершение)"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "Блок else выполняется только при нормальном завершении цикла (когда условие стало False). Если сработал break — else пропускается."
   },
   {
@@ -58,55 +58,55 @@
     "question": "Какой тип цикла гарантирует выполнение тела хотя бы один раз?",
     "options": [
       "while",
+      "Ни один из циклов Python",
       "for",
-      "do-while",
-      "Ни один из циклов Python"
+      "do-while"
     ],
-    "correct": 3,
+    "correct": 1,
     "explanation": "В Python нет цикла do-while. while и for проверяют условие перед первой итерацией."
   },
   {
     "question": "Что выведет код?<br><code>x = 10<br>while x > 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;if x == 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x, end=\" \")<br>&nbsp;&nbsp;&nbsp;&nbsp;x -= 1</code>",
     "options": [
       "10 9 8 7 6 5",
-      "10 9 8 7 6",
       "10 9 8 7 6 5 4 3 2 1",
-      "5"
+      "5",
+      "10 9 8 7 6"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "Цикл выводит 10, 9, 8, 7, 6. Когда x становится 5, срабатывает break и цикл завершается."
   },
   {
     "question": "Что выведет код?<br><code>x = 1<br>while x &lt; 10:<br>&nbsp;&nbsp;&nbsp;&nbsp;x = x * 2<br>print(x)</code>",
     "options": [
       "8",
-      "16",
       "10",
+      "16",
       "Бесконечный цикл"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "x последовательно удваивается: 2, 4, 8, 16. При x = 16 условие x &lt; 10 ложно, цикл завершается. Выводится 16."
   },
   {
     "question": "Что выведет код?<br><code>n = 0<br>while n &lt; 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;n += 1<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Готово\")</code>",
     "options": [
-      "Ошибка",
       "Готово",
+      "Ошибка",
       "1 2 3",
       "1 2 3 Готово"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Цикл завершается нормально (break не использовался), поэтому выполняется else: выводится \"Готово\"."
   },
   {
     "question": "Что такое итерация?",
     "options": [
-      "Одно выполнение тела цикла",
       "Переменная цикла",
+      "Одно выполнение тела цикла",
       "Условие цикла",
       "Завершение цикла"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "Итерация — это одно выполнение тела цикла. Цикл состоит из нескольких итераций."
   }
 ]
