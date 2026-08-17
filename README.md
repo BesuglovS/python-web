@@ -265,7 +265,7 @@ npm run build
 Оба файла содержат:
 
 - Security headers (HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
-- Кэширование статики (CSS/JS/изображения — 1 год, HTML/JSON — 1 час)
+- Кэширование статики (CSS/JS/изображения — 1 год, HTML/JSON — не кэшируются)
 - Gzip-сжатие
 - Запрет листинга директорий
 

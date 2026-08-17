@@ -107,17 +107,15 @@ server {
         access_log off;
     }
 
-    # 6. Кэширование JSON и манифестов — 1 час
+    # 6. JSON и манифесты — не кэшируем (контент меняется при деплое)
     location ~* \.(json|webmanifest)$ {
-        expires 1h;
-        add_header Cache-Control "public";
+        add_header Cache-Control "no-cache, must-revalidate";
         access_log off;
     }
 
-    # 7. Кэширование HTML — 1 час
+    # 7. HTML — не кэшируем (контент меняется при деплое)
     location ~* \.html$ {
-        expires 1h;
-        add_header Cache-Control "public";
+        add_header Cache-Control "no-cache, must-revalidate";
     }
 
     # 8. Блокировка скрытых файлов
