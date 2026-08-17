@@ -185,6 +185,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Данные курса (lessons.json) — Network-first для свежести
+  if (url.pathname === '/lessons.json') {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
+
   // Для HTML-страниц используем Network-first (всегда свежий контент)
   if (event.request.destination === 'document' ||
       url.pathname.endsWith('.html') ||
@@ -218,7 +224,9 @@ async function cacheFirst(request) {
 // Network-first стратегия: сначала сеть, при ошибке — кэш, при отсутствии — офлайн-страница
 async function networkFirst(request) {
   try {
-    const response = await fetch(request);
+    // cache: 'no-store' — игнорируем HTTP-кэш браузера, всегда запрашиваем сеть,
+    // чтобы обновления контента появлялись без Ctrl+Shift+R.
+    const response = await fetch(request, { cache: 'no-store' });
     if (response.ok) {
       const cache = await caches.open(CACHE_NAME);
       cache.put(request, response.clone());
