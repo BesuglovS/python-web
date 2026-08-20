@@ -46,12 +46,12 @@
   {
     "question": "Как получить содержимое ответа в виде текста?",
     "options": [
-      "response.text",
       "response.content",
+      "response.text",
       "response.body",
       "response.data"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "response.text возвращает содержимое ответа в виде строки (текста)."
   },
   {

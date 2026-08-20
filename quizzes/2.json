@@ -13,12 +13,12 @@
   {
     "question": "Как запустить Python-скрипт из командной строки?",
     "options": [
-      "run script.py",
       "python script.py",
+      "run script.py",
       "execute script.py",
       "compile script.py"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Для запуска Python-скрипта используется команда python (или python3). Например: python myscript.py."
   },
   {
@@ -69,11 +69,11 @@
     "question": "Что нужно отметить при установке Python на Windows?",
     "options": [
       "Install for all users",
-      "Add Python to PATH",
+      "Install launcher",
       "Create desktop shortcut",
-      "Install launcher"
+      "Add Python to PATH"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "Галочка «Add Python to PATH» позволяет запускать Python из командной строки, просто набрав python."
   },
   {

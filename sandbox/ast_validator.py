@@ -45,6 +45,7 @@ ALLOWED_NODES: set[str] = {
     "Match", "match_case",
     "MatchValue", "MatchSingleton", "MatchSequence", "MatchMapping",
     "MatchClass", "MatchStar", "MatchAs", "MatchOr",
+    "Global", "Nonlocal",
 }
 
 # Список разрешённых импортов задаётся при вызове validate()/main().

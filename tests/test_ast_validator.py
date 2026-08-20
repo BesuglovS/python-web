@@ -303,5 +303,32 @@ class TestDunderBypassPrevention(unittest.TestCase):
         self.assertTrue(result['ok'])
 
 
+class TestGlobalNonlocalAllowed(unittest.TestCase):
+    """Ключевое слово global/nonlocal разрешено (учится в уроках 22-23)."""
+
+    def test_global_allowed(self):
+        result = run_validator(
+            'count = 10\n'
+            'def set_count():\n'
+            '    global count\n'
+            '    count = 5\n'
+            'set_count()\n'
+            'print(count)'
+        )
+        self.assertTrue(result['ok'])
+
+    def test_nonlocal_allowed(self):
+        result = run_validator(
+            'def outer():\n'
+            '    x = 1\n'
+            '    def inner():\n'
+            '        nonlocal x\n'
+            '        x = 2\n'
+            '    inner()\n'
+            '    return x'
+        )
+        self.assertTrue(result['ok'])
+
+
 if __name__ == '__main__':
     unittest.main()

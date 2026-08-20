@@ -218,7 +218,8 @@ def calculate(a: float, b: float, operation: str = "+") -> float:
         return None
 
 # Использование
-print(calculate(10, 5, "+"))   # 15.0
-print(calculate(10, 5, "/"))   # 2.0
-print(calculate(10, 0, "/"))   # Ошибка: деление на ноль! \n None
+print(calculate(10, 5, "+"))   # 15  (аннотации не конвертируют типы — 10 + 5 = 15)
+print(calculate(10, 5, "/"))   # 2.0 (деление всегда возвращает float)
+print(calculate(10, 0, "/"))   # Ошибка: деление на ноль!
+                               # None
 ```

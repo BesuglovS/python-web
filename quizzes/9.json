@@ -13,12 +13,12 @@
   {
     "question": "Чему равно <code>not (5 > 3)</code>?",
     "options": [
-      "True",
       "False",
+      "True",
       "5",
       "3"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "5 > 3 — True, оператор not инвертирует результат в False."
   },
   {

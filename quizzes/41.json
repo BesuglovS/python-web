@@ -68,12 +68,12 @@
   {
     "question": "Как вызвать метод объекта?",
     "options": [
-      "MyClass.method(obj)",
       "obj.method()",
+      "MyClass.method(obj)",
       "method(obj)",
       "Нельзя вызвать"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Метод вызывается через объект: obj.method(). Python автоматически передаёт self."
   },
   {

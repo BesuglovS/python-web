@@ -25,11 +25,11 @@
     "question": "Чем отличаются combinations() от permutations()?",
     "options": [
       "Ничем",
-      "В combinations() порядок не важен, в permutations() — важен",
       "В combinations() элементы могут повторяться",
+      "В combinations() порядок не важен, в permutations() — важен",
       "permutations() работает только с числами"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "В combinations() порядок не имеет значения: (A,B) и (B,A) — одно и то же. В permutations() это разные комбинации."
   },
   {
@@ -58,11 +58,11 @@
     "question": "Сколько комбинаций вернёт <code>combinations(\"ABC\", 2)</code>?",
     "options": [
       "2",
-      "3",
+      "9",
       "6",
-      "9"
+      "3"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "combinations(\"ABC\", 2) = AB, AC, BC. Порядок не важен: AB и BA считаются одинаковыми. Всего 3 комбинации."
   },
   {

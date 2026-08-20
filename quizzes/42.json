@@ -24,12 +24,12 @@
   {
     "question": "Что такое super() в Python?",
     "options": [
-      "Функция для создания супер-объекта",
       "Функция для вызова метода родительского класса",
+      "Функция для создания супер-объекта",
       "Декоратор",
       "Тип данных"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "super() позволяет вызвать метод родительского класса из дочернего, например super().__init__()."
   },
   {
@@ -58,11 +58,11 @@
     "question": "Что выведет код?<br><code>class A:<br>&nbsp;&nbsp;&nbsp;&nbsp;def greet(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return \"A\"<br>class B(A):<br>&nbsp;&nbsp;&nbsp;&nbsp;def greet(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return \"B\"<br>obj = B()<br>print(obj.greet())</code>",
     "options": [
       "A",
-      "B",
+      "None",
       "Ошибка",
-      "None"
+      "B"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "Класс B переопределяет метод greet(), возвращая \"B\"."
   },
   {
@@ -91,11 +91,11 @@
     "question": "Как проверить, является ли объект экземпляром класса?",
     "options": [
       "obj.isinstance(MyClass)",
-      "isinstance(obj, MyClass)",
       "obj.type() == MyClass",
+      "isinstance(obj, MyClass)",
       "MyClass.isinstance(obj)"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "isinstance(obj, MyClass) возвращает True, если obj является экземпляром MyClass (или его подкласса)."
   },
   {

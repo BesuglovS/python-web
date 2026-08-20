@@ -47,11 +47,11 @@
     "question": "Как вернуть JSON-ответ из Flask?",
     "options": [
       "return json.dumps(data)",
-      "return jsonify(data)",
+      "return data.to_json()",
       "return JSON(data)",
-      "return data.to_json()"
+      "return jsonify(data)"
     ],
-    "correct": 1,
+    "correct": 3,
     "explanation": "flask.jsonify(data) возвращает JSON-ответ с правильным Content-Type."
   },
   {
@@ -90,12 +90,12 @@
   {
     "question": "Какой шаблонизатор используется в Flask по умолчанию?",
     "options": [
-      "Mako",
       "Jinja2",
+      "Mako",
       "Django Templates",
       "Mustache"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "Flask использует Jinja2 — мощный шаблонизатор с поддержкой наследования шаблонов."
   },
   {

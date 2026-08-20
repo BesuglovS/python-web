@@ -57,12 +57,12 @@
   {
     "question": "Что выведет код?<br><code>try:<br>&nbsp;&nbsp;&nbsp;&nbsp;x = int(\"42\")<br>except ValueError:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Ошибка\")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Успех\")<br>finally:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Конец\")</code>",
     "options": [
-      "42",
       "Успех Конец",
+      "42",
       "42 Успех Конец",
       "Ошибка Конец"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "int(\"42\") успешен, ошибки нет. Выполняется else («Успех») и finally («Конец»). try-блок не выводит 42 сам."
   },
   {
@@ -80,11 +80,11 @@
     "question": "Что выведет код?<br><code>try:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(10 / 0)<br>except ZeroDivisionError:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"На ноль делить нельзя\")</code>",
     "options": [
       "inf",
-      "На ноль делить нельзя",
       "Ошибка",
+      "На ноль делить нельзя",
       "10 / 0"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "Деление на ноль вызывает ZeroDivisionError. Блок except перехватывает его и выводит сообщение."
   },
   {

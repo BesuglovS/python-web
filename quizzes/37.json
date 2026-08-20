@@ -25,11 +25,11 @@
     "question": "Как активировать виртуальное окружение на Windows?",
     "options": [
       "myenv/activate",
-      "myenv\\Scripts\\activate",
       "activate myenv",
+      "myenv\\Scripts\\activate",
       "venv activate"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "На Windows активация: myenv\\Scripts\\activate. На Linux/Mac: source myenv/bin/activate."
   },
   {

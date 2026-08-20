@@ -24,12 +24,12 @@
   {
     "question": "Какой стиль именования переменных рекомендует PEP 8?",
     "options": [
-      "camelCase",
       "snake_case",
+      "camelCase",
       "kebab-case",
       "PascalCase"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "PEP 8 рекомендует snake_case для имён переменных: user_name, total_count."
   },
   {
@@ -47,11 +47,11 @@
     "question": "Чувствителен ли Python к регистру в именах переменных?",
     "options": [
       "Нет",
-      "Да, age и Age — разные переменные",
       "Только для ключевых слов",
+      "Да, age и Age — разные переменные",
       "Зависит от версии"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "Python чувствителен к регистру: age, Age и AGE — это три разные переменные."
   },
   {

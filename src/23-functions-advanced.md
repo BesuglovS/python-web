@@ -1,12 +1,12 @@
 ---
 title: 'Продвинутые функции'
 lesson: 23
-description: 'args/kwargs, области видимости, аннотации'
+description: 'args/kwargs, области видимости: global и nonlocal'
 badge: 'func_guru'
 file: '23-functions-advanced.html'
 layout: 'layout.njk'
 permalink: '23-functions-advanced.html'
-subtitle: '*args, **kwargs, области видимости, аннотации типов'
+subtitle: '*args, **kwargs, области видимости: global и nonlocal'
 ---
 
 ## Понадобятся два типа данных: кортеж и словарь

@@ -47,11 +47,11 @@
     "question": "Можно ли использовать f-строки в Python 3.5?",
     "options": [
       "Да",
-      "Нет, f-строки доступны с Python 3.6",
       "Только в Python 2",
+      "Нет, f-строки доступны с Python 3.6",
       "Только в Python 4"
     ],
-    "correct": 1,
+    "correct": 2,
     "explanation": "f-строки (f-strings) были добавлены в Python 3.6."
   },
   {

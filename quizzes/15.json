@@ -24,12 +24,12 @@
   {
     "question": "Что выведет: <code>print(\"Ha\" * 3)</code>?",
     "options": [
-      "HaHaHa",
       "Ha Ha Ha",
+      "HaHaHa",
       "Ha3",
       "Ошибка"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "Оператор * повторяет строку указанное количество раз: \"Ha\" * 3 = \"HaHaHa\"."
   },
   {
@@ -68,12 +68,12 @@
   {
     "question": "Что выведет: <code>print(\"Hello\".replace(\"l\", \"7\"))</code>?",
     "options": [
-      "Hello",
       "He77o",
+      "Hello",
       "He7lo",
       "Hello7"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "replace(old, new) заменяет все вхождения подстроки old на new: \"l\" → \"7\", результат \"He77o\"."
   },
   {

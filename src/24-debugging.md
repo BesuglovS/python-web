@@ -1,7 +1,7 @@
 ---
 title: 'Отладка'
 lesson: 24
-description: 'pdb, print-отладка, assert, логирование'
+description: 'pdb, print-отладка, логирование'
 badge: 'debugger'
 file: '24-debugging.html'
 layout: 'layout.njk'
@@ -82,9 +82,9 @@ print(buggy_function(x, y))
 ```python
 import logging
 
-# Настройка: уровень INFO и выше, запись в файл
+# Настройка: уровень DEBUG и выше, запись в файл
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s [%(levelname)s] %(message)s',
     filename='app.log'
 )
@@ -122,7 +122,7 @@ print(divide(10, 0))   # None
 - **Step Into** (шаг с заходом, `F11` в VS Code) — заходит внутрь вызываемой функции и останавливается на её первой строке.
 - **Step Out** (выйти из функции, `Shift+F11` в VS Code) — выполняет оставшийся код функции до конца и возвращается в вызывающий код.
 
-> **💡 Совет:** IDLE тоже имеет встроенный отладчик (меню *Shell → Debug → Debugger*, точки останова через контекстное меню в редакторе, кнопки в окне Debug Control), но в нём нет горячих клавиш для пошаговой отладки. Для более удобной отладки с горячими клавишами и панелью Watch используйте VS Code или PyCharm.
+> **💡 Совет:** IDLE тоже имеет встроенный отладчик (меню *Debug → Debugger*, точки останова через контекстное меню в редакторе, кнопки в окне Debug Control), но в нём нет горячих клавиш для пошаговой отладки. Для более удобной отладки с горячими клавишами и панелью Watch используйте VS Code или PyCharm.
 
 ## Панель Watch (наблюдение за переменными)
 

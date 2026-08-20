@@ -26,10 +26,10 @@
     "options": [
       "int",
       "str",
-      "bool",
-      "NoneType"
+      "NoneType",
+      "bool"
     ],
-    "correct": 2,
+    "correct": 3,
     "explanation": "True и False имеют тип bool (булевый тип данных)."
   },
   {
@@ -90,12 +90,12 @@
   {
     "question": "Какие значения преобразуются в False через bool()?",
     "options": [
-      "Только False",
       "0, \"\", [], None, False",
+      "Только False",
       "Только 0",
       "Любые числа"
     ],
-    "correct": 1,
+    "correct": 0,
     "explanation": "bool() возвращает False для пустых и нулевых значений: 0, 0.0, \"\", [], None и т.д."
   },
   {

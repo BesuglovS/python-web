@@ -13,12 +13,12 @@
   {
     "question": "Как создать массив NumPy из списка?",
     "options": [
-      "np.array([1, 2, 3])",
       "np.list([1, 2, 3])",
+      "np.array([1, 2, 3])",
       "np.create([1, 2, 3])",
       "np.fromlist([1, 2, 3])"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "np.array() создаёт массив NumPy из списка или другого итерируемого объекта."
   },
   {
@@ -35,12 +35,12 @@
   {
     "question": "Как создать DataFrame в Pandas?",
     "options": [
-      "pd.DataFrame(data)",
+      "pd.data(data)",
       "pd.Table(data)",
       "pd.Series(data)",
-      "pd.data(data)"
+      "pd.DataFrame(data)"
     ],
-    "correct": 0,
+    "correct": 3,
     "explanation": "pd.DataFrame(data) создаёт таблицу (DataFrame) из словаря, списка или другого источника."
   },
   {

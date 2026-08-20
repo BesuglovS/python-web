@@ -553,7 +553,7 @@
           "num": 23,
           "file": "23-functions-advanced.html",
           "title": "Функции: продвинутые темы",
-          "desc": "args/kwargs, области видимости, аннотации",
+          "desc": "args/kwargs, области видимости: global и nonlocal",
           "duration": 15,
           "complexity": "intermediate",
           "badge": "func_guru",
@@ -562,7 +562,8 @@
             "args",
             "kwargs",
             "области видимости",
-            "аннотации",
+            "global",
+            "nonlocal",
             "функции"
           ],
           "interactive": {
@@ -576,7 +577,7 @@
           "num": 24,
           "file": "24-debugging.html",
           "title": "Отладка программ",
-          "desc": "pdb, print-отладка, assert, логирование",
+          "desc": "pdb, print-отладка, логирование",
           "duration": 12,
           "complexity": "basic",
           "badge": "debugger",
@@ -585,7 +586,6 @@
             "отладка",
             "pdb",
             "debug",
-            "assert",
             "логирование"
           ],
           "interactive": {

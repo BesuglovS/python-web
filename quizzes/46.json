@@ -24,12 +24,12 @@
   {
     "question": "Как указать тип возвращаемого значения функции?",
     "options": [
-      "def func() -> int:",
       "def func() : int",
+      "def func() -> int:",
       "def func() returns int:",
       "def func() => int:"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "Стрелка -> указывает тип возвращаемого значения: def func() -> int:."
   },
   {
@@ -57,12 +57,12 @@
   {
     "question": "Как аннотировать переменную?",
     "options": [
-      "x: int = 5",
+      "x = int(5)",
       "int x = 5",
       "x :: int = 5",
-      "x = int(5)"
+      "x: int = 5"
     ],
-    "correct": 0,
+    "correct": 3,
     "explanation": "Аннотация переменной: имя: тип = значение. Например: x: int = 5."
   },
   {
@@ -90,12 +90,12 @@
   {
     "question": "Как аннотировать список целых чисел?",
     "options": [
-      "List[int]",
       "[int]",
+      "List[int]",
       "list(int)",
       "int[]"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "List[int] из модуля typing означает список, содержащий целые числа."
   },
   {

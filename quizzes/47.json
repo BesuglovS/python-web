@@ -35,12 +35,12 @@
   {
     "question": "Что делает assert в тесте?",
     "options": [
-      "Проверяет условие и вызывает AssertionError, если оно ложно",
-      "Выводит сообщение",
       "Завершает тест",
+      "Выводит сообщение",
+      "Проверяет условие и вызывает AssertionError, если оно ложно",
       "Создаёт отчёт"
     ],
-    "correct": 0,
+    "correct": 2,
     "explanation": "assert условие — встроенная проверка. Если условие ложно, тест падает с AssertionError."
   },
   {
@@ -57,12 +57,12 @@
   {
     "question": "Как параметризовать тест в pytest?",
     "options": [
-      "@pytest.mark.parametrize",
+      "@pytest.parameterize",
       "@pytest.parametrize",
       "@pytest.params",
-      "@pytest.parameterize"
+      "@pytest.mark.parametrize"
     ],
-    "correct": 0,
+    "correct": 3,
     "explanation": "@pytest.mark.parametrize(\"arg\", values) позволяет запустить один тест с разными наборами данных."
   },
   {
@@ -79,12 +79,12 @@
   {
     "question": "Как проверить, что код вызывает исключение?",
     "options": [
-      "pytest.raises(ValueError)",
       "pytest.expect(ValueError)",
+      "pytest.raises(ValueError)",
       "pytest.catch(ValueError)",
       "pytest.exception(ValueError)"
     ],
-    "correct": 0,
+    "correct": 1,
     "explanation": "with pytest.raises(ValueError): проверяет, что внутри блока возникает исключение ValueError."
   },
   {
