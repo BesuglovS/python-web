@@ -2,7 +2,7 @@
 title: 'ООП: введение'
 lesson: 41
 description: 'Классы, объекты, __init__, self'
-badge: 'oop_master'
+badge: 'class_builder'
 file: '41-oop-intro.html'
 layout: 'layout.njk'
 permalink: '41-oop-intro.html'

@@ -156,6 +156,99 @@
   color: #1f2937;
 }
 
+/* ─── Lesson Map (per-lesson badges) ─── */
+.lesson-map-section {
+  margin-top: 16px;
+  padding: 20px 20px 16px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: background var(--transition);
+}
+
+.lesson-map-counter {
+  font-size: 0.82em;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.lesson-map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 8px;
+}
+
+.lesson-map-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  font-size: 0.85em;
+  font-weight: 700;
+  text-decoration: none;
+  background: var(--bg-alt);
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+  opacity: 0.65;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.lesson-map-tile:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  border-color: var(--text-muted);
+}
+
+.lesson-map-tile:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.lesson-map-tile.earned {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-color: #f59e0b;
+  color: #92400e;
+  opacity: 1;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+.lesson-map-tile.earned:hover {
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+}
+
+.lesson-map-tile[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: var(--bg);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.82em;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+[data-theme=dark] .lesson-map-tile.earned {
+  background: linear-gradient(135deg, #78350f, #92400e);
+  border-color: #f59e0b;
+  color: #fde68a;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+}
+
+[data-theme=dark] .lesson-map-tile[data-tooltip]:hover::after {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
 .contest-badge {
   position: absolute;
   bottom: 8px;
@@ -457,11 +550,13 @@
 }
 
 .no-results {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   text-align: center;
   padding: 40px 20px;
   color: var(--text-muted);
   font-size: 1.1em;
-  grid-column: 1 / -1;
 }
 
 .exercise-output {

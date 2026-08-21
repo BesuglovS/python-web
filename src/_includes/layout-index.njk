@@ -50,7 +50,7 @@
       <header class="index-header">
         <h1>🐍 <span>Python</span> — основы программирования</h1>
         <p>50 тем для начинающих с примерами кода</p>
-        <div class="progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Прогресс прохождения курса"></div>
+        <div class="progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Прогресс прохождения курса"><div class="progress-bar-fill"></div></div>
         <span class="progress-info"></span>
         <div class="repl-auth-wrapper">
           <a href="repl.html" class="repl-hero-btn">▶ Интерактивная консоль Python</a>
@@ -62,6 +62,14 @@
             <button class="badges-all-btn" id="badgesAllBtn" type="button">Все достижения</button>
           </div>
           <div class="badges-grid" id="badgesGrid"></div>
+        </div>
+        <!-- Карта прогресса: per-lesson бейджи -->
+        <div class="lesson-map-section" id="lessonMapBlock" hidden>
+          <div class="badges-header">
+            <div class="badges-title">🎓 Карта прогресса</div>
+            <span class="lesson-map-counter" id="lessonMapCounter"></span>
+          </div>
+          <div class="lesson-map-grid" id="lessonMapGrid"></div>
         </div>
       </header>
 

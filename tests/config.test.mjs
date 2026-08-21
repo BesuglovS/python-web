@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
@@ -39,9 +39,16 @@ function loadCourseData() {
   const fn = new Function(`
     var window = { THEORY_CONTESTS: {}, CONTEST_BASE_URL: '', TOTAL_LESSONS: 0, LESSON_META: {}, COMPLEXITY_LABELS: {} };
     ${stripped};
-    return { THEORY_CONTESTS, CONTEST_BASE_URL, TOTAL_LESSONS, LESSON_META, COMPLEXITY_LABELS };
+    return { THEORY_CONTESTS, CONTEST_BASE_URL, TOTAL_LESSONS, LESSON_META, COMPLEXITY_LABELS, LESSON_BADGES };
   `);
   return fn();
+}
+
+function stripModuleSyntax(src) {
+  return src
+    .replace(/^import\b[^;]*;/gms, '')
+    .replace(/^export\s*\{[^}]*\};?$/gm, '')
+    .trim();
 }
 
 describe('config/security.js', () => {
@@ -144,13 +151,6 @@ describe('config/courseData.js', () => {
 describe('config/badges.js', () => {
   const badgesSrc = fs.readFileSync(path.join(configDir, 'badges.js'), 'utf-8');
 
-  function stripModuleSyntax(src) {
-    return src
-      .replace(/^import\b[^;]*;/gms, '')
-      .replace(/^export\s*\{[^}]*\};?$/gm, '')
-      .trim();
-  }
-
   const stripped = stripModuleSyntax(badgesSrc);
   const fn = new Function(`
     ${stripped};
@@ -174,5 +174,51 @@ describe('config/badges.js', () => {
   it('all badge ids are unique', () => {
     const ids = badges.BADGES.map((b) => b.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe('config/courseData.js LESSON_BADGES', () => {
+  const data = loadCourseData();
+  const lessons = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'lessons.json'), 'utf-8'));
+  const badgesSrc = fs.readFileSync(path.join(configDir, 'badges.js'), 'utf-8');
+  const achievementBadges = new Function(`
+    ${stripModuleSyntax(badgesSrc)};
+    return { BADGES };
+  `)().BADGES;
+
+  it('has an entry for every lesson matching lessons.json', () => {
+    expect(data.LESSON_BADGES).toHaveLength(50);
+
+    const badgeByNum = {};
+    const fileByNum = {};
+    for (const section of lessons.sections) {
+      for (const lesson of section.lessons) {
+        badgeByNum[lesson.num] = lesson.badge;
+        fileByNum[lesson.num] = lesson.file;
+      }
+    }
+
+    for (const lb of data.LESSON_BADGES) {
+      expect(lb.num).toBeGreaterThan(0);
+      expect(lb.id, `lesson ${lb.num} badge id must match lessons.json`).toBe(badgeByNum[lb.num]);
+      expect(typeof lb.title, `lesson ${lb.num} must have title`).toBe('string');
+      expect(lb.title.length, `lesson ${lb.num} title must not be empty`).toBeGreaterThan(0);
+      expect(lb.file, `lesson ${lb.num} file must match lessons.json`).toBe(fileByNum[lb.num]);
+    }
+  });
+
+  it('has unique ids', () => {
+    const ids = data.LESSON_BADGES.map((b) => b.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('ids do not collide with achievement badge ids', () => {
+    const achievementIds = new Set(achievementBadges.map((b) => b.id));
+    for (const lb of data.LESSON_BADGES) {
+      expect(
+        achievementIds.has(lb.id),
+        `lesson badge '${lb.id}' (урок ${lb.num}) collides with achievement badge id`,
+      ).toBe(false);
+    }
   });
 });

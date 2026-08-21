@@ -261,7 +261,7 @@
           "desc": "try, except, finally, raise",
           "duration": 10,
           "complexity": "basic",
-          "badge": "error_handler",
+          "badge": "try_except_master",
           "type": "mixed",
           "tags": [
             "try",
@@ -556,7 +556,7 @@
           "desc": "args/kwargs, области видимости: global и nonlocal",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "func_guru",
+          "badge": "func_wizard",
           "type": "mixed",
           "tags": [
             "args",
@@ -1000,7 +1000,7 @@
           "desc": "Классы, объекты, __init__, self",
           "duration": 15,
           "complexity": "intermediate",
-          "badge": "oop_master",
+          "badge": "class_builder",
           "type": "theory",
           "tags": [
             "ООП",

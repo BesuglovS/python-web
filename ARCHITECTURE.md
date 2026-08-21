@@ -78,7 +78,7 @@ python-web/
 ├── build-css.mjs                 # Сборка CSS (esbuild)
 ├── build-js.mjs                  # Сборка JS (esbuild)
 ├── build-sw.mjs                  # Генерация Service Worker
-├── build-config-meta.mjs         # Генерация LESSON_META из lessons.json
+├── build-config-meta.mjs         # Генерация LESSON_META, THEORY_CONTESTS, LESSON_BADGES из lessons.json
 ├── build-assets-hash.mjs         # Контент-хэширование ассетов
 └── minify.cjs                    # CSS-бандл + страничные скрипты (esbuild IIFE)
 ```
@@ -87,7 +87,7 @@ python-web/
 
 ```
 npm run build →
-  1. build-config-meta.mjs    → src/js/config/courseData.js (LESSON_META, THEORY_CONTESTS)
+  1. build-config-meta.mjs    → src/js/config/courseData.js (LESSON_META, THEORY_CONTESTS, LESSON_BADGES)
   2. build-highlight.mjs      → highlight-py.min.js
   3. build-css.mjs            → dist/style.css (esbuild, CSS bundling)
   4. eleventy                 → dist/*.html (Markdown/HTML → HTML)
@@ -170,6 +170,14 @@ safeSetItem('python-web-course-progress', JSON.stringify(lessons));
 - Ссылки на контесты: `contest-link.js` (страницы уроков, бейджи на главной).
 - Проверка прогресса: `checkContestProgress()` (`modules/api-client.js`) → кросс-доменный GET `contest.nayanovaacademy.ru/index.php?page=api&endpoint=contest_progress&contest_id=N` с `credentials: 'include'`.
 - Гейт «урок пройден»: квиз 100% **и** все задачи контеста решены (проверяется и на клиенте, и на сервере в `sandbox/progress.php` через `sandbox/contest_map.php`).
+
+### Бейджи
+
+Два уровня достижений с раздельными витринами; источник истины для обоих — `lessons.json` и `src/js/config/badges.js`:
+
+- **Достижения** (`src/js/config/badges.js`) — за серии уроков, стрики, итоговый тест и т.п. Правила выдачи дублируются серверно в `sandbox/badges.php` (`recalculateBadges()`). Витрина: блок «🏆 Достижения» на главной (только заработанные) и модалка «Все достижения» с прогрессом.
+- **Per-lesson бейджи** — поле `badge` каждого урока в `lessons.json`. Клиентская копия (`LESSON_BADGES` в `courseData.js`, с полем `file` для ссылок) генерируется `build-config-meta.mjs`; серверная выдача — `loadLessonBadgeMap()` в `sandbox/badges.php`, читающая `lessons.json` напрямую (файл копируется в dist рядом с `sandbox/`). Бейдж за урок выдаётся при его завершении; id per-lesson бейджей не должны пересекаться с id достижений (проверяется тестом в `tests/config.test.mjs`). Витрина: блок «🎓 Карта прогресса» на главной — 50 плиток-ссылок на уроки (пройденные подсвечены); в модалке достижений per-lesson бейджи не показываются.
+- Отображение: `modules/badges-render.js` рендерит обе витрины из одного ответа `badges.php`.
 
 ## Тестирование
 

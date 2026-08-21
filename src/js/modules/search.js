@@ -30,23 +30,26 @@ export function initSearch() {
 
   const input = document.getElementById('lesson-search');
 
-  function getCards() {
-    return mainContent.querySelectorAll('.topic-card');
-  }
-
   input.addEventListener('input', function () {
     const query = input.value.toLowerCase().trim();
     let visibleCount = 0;
-    const cards = getCards();
 
-    cards.forEach(function (card) {
-      const title = (card.querySelector('h2')?.textContent || '').toLowerCase();
-      const desc = (card.querySelector('p')?.textContent || '').toLowerCase();
-      const num = (card.querySelector('.topic-num')?.textContent || '').toLowerCase();
-      const matches =
-        !query || title.includes(query) || desc.includes(query) || num.includes(query);
-      card.style.display = matches ? '' : 'none';
-      if (matches) visibleCount++;
+    const groups = mainContent.querySelectorAll('.section-group');
+    groups.forEach(function (group) {
+      let groupVisibleCount = 0;
+      group.querySelectorAll('.topic-card').forEach(function (card) {
+        const title = (card.querySelector('h2')?.textContent || '').toLowerCase();
+        const desc = (card.querySelector('p')?.textContent || '').toLowerCase();
+        const num = (card.querySelector('.topic-num')?.textContent || '').toLowerCase();
+        const matches =
+          !query || title.includes(query) || desc.includes(query) || num.includes(query);
+        card.style.display = matches ? '' : 'none';
+        if (matches) {
+          groupVisibleCount++;
+          visibleCount++;
+        }
+      });
+      group.style.display = !query || groupVisibleCount > 0 ? '' : 'none';
     });
 
     let noResults = mainContent.querySelector('.no-results');
@@ -54,7 +57,7 @@ export function initSearch() {
       if (!noResults) {
         noResults = document.createElement('div');
         noResults.className = 'no-results';
-        noResults.textContent = '? Ничего не найдено. Попробуйте изменить запрос.';
+        noResults.textContent = '🔍 Ничего не найдено. Попробуйте изменить запрос.';
         mainContent.appendChild(noResults);
       }
     } else if (noResults) {

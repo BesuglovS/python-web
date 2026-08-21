@@ -40,6 +40,37 @@ describe('build-config-meta.mjs', () => {
     const entries = metaMatch[1].match(/^\s*(\d+):\s*\{/gm);
     expect(entries).toHaveLength(50);
   });
+
+  it('generates LESSON_BADGES matching lessons.json', () => {
+    const lessons = JSON.parse(fs.readFileSync(path.join(ROOT, 'lessons.json'), 'utf-8'));
+    const courseDataSrc = fs.readFileSync(
+      path.join(ROOT, 'src', 'js', 'config', 'courseData.js'),
+      'utf-8',
+    );
+
+    for (const section of lessons.sections) {
+      for (const lesson of section.lessons) {
+        expect(courseDataSrc).toMatch(
+          new RegExp(`num:\\s*${lesson.num},\\s*id:\\s*'${lesson.badge}'`),
+        );
+        expect(courseDataSrc).toMatch(
+          new RegExp(`num:\\s*${lesson.num},[^\\n]*file:\\s*'${lesson.file}'`),
+        );
+      }
+    }
+  });
+
+  it('LESSON_BADGES has entries for all 50 lessons', () => {
+    const courseDataSrc = fs.readFileSync(
+      path.join(ROOT, 'src', 'js', 'config', 'courseData.js'),
+      'utf-8',
+    );
+    const badgesMatch = courseDataSrc.match(/const LESSON_BADGES = \[([\s\S]*?)\];/);
+    expect(badgesMatch).not.toBeNull();
+
+    const entries = badgesMatch[1].match(/^\s*\{ num:/gm);
+    expect(entries).toHaveLength(50);
+  });
 });
 
 // ─── lessons.json structure ───

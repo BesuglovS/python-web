@@ -16,16 +16,16 @@ split() разбивает строку на список подстрок:
 ```python
 text = "яблоко банан вишня"
 words = text.split()
-print(words)  # ["яблоко", "банан", "вишня"]
+print(words)  # ['яблоко', 'банан', 'вишня']
 
 # С указанием разделителя
 csv = "1,2,3,4,5"
 nums = csv.split(",")
-print(nums)  # ["1", "2", "3", "4", "5"]
+print(nums)  # ['1', '2', '3', '4', '5']
 
 # Ограничение количества разбиений
 data = "a-b-c-d"
-print(data.split("-", 2))  # ["a", "b", "c-d"]
+print(data.split("-", 2))  # ['a', 'b', 'c-d']
 ```
 
 ### Важное отличие: split() без аргументов и с разделителем-пробелом
@@ -34,17 +34,17 @@ print(data.split("-", 2))  # ["a", "b", "c-d"]
 
 ```python
 text = "   много   пробелов   "
-print(text.split())    # ["много", "пробелов"]
+print(text.split())    # ['много', 'пробелов']
 
 text2 = "a\nb\tc"
-print(text2.split())   # ["a", "b", "c"]
+print(text2.split())   # ['a', 'b', 'c']
 ```
 
 А вот `split(" ")` с явным разделителем-пробелом учитывает **каждый** пробел и сохраняет пустые строки между ними:
 
 ```python
 text = "  a  b  c  "
-print(text.split(" "))  # ["", "", "a", "", "b", "", "c", "", ""]
+print(text.split(" "))  # ['', '', 'a', '', 'b', '', 'c', '', '']
 ```
 
 ## join() — объединение в строку
@@ -74,12 +74,12 @@ print(", ".join(map(str, nums)))  # "1, 2, 3"
 Парсинг и форматирование данных:
 
 ```python
-data = "Иван,25,Москва"
+data = "Иван,25,Сочи"
 fields = data.split(",")
 name, age, city = fields
 print(f"{name} из {city}, возраст {age}")
 
 # Обратно в строку
 new_data = ";".join(fields)
-print(new_data)  # "Иван;25;Москва"
+print(new_data)  # "Иван;25;Сочи"
 ```

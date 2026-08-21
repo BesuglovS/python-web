@@ -2,7 +2,7 @@
 title: 'Обработка исключений'
 lesson: 11
 description: 'try, except, finally, raise'
-badge: 'error_handler'
+badge: 'try_except_master'
 file: '11-try-except.html'
 layout: 'layout.njk'
 permalink: '11-try-except.html'

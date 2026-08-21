@@ -2,7 +2,7 @@
 title: 'Продвинутые функции'
 lesson: 23
 description: 'args/kwargs, области видимости: global и nonlocal'
-badge: 'func_guru'
+badge: 'func_wizard'
 file: '23-functions-advanced.html'
 layout: 'layout.njk'
 permalink: '23-functions-advanced.html'

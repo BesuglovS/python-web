@@ -24,6 +24,10 @@ $userId = Auth::getUserId();
 $db = Database::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Пересчитываем перед чтением: закрывает случаи, когда прогресс заработан
+    // (например, до внедрения per-lesson бейджей), а POST check ещё не приходил
+    recalculateBadges($db, $userId);
+
     $stmt = $db->prepare("SELECT badge_id, earned_at FROM badges WHERE user_id = ? ORDER BY earned_at");
     $stmt->execute([$userId]);
     $rows = $stmt->fetchAll();
@@ -69,6 +73,15 @@ function recalculateBadges(PDO $db, int $userId): array {
     $dates = $progress['dates'];
 
     $badgeIds = [];
+
+    // Per-lesson badges: отдельный бейдж за каждый пройденный урок
+    // (соответствие урок → badge задаётся в lessons.json)
+    $lessonBadges = loadLessonBadgeMap();
+    foreach ($completed as $num) {
+        if (isset($lessonBadges[$num])) {
+            $badgeIds[] = $lessonBadges[$num];
+        }
+    }
 
     // first_steps: уроки 1-5
     if (everyLesson($completed, [1, 2, 3, 4, 5])) {
@@ -219,6 +232,42 @@ function recalculateBadges(PDO $db, int $userId): array {
     return $badgeIds;
 }
 
+/**
+ * Карта «номер урока → id per-lesson бейджа» из lessons.json.
+ * lessons.json лежит в корне сайта (рядом с sandbox/), см. eleventy passthrough.
+ * При отсутствии/битом файле возвращает пустой массив — бейджи уроков просто не выдаются.
+ */
+function loadLessonBadgeMap(): array {
+    static $map = null;
+    if ($map !== null) {
+        return $map;
+    }
+    $map = [];
+    $path = __DIR__ . '/../lessons.json';
+    $raw = is_file($path) ? file_get_contents($path) : false;
+    if ($raw === false) {
+        return $map;
+    }
+    $data = json_decode($raw, true);
+    if (!is_array($data) || !isset($data['sections']) || !is_array($data['sections'])) {
+        return $map;
+    }
+    foreach ($data['sections'] as $section) {
+        if (!isset($section['lessons']) || !is_array($section['lessons'])) {
+            continue;
+        }
+        foreach ($section['lessons'] as $lesson) {
+            if (isset($lesson['num'], $lesson['badge'])
+                && is_numeric($lesson['num'])
+                && is_string($lesson['badge'])
+                && $lesson['badge'] !== '') {
+                $map[(int) $lesson['num']] = $lesson['badge'];
+            }
+        }
+    }
+    return $map;
+}
+
 function getCompletedProgress(PDO $db, int $userId): array {
     $stmt = $db->prepare(
         "SELECT lesson_number, completed, quiz_score, completed_at, updated_at
@@ -343,6 +392,13 @@ function computeAllBadgeProgress(PDO $db, int $userId): array {
     }
     $result['streak_7'] = ['current' => $currentStreak, 'required' => 7];
     $result['repl_10'] = ['current' => $runCount, 'required' => 10];
+
+    // Per-lesson badges: прогресс 0/1 по каждому уроку
+    foreach (loadLessonBadgeMap() as $num => $badgeId) {
+        if (!isset($result[$badgeId])) {
+            $result[$badgeId] = ['current' => in_array($num, $completed) ? 1 : 0, 'required' => 1];
+        }
+    }
 
     return $result;
 }

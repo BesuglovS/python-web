@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Per-lesson badges: each completed lesson awards its badge from `lessons.json`
+  - Server-side awarding and progress in `sandbox/badges.php` (`loadLessonBadgeMap()`)
+  - Client-side `LESSON_BADGES` generated into `src/js/config/courseData.js` by `build-config-meta.mjs`
+  - «Карта прогресса» block on the index page: 50 lesson tiles linking to lessons, earned ones highlighted
+- Tests: LESSON_BADGES generation/matching and no id collisions with achievement badges
+
+### Changed
+
+- Achievements modal and index badge counter count only the 20 achievement badges; per-lesson badges live solely in the progress map
+
+### Changed
+
+- Renamed colliding per-lesson badge ids: lesson 11 `error_handler` → `try_except_master`, lesson 23 `func_guru` → `func_wizard`, lesson 41 `oop_master` → `class_builder`
+
+### Fixed
+
+- Badges API GET now recalculates badges before reading, so per-lesson badges are backfilled for progress earned before this feature (progress map no longer shows 0 of 50 for existing users)
+- Lesson 31 quiz: explanation referenced `sorted()` while the code uses `.sort()`
+- Lesson 31: clarified advice on conditions in lambdas (single ternary vs nested chains), added PEP 8 note against assigning lambdas to variables
+
 ## [1.1.0] — 2026-07-11
 
 ### Security

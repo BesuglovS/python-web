@@ -42,7 +42,10 @@ test.describe('Главная страница', () => {
 
   test('прогресс-бар отображается', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('.progress-bar-container').first()).toBeVisible();
+    const bars = page.locator('.index-header .progress-bar-container');
+    await expect(bars).toHaveCount(1);
+    await expect(page.locator('.index-header .progress-info')).toHaveCount(1);
+    await expect(bars.locator('.progress-bar-fill')).toHaveCount(1);
   });
 
   test('секции присутствуют на странице', async ({ page }) => {

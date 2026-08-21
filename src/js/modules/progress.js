@@ -201,54 +201,48 @@ function renderIndexPage() {
   const header = document.querySelector('header');
   if (!header) return;
 
-  const headerParagraph = header.querySelector('p');
-  if (!headerParagraph) return;
-
-  if (headerParagraph.querySelector('.progress-info')) {
-    const barContainer = headerParagraph.nextElementSibling;
-    if (barContainer && barContainer.classList.contains('progress-bar-container')) {
-      barContainer.querySelector('.progress-bar-fill').style.width = pct + '%';
-      barContainer.querySelector('.progress-bar-fill').setAttribute('aria-valuenow', pct);
-    }
-    const existingInfo = headerParagraph.parentElement.querySelector('.progress-info');
-    if (existingInfo) {
-      existingInfo.textContent = '';
-      existingInfo.appendChild(document.createTextNode('\u041f\u0440\u043e\u0439\u0434\u0435\u043d\u043e: '));
-      const strongCountUpd = document.createElement('strong');
-      strongCountUpd.textContent = String(count);
-      existingInfo.appendChild(strongCountUpd);
-      existingInfo.appendChild(document.createTextNode(' \u0438\u0437 '));
-      const strongTotalUpd = document.createElement('strong');
-      strongTotalUpd.textContent = String(totalLessons);
-      existingInfo.appendChild(strongTotalUpd);
-      existingInfo.appendChild(document.createTextNode(' \u0443\u0440\u043e\u043a\u043e\u0432 (' + pct + '%)'));
-    }
-  } else {
-    const barContainer = document.createElement('div');
+  let barContainer = header.querySelector('.progress-bar-container');
+  if (!barContainer) {
+    barContainer = document.createElement('div');
     barContainer.className = 'progress-bar-container';
-    const barFill = document.createElement('div');
-    barFill.className = 'progress-bar-fill';
-    barFill.style.width = pct + '%';
-    barFill.setAttribute('role', 'progressbar');
-    barFill.setAttribute('aria-valuemin', '0');
-    barFill.setAttribute('aria-valuemax', '100');
-    barFill.setAttribute('aria-valuenow', String(pct));
-    barContainer.appendChild(barFill);
-    headerParagraph.parentNode.insertBefore(barContainer, headerParagraph.nextSibling);
+    barContainer.setAttribute('role', 'progressbar');
+    barContainer.setAttribute('aria-valuemin', '0');
+    barContainer.setAttribute('aria-valuemax', '100');
+    barContainer.setAttribute('aria-label', '\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043f\u0440\u043e\u0445\u043e\u0436\u0434\u0435\u043d\u0438\u044f \u043a\u0443\u0440\u0441\u0430');
+    const headerParagraph = header.querySelector('p');
+    if (headerParagraph) {
+      headerParagraph.parentNode.insertBefore(barContainer, headerParagraph.nextSibling);
+    } else {
+      header.appendChild(barContainer);
+    }
+  }
 
-    const progressInfo = document.createElement('span');
+  let barFill = barContainer.querySelector('.progress-bar-fill');
+  if (!barFill) {
+    barFill = document.createElement('div');
+    barFill.className = 'progress-bar-fill';
+    barContainer.appendChild(barFill);
+  }
+  barFill.style.width = pct + '%';
+  barContainer.setAttribute('aria-valuenow', String(pct));
+
+  let progressInfo = header.querySelector('.progress-info');
+  if (!progressInfo) {
+    progressInfo = document.createElement('span');
     progressInfo.className = 'progress-info';
-    progressInfo.appendChild(document.createTextNode('\u041f\u0440\u043e\u0439\u0434\u0435\u043d\u043e: '));
-    const strongCount = document.createElement('strong');
-    strongCount.textContent = String(count);
-    progressInfo.appendChild(strongCount);
-    progressInfo.appendChild(document.createTextNode(' \u0438\u0437 '));
-    const strongTotal = document.createElement('strong');
-    strongTotal.textContent = String(totalLessons);
-    progressInfo.appendChild(strongTotal);
-    progressInfo.appendChild(document.createTextNode(' \u0443\u0440\u043e\u043a\u043e\u0432 (' + pct + '%)'));
     barContainer.parentNode.insertBefore(progressInfo, barContainer.nextSibling);
   }
+
+  progressInfo.textContent = '';
+  progressInfo.appendChild(document.createTextNode('\u041f\u0440\u043e\u0439\u0434\u0435\u043d\u043e: '));
+  const strongCount = document.createElement('strong');
+  strongCount.textContent = String(count);
+  progressInfo.appendChild(strongCount);
+  progressInfo.appendChild(document.createTextNode(' \u0438\u0437 '));
+  const strongTotal = document.createElement('strong');
+  strongTotal.textContent = String(totalLessons);
+  progressInfo.appendChild(strongTotal);
+  progressInfo.appendChild(document.createTextNode(' \u0443\u0440\u043e\u043a\u043e\u0432 (' + pct + '%)'));
 
   if (typeof COMPLEXITY_LABELS !== 'undefined') {
     document.querySelectorAll('.meta-complexity').forEach(function (el) {
