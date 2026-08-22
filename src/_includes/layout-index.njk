@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests" />
     <meta name="description" content="{% if description %}{{ description }}{% else %}Изучайте Python с нуля — 50 интерактивных уроков с примерами кода.{% endif %}" />
     <meta property="og:title" content="Python — Основы программирования" />
     <meta property="og:description" content="50 уроков по Python для начинающих: от переменных до Git. Бесплатно, с примерами кода." />
@@ -38,10 +38,6 @@
       "hasCourseInstance": [{ "@type": "CourseInstance", "courseMode": ["online", "MOOC"], "inLanguage": "ru" }]
     }
     </script>
-    <!-- Yandex.Metrika -->
-    <script defer src="ym-init.js"></script>
-    <noscript><div><img class="ym-pixel" src="https://mc.yandex.ru/watch/{{ site.yandexMetrikaId }}" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
   </head>
   <body class="index-page">
     <noscript><div class="noscript-banner" role="alert">\u0414\u043b\u044f \u0440\u0430\u0431\u043e\u0442\u044b \u0441\u0430\u0439\u0442\u0430 \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c JavaScript.</div></noscript>
@@ -104,5 +100,6 @@
 
     <script defer src="highlight-py.min.js"></script>
     <script type="module" src="script.js"></script>
+    <script defer src="tracking-client.js"></script>
   </body>
 </html>

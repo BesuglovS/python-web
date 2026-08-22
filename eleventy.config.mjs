@@ -16,7 +16,6 @@ export default function (eleventyConfig) {
     md.use(norunPlugin);
   });
   // Passthrough copy — статические файлы, которые не обрабатываются сборкой
-  // ym-init.js генерируется из src/ym-init.njk (Nunjucks шаблон с site.yandexMetrikaId)
   // CSS собирается esbuild в minify.js / build:css → dist/style.css
 
   // Изображения
@@ -39,6 +38,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ 'offline.html': 'offline.html' });
   eleventyConfig.addPassthroughCopy({ 'highlight-theme.min.css': 'highlight-theme.min.css' });
   eleventyConfig.addPassthroughCopy({ 'manifest.json': 'manifest.json' });
+  eleventyConfig.addPassthroughCopy({ 'src/js/tracking-client.js': 'tracking-client.js' });
 
   // PHP-песочница
   eleventyConfig.addPassthroughCopy({ sandbox: 'sandbox' });

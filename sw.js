@@ -138,7 +138,6 @@ const PRECACHE = [
   '/script.e2ad10e8.js',
   '/style.3647cdfb.css',
   '/sw.js',
-  '/ym-init.js',
 ];
 
 // Установка: предварительное кэширование критических ресурсов

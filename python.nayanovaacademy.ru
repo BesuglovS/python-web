@@ -38,7 +38,7 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru" always;
 
     # --- Сжатие gzip ---
     gzip on;
@@ -98,6 +98,12 @@ server {
         fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
+    }
+
+    # 4a. Service Worker и JS-клиент трекинга без content-hash — не кэшируем,
+    # иначе браузер не увидит обновления sw.js и продолжит отдавать старые страницы
+    location ~* ^/(sw\.js|tracking-client\.js)$ {
+        add_header Cache-Control "no-cache, must-revalidate";
     }
 
     # 5. Кэширование статических ресурсов (CSS/JS/изображения/шрифты — 1 год)
