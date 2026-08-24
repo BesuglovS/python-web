@@ -28,11 +28,14 @@ import { initAuth } from './modules/auth.js';
 import { initSetsVisual } from './modules/sets-visual.js';
 
 // Service Worker Registration
-// Регистрируем SW только в secure context (https). На http://localhost (в т.ч.
-// Lighthouse-CI, где сайт отдаётся статическим сервером по http) SW не нужен и
-// его перехват fetch ломает навигацию Lighthouse ("Chrome prevented page load
-// with an interstitial").
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
+// Регистрируем SW только в secure context (https) и не в headless-браузерах
+// (Lighthouse/HeadlessChrome). На http://localhost и при прогоне Lighthouse SW
+// не нужен, а его перехват fetch может ломать навигацию ("Chrome prevented page
+// load with an interstitial"). userAgent-проверка страхует на случай, если LHCI
+// переиспользует профиль с ранее зарегистрированным SW.
+const _ua = navigator.userAgent || '';
+const _isHeadless = /HeadlessChrome|Lighthouse/i.test(_ua);
+if ('serviceWorker' in navigator && location.protocol === 'https:' && !_isHeadless) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js', { scope: './' })
       .then(function () { console.log('SW registered'); })
