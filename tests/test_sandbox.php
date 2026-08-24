@@ -154,6 +154,10 @@ if (DIRECTORY_SEPARATOR === '\\') {
 } else {
     [$stdout, $stderr, $exitCode] = sandbox_run_python('import sys\nsys.exit(42)', '', 5, 128);
     assert_test('sys.exit(42) возвращает exit code 42', $exitCode === 42);
+    if ($exitCode !== 42) {
+        echo "    DEBUG sys.exit: exitCode=" . var_export($exitCode, true)
+            . " stderr=" . var_export($stderr, true) . "\n";
+    }
 
     // Тест с stdin
     [$stdout, $stderr, $exitCode] = sandbox_run_python(
@@ -163,6 +167,11 @@ if (DIRECTORY_SEPARATOR === '\\') {
         128
     );
     assert_test('stdin данные передаются', str_contains($stdout, 'got:test_input'));
+    if (!str_contains($stdout, 'got:test_input')) {
+        echo "    DEBUG stdin: exitCode=" . var_export($exitCode, true)
+            . " stdout=" . var_export($stdout, true)
+            . " stderr=" . var_export($stderr, true) . "\n";
+    }
 }
 
 echo "\n=== Результаты ===\n";

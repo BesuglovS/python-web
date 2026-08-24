@@ -192,32 +192,21 @@ jobs:
           name: dist
           path: dist
 
-      - name: Diagnose static site (Lighthouse interstitial)
-        # Поднимаем статический сервер на НЕ конфликтующем порту (8099) и смотрим,
-        # что реально отдаётся по / и /repl.html: нет ли 3xx-редиректа на https,
-        # meta-refresh или чего-то, из-за чего Chrome показывает interstitial.
-        run: |
-          cd dist && python3 -m http.server 8099 &
-          SRV=$!
-          sleep 2
-          echo "=== HEAD / ==="; curl -sI http://localhost:8099/ | head -20
-          echo "=== first 600 bytes / ==="; curl -s http://localhost:8099/ | head -c 600
-          echo ""
-          echo "=== HEAD /repl.html ==="; curl -sI http://localhost:8099/repl.html | head -10
-          kill $SRV 2>/dev/null || true
-
       - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v12
+        # treosh/lighthouse-ci-action@v12 НЕ поддерживает входной параметр
+        # staticDistDir (выдаёт "Unexpected input(s) 'staticDistDir'"), поэтому
+        # статический сервер поднимаем самим в той же шаге, что и запуск lhci,
+        # иначе фоновый процесс убивается в конце шага и Chrome при навигации к
+        # http://localhost:8080/ получал chrome-error://chromewebdata/ (интерстициаль).
         env:
-          # Подробный лог для диагностики interstitial/редиректов в CI.
           LHCI_DEBUG: '1'
-        with:
-          # Экшен сам поднимает статический сервер для dist/ и подменяет
-          # origin у urls на него. Без staticDistDir запросы к
-          # localhost:8080 падали бы с ECONNREFUSED.
-          urls: |
-            http://localhost:8080/
-            http://localhost:8080/repl.html
-          staticDistDir: ./dist
-          configPath: './lighthouserc.json'
-          uploadArtifacts: true
+        run: |
+          (cd dist && python3 -m http.server 8080 --bind 127.0.0.1 >/tmp/lh-server.log 2>&1 &)
+          sleep 3
+          echo "=== HEAD / ==="; curl -fsS -o /dev/null -w "%{http_code}\n" http://localhost:8080/ || echo "server not up"
+          echo "=== HEAD /repl.html ==="; curl -fsS -o /dev/null -w "%{http_code}\n" http://localhost:8080/repl.html || echo "repl.html not up"
+          npx --yes @lhci/cli@latest autorun \
+            --collect.url=http://localhost:8080/ \
+            --collect.url=http://localhost:8080/repl.html \
+            --config=./lighthouserc.json
+          pkill -f "http.server 8080" 2>/dev/null || true
