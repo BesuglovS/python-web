@@ -22,8 +22,7 @@ server {
 # 2. Основной HTTPS-сервер
 # ==========================================
 server {
-    listen 443 ssl;
-    http2 on;
+    listen 443 ssl http2;
     server_name python.nayanovaacademy.ru;
 
     # --- SSL-сертификаты ---
