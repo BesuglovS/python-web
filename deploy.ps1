@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   Build and deploy static site to remote server via SSH.
 .DESCRIPTION
@@ -175,17 +175,17 @@ if ($DryRun) {
   if ($LASTEXITCODE -ne 0) { Write-Host "  Nginx config scp failed" -ForegroundColor Red; exit 1 }
 
   # Устанавливаем новый конфиг, тестируем; при ошибке откатываемся и выходим.
-  $sshNginxCmd = "ssh $portArg $identityArg $remote `"cp ${nginxRemote} /tmp/nginx-backup-$nginxSite && cp /tmp/nginx-$nginxSite $nginxRemote && nginx -t`""
+  $sshNginxCmd = 'ssh ' + $portArg + ' ' + $identityArg + ' ' + $remote + ' "cp ' + $nginxRemote + ' /tmp/nginx-backup-' + $nginxSite + ' ; cp /tmp/nginx-' + $nginxSite + ' ' + $nginxRemote + ' ; nginx -t"'
   cmd /c $sshNginxCmd
   if ($LASTEXITCODE -ne 0) {
     Write-Host "  nginx -t failed — rolling back previous config..." -ForegroundColor Red
-    $sshRollbackCmd = "ssh $portArg $identityArg $remote `"cp /tmp/nginx-backup-$nginxSite $nginxRemote && rm -f /tmp/nginx-$nginxSite /tmp/nginx-backup-$nginxSite && systemctl reload nginx`""
+    $sshRollbackCmd = 'ssh ' + $portArg + ' ' + $identityArg + ' ' + $remote + ' "cp /tmp/nginx-backup-' + $nginxSite + ' ' + $nginxRemote + ' ; rm -f /tmp/nginx-' + $nginxSite + ' /tmp/nginx-backup-' + $nginxSite + ' ; systemctl reload nginx"'
     cmd /c $sshRollbackCmd
     Write-Host "  Rolled back. Deploy aborted." -ForegroundColor Red
     exit 1
   }
 
-  $sshReloadCmd = "ssh $portArg $identityArg $remote `"systemctl reload nginx && rm -f /tmp/nginx-$nginxSite /tmp/nginx-backup-$nginxSite`""
+  $sshReloadCmd = 'ssh ' + $portArg + ' ' + $identityArg + ' ' + $remote + ' "systemctl reload nginx ; rm -f /tmp/nginx-' + $nginxSite + ' /tmp/nginx-backup-' + $nginxSite + '"'
   cmd /c $sshReloadCmd
   if ($LASTEXITCODE -ne 0) { Write-Host "  Nginx reload failed" -ForegroundColor Red; exit 1 }
   Write-Host "  Done." -ForegroundColor Green
