@@ -319,7 +319,6 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
         $stdout = '';
         $stderr = '';
         $exitCode = -1;
-        $procClosed = false;
 
         // Завершение процесса определяем через proc_get_status()['running'], а не
         // через хрупкий feof() на pipe (на ряде платформ feof не сбрасывается при
@@ -328,17 +327,14 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
         while (true) {
             $status = proc_get_status($process);
             if (!($status['running'] ?? false)) {
-                // Надёжный источник кода завершения — proc_close(): он делает
-                // reap процесса и возвращает реальный код (включая ненулевые,
-                // напр. sys.exit(42)). proc_get_status()['exitcode'] на ряде
-                // платформ (PHP 8.2/Linux) возвращает -1 для ненулевых кодов,
-                // поэтому брать код оттуда нельзя.
+                // Код завершения берём из proc_get_status(): как только процесс
+                // завершён (running=false), PHP уже сделал reap и заполнил поле
+                // exitcode реальным кодом (включая ненулевые, напр. sys.exit(42)).
+                // Использовать proc_close() здесь нельзя — процесс уже «забран»,
+                // повторный waitpid вернёт -1 (ECHILD).
+                $exitCode = $status['exitcode'] ?? -1;
                 $stdout .= stream_get_contents($pipes[1]);
                 $stderr .= stream_get_contents($pipes[2]);
-                fclose($pipes[1]);
-                fclose($pipes[2]);
-                $exitCode = proc_close($process);
-                $procClosed = true;
                 break;
             }
 
@@ -363,13 +359,11 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
             $sel = @stream_select($read, $write, $except, (int)ceil($timeout - $elapsed), 0);
 
             if ($sel === false) {
-                // stream_select interrupted (e.g. signal) — read remaining data and reap
+                // stream_select interrupted (e.g. signal) — read remaining data and break
+                $st = proc_get_status($process);
+                $exitCode = $st['exitcode'] ?? -1;
                 $stdout .= stream_get_contents($pipes[1]);
                 $stderr .= stream_get_contents($pipes[2]);
-                fclose($pipes[1]);
-                fclose($pipes[2]);
-                $exitCode = proc_close($process);
-                $procClosed = true;
                 break;
             }
             if ($sel > 0) {
@@ -387,11 +381,13 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
             }
         }
 
-        if (!$procClosed) {
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-            $exitCode = proc_close($process);
-        }
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        // Процесс уже завершён и «забран» через proc_get_status() выше,
+        // поэтому proc_close() используем только для освобождения ресурса;
+        // код завершения уже сохранён в $exitCode.
+        proc_close($process);
 
         return [$stdout, $stderr, $exitCode];
     } finally {

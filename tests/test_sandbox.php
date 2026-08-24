@@ -152,7 +152,7 @@ assert_test('Exit code = 0', $exitCode === 0);
 if (DIRECTORY_SEPARATOR === '\\') {
     echo "  ⚠  Exit code and stdin tests skipped (Windows proc_close limitation)\n";
 } else {
-    [$stdout, $stderr, $exitCode] = sandbox_run_python('import sys\nsys.exit(42)', '', 5, 128);
+    [$stdout, $stderr, $exitCode] = sandbox_run_python("import sys\nsys.exit(42)", '', 5, 128);
     assert_test('sys.exit(42) возвращает exit code 42', $exitCode === 42);
     if ($exitCode !== 42) {
         echo "    DEBUG sys.exit: exitCode=" . var_export($exitCode, true)
@@ -161,7 +161,7 @@ if (DIRECTORY_SEPARATOR === '\\') {
 
     // Тест с stdin
     [$stdout, $stderr, $exitCode] = sandbox_run_python(
-        'import sys\ndata = sys.stdin.read()\nprint("got:" + data)',
+        "import sys\ndata = sys.stdin.read()\nprint(\"got:\" + data)",
         'test_input',
         5,
         128
