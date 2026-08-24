@@ -287,7 +287,13 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
         ];
 
         $pythonCmd = sandbox_python_cmd();
-        $cmd = [$pythonCmd, '-I', '-S', '-X', 'utf8', $tmpFile];
+        // sandbox_python_cmd() может вернуть строку с пробелом (напр. "py -3" на
+        // Windows). При bypass_shell такая строка попадает в argv[0] как имя
+        // несуществующего файла → "Failed to start Python". Разбиваем на токены.
+        $baseArgs = str_contains($pythonCmd, ' ')
+            ? preg_split('/\s+/', $pythonCmd)
+            : [$pythonCmd];
+        $cmd = array_merge($baseArgs, ['-I', '-S', '-X', 'utf8', $tmpFile]);
 
         $process = proc_open(
             $cmd,
@@ -313,15 +319,23 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
         $stdout = '';
         $stderr = '';
 
-        stream_set_timeout($pipes[1], $timeout);
-        stream_set_timeout($pipes[2], $timeout);
+        // Завершение процесса определяем через proc_get_status()['running'], а не
+        // через хрупкий feof() на pipe (на ряде платформ feof не сбрасывается при
+        // EOF, из-за чего цикл крутился до таймаута и возвращался код 124 вместо
+        // реального кода завершения, напр. sys.exit(42)).
+        while (true) {
+            $status = proc_get_status($process);
+            if (!($status['running'] ?? false)) {
+                $stdout .= stream_get_contents($pipes[1]);
+                $stderr .= stream_get_contents($pipes[2]);
+                break;
+            }
 
-        while (!feof($pipes[1]) || !feof($pipes[2])) {
             $elapsed = microtime(true) - $startTime;
-            if ($elapsed > $timeout) {
+            if ($elapsed >= $timeout) {
                 proc_terminate($process, 9);
-                $stdout = stream_get_contents($pipes[1]);
-                $stderr = stream_get_contents($pipes[2]);
+                $stdout .= stream_get_contents($pipes[1]);
+                $stderr .= stream_get_contents($pipes[2]);
                 fclose($pipes[1]);
                 fclose($pipes[2]);
                 proc_close($process);
@@ -335,7 +349,7 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
             $read = [$pipes[1], $pipes[2]];
             $write = null;
             $except = null;
-            $sel = @stream_select($read, $write, $except, 1, 0);
+            $sel = @stream_select($read, $write, $except, (int)ceil($timeout - $elapsed), 0);
 
             if ($sel === false) {
                 // stream_select interrupted (e.g. signal) — read remaining data and break
@@ -358,8 +372,6 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
             }
         }
 
-        $stdout .= stream_get_contents($pipes[1]);
-        $stderr .= stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
 
@@ -382,7 +394,11 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
 function sandbox_build_ast_command(array $allowedImports): array {
     $importsJson = json_encode($allowedImports, JSON_UNESCAPED_UNICODE);
     $scriptPath = __DIR__ . '/ast_validator.py';
-    return [sandbox_python_cmd(), '-I', '-S', $scriptPath, $importsJson];
+    $pythonCmd = sandbox_python_cmd();
+    $baseArgs = str_contains($pythonCmd, ' ')
+        ? preg_split('/\s+/', $pythonCmd)
+        : [$pythonCmd];
+    return array_merge($baseArgs, ['-I', '-S', $scriptPath, $importsJson]);
 }
 
 /**

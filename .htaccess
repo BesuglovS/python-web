@@ -9,7 +9,7 @@
     # Content Security Policy — каноническая политика, идентичная meta-CSP
     # в layout.njk / layout-index.njk и header-CSP в nginx-конфиге.
     # (frame-ancestors в meta не поддерживается браузерами — работает только здесь.)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests; frame-ancestors 'none'"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'"
     # Referrer policy
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     # Permissions policy (restrict browser features)

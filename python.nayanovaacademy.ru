@@ -46,7 +46,7 @@ server {
     add_header X-Content-Type-Options "nosniff" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests; frame-ancestors 'none'" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
 
     # --- Сжатие gzip ---
     gzip on;
@@ -141,7 +141,7 @@ server {
         add_header X-Content-Type-Options "nosniff" always;
         add_header Referrer-Policy "strict-origin-when-cross-origin" always;
         add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests; frame-ancestors 'none'" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
     }
 
     # 5. Кэширование статических ресурсов (CSS/JS/изображения/шрифты — 1 год)

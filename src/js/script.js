@@ -28,7 +28,11 @@ import { initAuth } from './modules/auth.js';
 import { initSetsVisual } from './modules/sets-visual.js';
 
 // Service Worker Registration
-if ('serviceWorker' in navigator) {
+// Регистрируем SW только в secure context (https). На http://localhost (в т.ч.
+// Lighthouse-CI, где сайт отдаётся статическим сервером по http) SW не нужен и
+// его перехват fetch ломает навигацию Lighthouse ("Chrome prevented page load
+// with an interstitial").
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js', { scope: './' })
       .then(function () { console.log('SW registered'); })
