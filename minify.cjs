@@ -19,11 +19,7 @@ const CSS_ENTRY = path.join(SRC_CSS, 'index.css');
 const CSS_OUT = path.join(PROJECT, 'dist', 'style.css');
 
 // Файлы JS для бандлинга (классические скрипты, доступны глобально на своих страницах)
-const JS_FILES = [
-  { name: 'repl.js' },
-  { name: 'mindmap.js' },
-  { name: 'cheatsheets.js' },
-];
+const JS_FILES = [{ name: 'repl.js' }, { name: 'mindmap.js' }, { name: 'cheatsheets.js' }];
 
 /**
  * Собирает CSS из модулей через esbuild (bundle + minify)
@@ -37,7 +33,11 @@ async function buildCSS() {
   const distDir = path.dirname(CSS_OUT);
   for (const f of fs.readdirSync(distDir)) {
     if (/^style\.[a-f0-9]{8}\.css$/.test(f)) {
-      try { fs.unlinkSync(path.join(distDir, f)); } catch { /* ignore */ }
+      try {
+        fs.unlinkSync(path.join(distDir, f));
+      } catch {
+        /* ignore */
+      }
     }
   }
 
@@ -56,8 +56,10 @@ async function buildCSS() {
 
 /**
  * Бандлит и минифицирует страничные JS-скрипты через esbuild (IIFE).
+ * @returns {Promise<boolean>} false, если хотя бы один бандл упал
  */
 async function processJSFiles() {
+  let failed = false;
   for (const file of JS_FILES) {
     const srcPath = path.join(SRC_JS, file.name);
     const destPath = path.join(PROJECT, 'dist', file.name);
@@ -81,15 +83,23 @@ async function processJSFiles() {
       });
       console.log(`✔ ${file.name}: bundled → dist/${file.name}`);
     } catch (err) {
+      // Ошибка бандла НЕ должна глушиться: сломанный repl.js/mindmap.js
+      // молча уезжал бы в прод с exit code 0.
+      failed = true;
       console.error(`✖ ${file.name} bundle error:`, err);
     }
   }
+  return !failed;
 }
 
 async function main() {
   try {
     await buildCSS();
-    await processJSFiles();
+    const jsOk = await processJSFiles();
+    if (!jsOk) {
+      console.error('❌ Пост-билд завершен с ошибками бандлов');
+      process.exit(1);
+    }
     console.log('\n✅ Пост-билд завершен успешно!');
   } catch (err) {
     console.error('❌ Пост-билд завершен с ошибкой:', err);

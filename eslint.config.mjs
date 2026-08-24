@@ -145,4 +145,21 @@ export default tseslint.config(
       sourceType: 'module',
     },
   },
+  {
+    // Шаблон Service Worker — среда ServiceWorkerGlobalScope
+    files: ['src/sw/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        self: 'readonly',
+        caches: 'readonly',
+        clients: 'readonly',
+        Response: 'readonly',
+        Request: 'readonly',
+        fetch: 'readonly',
+        URL: 'readonly',
+        Promise: 'readonly',
+      },
+    },
+  },
 );

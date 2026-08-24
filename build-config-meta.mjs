@@ -23,7 +23,12 @@ for (const section of lessons.sections) {
       contests[lesson.num] = lesson.contest;
     }
     if (lesson.badge !== undefined) {
-      lessonBadges.push({ num: lesson.num, id: lesson.badge, title: lesson.title, file: lesson.file });
+      lessonBadges.push({
+        num: lesson.num,
+        id: lesson.badge,
+        title: lesson.title,
+        file: lesson.file,
+      });
     }
   }
 }
@@ -114,7 +119,7 @@ const blocks = [
     name: 'LESSON_BADGES',
     range: findBlock(allLines, 'LESSON_BADGES'),
     body: [
-      "// LESSON_BADGES генерируется из lessons.json (поле badge) скриптом build-config-meta.mjs.",
+      '// LESSON_BADGES генерируется из lessons.json (поле badge) скриптом build-config-meta.mjs.',
       '// Источник истины — lessons.json, НЕ этот файл.',
       '// Для обновления: node build-config-meta.mjs',
       'const LESSON_BADGES = [',
@@ -145,4 +150,35 @@ console.log(
   `✔ courseData.js обновлён: LESSON_META — ${Object.keys(meta).length} уроков, ` +
     `THEORY_CONTESTS — ${Object.keys(contests).length} контестов, ` +
     `LESSON_BADGES — ${lessonBadges.length} бейджей из lessons.json`,
+);
+
+// ─── Генерация sandbox/contest_map.php ───
+// Серверная карта урок→контест должна совпадать с THEORY_CONTESTS.
+// Раньше она велась вручную и дрейфовала от lessons.json.
+const contestPhpLines = Object.entries(contests)
+  .sort((a, b) => Number(a[0]) - Number(b[0]))
+  .map(([num, id]) => `        ${num} => ${id},`);
+
+const contestMapPath = join(ROOT, 'sandbox', 'contest_map.php');
+let contestMap = readFileSync(contestMapPath, 'utf-8');
+const mapStartMarker = '// ─── GENERATED: lesson → contest map';
+const mapEndMarker = '// ─── END GENERATED ───';
+const startIdx = contestMap.indexOf(mapStartMarker);
+const endIdx = contestMap.indexOf(mapEndMarker);
+
+const generatedBlock = [
+  mapStartMarker + ' (build-config-meta.mjs) — не редактировать вручную',
+  ...contestPhpLines,
+  mapEndMarker,
+].join('\n');
+
+if (startIdx === -1 || endIdx === -1) {
+  console.error('✖ Не найдены маркеры GENERATED-блока в sandbox/contest_map.php');
+  process.exit(1);
+}
+contestMap =
+  contestMap.slice(0, startIdx) + generatedBlock + contestMap.slice(endIdx + mapEndMarker.length);
+writeFileSync(contestMapPath, contestMap, 'utf-8');
+console.log(
+  `✔ sandbox/contest_map.php обновлён: ${Object.keys(contests).length} контестов из lessons.json`,
 );

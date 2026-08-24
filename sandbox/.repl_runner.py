@@ -59,22 +59,71 @@ _original_input = builtins.input
 
 def custom_input(prompt: str = '') -> str:
     """Подмена builtins.input для перенаправления данных из stdin."""
-    sys.__stdout__.write(prompt)
-    sys.__stdout__.flush()
+    # Пишем в текущий sys.stdout: во время exec() это захваченный StringIO,
+    # поэтому промпт попадает в вывод сессии, а не в JSON-конверт протокола.
+    sys.stdout.write(prompt)
+    sys.stdout.flush()
     try:
         return next(input_iter)
     except StopIteration:
         return ''
 
 
-builtins.input = custom_input
+# ─── Усечённые builtins (защита в глубину) ───
+# AST-валидатор — основной рубеж; здесь мы дополнительно лишаем код
+# доступа к опасным встроенным функциям на случай обхода статики.
+# Список исключений синхронизирован с DANGEROUS_CALLS/BLOCKED_NAMES
+# в ast_validator.py.
+_RUNTIME_BLOCKED_BUILTINS = frozenset({
+    'open', 'exec', 'eval', 'compile',
+    'getattr', 'setattr', 'delattr', 'hasattr',
+    'globals', 'locals', 'vars', 'dir',
+    'type', 'isinstance', 'issubclass', 'callable',
+    'help', 'memoryview', 'exit', 'quit',
+})
+
+# Разрешённые для импорта модули — синхронизированы с
+# $SANDBOX_ALLOWED_IMPORTS в sandbox_common.php.
+_RUNTIME_ALLOWED_MODULES = frozenset({
+    'math', 'random', 'datetime', 'itertools', 'collections',
+    'functools', 'json', 're', 'string', 'statistics',
+    'decimal', 'fractions', 'copy', 'pprint',
+})
+
+_real_import = builtins.__import__
+
+
+def _safe_import(name, globals=None, locals=None, fromlist=(), level=0):
+    """__import__, разрешающий только белый список безопасных модулей."""
+    if level > 0:
+        raise ImportError('Относительные импорты запрещены в песочнице')
+    root = name.split('.')[0]
+    if root not in _RUNTIME_ALLOWED_MODULES:
+        raise ImportError(f'Модуль "{root}" недоступен в песочнице')
+    return _real_import(name, globals, locals, fromlist, level)
+
+
+SAFE_BUILTINS: dict[str, Any] = {
+    name: getattr(builtins, name)
+    for name in dir(builtins)
+    if not name.startswith('_') and name not in _RUNTIME_BLOCKED_BUILTINS
+}
+# Служебные имена с подчёркиваниями, необходимые легитимному коду:
+# __build_class__ — работа оператора class, __debug__ — оператор assert,
+# __import__ — ограниченная версия для разрешённых импортов.
+SAFE_BUILTINS['__build_class__'] = builtins.__build_class__
+SAFE_BUILTINS['__debug__'] = True
+SAFE_BUILTINS['__import__'] = _safe_import
+SAFE_BUILTINS['input'] = custom_input
 
 # ─── Подмена stdout/stderr ───
 old_stdout = sys.stdout
 old_stderr = sys.stderr
-# Удаляем __builtins__ из namespace, чтобы Python при exec() заново
-# подхватил текущие builtins (включая подменённый input → custom_input)
-namespace.pop('__builtins__', None)
+# Явно подставляем усечённые builtins: без этого exec() автоматически
+# подставляет ПОЛНЫЙ словарь builtins в namespace.
+namespace['__builtins__'] = SAFE_BUILTINS
+# __build_class__ (оператор class) читает __name__ из globals сессии.
+namespace['__name__'] = '__main__'
 
 sys.stdout = io.StringIO()
 sys.stderr = io.StringIO()

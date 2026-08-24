@@ -56,6 +56,7 @@ async function runRepl() {
   }
 
   const entry = { code: code, output: '', error: '', time: Date.now() };
+  let execOk = false;
 
   try {
     const stdinEl = document.getElementById('repl-stdin');
@@ -86,6 +87,7 @@ async function runRepl() {
 
     const result = await response.json();
     if (result.session_id) sessionId = result.session_id;
+    execOk = !!result.ok;
     entry.output = result.stdout || '';
     entry.error = result.stderr || '';
     if (!entry.output && !entry.error && result.ok) {
@@ -115,7 +117,9 @@ async function runRepl() {
       // ignore
     }
 
-    incrementCodeRuns();
+    if (execOk) {
+      incrementCodeRuns();
+    }
   }
 
   renderHistory();
@@ -193,6 +197,9 @@ async function runEditor() {
       div.textContent = '✅ Код выполнен без вывода';
       output.appendChild(div);
     }
+    if (result.ok) {
+      incrementCodeRuns();
+    }
   } catch (err) {
     if (err.name !== 'AbortError') {
       output.textContent = '';
@@ -210,8 +217,6 @@ async function runEditor() {
     output.removeAttribute('aria-busy');
     currentEditorController = null;
   }
-
-  incrementCodeRuns();
 }
 
 // ─── Render history (DOM API, incremental update) ───

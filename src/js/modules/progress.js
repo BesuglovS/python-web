@@ -7,27 +7,57 @@
  */
 
 import { apiGet, saveProgress, checkBadges, checkContestProgress } from './api-client.js';
-import { createMetaInfo, createContestBadge, lessonNumberFromPage } from './utils.js';
-import { TOTAL_LESSONS, COMPLEXITY_LABELS, LESSON_META, THEORY_CONTESTS } from '../config/courseData.js';
+import { createMetaInfo, createContestBadge, lessonNumberFromPage, isIndexPage } from './utils.js';
+import {
+  TOTAL_LESSONS,
+  COMPLEXITY_LABELS,
+  LESSON_META,
+  THEORY_CONTESTS,
+} from '../config/courseData.js';
 
 const PROGRESS_URL = 'sandbox/progress.php';
 
 const _progress = new Map();
+let _uiGeneration = 0;
+
+/**
+ * Bump and return UI generation counter used to discard stale async updates
+ * of the lesson-complete toggle.
+ * @returns {number}
+ */
+export function bumpLessonToggleGeneration() {
+  return ++_uiGeneration;
+}
+
+/**
+ * Current UI generation value for stale-async-update checks.
+ * @returns {number}
+ */
+export function currentLessonToggleGeneration() {
+  return _uiGeneration;
+}
+
+async function fetchProgressOnce() {
+  const data = await apiGet(PROGRESS_URL);
+  if (data && data.progress) {
+    _progress.clear();
+    for (const row of data.progress) {
+      const num = parseInt(row.lesson_number, 10);
+      if (isNaN(num)) continue;
+      _progress.set(num, {
+        completed: !!row.completed,
+        quiz_score:
+          row.quiz_score !== null && row.quiz_score !== undefined
+            ? parseInt(row.quiz_score, 10)
+            : null,
+      });
+    }
+  }
+}
 
 export async function loadProgressFromServer() {
   try {
-    const data = await apiGet(PROGRESS_URL);
-    if (data && data.progress) {
-      _progress.clear();
-      for (const row of data.progress) {
-        const num = parseInt(row.lesson_number, 10);
-        if (isNaN(num)) continue;
-        _progress.set(num, {
-          completed: !!row.completed,
-          quiz_score: row.quiz_score !== null && row.quiz_score !== undefined ? parseInt(row.quiz_score, 10) : null,
-        });
-      }
-    }
+    await fetchProgressOnce();
   } catch (_e) {
     console.warn('Progress server unavailable — starting empty');
   }
@@ -67,17 +97,14 @@ function syncToServer(lessonNumber, completed, quizScore) {
 }
 
 export function initProgressTracking() {
-  const pageName = window.location.pathname.split('/').pop() || '';
-  const isIndexPage = !pageName || pageName === 'index.html' || pageName === '';
-
-  if (!isIndexPage) {
+  if (!isIndexPage()) {
     renderLessonPage();
   }
 
   renderIndexPage();
 }
 
-function buildCompleteToggle(container, lessonNum, completed) {
+export function buildCompleteToggle(container, lessonNum, completed) {
   container.className = 'lesson-complete-toggle';
 
   const label = document.createElement('label');
@@ -92,28 +119,38 @@ function buildCompleteToggle(container, lessonNum, completed) {
 
   const span = document.createElement('span');
   span.className = 'complete-text';
-  span.textContent = completed ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d' : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
+  span.textContent = completed
+    ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d'
+    : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
   label.appendChild(span);
 
   label.querySelector('input').addEventListener('change', function (e) {
     const isChecked = e.target.checked;
     updateLocalProgress(lessonNum, isChecked, undefined);
     syncToServer(lessonNum, isChecked, undefined);
-    span.textContent = isChecked ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d' : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
+    span.textContent = isChecked
+      ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d'
+      : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
     if (isChecked) checkBadges();
   });
 
   container.appendChild(label);
 }
 
-function buildContestRequiredMsg(container) {
+export function buildContestRequiredMsg(container) {
   container.className = 'lesson-complete-toggle';
   const msg = document.createElement('div');
   msg.className = 'quiz-required-msg';
-  const line1 = document.createTextNode('\ud83c\udfc6 \u041a\u0432\u0438\u0437 \u043f\u0440\u043e\u0439\u0434\u0435\u043d!');
+  const line1 = document.createTextNode(
+    '\ud83c\udfc6 \u041a\u0432\u0438\u0437 \u043f\u0440\u043e\u0439\u0434\u0435\u043d!',
+  );
   const br = document.createElement('br');
   const line2 = document.createElement('span');
-  line2.appendChild(document.createTextNode('\u0420\u0435\u0448\u0438 \u0432\u0441\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c'));
+  line2.appendChild(
+    document.createTextNode(
+      '\u0420\u0435\u0448\u0438 \u0432\u0441\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c',
+    ),
+  );
   msg.appendChild(line1);
   msg.appendChild(br);
   msg.appendChild(line2);
@@ -124,7 +161,9 @@ function buildQuizRequiredMsg(container) {
   container.className = 'lesson-complete-toggle';
   const msg = document.createElement('div');
   msg.className = 'quiz-required-msg';
-  const line1 = document.createTextNode('\ud83d\udd12 \u0427\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c,');
+  const line1 = document.createTextNode(
+    '\ud83d\udd12 \u0427\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c,',
+  );
   const br = document.createElement('br');
   const line2 = document.createElement('span');
   line2.appendChild(document.createTextNode('\u043d\u0430\u0431\u0435\u0440\u0438\u0442\u0435 '));
@@ -159,7 +198,8 @@ function renderLessonPage() {
   } else if (quizPassed && !contestId) {
     buildCompleteToggle(toggleDiv, lessonNum, false);
   } else if (quizPassed && contestId) {
-    toggleDiv.textContent = '\u23f3 \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430...';
+    toggleDiv.textContent =
+      '\u23f3 \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430...';
   } else {
     buildQuizRequiredMsg(toggleDiv);
   }
@@ -172,21 +212,27 @@ function renderLessonPage() {
   }
 
   if (quizPassed && contestId && !completed) {
-    checkContestProgress(contestId).then(function (contestData) {
-      if (contestData && contestData.completed) {
-        updateLocalProgress(lessonNum, true, undefined);
-        syncToServer(lessonNum, true, undefined);
-        toggleDiv.textContent = '';
-        buildCompleteToggle(toggleDiv, lessonNum, true);
-        checkBadges();
-      } else {
+    const generation = ++_uiGeneration;
+    checkContestProgress(contestId)
+      .then(function (contestData) {
+        if (generation !== _uiGeneration) return;
+        if (!toggleDiv.isConnected) return;
+        if (contestData && contestData.completed) {
+          updateLocalProgress(lessonNum, true, undefined);
+          syncToServer(lessonNum, true, undefined);
+          toggleDiv.textContent = '';
+          buildCompleteToggle(toggleDiv, lessonNum, true);
+          checkBadges();
+        } else {
+          toggleDiv.textContent = '';
+          buildContestRequiredMsg(toggleDiv);
+        }
+      })
+      .catch(function () {
+        if (generation !== _uiGeneration || !toggleDiv.isConnected) return;
         toggleDiv.textContent = '';
         buildContestRequiredMsg(toggleDiv);
-      }
-    }).catch(function () {
-      toggleDiv.textContent = '';
-      buildContestRequiredMsg(toggleDiv);
-    });
+      });
   }
 }
 
@@ -208,7 +254,10 @@ function renderIndexPage() {
     barContainer.setAttribute('role', 'progressbar');
     barContainer.setAttribute('aria-valuemin', '0');
     barContainer.setAttribute('aria-valuemax', '100');
-    barContainer.setAttribute('aria-label', '\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043f\u0440\u043e\u0445\u043e\u0436\u0434\u0435\u043d\u0438\u044f \u043a\u0443\u0440\u0441\u0430');
+    barContainer.setAttribute(
+      'aria-label',
+      '\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043f\u0440\u043e\u0445\u043e\u0436\u0434\u0435\u043d\u0438\u044f \u043a\u0443\u0440\u0441\u0430',
+    );
     const headerParagraph = header.querySelector('p');
     if (headerParagraph) {
       headerParagraph.parentNode.insertBefore(barContainer, headerParagraph.nextSibling);
@@ -234,7 +283,9 @@ function renderIndexPage() {
   }
 
   progressInfo.textContent = '';
-  progressInfo.appendChild(document.createTextNode('\u041f\u0440\u043e\u0439\u0434\u0435\u043d\u043e: '));
+  progressInfo.appendChild(
+    document.createTextNode('\u041f\u0440\u043e\u0439\u0434\u0435\u043d\u043e: '),
+  );
   const strongCount = document.createElement('strong');
   strongCount.textContent = String(count);
   progressInfo.appendChild(strongCount);
@@ -242,7 +293,9 @@ function renderIndexPage() {
   const strongTotal = document.createElement('strong');
   strongTotal.textContent = String(totalLessons);
   progressInfo.appendChild(strongTotal);
-  progressInfo.appendChild(document.createTextNode(' \u0443\u0440\u043e\u043a\u043e\u0432 (' + pct + '%)'));
+  progressInfo.appendChild(
+    document.createTextNode(' \u0443\u0440\u043e\u043a\u043e\u0432 (' + pct + '%)'),
+  );
 
   if (typeof COMPLEXITY_LABELS !== 'undefined') {
     document.querySelectorAll('.meta-complexity').forEach(function (el) {

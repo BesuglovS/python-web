@@ -27,6 +27,9 @@ class Database
             ]);
             self::$instance->exec('PRAGMA journal_mode=WAL');
             self::$instance->exec('PRAGMA foreign_keys=ON');
+            // Ждём освобождения БД вместо мгновенного "database is locked"
+            // при параллельной записи (WAL допускает одного писателя).
+            self::$instance->exec('PRAGMA busy_timeout=5000');
         }
         return self::$instance;
     }
@@ -34,6 +37,13 @@ class Database
     public static function initialize(): void
     {
         $db = self::getInstance();
+
+        // Миграции выполняются один раз: версия схемы в PRAGMA user_version.
+        // Без этого CREATE/ALTER/UPDATE гонялись на каждом HTTP-запросе.
+        $currentVersion = (int) $db->query('PRAGMA user_version')->fetchColumn();
+        if ($currentVersion >= 1) {
+            return;
+        }
 
         $db->exec("
             CREATE TABLE IF NOT EXISTS progress (
@@ -83,5 +93,7 @@ class Database
 
         // Миграция: заполняем completed_at для старых записей, где его нет
         $db->exec("UPDATE progress SET completed_at = updated_at WHERE completed = 1 AND completed_at IS NULL");
+
+        $db->exec("PRAGMA user_version = 1");
     }
 }

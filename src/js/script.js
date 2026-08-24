@@ -8,7 +8,6 @@
 // Module initializers
 import { initSyntaxHighlighting } from './modules/syntax-highlight.js';
 import { initKeyboardNavigation } from './modules/keyboard-nav.js';
-import { initBreadcrumbs } from './modules/breadcrumbs.js';
 import { initLessonMetadata } from './modules/lesson-meta.js';
 import { initTableOfContents } from './modules/toc.js';
 import { initCodeToolbar } from './modules/code-toolbar.js';
@@ -64,7 +63,6 @@ async function initializeApplication() {
     await Promise.allSettled([
       initSyntaxHighlighting(),
       initKeyboardNavigation(),
-      initBreadcrumbs(),
       initLessonMetadata(),
       initTableOfContents(),
       initCodeToolbar(),

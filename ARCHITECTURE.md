@@ -123,17 +123,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 Прогресс уроков и результаты квизов хранятся на сервере (SQLite `data/python.db`, ключ — глобальный `user_id` из auth-web). В `localStorage` остаются только предпочтения и локальное состояние:
 
-| Ключ | Назначение |
-|------|-----------|
+| Ключ                         | Назначение                                  |
+| ---------------------------- | ------------------------------------------- |
 | `python-web-course-progress` | Локальный кэш прогресса (источник — сервер) |
-| `python-web-theme` | Предпочтения темы |
-| `python-web-quiz-scores` | Локальный кэш результатов квизов |
-| `python-repl-history` | История REPL |
-| `sw-version` | Версия Service Worker |
+| `python-web-theme`           | Предпочтения темы                           |
+| `python-web-quiz-scores`     | Локальный кэш результатов квизов            |
+| `python-repl-history`        | История REPL                                |
+| `sw-version`                 | Версия Service Worker                       |
 
 ### Безопасный доступ к localStorage
 
 Все обращения к `localStorage` проходят через `config/security.js`:
+
 ```javascript
 import { safeGetItem, safeSetItem } from '../config/security.js';
 safeSetItem('python-web-course-progress', JSON.stringify(lessons));
@@ -181,11 +182,11 @@ safeSetItem('python-web-course-progress', JSON.stringify(lessons));
 
 ## Тестирование
 
-| Тип | Инструмент | Команда |
-|-----|-----------|---------|
-| E2E | Playwright | `npm test` |
-| Unit | Vitest | `npm run test:unit` |
-| Python | pytest | `npm run test:python` |
-| PHP | phpunit | `npm run test:php` |
-| Lint | ESLint | `npm run lint` |
-| TypeCheck | TypeScript | `npm run typecheck` |
+| Тип       | Инструмент | Команда               |
+| --------- | ---------- | --------------------- |
+| E2E       | Playwright | `npm test`            |
+| Unit      | Vitest     | `npm run test:unit`   |
+| Python    | pytest     | `npm run test:python` |
+| PHP       | phpunit    | `npm run test:php`    |
+| Lint      | ESLint     | `npm run lint`        |
+| TypeCheck | TypeScript | `npm run typecheck`   |

@@ -38,7 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (stripos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') === false) {
+        jsonResponse(['error' => 'Content-Type must be application/json'], 415);
+    }
     $input = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($input)) {
+        jsonResponse(['error' => 'Некорректный JSON'], 400);
+    }
     $action = $input['action'] ?? '';
 
     if ($action === 'check') {

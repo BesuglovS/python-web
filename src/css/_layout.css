@@ -5,7 +5,8 @@
   position: relative;
 }
 
-.main-content, main {
+.main-content,
+main {
   flex: 1;
   min-width: 0;
 }
@@ -16,7 +17,10 @@ section {
   padding: 26px 30px;
   margin-bottom: 18px;
   border: 1px solid var(--border);
-  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
   box-shadow: var(--shadow-sm);
 }
 
@@ -52,7 +56,9 @@ section p {
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: var(--shadow-sm);
-  transition: background var(--transition), border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
 #toc-title {
@@ -82,7 +88,9 @@ section p {
   display: block;
   padding: 4px 6px;
   border-radius: 4px;
-  transition: color var(--transition), background var(--transition);
+  transition:
+    color var(--transition),
+    background var(--transition);
   font-size: 0.85em;
   line-height: 1.35;
 }
@@ -133,7 +141,9 @@ section p {
   align-items: center;
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(10px);
-  transition: background var(--transition), border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
 .section-anchor-nav a {
@@ -173,7 +183,10 @@ section p {
   opacity: 0;
   visibility: hidden;
   transform: translateY(20px);
-  transition: opacity .3s, visibility .3s, transform .3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s,
+    transform 0.3s;
 }
 
 .bottom-controls.visible {
@@ -192,7 +205,9 @@ section p {
   font-size: 1.3em;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +226,7 @@ section p {
   background: linear-gradient(90deg, #667eea, #764ba2, #10b981);
   z-index: 10000;
   width: 0%;
-  transition: width .35s;
+  transition: width 0.35s;
   pointer-events: none;
 }
 
@@ -220,19 +235,24 @@ section p {
 }
 
 @keyframes loader-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 .page-loader-bar.done {
   width: 100%;
-  transition: width .2s ease-out;
+  transition: width 0.2s ease-out;
   animation: none;
 }
 
 .page-loader-bar.hide {
   opacity: 0;
-  transition: opacity .35s .2s;
+  transition: opacity 0.35s 0.2s;
 }
 
 .scroll-progress-bar {
@@ -242,7 +262,7 @@ section p {
   height: 3px;
   background: linear-gradient(90deg, #007bff, #00d4ff);
   z-index: 9999;
-  transition: width .1s linear;
+  transition: width 0.1s linear;
 }
 
 /* Баннер без JS (заменяет инлайн-стиль, чтобы CSP не требовал 'unsafe-inline') */

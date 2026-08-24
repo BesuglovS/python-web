@@ -42,7 +42,9 @@ function onError(event) {
 function onRejection(event) {
   if (errors.length >= MAX_TRACKED_ERRORS) return;
   const reason = event.reason;
-  errors.push(formatError(reason instanceof Error ? reason : new Error(String(reason)), 'unhandledrejection'));
+  errors.push(
+    formatError(reason instanceof Error ? reason : new Error(String(reason)), 'unhandledrejection'),
+  );
 }
 
 /**

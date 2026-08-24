@@ -9,8 +9,12 @@ function createLocalStorage() {
   const store = {};
   return {
     getItem: (key) => store[key] ?? null,
-    setItem: (key, val) => { store[key] = val; },
-    removeItem: (key) => { delete store[key]; },
+    setItem: (key, val) => {
+      store[key] = val;
+    },
+    removeItem: (key) => {
+      delete store[key];
+    },
     _store: store,
   };
 }
@@ -22,12 +26,24 @@ function loadSecurity() {
     .replace(/^export\s*\{[\s\S]*?\};?\s*$/m, '')
     .replace(/^export\s+function\s+(\w+)/gm, 'function $1');
   const ls = createLocalStorage();
-  const ctx = { localStorage: ls, console: { warn: () => {} }, CustomEvent: undefined, document: { dispatchEvent: () => {} }, MAX_STORAGE_VALUE_LENGTH: 102400 };
-  const fn = new Function('localStorage', 'console', 'document', 'CustomEvent', `
+  const ctx = {
+    localStorage: ls,
+    console: { warn: () => {} },
+    CustomEvent: undefined,
+    document: { dispatchEvent: () => {} },
+    MAX_STORAGE_VALUE_LENGTH: 102400,
+  };
+  const fn = new Function(
+    'localStorage',
+    'console',
+    'document',
+    'CustomEvent',
+    `
     var MAX_STORAGE_VALUE_LENGTH = 102400;
     ${stripped};
     return { SAFE_KEYS, safeGetItem, safeSetItem, safeRemoveItem, buildLessonLookup };
-  `);
+  `,
+  );
   return { ...fn(ctx.localStorage, ctx.console, ctx.document, ctx.CustomEvent), _ls: ls };
 }
 

@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
         authenticated: true,
         user: { username: 'e2e', display_name: 'E2E Тест' },
       }),
-    })
+    }),
   );
 });
 
@@ -83,9 +83,9 @@ test.describe('Уроки', () => {
 
   test('блоки кода имеют панель инструментов', async ({ page }) => {
     await page.goto('/03-variables.html');
-    const toolbars = page.locator('.code-toolbar');
-    const count = await toolbars.count();
-    expect(count).toBeGreaterThanOrEqual(1);
+    // Тулбары добавляются асинхронно (auth → progress → allSettled),
+    // поэтому ждём появление, а не считаем мгновенно.
+    await expect(page.locator('.code-toolbar').first()).toBeAttached({ timeout: 15000 });
   });
 
   test('навигация prev/next работает', async ({ page }) => {
@@ -117,7 +117,9 @@ test.describe('Уроки', () => {
     await expect(page.locator('.sets-visual .num-bubble.active')).toHaveCount(2);
 
     await page.locator('.sets-visual [data-op="union"]').click();
-    await expect(page.locator('.sets-visual .sets-visual-result')).toHaveText('A ∪ B = {1, 2, 3, 4, 5, 6}');
+    await expect(page.locator('.sets-visual .sets-visual-result')).toHaveText(
+      'A ∪ B = {1, 2, 3, 4, 5, 6}',
+    );
     await expect(page.locator('.sets-visual .num-bubble.active')).toHaveCount(6);
   });
 });

@@ -16,7 +16,11 @@ const outfile = join(outdir, 'style.css');
 // Удаляем старые хэшированные копии (style.abc12345.css)
 for (const f of readdirSync(outdir)) {
   if (/^style\.[a-f0-9]{8}\.css$/.test(f)) {
-    try { unlinkSync(join(outdir, f)); } catch { /* ignore */ }
+    try {
+      unlinkSync(join(outdir, f));
+    } catch {
+      /* ignore */
+    }
   }
 }
 

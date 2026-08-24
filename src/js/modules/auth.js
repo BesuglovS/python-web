@@ -5,6 +5,8 @@
  * If not authenticated, hides page content and shows login form.
  */
 
+import { escapeHtml } from './utils.js';
+
 const AUTH_CHECK_URL = 'sandbox/auth_check.php';
 const AUTH_LOGIN_URL = 'https://auth.nayanovaacademy.ru/index.php?page=login&redirect=';
 const AUTH_LOGOUT_URL = 'https://auth.nayanovaacademy.ru/api/logout.php?redirect=';
@@ -33,9 +35,11 @@ function showAuthGate() {
   gate.className = 'auth-gate';
   gate.innerHTML =
     '<div class="auth-gate-form">' +
-      '<h1>\ud83d\udc0d Python — \u043e\u0441\u043d\u043e\u0432\u044b \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f</h1>' +
-      '<p>\u0414\u043b\u044f \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043a \u0443\u0440\u043e\u043a\u0430\u043c \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e \u0432\u043e\u0439\u0442\u0438 \u0432 \u0441\u0438\u0441\u0442\u0435\u043c\u0443</p>' +
-      '<a href="' + loginUrl + '" class="auth-gate-login">\u0412\u043e\u0439\u0442\u0438 \u0447\u0435\u0440\u0435\u0437 \u0430\u043a\u043a\u0430\u0443\u043d\u0442</a>' +
+    '<h1>\ud83d\udc0d Python — \u043e\u0441\u043d\u043e\u0432\u044b \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f</h1>' +
+    '<p>\u0414\u043b\u044f \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043a \u0443\u0440\u043e\u043a\u0430\u043c \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e \u0432\u043e\u0439\u0442\u0438 \u0432 \u0441\u0438\u0441\u0442\u0435\u043c\u0443</p>' +
+    '<a href="' +
+    loginUrl +
+    '" class="auth-gate-login">\u0412\u043e\u0439\u0442\u0438 \u0447\u0435\u0440\u0435\u0437 \u0430\u043a\u043a\u0430\u0443\u043d\u0442</a>' +
     '</div>';
 
   document.body.appendChild(gate);
@@ -69,12 +73,17 @@ function renderAuthUI(user) {
 
   if (user) {
     container.innerHTML =
-      '<span class="auth-user">' + escapeHtml(user.display_name) + '</span>' +
+      '<span class="auth-user">' +
+      escapeHtml(user.display_name) +
+      '</span>' +
       '<a href="#" class="auth-link auth-logout" id="auth-logout-btn">\u0412\u044b\u0439\u0442\u0438';
   } else {
     const currentUrl = encodeURIComponent(window.location.href);
     container.innerHTML =
-      '<a href="' + AUTH_LOGIN_URL + currentUrl + '" class="auth-link auth-login">\u0412\u043e\u0439\u0442\u0438</a>';
+      '<a href="' +
+      AUTH_LOGIN_URL +
+      currentUrl +
+      '" class="auth-link auth-login">\u0412\u043e\u0439\u0442\u0438</a>';
   }
 
   const logoutBtn = container.querySelector('#auth-logout-btn');
@@ -85,12 +94,6 @@ function renderAuthUI(user) {
       window.location.href = AUTH_LOGOUT_URL + currentUrl;
     });
   }
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
 }
 
 export async function initAuth() {

@@ -1,5 +1,7 @@
 /* Widgets: Notes, Badges, Alerts */
-.note, .tip, .warning {
+.note,
+.tip,
+.warning {
   padding: 12px 18px;
   border-radius: var(--radius-sm);
   margin: 14px 0 18px;
@@ -60,7 +62,9 @@
   font-size: 0.78em;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity var(--transition), transform var(--transition);
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
   white-space: nowrap;
 }
 
@@ -140,18 +144,18 @@
   }
 }
 
-[data-theme=dark] .badge-item.earned {
+[data-theme='dark'] .badge-item.earned {
   background: linear-gradient(135deg, #78350f, #92400e);
   border-color: #f59e0b;
   color: #fde68a;
   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
 }
 
-[data-theme=dark] .badge-item.locked {
+[data-theme='dark'] .badge-item.locked {
   opacity: 0.4;
 }
 
-[data-theme=dark] .badge-item[data-tooltip]:hover::after {
+[data-theme='dark'] .badge-item[data-tooltip]:hover::after {
   background: #e5e7eb;
   color: #1f2937;
 }
@@ -237,14 +241,14 @@
   z-index: 10;
 }
 
-[data-theme=dark] .lesson-map-tile.earned {
+[data-theme='dark'] .lesson-map-tile.earned {
   background: linear-gradient(135deg, #78350f, #92400e);
   border-color: #f59e0b;
   color: #fde68a;
   box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
 }
 
-[data-theme=dark] .lesson-map-tile[data-tooltip]:hover::after {
+[data-theme='dark'] .lesson-map-tile[data-tooltip]:hover::after {
   background: #e5e7eb;
   color: #1f2937;
 }
@@ -256,7 +260,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-   background: linear-gradient(135deg, #1e293b, #0f172a);
+  background: linear-gradient(135deg, #1e293b, #0f172a);
   color: #fbbf24;
   display: flex;
   align-items: center;
@@ -264,7 +268,9 @@
   font-size: 16px;
   text-decoration: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   z-index: 2;
   line-height: 1;
 }
@@ -305,7 +311,9 @@
   margin: 24px 0 18px;
   border: 2px solid var(--primary);
   box-shadow: var(--shadow);
-  transition: background var(--transition), border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
 .quiz-container h3 {
@@ -376,7 +384,7 @@
   font-weight: 600;
 }
 
-[data-theme=dark] .quiz-option.correct {
+[data-theme='dark'] .quiz-option.correct {
   background: #064e3b;
   color: #a7f3d0;
 }
@@ -387,7 +395,7 @@
   color: #991b1b;
 }
 
-[data-theme=dark] .quiz-option.incorrect {
+[data-theme='dark'] .quiz-option.incorrect {
   background: #450a0a;
   color: #fca5a5;
 }
@@ -420,7 +428,7 @@
   color: #065f46;
 }
 
-[data-theme=dark] .quiz-feedback.correct-fb {
+[data-theme='dark'] .quiz-feedback.correct-fb {
   background: #064e3b;
   border-color: #059669;
   color: #a7f3d0;
@@ -432,7 +440,7 @@
   color: #991b1b;
 }
 
-[data-theme=dark] .quiz-feedback.incorrect-fb {
+[data-theme='dark'] .quiz-feedback.incorrect-fb {
   background: #450a0a;
   border-color: #dc2626;
   color: #fca5a5;
@@ -448,7 +456,9 @@
   font-size: 0.95em;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity var(--transition), transform var(--transition);
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
 }
 
 .quiz-next-btn:hover {
@@ -507,7 +517,9 @@
   margin: 24px 0 18px;
   border: 2px dashed var(--primary);
   box-shadow: var(--shadow-sm);
-  transition: background var(--transition), border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
 .exercise-block h3 {
@@ -538,7 +550,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 14px;
-  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
   font-size: 0.88em;
   line-height: 1.6;
   resize: vertical;
@@ -565,7 +577,7 @@
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   margin-top: 10px;
-  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
   font-size: 0.88em;
   min-height: 36px;
   white-space: pre-wrap;
@@ -580,7 +592,8 @@
   color: #fca5a5;
 }
 
-.exercise-input, .sandbox-input {
+.exercise-input,
+.sandbox-input {
   width: 100%;
   min-height: 60px;
   background: #1a1a2e;
@@ -588,7 +601,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
-  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
   font-size: 0.85em;
   line-height: 1.5;
   resize: vertical;
@@ -597,11 +610,13 @@
   transition: border-color var(--transition);
 }
 
-.exercise-input:focus, .sandbox-input:focus {
+.exercise-input:focus,
+.sandbox-input:focus {
   border-color: var(--primary);
 }
 
-.exercise-input::placeholder, .sandbox-input::placeholder {
+.exercise-input::placeholder,
+.sandbox-input::placeholder {
   color: #6b7280;
   font-style: italic;
 }
@@ -612,7 +627,7 @@
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   margin-top: 10px;
-  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
   font-size: 0.88em;
   min-height: 36px;
   white-space: pre-wrap;
@@ -642,14 +657,20 @@
   border-top: 1px solid rgba(252, 165, 165, 0.3);
 }
 
-.exercise-output.running, .sandbox-output.running {
+.exercise-output.running,
+.sandbox-output.running {
   animation: 1.2s ease-in-out infinite pulse;
   border-left-color: #f59e0b;
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 .exercise-buttons {
@@ -786,16 +807,16 @@
   color: #92400e;
 }
 
-[data-theme=dark] .achievement-card.earned {
+[data-theme='dark'] .achievement-card.earned {
   background: linear-gradient(135deg, #78350f, #92400e);
   border-color: #f59e0b;
   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
 }
 
-[data-theme=dark] .achievement-card.earned .achievement-earned-label {
+[data-theme='dark'] .achievement-card.earned .achievement-earned-label {
   color: #fde68a;
 }
 
-[data-theme=dark] .achievement-card.earned .achievement-progress-fill {
+[data-theme='dark'] .achievement-card.earned .achievement-progress-fill {
   background: #fbbf24;
 }

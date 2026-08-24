@@ -6,13 +6,27 @@
     Header always set X-Content-Type-Options "nosniff"
     # Prevent clickjacking
     Header always set X-Frame-Options "DENY"
-    # Content Security Policy (moved from <meta> for frame-ancestors/report-uri support)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://mc.yandex.ru https://contest.nayanovaacademy.ru wss://mc.yandex.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    # Content Security Policy — каноническая политика, идентичная meta-CSP
+    # в layout.njk / layout-index.njk и header-CSP в nginx-конфиге.
+    # (frame-ancestors в meta не поддерживается браузерами — работает только здесь.)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests; frame-ancestors 'none'"
     # Referrer policy
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     # Permissions policy (restrict browser features)
     Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
 </IfModule>
+
+# Service Worker и tracking-client должны всегда быть свежими,
+# иначе обновления сайта тормозятся HTTP-кэшем на год.
+<FilesMatch "^(sw|tracking-client)\.js$">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "no-cache"
+    </IfModule>
+</FilesMatch>
+
+# База данных прогресса и любые файлы data/ не отдаются веб-сервером.
+# (Параллельное правило есть в nginx-конфиге: location ^~ /data/ { deny all; })
+RedirectMatch 404 ^/data/
 
 # Cache-Control for static assets
 <IfModule mod_expires.c>

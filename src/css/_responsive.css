@@ -27,7 +27,7 @@
     padding: 14px 12px;
   }
 
-  .toc-section[style*="display: none"] {
+  .toc-section[style*='display: none'] {
     display: block;
   }
 
@@ -75,7 +75,7 @@
     overflow-y: auto;
   }
 
-  #toc[style*="display: none"] {
+  #toc[style*='display: none'] {
     display: none;
   }
 
@@ -162,12 +162,15 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .note, .tip, .warning {
+  .note,
+  .tip,
+  .warning {
     font-size: 0.88em;
     padding: 10px 14px;
   }
 
-  pre, .code-block {
+  pre,
+  .code-block {
     font-size: 0.85em;
     padding: 14px 16px;
   }
@@ -176,11 +179,13 @@
     font-size: 0.88em;
   }
 
-  td, th {
+  td,
+  th {
     padding: 8px 10px;
   }
 
-  button, .btn {
+  button,
+  .btn {
     padding: 8px 14px;
     font-size: 0.9em;
   }

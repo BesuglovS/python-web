@@ -5,11 +5,7 @@
  * Provides common utilities for the Python-Web course application
  */
 
-import {
-  THEORY_CONTESTS,
-  CONTEST_BASE_URL,
-  COMPLEXITY_LABELS,
-} from '../config/courseData.js';
+import { THEORY_CONTESTS, CONTEST_BASE_URL, COMPLEXITY_LABELS } from '../config/courseData.js';
 import { MAX_INPUT_LENGTH } from '../config/constants.js';
 
 export function lessonNumberFromPage() {
@@ -19,6 +15,26 @@ export function lessonNumberFromPage() {
     if (!isNaN(num)) return num;
   }
   return null;
+}
+
+/**
+ * Determine whether current page is the index page
+ * @returns {boolean}
+ */
+export function isIndexPage() {
+  const pageName = window.location.pathname.split('/').pop() || '';
+  return !pageName || pageName === 'index.html';
+}
+
+/**
+ * Escape HTML special characters in text before inserting via innerHTML
+ * @param {string} text - Raw text
+ * @returns {string} - Escaped text safe for innerHTML
+ */
+export function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = String(text === null || text === undefined ? '' : text);
+  return div.innerHTML;
 }
 
 /**
@@ -75,6 +91,10 @@ export function fetchLessonsData() {
  */
 export function createContestBadge(lessonNum) {
   if (!THEORY_CONTESTS || !THEORY_CONTESTS[lessonNum]) return null;
+  const existing = document.querySelector(
+    '.topic-card[data-lesson="' + lessonNum + '"] .contest-badge',
+  );
+  if (existing) return null;
   const contestId = THEORY_CONTESTS[lessonNum];
   const baseUrl =
     (CONTEST_BASE_URL || 'https://contest.nayanovaacademy.ru/index.php?page=contest&id=') +

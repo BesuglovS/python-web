@@ -6,6 +6,7 @@
  */
 
 import { safeGetItem, safeSetItem } from '../config/security.js';
+import { isIndexPage } from './utils.js';
 
 const SCROLL_STORAGE_KEY = 'python-web-scroll-positions';
 const RESTORE_DELAY_MS = 100;
@@ -13,7 +14,7 @@ const SAVE_DEBOUNCE_MS = 500;
 
 export function initScrollRestore() {
   const pageName = window.location.pathname.split('/').pop() || '';
-  if (!pageName || pageName === 'index.html' || pageName === '') return;
+  if (isIndexPage()) return;
 
   const saved = getScrollPosition(pageName);
   if (saved > 0) {
@@ -24,12 +25,16 @@ export function initScrollRestore() {
   }
 
   let saveTimer = null;
-  window.addEventListener('scroll', function () {
-    if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(function () {
-      saveScrollPosition(pageName, window.scrollY);
-    }, SAVE_DEBOUNCE_MS);
-  }, { passive: true });
+  window.addEventListener(
+    'scroll',
+    function () {
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () {
+        saveScrollPosition(pageName, window.scrollY);
+      }, SAVE_DEBOUNCE_MS);
+    },
+    { passive: true },
+  );
 }
 
 function getScrollPosition(pageName) {

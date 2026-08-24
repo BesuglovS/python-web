@@ -12,7 +12,6 @@ const SAFE_KEYS = new Set([
   'sw-version',
   'python-web-dragdrop-completed',
   'python-web-scroll-positions',
-  'python-web-course-progress',
 ]);
 
 function safeGetItem(key) {
@@ -76,8 +75,4 @@ export function buildLessonLookup(progress) {
   return lookup;
 }
 
-export {
-  safeGetItem,
-  safeSetItem,
-  safeRemoveItem,
-};
+export { safeGetItem, safeSetItem, safeRemoveItem };

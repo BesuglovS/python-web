@@ -3,8 +3,9 @@
  * Эндпоинт для проверки авторизации через auth-web
  * Вызывается из JavaScript python-web
  */
-error_reporting(0);
+error_reporting(E_ALL);
 ini_set('display_errors', '0');
+ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -64,4 +65,18 @@ if ($response === false || $httpCode !== 200) {
 }
 
 $data = json_decode($response, true);
-echo json_encode($data ?: ['authenticated' => false]);
+if (!is_array($data) || empty($data['authenticated']) || empty($data['user']) || !is_array($data['user'])) {
+    echo json_encode(['authenticated' => false]);
+    exit;
+}
+
+// Прокидываем клиенту только безопасное подмножество полей: ответ auth-web
+// может со временем обрасти служебными данными (email, роли, внутренние id).
+$user = $data['user'];
+$safeUser = [
+    'id'           => isset($user['id']) ? (string) $user['id'] : '',
+    'login'        => isset($user['login']) ? (string) $user['login'] : '',
+    'display_name' => isset($user['display_name']) ? (string) $user['display_name'] : '',
+    'is_admin'     => !empty($user['is_admin']),
+];
+echo json_encode(['authenticated' => true, 'user' => $safeUser]);

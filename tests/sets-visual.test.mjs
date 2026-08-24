@@ -14,8 +14,12 @@ function setupDiagram() {
 
 function activeNumbers(container) {
   return Array.from(container.querySelectorAll('.num-bubble.active'))
-    .map(function (b) { return b.getAttribute('data-num'); })
-    .sort(function (x, y) { return Number(x) - Number(y); });
+    .map(function (b) {
+      return b.getAttribute('data-num');
+    })
+    .sort(function (x, y) {
+      return Number(x) - Number(y);
+    });
 }
 
 function activeRegions(container) {
@@ -43,7 +47,9 @@ describe('sets-visual Euler diagram', () => {
     expect(bubbles.length).toBe(6);
 
     const nums = Array.from(bubbles)
-      .map(function (b) { return b.getAttribute('data-num'); })
+      .map(function (b) {
+        return b.getAttribute('data-num');
+      })
       .sort();
     expect(nums).toEqual(['1', '2', '3', '4', '5', '6']);
   });
@@ -62,8 +68,12 @@ describe('sets-visual Euler diagram', () => {
     container.querySelector('[data-op="union"]').click();
 
     expect(activeNumbers(container)).toEqual(['1', '2', '3', '4', '5', '6']);
-    expect(activeRegions(container).sort()).toEqual(['region-a-only', 'region-b-only', 'region-inter'].sort());
-    expect(container.querySelector('.sets-visual-result').textContent).toBe('A ∪ B = {1, 2, 3, 4, 5, 6}');
+    expect(activeRegions(container).sort()).toEqual(
+      ['region-a-only', 'region-b-only', 'region-inter'].sort(),
+    );
+    expect(container.querySelector('.sets-visual-result').textContent).toBe(
+      'A ∪ B = {1, 2, 3, 4, 5, 6}',
+    );
   });
 
   it('intersection highlights only the common numbers', () => {

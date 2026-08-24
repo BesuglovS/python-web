@@ -4,12 +4,13 @@
  * Search functionality module
  */
 
+import { isIndexPage } from './utils.js';
+
 /**
  * Initialize search on index page
  */
 export function initSearch() {
-  const pageName = window.location.pathname.split('/').pop() || '';
-  if (pageName && pageName !== 'index.html' && pageName !== '') return;
+  if (!isIndexPage()) return;
 
   const mainContent = document.querySelector('#main-content,main') || document.querySelector('nav');
   if (!mainContent || !mainContent.querySelector('.topic-card')) return;

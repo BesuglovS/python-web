@@ -9,37 +9,54 @@
 (function (global) {
   'use strict';
 
-  var DEFAULTS = {
+  const DEFAULTS = {
     apiBase: 'https://auth.nayanovaacademy.ru',
-    interval: 30,           // секунд между heartbeat'ами
-    trackTitle: true,       // передавать document.title
-    trackReferrer: true     // передавать referrer первого захода
+    interval: 30, // секунд между heartbeat'ами
+    trackTitle: true, // передавать document.title
+    trackReferrer: true, // передавать referrer первого захода
   };
 
-  var config = Object.assign({}, DEFAULTS);
-  var authed = null;        // tri-state: null = неизвестно, true/false
-  var enabled = false;
-  var initialized = false;
-  var timer = null;
-  var firstBeat = true;
-  var lastHref = '';
-  var lastBeatAt = 0;
+  let config = Object.assign({}, DEFAULTS);
+  let authed = null; // tri-state: null = неизвестно, true/false
+  let enabled = false;
+  let initialized = false;
+  let timer = null;
+  let firstBeat = true;
+  let lastHref = '';
+  let lastBeatAt = 0;
+
+  const boundListeners = [];
+  const originalHistoryMethods = {};
+
+  function addListener(target, type, fn) {
+    target.addEventListener(type, fn);
+    boundListeners.push({ target: target, type: type, fn: fn });
+  }
+
+  function removeAllListeners() {
+    while (boundListeners.length) {
+      const entry = boundListeners.pop();
+      entry.target.removeEventListener(entry.type, entry.fn);
+    }
+  }
 
   // Уникальный ключ вкладки — чтобы несколько вкладок не конфликтовали
   // за одну открытую строку page_views на сервере.
   function tabKey() {
-    var k = null;
+    let k = null;
     try {
       k = global.sessionStorage.getItem('nayanova_tab_key');
     } catch (e) {}
     if (!k) {
       k = Math.random().toString(36).slice(2) + Date.now().toString(36);
-      try { global.sessionStorage.setItem('nayanova_tab_key', k); } catch (e) {}
+      try {
+        global.sessionStorage.setItem('nayanova_tab_key', k);
+      } catch (e) {}
     }
     return k;
   }
 
-  var tab = tabKey();
+  const tab = tabKey();
 
   function init(opts) {
     if (initialized) return;
@@ -54,7 +71,9 @@
   // на странице (инлайн-скрипты могут блокироваться CSP script-src 'self').
   function autoInit() {
     if (typeof global.document === 'undefined') return;
-    var boot = function () { init(); };
+    const boot = function () {
+      init();
+    };
     if (global.document.readyState === 'complete' || global.document.readyState === 'interactive') {
       boot();
     } else {
@@ -64,13 +83,20 @@
 
   function checkAuth() {
     if (authed !== null) return Promise.resolve(authed);
-    return global.fetch(config.apiBase + '/api/check.php', { credentials: 'include' })
-      .then(function (r) { return r.json(); })
+    return global
+      .fetch(config.apiBase + '/api/check.php', { credentials: 'include' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('check.php HTTP ' + r.status);
+        return r.json();
+      })
       .then(function (d) {
         authed = !!(d && d.authenticated);
         return authed;
       })
-      .catch(function () { authed = false; return false; });
+      .catch(function () {
+        authed = false;
+        return false;
+      });
   }
 
   function currentUrl() {
@@ -78,45 +104,45 @@
   }
 
   function currentTitle() {
-    return config.trackTitle ? (global.document.title || '') : '';
+    return config.trackTitle ? global.document.title || '' : '';
   }
 
   function currentReferrer() {
-    return (config.trackReferrer && firstBeat) ? (global.document.referrer || '') : '';
+    return config.trackReferrer && firstBeat ? global.document.referrer || '' : '';
   }
 
   // Секунд, прошедших с прошлого тика.
   function elapsedSeconds() {
-    var now = Date.now();
-    var d = lastBeatAt > 0 ? (now - lastBeatAt) / 1000 : 0;
+    const now = Date.now();
+    const d = lastBeatAt > 0 ? (now - lastBeatAt) / 1000 : 0;
     lastBeatAt = now;
     return Math.max(0, Math.round(d));
   }
 
   function send(url, title, referrer, duration) {
-    return global.fetch(config.apiBase + '/api/track.php', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        url: url,
-        title: title,
-        referrer: referrer,
-        duration: duration,
-        tab: tab
+    return global
+      .fetch(config.apiBase + '/api/track.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: url,
+          title: title,
+          referrer: referrer,
+          duration: duration,
+          tab: tab,
+        }),
       })
-    }).then(function (r) {
-      if (r.status === 401 || r.status === 403) {
-        authed = false;
-        stop();
-      }
-      return r;
-    }).catch(function () { /* сеть недоступна — пропускаем тик */ });
-  }
-
-  function heartbeat() {
-    if (!enabled) return;
-    send(currentUrl(), currentTitle(), currentReferrer(), elapsedSeconds());
+      .then(function (r) {
+        if (r.status === 401 || r.status === 403) {
+          authed = false;
+          stop();
+        }
+        return r;
+      })
+      .catch(function () {
+        /* сеть недоступна — пропускаем тик */
+      });
   }
 
   // Обычный периодический тик: фиксирует время на текущей странице.
@@ -136,23 +162,42 @@
   // Финальный тик при уходе со страницы (в т.ч. закрытие вкладки).
   function beacon() {
     if (!enabled) return;
-    var data = JSON.stringify({
+    const data = JSON.stringify({
       url: currentUrl(),
       title: currentTitle(),
       referrer: '',
       duration: elapsedSeconds(),
-      tab: tab
+      tab: tab,
     });
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(config.apiBase + '/api/track.php', new Blob([data], { type: 'application/json' }));
+      navigator.sendBeacon(
+        config.apiBase + '/api/track.php',
+        new Blob([data], { type: 'application/json' }),
+      );
     } else {
       send(currentUrl(), currentTitle(), '', elapsedSeconds());
     }
   }
 
+  function restoreHistoryMethods() {
+    if (originalHistoryMethods.pushState && global.history) {
+      global.history.pushState = originalHistoryMethods.pushState;
+      originalHistoryMethods.pushState = null;
+    }
+    if (originalHistoryMethods.replaceState && global.history) {
+      global.history.replaceState = originalHistoryMethods.replaceState;
+      originalHistoryMethods.replaceState = null;
+    }
+  }
+
   function stop() {
     enabled = false;
-    if (timer) { clearInterval(timer); timer = null; }
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+    removeAllListeners();
+    restoreHistoryMethods();
   }
 
   function start() {
@@ -167,18 +212,18 @@
     timer = setInterval(tick, config.interval * 1000);
 
     if (typeof global.document !== 'undefined') {
-      global.document.addEventListener('visibilitychange', function () {
+      addListener(global.document, 'visibilitychange', function () {
         if (global.document.visibilityState === 'hidden') beacon();
       });
     }
-    global.addEventListener('pagehide', beacon);
-    global.addEventListener('beforeunload', beacon);
+    addListener(global, 'pagehide', beacon);
+    addListener(global, 'beforeunload', beacon);
 
-    var originalPush = global.history && global.history.pushState;
-    var originalReplace = global.history && global.history.replaceState;
+    originalHistoryMethods.pushState = global.history && global.history.pushState;
+    originalHistoryMethods.replaceState = global.history && global.history.replaceState;
 
     function wrapHistory(original, args) {
-      var oldUrl = currentUrl();
+      const oldUrl = currentUrl();
       original.apply(global.history, args);
       if (currentUrl() !== oldUrl) {
         pageSwitched(oldUrl);
@@ -186,13 +231,17 @@
       }
     }
 
-    if (originalPush) {
-      global.history.pushState = function () { wrapHistory(originalPush, arguments); };
+    if (originalHistoryMethods.pushState) {
+      global.history.pushState = function () {
+        wrapHistory(originalHistoryMethods.pushState, arguments);
+      };
     }
-    if (originalReplace) {
-      global.history.replaceState = function () { wrapHistory(originalReplace, arguments); };
+    if (originalHistoryMethods.replaceState) {
+      global.history.replaceState = function () {
+        wrapHistory(originalHistoryMethods.replaceState, arguments);
+      };
     }
-    global.addEventListener('popstate', function () {
+    addListener(global, 'popstate', function () {
       if (currentUrl() !== lastHref) {
         pageSwitched(lastHref);
         lastHref = currentUrl();
@@ -200,10 +249,10 @@
     });
   }
 
-  var apiObj = {
+  const apiObj = {
     init: init,
     checkAuth: checkAuth,
-    stop: stop
+    stop: stop,
   };
 
   global.NayanovaTrack = apiObj;

@@ -59,9 +59,16 @@ DANGEROUS_CALLS: set[str] = {
     "breakpoint", "help", "memoryview",
 }
 
-# Запрещённые имена при обращении как к переменной
+# Запрещённые имена при обращении как к переменной.
+# Помимо __builtins__ сюда входят опасные встроенные функции: их ЗАПРЕЩЕНО
+# даже упоминать вне позиции вызова — иначе тривиальный алиасинг
+# (f = exec; f("...")) обходит проверку visit_Call.
 BLOCKED_NAMES: set[str] = {
     "__builtins__",
+    "open", "exec", "eval", "compile", "__import__",
+    "breakpoint", "getattr", "setattr", "delattr",
+    "globals", "locals", "vars",
+    "help", "memoryview", "exit", "quit",
 }
 
 # Запрещённые дандер-атрибуты — блокируют обход через цепочку классов
@@ -75,6 +82,16 @@ BLOCKED_DUNDER_ATTRS: set[str] = {
     "__getattribute__", "__setattr__", "__delattr__",
     "__qualname__", "__module__",
     "__reduce__", "__reduce_ex__",
+    "__traceback__",
+}
+
+# Атрибуты кадров/трейсбеков/генераторов — эскалация до builtins и sys
+# (e.__traceback__.tb_frame.f_builtins и т.п.)
+BLOCKED_FRAME_ATTRS: set[str] = {
+    "tb_frame", "tb_next", "tb_lineno",
+    "f_back", "f_builtins", "f_code", "f_globals", "f_locals",
+    "gi_frame", "gi_yieldfrom",
+    "cr_frame", "cr_await",
 }
 
 # Запрещённые модули и их атрибуты — блокируют доступ к os.path, sys.path, subprocess.run и т.д.
@@ -156,10 +173,15 @@ class SafeVisitor(ast.NodeVisitor):
             if isinstance(node.func.value, ast.Name):
                 if node.func.value.id in ("os", "sys", "subprocess"):
                     errors.append(f"Forbidden module access: {node.func.value.id}.{node.func.attr} (line {node.lineno})")
+        else:
+            # Вызов через произвольное выражение (subscript, результат вызова,
+            # лямбда и т.п.) — классический обход чёрных списков:
+            # [__import__][0]('os'), (lambda: eval)(), f = exec; f(...)
+            errors.append(f"Forbidden call target expression (line {node.lineno})")
         self.generic_visit(node)
 
     def visit_Attribute(self, node: ast.Attribute) -> None:
-        if node.attr in BLOCKED_DUNDER_ATTRS:
+        if node.attr in BLOCKED_DUNDER_ATTRS or node.attr in BLOCKED_FRAME_ATTRS:
             errors.append(
                 f"Forbidden attribute access: .{node.attr} "
                 f"(line {node.lineno})"
@@ -188,6 +210,8 @@ class SafeVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+        if node.level > 0:
+            errors.append(f"Relative imports are forbidden (line {node.lineno})")
         if node.module and node.module not in self._allowed_imports:
             errors.append(f"Forbidden import from: {node.module} (line {node.lineno})")
         self.generic_visit(node)

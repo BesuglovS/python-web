@@ -256,12 +256,12 @@
   line-height: 1.55;
 }
 
-[data-theme=dark] .cheat-item code {
+[data-theme='dark'] .cheat-item code {
   background: rgba(102, 126, 234, 0.2);
   color: #f5a97f;
 }
 
-[data-theme=dark] .cheat-item pre {
+[data-theme='dark'] .cheat-item pre {
   background: #11111b;
   color: #cdd6f4;
 }

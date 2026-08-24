@@ -18,7 +18,9 @@
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .auth-login {
@@ -86,7 +88,9 @@
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
 }
 
 .auth-gate-login:hover {

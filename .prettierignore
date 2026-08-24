@@ -1,7 +1,7 @@
 node_modules/
 dist/
 
-# Минифицированные файлы (build output)
+# Генерируемые файлы (build output)
 *.min.js
 *.min.css
 highlight-py.min.js
@@ -12,6 +12,9 @@ repl.js
 ga.js
 mindmap.js
 sw.js
+
+# Генерируется build-config-meta.mjs из lessons.json — форматирование ломает тесты
+src/js/config/courseData.js
 
 # Сгенерированные HTML (из Eleventy)
 *.html

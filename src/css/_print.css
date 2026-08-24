@@ -53,7 +53,8 @@
     display: none;
   }
 
-  pre, .code-block {
+  pre,
+  .code-block {
     white-space: pre-wrap;
     word-wrap: break-word;
     page-break-inside: avoid;
@@ -76,7 +77,9 @@
     page-break-inside: avoid;
   }
 
-  .note, .tip, .warning {
+  .note,
+  .tip,
+  .warning {
     border-left-width: 2px;
   }
 

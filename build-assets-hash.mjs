@@ -99,17 +99,14 @@ for (const [asset, hashed] of Object.entries(hashes)) {
   const base = basename(asset, ext);
   // Исходное имя (config.js)
   replacePatterns.push({
-    re: new RegExp(
-      `(^|[/"'>\`\\s])${escapeRe(asset)}(?=["'<\\\`\\s]|$)`,
-      'g'
-    ),
+    re: new RegExp(`(^|[/"'>\`\\s])${escapeRe(asset)}(?=["'<\\\`\\s]|$)`, 'g'),
     replacement: `$1${hashed}`,
   });
   // Любое хэшированное имя, кроме текущего нового (config.XXXXXXXX.js)
   replacePatterns.push({
     re: new RegExp(
       `(^|[/"'>\`\\s])${escapeRe(base)}\\.[a-f0-9]{8}\\.${escapeRe(ext.slice(1))}(?=["'<\\\`\\s]|$)`,
-      'g'
+      'g',
     ),
     replacement: (match, pre) => {
       const found = match.slice(pre.length);
@@ -156,3 +153,21 @@ function walk(dir) {
 
 walk(ROOT);
 console.log(`✔ Ссылки обновлены для ${Object.keys(hashes).length} ассетов`);
+
+// ─── 3. Пересчитываем CACHE_NAME в sw.js ПОСЛЕ переписывания ссылок ───
+// Иначе хэш имени кэша считается от контента ДО подстановки хэшированных
+// URL: изменение style.css не меняло CACHE_NAME, старый кэш не чистился,
+// и устаревшие хэшированные ассеты копились у клиентов навсегда.
+const swFile = join(ROOT, 'sw.js');
+if (existsSync(swFile)) {
+  const before = readFileSync(swFile, 'utf-8');
+  const hash = createHash('md5').update(before).digest('hex').slice(0, 8);
+  const after = before.replace(
+    /const CACHE_NAME = 'python-web-[^']*'/,
+    `const CACHE_NAME = 'python-web-${hash}'`,
+  );
+  if (after !== before) {
+    writeFileSync(swFile, after, 'utf-8');
+    console.log(`✔ CACHE_NAME обновлён по финальному контенту: python-web-${hash}`);
+  }
+}

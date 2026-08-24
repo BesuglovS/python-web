@@ -6,10 +6,10 @@
  */
 
 import { COMPLEXITY_LABELS } from '../config/courseData.js';
+import { isIndexPage } from './utils.js';
 
 export function initSectionNavigation() {
-  const pageName = window.location.pathname.split('/').pop() || '';
-  if (pageName && pageName !== 'index.html' && pageName !== '') return;
+  if (!isIndexPage()) return;
 
   const currentSection = document.querySelector('.section-nav');
   if (!currentSection) return;
@@ -47,15 +47,17 @@ export function initSectionNavigation() {
     }
   }
 
+  let scrollTicking = false;
+
   window.addEventListener('scroll', function () {
-    if (!this.scrollTicking) {
+    if (!scrollTicking) {
       window.requestAnimationFrame(function () {
         updateActiveSection();
-        this.scrollTicking = false;
-      }.bind(this));
-      this.scrollTicking = true;
+        scrollTicking = false;
+      });
+      scrollTicking = true;
     }
-  }.bind(this));
+  });
 
   updateActiveSection();
 }

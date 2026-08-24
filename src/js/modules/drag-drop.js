@@ -71,22 +71,30 @@ function initOrderExercise(container) {
       }
     });
 
-    item.addEventListener('touchstart', function () {
-      dragSrcEl = item;
-      item.classList.add('dragging');
-    }, { passive: true });
+    item.addEventListener(
+      'touchstart',
+      function () {
+        dragSrcEl = item;
+        item.classList.add('dragging');
+      },
+      { passive: true },
+    );
 
-    item.addEventListener('touchmove', function (e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const target = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (target && target.classList.contains('drag-item') && target !== dragSrcEl) {
-        container.querySelectorAll('.drag-item').forEach(function (el) {
-          el.classList.remove('drag-over');
-        });
-        target.classList.add('drag-over');
-      }
-    }, { passive: false });
+    item.addEventListener(
+      'touchmove',
+      function (e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (target && target.classList.contains('drag-item') && target !== dragSrcEl) {
+          container.querySelectorAll('.drag-item').forEach(function (el) {
+            el.classList.remove('drag-over');
+          });
+          target.classList.add('drag-over');
+        }
+      },
+      { passive: false },
+    );
 
     item.addEventListener('touchend', function (e) {
       item.classList.remove('dragging');

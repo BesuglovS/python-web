@@ -57,18 +57,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (stripos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') === false) {
+        jsonResponse(['error' => 'Content-Type must be application/json'], 415);
+    }
     $input = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($input)) {
+        jsonResponse(['error' => 'Некорректный JSON'], 400);
+    }
     $action = $input['action'] ?? '';
 
     try {
 
+    /**
+     * Номер урока: 1..50 или -1 (итоговый тест). Остальное — отклоняем.
+     */
+    function normalizeLessonNumber($raw): ?int {
+        $n = isset($raw) ? (int) $raw : null;
+        if ($n === null || ($n !== -1 && ($n < 1 || $n > MAX_COURSE_LESSONS))) {
+            return null;
+        }
+        return $n;
+    }
+
+    /** Оценка квиза строго 0..100 либо null. */
+    function normalizeQuizScore($raw): ?int {
+        if (!isset($raw)) return null;
+        $s = (int) $raw;
+        if ($s < 0 || $s > 100) return null;
+        return $s;
+    }
+
     if ($action === 'save') {
-        $lessonNumber = isset($input['lesson_number']) ? (int) $input['lesson_number'] : null;
+        $lessonNumber = normalizeLessonNumber($input['lesson_number'] ?? null);
         $completed = !empty($input['completed']) ? 1 : 0;
-        $quizScore = isset($input['quiz_score']) ? (int) $input['quiz_score'] : null;
+        $quizScore = normalizeQuizScore($input['quiz_score'] ?? null);
 
         if ($lessonNumber === null) {
-            jsonResponse(['error' => 'lesson_number обязателен'], 400);
+            jsonResponse(['error' => 'lesson_number обязателен и должен быть от 1 до ' . MAX_COURSE_LESSONS . ' (или -1 для итогового теста)'], 400);
         }
 
         $contestId = contestIdForLesson($lessonNumber);
@@ -116,6 +141,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!is_array($items)) {
             jsonResponse(['error' => 'items должен быть массивом'], 400);
         }
+        if (count($items) > MAX_BULK_ITEMS) {
+            jsonResponse(['error' => 'Слишком много элементов в items (максимум ' . MAX_BULK_ITEMS . ')'], 400);
+        }
+
+        // Проверки контестов выносим из цикла: уникальные contest_id,
+        // один HTTP-вызов на каждый вместо N повторов.
+        $contestCache = [];
 
         $stmt = $db->prepare(
             "INSERT INTO progress (user_id, lesson_number, completed, quiz_score, completed_at, updated_at)
@@ -144,22 +176,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         $count = 0;
-        foreach ($items as $item) {
-            $lessonNumber = isset($item['lesson_number']) ? (int) $item['lesson_number'] : null;
-            if ($lessonNumber === null) continue;
-            $completed = !empty($item['completed']) ? 1 : 0;
-            $quizScore = isset($item['quiz_score']) ? (int) $item['quiz_score'] : null;
+        $db->beginTransaction();
+        try {
+            foreach ($items as $item) {
+                if (!is_array($item)) continue;
+                $lessonNumber = normalizeLessonNumber($item['lesson_number'] ?? null);
+                if ($lessonNumber === null) continue;
+                $completed = !empty($item['completed']) ? 1 : 0;
+                $quizScore = normalizeQuizScore($item['quiz_score'] ?? null);
 
-            $contestId = contestIdForLesson($lessonNumber);
-            if ($completed && $contestId !== null) {
-                $contestOk = checkContestCompleted($contestId);
-                if ($contestOk === false) {
-                    $completed = 0;
+                $contestId = contestIdForLesson($lessonNumber);
+                if ($completed && $contestId !== null) {
+                    if (!array_key_exists($contestId, $contestCache)) {
+                        $contestCache[$contestId] = checkContestCompleted($contestId);
+                    }
+                    if ($contestCache[$contestId] === false) {
+                        $completed = 0;
+                    }
                 }
-            }
 
-            $stmt->execute([$userId, $lessonNumber, $completed, $quizScore, $completed]);
-            $count++;
+                $stmt->execute([$userId, $lessonNumber, $completed, $quizScore, $completed]);
+                $count++;
+            }
+            $db->commit();
+        } catch (Throwable $inner) {
+            $db->rollBack();
+            throw $inner;
         }
 
         reportCourseSummary($userId);
@@ -168,9 +210,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     } catch (PDOException $e) {
-        jsonResponse(['error' => 'Database error: ' . $e->getMessage()], 500);
+        error_log('progress.php PDO: ' . $e->getMessage());
+        jsonResponse(['error' => 'Ошибка базы данных. Попробуйте позже.'], 500);
     } catch (Throwable $e) {
-        jsonResponse(['error' => 'Server error: ' . $e->getMessage()], 500);
+        error_log('progress.php: ' . $e->getMessage());
+        jsonResponse(['error' => 'Внутренняя ошибка сервера'], 500);
     }
 
     jsonResponse(['error' => 'Неизвестное действие'], 400);

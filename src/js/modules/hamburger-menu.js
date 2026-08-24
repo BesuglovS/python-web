@@ -6,7 +6,7 @@
  */
 
 import { fetchLessonsData } from './utils.js';
-import { safeGetItem } from '../config/security.js';
+import { getCompletedLessonNumbers } from './progress.js';
 
 export function initHamburgerMenu() {
   const pageName = window.location.pathname.split('/').pop() || '';
@@ -15,7 +15,10 @@ export function initHamburgerMenu() {
   const hamburgerBtn = document.createElement('button');
   hamburgerBtn.className = 'hamburger-menu';
   hamburgerBtn.textContent = '\u2630';
-  hamburgerBtn.setAttribute('aria-label', '\u041c\u0435\u043d\u044e \u0443\u0440\u043e\u043a\u043e\u0432');
+  hamburgerBtn.setAttribute(
+    'aria-label',
+    '\u041c\u0435\u043d\u044e \u0443\u0440\u043e\u043a\u043e\u0432',
+  );
   hamburgerBtn.setAttribute('aria-expanded', 'false');
   hamburgerBtn.title = '\u0421\u043f\u0438\u0441\u043e\u043a \u0443\u0440\u043e\u043a\u043e\u0432';
   document.body.appendChild(hamburgerBtn);
@@ -30,7 +33,10 @@ export function initHamburgerMenu() {
   const panel = document.createElement('div');
   panel.className = 'hamburger-panel';
   panel.setAttribute('role', 'dialog');
-  panel.setAttribute('aria-label', '\u041d\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044f \u043f\u043e \u0443\u0440\u043e\u043a\u0430\u043c');
+  panel.setAttribute(
+    'aria-label',
+    '\u041d\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044f \u043f\u043e \u0443\u0440\u043e\u043a\u0430\u043c',
+  );
   panel.setAttribute('aria-modal', 'true');
   panel.id = 'hamburger-panel';
 
@@ -38,12 +44,17 @@ export function initHamburgerMenu() {
 
   const hamburgerHeader = document.createElement('div');
   hamburgerHeader.className = 'hamburger-header';
-  hamburgerHeader.appendChild(document.createTextNode('\ud83d\udc0d \u0423\u0440\u043e\u043a\u0438 Python '));
+  hamburgerHeader.appendChild(
+    document.createTextNode('\ud83d\udc0d \u0423\u0440\u043e\u043a\u0438 Python '),
+  );
 
   const hamburgerClose = document.createElement('button');
   hamburgerClose.className = 'hamburger-close';
   hamburgerClose.textContent = '\u2715';
-  hamburgerClose.setAttribute('aria-label', '\u0417\u0430\u043a\u0440\u044b\u0442\u044c \u043c\u0435\u043d\u044e');
+  hamburgerClose.setAttribute(
+    'aria-label',
+    '\u0417\u0430\u043a\u0440\u044b\u0442\u044c \u043c\u0435\u043d\u044e',
+  );
   hamburgerHeader.appendChild(hamburgerClose);
   panel.appendChild(hamburgerHeader);
 
@@ -91,7 +102,7 @@ export function initHamburgerMenu() {
     // Focus trap: Tab cycles within the panel
     if (e.key === 'Tab') {
       const focusable = panel.querySelectorAll(
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
       );
       if (focusable.length === 0) return;
       const first = focusable[0];
@@ -128,13 +139,17 @@ export function initHamburgerMenu() {
           });
         });
       }
-      lessons.push({ num: '\ud83c\udfc6', title: '\u0418\u0442\u043e\u0433\u043e\u0432\u044b\u0439 \u0442\u0435\u0441\u0442', href: 'final-test.html' });
+      lessons.push({
+        num: '\ud83c\udfc6',
+        title: '\u0418\u0442\u043e\u0433\u043e\u0432\u044b\u0439 \u0442\u0435\u0441\u0442',
+        href: 'final-test.html',
+      });
 
       let completed = [];
       try {
-        completed = JSON.parse(safeGetItem('python-web-course-progress') || '[]');
+        completed = getCompletedLessonNumbers();
       } catch {
-        /* ignore */
+        completed = [];
       }
 
       lessons.forEach(function (lesson) {
@@ -149,7 +164,7 @@ export function initHamburgerMenu() {
         a.appendChild(numSpan);
         a.appendChild(document.createTextNode(' ' + lesson.title));
 
-        if (completed.indexOf(lesson.href) !== -1) {
+        if (completed.indexOf(lesson.num) !== -1) {
           const checkSpan = document.createElement('span');
           checkSpan.className = 'hamburger-check';
           checkSpan.textContent = '\u2713';
@@ -170,7 +185,8 @@ export function initHamburgerMenu() {
       const errorLi = document.createElement('li');
       errorLi.style.padding = '1rem';
       errorLi.style.color = 'var(--text-muted)';
-      errorLi.textContent = '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u0443\u0440\u043e\u043a\u043e\u0432';
+      errorLi.textContent =
+        '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u0443\u0440\u043e\u043a\u043e\u0432';
       list.appendChild(errorLi);
     });
 }

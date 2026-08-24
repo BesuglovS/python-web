@@ -6,10 +6,15 @@
  */
 
 import { saveProgress, checkBadges, checkContestProgress } from './api-client.js';
-import { updateLocalProgress } from './progress.js';
-import { lessonNumberFromPage } from './utils.js';
+import {
+  updateLocalProgress,
+  buildCompleteToggle,
+  buildContestRequiredMsg,
+  bumpLessonToggleGeneration,
+  currentLessonToggleGeneration,
+} from './progress.js';
 
-const _QUIZ_ALLOWED_TAG_RE = /<\/?(code|br|b|i|em|strong)(\s[^>]*)?>/g;
+const _QUIZ_ALLOWED_TAG_RE = /<\/?(code|br|b|i|em|strong)\s*\/?>/g;
 
 function _escapeHtmlChars(str) {
   return str.replace(/[<>]/g, function (ch) {
@@ -33,16 +38,18 @@ export function sanitizeHtml(html) {
 }
 
 function syncQuizToServer(lessonNumber, score, completed) {
-  if (lessonNumber === null) return;
-  saveProgress(lessonNumber, completed !== undefined ? completed : true, score).catch(function (err) {
-    console.warn('Quiz progress sync failed:', err);
-  });
+  if (lessonNumber === null) return Promise.resolve();
+  return saveProgress(lessonNumber, completed !== undefined ? completed : true, score).catch(
+    function (err) {
+      console.warn('Quiz progress sync failed:', err);
+    },
+  );
 }
 
 export function initQuizSystem() {
   const lessonAttr = document.body.getAttribute('data-lesson');
   const isFinalTest = lessonAttr === 'final-test';
-  const lessonNum = isFinalTest ? null : parseInt(lessonAttr, 10);
+  const lessonNum = isFinalTest ? -1 : parseInt(lessonAttr, 10);
   if (!isFinalTest && (isNaN(lessonNum) || !lessonNum)) return;
 
   const quizFile = isFinalTest ? 'quizzes/final-test.json' : 'quizzes/' + lessonNum + '.json';
@@ -53,11 +60,15 @@ export function initQuizSystem() {
   const quizContainer = document.createElement('section');
   quizContainer.className = 'quiz-container';
   quizContainer.setAttribute('role', 'region');
-  quizContainer.setAttribute('aria-label', '\u041f\u0440\u043e\u0432\u0435\u0440\u044c \u0441\u0435\u0431\u044f');
+  quizContainer.setAttribute(
+    'aria-label',
+    '\u041f\u0440\u043e\u0432\u0435\u0440\u044c \u0441\u0435\u0431\u044f',
+  );
 
   const loadingDiv = document.createElement('div');
   loadingDiv.className = 'quiz-loading';
-  loadingDiv.textContent = '\u23f3 \u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0432\u043e\u043f\u0440\u043e\u0441\u043e\u0432...';
+  loadingDiv.textContent =
+    '\u23f3 \u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0432\u043e\u043f\u0440\u043e\u0441\u043e\u0432...';
   quizContainer.appendChild(loadingDiv);
 
   const completeToggle = main.querySelector('.lesson-complete-toggle');
@@ -88,7 +99,9 @@ export function initQuizSystem() {
         quizContainer.textContent = '';
         const h3 = document.createElement('h3');
         h3.id = 'quiz-heading';
-        h3.textContent = '\ud83e\udde0 \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u0441\u0435\u0431\u044f';
+        h3.tabIndex = -1;
+        h3.textContent =
+          '\ud83e\udde0 \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u0441\u0435\u0431\u044f';
         quizContainer.appendChild(h3);
         quizContainer.setAttribute('aria-labelledby', 'quiz-heading');
 
@@ -96,7 +109,11 @@ export function initQuizSystem() {
         progressDiv.className = 'quiz-progress';
         progressDiv.setAttribute('role', 'status');
         progressDiv.setAttribute('aria-live', 'polite');
-        progressDiv.textContent = '\u0412\u043e\u043f\u0440\u043e\u0441 ' + (state.idx + 1) + ' \u0438\u0437 ' + state.total;
+        progressDiv.textContent =
+          '\u0412\u043e\u043f\u0440\u043e\u0441 ' +
+          (state.idx + 1) +
+          ' \u0438\u0437 ' +
+          state.total;
         quizContainer.appendChild(progressDiv);
 
         const questionDiv = document.createElement('div');
@@ -107,7 +124,10 @@ export function initQuizSystem() {
         const optionsDiv = document.createElement('div');
         optionsDiv.className = 'quiz-options';
         optionsDiv.setAttribute('role', 'radiogroup');
-        optionsDiv.setAttribute('aria-label', '\u0412\u0430\u0440\u0438\u0430\u043d\u0442\u044b \u043e\u0442\u0432\u0435\u0442\u0430');
+        optionsDiv.setAttribute(
+          'aria-label',
+          '\u0412\u0430\u0440\u0438\u0430\u043d\u0442\u044b \u043e\u0442\u0432\u0435\u0442\u0430',
+        );
 
         q.options.forEach(function (opt, i) {
           const optEl = document.createElement('button');
@@ -141,7 +161,10 @@ export function initQuizSystem() {
 
         const nextBtn = document.createElement('button');
         nextBtn.className = 'quiz-next-btn';
-        nextBtn.textContent = state.idx + 1 < state.total ? '\u0414\u0430\u043b\u0435\u0435 \u2192' : '\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442';
+        nextBtn.textContent =
+          state.idx + 1 < state.total
+            ? '\u0414\u0430\u043b\u0435\u0435 \u2192'
+            : '\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442';
         quizContainer.appendChild(nextBtn);
 
         bindOptionHandlers(q);
@@ -165,7 +188,9 @@ export function initQuizSystem() {
             if (selectedIdx === currentQuestion.correct) {
               state.correct++;
               optEl.classList.add('correct');
-              feedback.textContent = '\u2705 \u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e! ' + (currentQuestion.explanation || '');
+              feedback.textContent =
+                '\u2705 \u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e! ' +
+                (currentQuestion.explanation || '');
               feedback.className = 'quiz-feedback correct-fb show';
             } else {
               optEl.classList.add('incorrect');
@@ -173,7 +198,9 @@ export function initQuizSystem() {
                 options[currentQuestion.correct].classList.add('correct');
                 options[currentQuestion.correct].setAttribute('aria-checked', 'true');
               }
-              feedback.textContent = '\u274c \u041d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e. ' + (currentQuestion.explanation || '');
+              feedback.textContent =
+                '\u274c \u041d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e. ' +
+                (currentQuestion.explanation || '');
               feedback.className = 'quiz-feedback incorrect-fb show';
             }
 
@@ -192,13 +219,21 @@ export function initQuizSystem() {
             if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
               e.preventDefault();
               const next = optEl.nextElementSibling;
-              if (next && next.classList.contains('quiz-option') && !next.classList.contains('disabled')) {
+              if (
+                next &&
+                next.classList.contains('quiz-option') &&
+                !next.classList.contains('disabled')
+              ) {
                 next.focus();
               }
             } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
               e.preventDefault();
               const prev = optEl.previousElementSibling;
-              if (prev && prev.classList.contains('quiz-option') && !prev.classList.contains('disabled')) {
+              if (
+                prev &&
+                prev.classList.contains('quiz-option') &&
+                !prev.classList.contains('disabled')
+              ) {
                 prev.focus();
               }
             }
@@ -218,15 +253,18 @@ export function initQuizSystem() {
 
       function showResults() {
         const scorePct = Math.round((state.correct / state.total) * 100);
-        const icon = scorePct === 100 ? '\ud83e\udd47' : scorePct >= 50 ? '\ud83d\udc4d' : '\ud83d\udcda';
-        const lessonNumber = lessonNumberFromPage();
-        const contestId = window.THEORY_CONTESTS ? window.THEORY_CONTESTS[lessonNumber] : null;
+        const icon =
+          scorePct === 100 ? '\ud83e\udd47' : scorePct >= 50 ? '\ud83d\udc4d' : '\ud83d\udcda';
+        const contestId =
+          window.THEORY_CONTESTS && !isFinalTest ? window.THEORY_CONTESTS[lessonNum] : null;
         const hasContest = !!contestId;
         const message =
           scorePct === 100
             ? hasContest
               ? '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0443\u0441\u0432\u043e\u0438\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b. \u0422\u0435\u043f\u0435\u0440\u044c \u0440\u0435\u0448\u0438 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430!'
-              : '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0443\u0441\u0432\u043e\u0438\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b. \u0423\u0440\u043e\u043a \u043e\u0442\u043c\u0435\u0447\u0435\u043d \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439!'
+              : isFinalTest
+                ? '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0441\u043f\u0440\u0430\u0432\u0438\u043b\u0441\u044f \u0441 \u0438\u0442\u043e\u0433\u043e\u0432\u044b\u043c \u0442\u0435\u0441\u0442\u043e\u043c!'
+                : '\u0412\u0435\u043b\u0438\u043a\u043e\u043b\u0435\u043f\u043d\u043e! \u0422\u044b \u043e\u0442\u043b\u0438\u0447\u043d\u043e \u0443\u0441\u0432\u043e\u0438\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b. \u0423\u0440\u043e\u043a \u043e\u0442\u043c\u0435\u0447\u0435\u043d \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439!'
             : scorePct >= 50
               ? '\u0425\u043e\u0440\u043e\u0448\u043e! \u041d\u043e \u0435\u0441\u0442\u044c \u043a\u0443\u0434\u0430 \u0440\u0430\u0441\u0442\u0438 \u2014 \u043f\u043e\u0432\u0442\u043e\u0440\u0438 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b.'
               : '\u0421\u0442\u043e\u0438\u0442 \u043f\u0435\u0440\u0435\u0447\u0438\u0442\u0430\u0442\u044c \u0443\u0440\u043e\u043a \u0438 \u043f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c \u0441\u043d\u043e\u0432\u0430.';
@@ -238,6 +276,7 @@ export function initQuizSystem() {
         resultsDiv.setAttribute('aria-live', 'polite');
 
         const h3 = document.createElement('h3');
+        h3.tabIndex = -1;
         h3.textContent = icon + ' \u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442';
         resultsDiv.appendChild(h3);
 
@@ -254,104 +293,74 @@ export function initQuizSystem() {
 
         const retryBtn = document.createElement('button');
         retryBtn.className = 'quiz-retry';
-        retryBtn.setAttribute('aria-label', '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0442\u0435\u0441\u0442');
-        retryBtn.textContent = '\ud83d\udd04 \u041f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c \u0435\u0449\u0451 \u0440\u0430\u0437';
+        retryBtn.setAttribute(
+          'aria-label',
+          '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0442\u0435\u0441\u0442',
+        );
+        retryBtn.textContent =
+          '\ud83d\udd04 \u041f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c \u0435\u0449\u0451 \u0440\u0430\u0437';
         resultsDiv.appendChild(retryBtn);
 
         quizContainer.appendChild(resultsDiv);
 
-          if (scorePct === 100) {
-            if (contestId) {
-              syncQuizToServer(lessonNumber, scorePct, false);
-              updateLocalProgress(lessonNumber, false, scorePct);
-
-              checkContestProgress(contestId).then(function (contestData) {
+        if (scorePct === 100) {
+          if (hasContest) {
+            const generation = bumpLessonToggleGeneration();
+            syncQuizToServer(lessonNum, scorePct, false)
+              .then(function () {
+                return checkContestProgress(contestId);
+              })
+              .then(function (contestData) {
+                if (generation !== currentLessonToggleGeneration()) return;
+                const completeEl = document.querySelector('.lesson-complete-toggle');
                 if (contestData && contestData.completed) {
-                  updateLocalProgress(lessonNumber, true, scorePct);
-                  saveProgress(lessonNumber, true, undefined);
+                  updateLocalProgress(lessonNum, true, scorePct);
+                  saveProgress(lessonNum, true, scorePct).catch(function (err) {
+                    console.warn('Quiz progress sync failed:', err);
+                  });
 
-                  const completeEl = document.querySelector('.lesson-complete-toggle');
                   if (completeEl) {
                     completeEl.textContent = '';
-                    const label = document.createElement('label');
-                    label.className = 'complete-label';
-
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'complete-checkbox';
-                    checkbox.checked = true;
-                    label.appendChild(checkbox);
-                    label.appendChild(document.createTextNode(' '));
-
-                    const span = document.createElement('span');
-                    span.className = 'complete-text';
-                    span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
-                    label.appendChild(span);
-
-                    completeEl.appendChild(label);
+                    buildCompleteToggle(completeEl, lessonNum, true);
                   }
 
                   checkBadges();
-                } else {
-                  const completeEl = document.querySelector('.lesson-complete-toggle');
-                  if (completeEl) {
-                    completeEl.textContent = '';
-                    const msg = document.createElement('div');
-                    msg.className = 'quiz-required-msg';
-                    const line1 = document.createTextNode('\ud83c\udfc6 \u041a\u0432\u0438\u0437 \u043f\u0440\u043e\u0439\u0434\u0435\u043d!');
-                    const br = document.createElement('br');
-                    const line2 = document.createElement('span');
-                    line2.appendChild(document.createTextNode('\u0420\u0435\u0448\u0438 \u0432\u0441\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0443\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u043c'));
-                    msg.appendChild(line1);
-                    msg.appendChild(br);
-                    msg.appendChild(line2);
-                    completeEl.appendChild(msg);
-                  }
+                } else if (completeEl) {
+                  completeEl.textContent = '';
+                  buildContestRequiredMsg(completeEl);
                 }
-              }).catch(function () {
+              })
+              .catch(function () {
+                if (generation !== currentLessonToggleGeneration()) return;
                 const completeEl = document.querySelector('.lesson-complete-toggle');
                 if (completeEl) {
                   completeEl.textContent = '';
                   const msg = document.createElement('div');
                   msg.className = 'quiz-required-msg';
-                  msg.textContent = '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u043f\u043e\u0437\u0436\u0435.';
+                  msg.textContent =
+                    '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043a\u043e\u043d\u0442\u0435\u0441\u0442\u0430. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u043f\u043e\u0437\u0436\u0435.';
                   completeEl.appendChild(msg);
                 }
               });
-            } else {
-              syncQuizToServer(lessonNumber, scorePct);
-              updateLocalProgress(lessonNumber, true, scorePct);
-
-              const completeEl = document.querySelector('.lesson-complete-toggle');
-              if (completeEl) {
-                completeEl.textContent = '';
-                const label = document.createElement('label');
-                label.className = 'complete-label';
-
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.className = 'complete-checkbox';
-                checkbox.checked = true;
-                label.appendChild(checkbox);
-                label.appendChild(document.createTextNode(' '));
-
-                const span = document.createElement('span');
-                span.className = 'complete-text';
-                span.textContent = '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d';
-                label.appendChild(span);
-
-                completeEl.appendChild(label);
-              }
-            }
           } else {
-            syncQuizToServer(lessonNumber, scorePct);
-            updateLocalProgress(lessonNumber, false, scorePct);
+            syncQuizToServer(lessonNum, scorePct);
+            updateLocalProgress(lessonNum, true, scorePct);
+
+            const completeEl = document.querySelector('.lesson-complete-toggle');
+            if (completeEl) {
+              completeEl.textContent = '';
+              buildCompleteToggle(completeEl, lessonNum, true);
+            }
           }
+        } else {
+          syncQuizToServer(lessonNum, scorePct);
+          updateLocalProgress(lessonNum, false, scorePct);
+        }
 
-          // Check badges after quiz
-          checkBadges();
+        // Check badges after quiz
+        checkBadges();
 
-          h3.focus();
+        h3.focus();
 
         quizContainer.querySelector('.quiz-retry').addEventListener('click', function () {
           state = { idx: 0, correct: 0, answered: false, total: questions.length };

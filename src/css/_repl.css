@@ -4,7 +4,7 @@ body.repl-page {
   min-height: 100vh;
 }
 
-[data-theme=dark] body.repl-page {
+[data-theme='dark'] body.repl-page {
   background: linear-gradient(135deg, #1a1030 0, #0f0a20 100%);
 }
 
@@ -292,7 +292,7 @@ body.repl-page {
 
 .exercise-run-btn.running::after,
 .repl-run-btn.running::after {
-  content: "";
+  content: '';
   display: inline-block;
   width: 14px;
   height: 14px;
@@ -304,21 +304,21 @@ body.repl-page {
   margin-left: 6px;
 }
 
-[data-theme=dark] .topic-card {
+[data-theme='dark'] .topic-card {
   background: var(--card-bg);
   border-color: var(--border);
 }
 
-[data-theme=dark] .topic-card:hover {
+[data-theme='dark'] .topic-card:hover {
   background: var(--card-hover-bg);
   border-color: var(--primary);
 }
 
-[data-theme=dark] .code-wrapper,
-[data-theme=dark] .quiz-option {
+[data-theme='dark'] .code-wrapper,
+[data-theme='dark'] .quiz-option {
   border-color: var(--border);
 }
 
-[data-theme=dark] .quiz-option:hover {
+[data-theme='dark'] .quiz-option:hover {
   border-color: var(--primary);
 }

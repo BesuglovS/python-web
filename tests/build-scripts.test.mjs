@@ -100,7 +100,10 @@ describe('lessons.json', () => {
     for (const section of lessons.sections) {
       for (const lesson of section.lessons) {
         expect(Array.isArray(lesson.tags), `lesson ${lesson.num} must have tags array`).toBe(true);
-        expect(lesson.tags.length, `lesson ${lesson.num} must have at least 1 tag`).toBeGreaterThanOrEqual(1);
+        expect(
+          lesson.tags.length,
+          `lesson ${lesson.num} must have at least 1 tag`,
+        ).toBeGreaterThanOrEqual(1);
         lesson.tags.forEach((tag) => {
           expect(typeof tag, `lesson ${lesson.num} tag must be string`).toBe('string');
         });
@@ -119,12 +122,29 @@ describe('lessons.json', () => {
   it('every lesson has interactive object', () => {
     for (const section of lessons.sections) {
       for (const lesson of section.lessons) {
-        expect(typeof lesson.interactive, `lesson ${lesson.num} must have interactive object`).toBe('object');
-        expect(lesson.interactive !== null, `lesson ${lesson.num} interactive must not be null`).toBe(true);
-        expect(typeof lesson.interactive.exercise, `lesson ${lesson.num} interactive.exercise must be boolean`).toBe('boolean');
-        expect(typeof lesson.interactive.quiz, `lesson ${lesson.num} interactive.quiz must be boolean`).toBe('boolean');
-        expect(typeof lesson.interactive.dragDrop, `lesson ${lesson.num} interactive.dragDrop must be boolean`).toBe('boolean');
-        expect(typeof lesson.interactive.game, `lesson ${lesson.num} interactive.game must be boolean`).toBe('boolean');
+        expect(typeof lesson.interactive, `lesson ${lesson.num} must have interactive object`).toBe(
+          'object',
+        );
+        expect(
+          lesson.interactive !== null,
+          `lesson ${lesson.num} interactive must not be null`,
+        ).toBe(true);
+        expect(
+          typeof lesson.interactive.exercise,
+          `lesson ${lesson.num} interactive.exercise must be boolean`,
+        ).toBe('boolean');
+        expect(
+          typeof lesson.interactive.quiz,
+          `lesson ${lesson.num} interactive.quiz must be boolean`,
+        ).toBe('boolean');
+        expect(
+          typeof lesson.interactive.dragDrop,
+          `lesson ${lesson.num} interactive.dragDrop must be boolean`,
+        ).toBe('boolean');
+        expect(
+          typeof lesson.interactive.game,
+          `lesson ${lesson.num} interactive.game must be boolean`,
+        ).toBe('boolean');
       }
     }
   });
@@ -137,7 +157,11 @@ describe('lessons.json', () => {
       }
     }
     nums.sort((a, b) => a - b);
-    expect(nums).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]);
+    expect(nums).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+      27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      50,
+    ]);
   });
 
   it('has sections with unique ids', () => {
@@ -148,8 +172,8 @@ describe('lessons.json', () => {
 
 // ─── build-sw.mjs markers ───
 
-describe('sw.js template', () => {
-  const swSrc = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf-8');
+describe('sw.js template (src/sw/template.js)', () => {
+  const swSrc = fs.readFileSync(path.join(ROOT, 'src', 'sw', 'template.js'), 'utf-8');
 
   it('has PRECACHE markers for build-sw.mjs', () => {
     expect(swSrc).toContain('// Ресурсы, которые кэшируем сразу при установке SW');
@@ -160,11 +184,8 @@ describe('sw.js template', () => {
     expect(swSrc).toMatch(/const CACHE_NAME = 'python-web-[^']+'/);
   });
 
-  it('has ALL mandatory precache entries', () => {
-    const mandatory = ['/', '/index.html', '/offline.html', '/404.html'];
-    for (const entry of mandatory) {
-      expect(swSrc).toContain(`'${entry}'`);
-    }
+  it('ignores cross-origin requests in fetch handler', () => {
+    expect(swSrc).toContain('url.origin !== self.location.origin');
   });
 });
 
@@ -264,8 +285,14 @@ describe('quiz JSON schema validation', () => {
     expect(q.question.length, `${quizFile}[${idx}].question must not be empty`).toBeGreaterThan(0);
 
     expect(Array.isArray(q.options), `${quizFile}[${idx}].options must be array`).toBe(true);
-    expect(q.options.length, `${quizFile}[${idx}].options must have 2+ items`).toBeGreaterThanOrEqual(2);
-    expect(q.options.length, `${quizFile}[${idx}].options must have at most 6 items`).toBeLessThanOrEqual(6);
+    expect(
+      q.options.length,
+      `${quizFile}[${idx}].options must have 2+ items`,
+    ).toBeGreaterThanOrEqual(2);
+    expect(
+      q.options.length,
+      `${quizFile}[${idx}].options must have at most 6 items`,
+    ).toBeLessThanOrEqual(6);
     q.options.forEach((opt, oi) => {
       expect(typeof opt, `${quizFile}[${idx}].options[${oi}] must be string`).toBe('string');
       expect(opt.length, `${quizFile}[${idx}].options[${oi}] must not be empty`).toBeGreaterThan(0);
@@ -274,7 +301,9 @@ describe('quiz JSON schema validation', () => {
     expect(typeof q.correct, `${quizFile}[${idx}].correct must be number`).toBe('number');
     expect(Number.isInteger(q.correct), `${quizFile}[${idx}].correct must be integer`).toBe(true);
     expect(q.correct, `${quizFile}[${idx}].correct must be >= 0`).toBeGreaterThanOrEqual(0);
-    expect(q.correct, `${quizFile}[${idx}].correct must be < options.length`).toBeLessThan(q.options.length);
+    expect(q.correct, `${quizFile}[${idx}].correct must be < options.length`).toBeLessThan(
+      q.options.length,
+    );
 
     if (q.explanation !== undefined) {
       expect(typeof q.explanation, `${quizFile}[${idx}].explanation must be string`).toBe('string');
@@ -337,10 +366,9 @@ describe('quiz JSON schema validation', () => {
       const quiz = JSON.parse(fs.readFileSync(path.join(quizzesDir, `${i}.json`), 'utf-8'));
       quiz.forEach((q, idx) => {
         const unique = new Set(q.options);
-        expect(
-          unique.size,
-          `quizzes/${i}.json[${idx}]: options must be unique`,
-        ).toBe(q.options.length);
+        expect(unique.size, `quizzes/${i}.json[${idx}]: options must be unique`).toBe(
+          q.options.length,
+        );
       });
     }
   });

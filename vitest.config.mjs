@@ -10,12 +10,13 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['tests/**', 'node_modules/**', 'src/**/*.test.ts'],
       // Гейт покрытия: CI (npm run test:unit:coverage) падает при просадке.
-      // Значения — текущий измеренный минимум; поднимать по мере роста тестов.
+      // Значения — измеренный минимум (2026-08: 14.75/54.14/25.58) с запасом;
+      // поднимать по мере роста тестов.
       thresholds: {
-        statements: 9,
-        branches: 28,
-        functions: 6,
-        lines: 9,
+        statements: 13,
+        branches: 48,
+        functions: 22,
+        lines: 13,
       },
     },
   },

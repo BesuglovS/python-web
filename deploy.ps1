@@ -87,28 +87,31 @@ if (-not (Test-Path $distPath)) {
 $sshArgStr = ""
 if ($sshPort -ne '22') { $sshArgStr += "-P $sshPort " }
 if ($identityFile) { $sshArgStr += "-i `"$identityFile`" " }
-# Сохраняем data/ на сервере перед очисткой, восстанавливаем после распаковки
-$sshArgStr += "$remote `"cp -r ${remotePath}/data /tmp/.deploy-data 2>/dev/null; rm -rf ${remotePath}/* ${remotePath}/.[!.]* 2>/dev/null; mkdir -p ${remotePath}/data 2>/dev/null; cp -r /tmp/.deploy-data/* ${remotePath}/data/ 2>/dev/null; rm -rf /tmp/.deploy-data; tar -xzf - -C $remotePath; chown -R www-data:www-data ${remotePath}/data 2>/dev/null; chmod -R 775 ${remotePath}/data 2>/dev/null`""
+# Сохраняем data/ на сервере перед очисткой, восстанавливаем после распаковки.
+# Все подстановки $remotePath берём в двойные кавычки remote-shell — пробелы
+# и спецсимволы в пути не должны ломать команду.
+# tar-исключения: __pycache__ и .ratelimit — runtime-каталоги, которые
+# перезаписали бы боевое состояние rate-limiter на сервере.
+$remoteScript = "cp -r `"$remotePath/data`" /tmp/.deploy-data 2>/dev/null; " +
+  "rm -rf `"$remotePath`"/* `"$remotePath`"/.[!.]* 2>/dev/null; " +
+  "mkdir -p `"$remotePath/data`" 2>/dev/null; " +
+  "cp -r /tmp/.deploy-data/* `"$remotePath/data/`" 2>/dev/null; " +
+  "rm -rf /tmp/.deploy-data; " +
+  "tar -xzf - -C `"$remotePath`"; " +
+  "chown -R www-data:www-data `"$remotePath/data`" 2>/dev/null; " +
+  "chmod -R 750 `"$remotePath/data`" 2>/dev/null"
+$sshArgStr += "$remote `"$remoteScript`""
 
 Write-Host "`n==> Deploying to ${remote}:${remotePath} ..." -ForegroundColor Cyan
 
 if ($DryRun) {
-  Write-Host "  [DryRun] tar -czf - -C `"$distPath`" --exclude __pycache__ . | ssh $sshArgStr" -ForegroundColor Yellow
+  Write-Host "  [DryRun] tar -czf - -C `"$distPath`" --exclude __pycache__ --exclude .ratelimit --exclude .repl_sessions . | ssh $sshArgStr" -ForegroundColor Yellow
 } else {
   Write-Host "  Archiving and transferring..." -ForegroundColor Gray
 
   $targz = Join-Path $env:TEMP "deploy-$(Get-Random).tar.gz"
-  $scriptsDir = Join-Path $PSScriptRoot 'scripts'
   try {
-    # Создаём временную папку, объединяем dist + scripts
-    $tmpDir = Join-Path $env:TEMP "deploy-tmp-$(Get-Random)"
-    New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
-    Copy-Item -Recurse -Path "$distPath\*" -Destination $tmpDir
-    if (Test-Path $scriptsDir) {
-      Copy-Item -Recurse -Path $scriptsDir -Destination $tmpDir
-    }
-
-    & tar -czf $targz -C $tmpDir --exclude __pycache__ .
+    & tar -czf $targz -C $distPath --exclude __pycache__ --exclude .ratelimit --exclude .repl_sessions .
     if ($LASTEXITCODE -ne 0) {
       Write-Host "  Archive creation failed" -ForegroundColor Red
       exit 1
@@ -149,13 +152,16 @@ if ($DryRun) {
     }
   } finally {
     Remove-Item $targz -ErrorAction SilentlyContinue
-    Remove-Item -Recurse -Path $tmpDir -ErrorAction SilentlyContinue
   }
 
   Write-Host "  Done." -ForegroundColor Green
 }
 
 # ─── 4. Deploy nginx config ───
+# Порядок критичен: конфиг устанавливается ТОЛЬКО после успешного nginx -t.
+# При провале теста предыдущий (рабочий) конфиг немедленно восстанавливается —
+# иначе сломанный конфиг остался бы в sites-available и сервер не поднялся бы
+# после restart/reboot.
 $nginxSite = 'python.nayanovaacademy.ru'
 $nginxLocal = Join-Path $PSScriptRoot $nginxSite
 $nginxRemote = '/etc/nginx/sites-available/' + $nginxSite
@@ -165,12 +171,40 @@ if ($DryRun) {
 } elseif (Test-Path $nginxLocal) {
   Write-Host "`n==> Deploying nginx config ($nginxSite) ..." -ForegroundColor Cyan
   $scpCmd = "scp $portArg $identityArg `"$nginxLocal`" ${remote}:/tmp/nginx-$nginxSite"
-  $sshNginxCmd = "ssh $portArg $identityArg $remote `"cp /tmp/nginx-$nginxSite $nginxRemote && nginx -t && systemctl reload nginx && rm -f /tmp/nginx-$nginxSite`""
   cmd /c $scpCmd
   if ($LASTEXITCODE -ne 0) { Write-Host "  Nginx config scp failed" -ForegroundColor Red; exit 1 }
+
+  # Устанавливаем новый конфиг, тестируем; при ошибке откатываемся и выходим.
+  $sshNginxCmd = "ssh $portArg $identityArg $remote `"cp ${nginxRemote} /tmp/nginx-backup-$nginxSite && cp /tmp/nginx-$nginxSite $nginxRemote && nginx -t`""
   cmd /c $sshNginxCmd
-  if ($LASTEXITCODE -ne 0) { Write-Host "  Nginx config install/reload failed" -ForegroundColor Red; exit 1 }
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "  nginx -t failed — rolling back previous config..." -ForegroundColor Red
+    $sshRollbackCmd = "ssh $portArg $identityArg $remote `"cp /tmp/nginx-backup-$nginxSite $nginxRemote && rm -f /tmp/nginx-$nginxSite /tmp/nginx-backup-$nginxSite && systemctl reload nginx`""
+    cmd /c $sshRollbackCmd
+    Write-Host "  Rolled back. Deploy aborted." -ForegroundColor Red
+    exit 1
+  }
+
+  $sshReloadCmd = "ssh $portArg $identityArg $remote `"systemctl reload nginx && rm -f /tmp/nginx-$nginxSite /tmp/nginx-backup-$nginxSite`""
+  cmd /c $sshReloadCmd
+  if ($LASTEXITCODE -ne 0) { Write-Host "  Nginx reload failed" -ForegroundColor Red; exit 1 }
   Write-Host "  Done." -ForegroundColor Green
+}
+
+# ─── 5. Smoke check ───
+if (-not $DryRun -and -not $SkipBuild) {
+  Write-Host "`n==> Smoke check..." -ForegroundColor Cyan
+  $siteUrl = 'https://python.nayanovaacademy.ru/'
+  try {
+    $resp = Invoke-WebRequest -Uri $siteUrl -Method Head -TimeoutSec 30 -UseBasicParsing
+    if ($resp.StatusCode -eq 200) {
+      Write-Host "  Site responds with HTTP 200." -ForegroundColor Green
+    } else {
+      Write-Host "  WARNING: site responded with HTTP $($resp.StatusCode)" -ForegroundColor Yellow
+    }
+  } catch {
+    Write-Host "  WARNING: smoke check failed: $($_.Exception.Message)" -ForegroundColor Yellow
+  }
 }
 
 Write-Host "`n==> Deploy complete" -ForegroundColor Green

@@ -4,14 +4,19 @@
  * Читает переменные окружения, стартует сессию, определяет хелперы.
  */
 
-error_reporting(0);
+error_reporting(E_ALL);
 ini_set('display_errors', '0');
+ini_set('log_errors', '1');
 
 define('PYTHON_BASE_URL', getenv('SANDBOX_BASE_URL') ?: 'https://python.nayanovaacademy.ru');
 define('PYTHON_DB_PATH', __DIR__ . '/../data/python.db');
 define('AUTH_URL', 'https://auth.nayanovaacademy.ru');
 define('CONTEST_URL', 'https://contest.nayanovaacademy.ru');
 define('SESSION_LIFETIME', 86400 * 30);
+
+// Ограничения курса (синхронизированы с lessons.json)
+define('MAX_COURSE_LESSONS', 50);
+define('MAX_BULK_ITEMS', 100);
 
 define('ALLOWED_ORIGINS', [
     'https://python.nayanovaacademy.ru',
@@ -23,7 +28,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => SESSION_LIFETIME,
         'path' => '/',
-        'domain' => '.nayanovaacademy.ru',
+        // Host-only кука: сессия курса не должна быть видна другим
+        // субдоменам (компрометация любого субдомена = угон сессии).
         'secure' => true,
         'httponly' => true,
         'samesite' => 'Lax',
@@ -57,6 +63,7 @@ function validateCsrf(): bool {
 }
 
 function setCorsHeaders(): void {
+    header('Vary: Origin');
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
     if (in_array($origin, ALLOWED_ORIGINS)) {
         header('Access-Control-Allow-Origin: ' . $origin);

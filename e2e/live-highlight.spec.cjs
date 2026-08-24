@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
         authenticated: true,
         user: { username: 'e2e', display_name: 'E2E Тест' },
       }),
-    })
+    }),
   );
 });
 
@@ -55,7 +55,7 @@ test.describe('Живая подсветка при редактировании
     const live = await wrapper.locator('pre').evaluate((pre) => {
       const code = pre.querySelector('code') || pre;
       const helloSpan = Array.from(code.querySelectorAll('span')).find((s) =>
-        (s.textContent || '').includes("'Hello'")
+        (s.textContent || '').includes("'Hello'"),
       );
       const text = code.textContent || '';
       return {

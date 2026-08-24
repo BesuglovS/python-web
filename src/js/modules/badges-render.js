@@ -16,24 +16,26 @@ export function initBadgesRendering() {
   const badgesAllBtn = document.getElementById('badgesAllBtn');
   if (!badgesBlock || !badgesGrid) return;
 
-  loadBadges().then(function (data) {
-    if (!data) {
+  loadBadges()
+    .then(function (data) {
+      if (!data) {
+        badgesBlock.hidden = true;
+        return;
+      }
+
+      _earnedIds = data.badges || [];
+      _badgeProgress = data.progress || {};
+      _earnedSet = {};
+      for (let i = 0; i < _earnedIds.length; i++) {
+        _earnedSet[_earnedIds[i]] = true;
+      }
+
+      renderAchievementsBlock(badgesBlock, badgesGrid, badgesAllBtn);
+      renderLessonMap();
+    })
+    .catch(function () {
       badgesBlock.hidden = true;
-      return;
-    }
-
-    _earnedIds = data.badges || [];
-    _badgeProgress = data.progress || {};
-    _earnedSet = {};
-    for (let i = 0; i < _earnedIds.length; i++) {
-      _earnedSet[_earnedIds[i]] = true;
-    }
-
-    renderAchievementsBlock(badgesBlock, badgesGrid, badgesAllBtn);
-    renderLessonMap();
-  }).catch(function () {
-    badgesBlock.hidden = true;
-  });
+    });
 }
 
 function renderAchievementsBlock(badgesBlock, badgesGrid, badgesAllBtn) {
@@ -64,12 +66,16 @@ function renderAchievementsBlock(badgesBlock, badgesGrid, badgesAllBtn) {
     badgesGrid.appendChild(el);
   }
 
-  const summaryEl = document.createElement('div');
-  summaryEl.className = 'badge-summary';
+  let summaryEl = badgesBlock.querySelector('.badge-summary');
+  if (!summaryEl) {
+    summaryEl = document.createElement('div');
+    summaryEl.className = 'badge-summary';
+    badgesBlock.appendChild(summaryEl);
+  }
   summaryEl.textContent = countEarnedFrom(BADGES) + ' из ' + BADGES.length + ' достижений';
-  badgesBlock.appendChild(summaryEl);
 
-  if (badgesAllBtn) {
+  if (badgesAllBtn && !badgesAllBtn.dataset.bound) {
+    badgesAllBtn.dataset.bound = 'true';
     badgesAllBtn.addEventListener('click', function () {
       openAchievementsModal();
     });
@@ -99,7 +105,10 @@ function renderLessonMap() {
     tile.className = 'lesson-map-tile' + (isEarned ? ' earned' : '');
     tile.href = lb.file;
     tile.textContent = lb.num;
-    tile.setAttribute('data-tooltip', 'Урок ' + lb.num + '. ' + lb.title + (isEarned ? ' — пройден' : ''));
+    tile.setAttribute(
+      'data-tooltip',
+      'Урок ' + lb.num + '. ' + lb.title + (isEarned ? ' — пройден' : ''),
+    );
     tile.setAttribute(
       'aria-label',
       'Урок ' + lb.num + '. ' + lb.title + (isEarned ? ' (пройден)' : ' (не пройден)'),

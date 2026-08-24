@@ -38,6 +38,11 @@ FLAT.sort((a, b) => a.num - b.num);
 
 const BY_NUM = new Map(FLAT.map((l) => [l.num, l]));
 
+function findSection(data) {
+  if (typeof data.lesson !== 'number') return undefined;
+  return lessons.sections.find((s) => s.lessons.some((l) => l.num === data.lesson));
+}
+
 function toUrl(file) {
   if (!file) return undefined;
   return file.replace(/\.(md|njk)$/i, '.html');
@@ -64,4 +69,11 @@ export default {
   nextTitle: (data) => neighbor(data, +1)?.title,
   duration: (data) => BY_NUM.get(data.lesson)?.duration,
   complexity: (data) => BY_NUM.get(data.lesson)?.complexity,
+  sectionTitle: (data) => findSection(data)?.title,
+  sectionUrl: (data) => {
+    const section = findSection(data);
+    if (!section) return undefined;
+    const first = [...section.lessons].sort((a, b) => a.num - b.num)[0];
+    return first ? toUrl(first.file) : undefined;
+  },
 };

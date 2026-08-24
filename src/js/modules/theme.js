@@ -56,8 +56,6 @@ function updateThemeToggleIcon(saved) {
   updateThemeIcon(btn, saved || 'auto', getSystemTheme());
 }
 
-let _prefersDarkListener = null;
-
 export function initThemeSystem() {
   const saved = getSavedTheme();
   applyTheme(getEffectiveTheme());
@@ -65,27 +63,13 @@ export function initThemeSystem() {
 
   if (window.matchMedia) {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    _prefersDarkListener = function () {
+    mq.addEventListener('change', function () {
       if (!getSavedTheme()) {
         applyTheme(getSystemTheme());
         updateThemeToggleIcon('auto');
       }
-    };
-    mq.addEventListener('change', _prefersDarkListener);
-    window.__mqCleanup = function () {
-      mq.removeEventListener('change', _prefersDarkListener);
-    };
+    });
   }
-
-  // Expose for other modules
-  window.__themeUtils = {
-    THEME_KEY: THEME_KEY,
-    getSystemTheme: getSystemTheme,
-    getSavedTheme: getSavedTheme,
-    applyTheme: applyTheme,
-    updateThemeToggleIcon: updateThemeToggleIcon,
-    getEffectiveTheme: getEffectiveTheme,
-  };
 }
 
 export function initBackToTopAndThemeToggle() {
@@ -107,7 +91,10 @@ export function initBackToTopAndThemeToggle() {
   // Theme toggle
   const themeToggle = document.createElement('button');
   themeToggle.className = 'theme-toggle';
-  themeToggle.setAttribute('aria-label', '\u041f\u0435\u0440\u0435\u043a\u043b\u044e\u0447\u0438\u0442\u044c \u0442\u0435\u043c\u0443');
+  themeToggle.setAttribute(
+    'aria-label',
+    '\u041f\u0435\u0440\u0435\u043a\u043b\u044e\u0447\u0438\u0442\u044c \u0442\u0435\u043c\u0443',
+  );
   themeToggle.setAttribute('role', 'switch');
 
   const liveRegion = document.createElement('div');
@@ -125,9 +112,16 @@ export function initBackToTopAndThemeToggle() {
 
   function updateIcon() {
     updateThemeIcon(themeToggle, currentTheme, getEffective());
-    const labels = { light: '\u0421\u0432\u0435\u0442\u043b\u0430\u044f', dark: '\u0422\u0451\u043c\u043d\u0430\u044f', auto: '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0430\u044f' };
+    const labels = {
+      light: '\u0421\u0432\u0435\u0442\u043b\u0430\u044f',
+      dark: '\u0422\u0451\u043c\u043d\u0430\u044f',
+      auto: '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0430\u044f',
+    };
     themeToggle.setAttribute('aria-checked', getEffective() === 'dark' ? 'true' : 'false');
-    liveRegion.textContent = '\u0422\u0435\u043c\u0430: ' + (labels[currentTheme] || '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0430\u044f');
+    liveRegion.textContent =
+      '\u0422\u0435\u043c\u0430: ' +
+      (labels[currentTheme] ||
+        '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0430\u044f');
   }
 
   updateIcon();

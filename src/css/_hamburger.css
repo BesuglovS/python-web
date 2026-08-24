@@ -15,7 +15,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
   box-shadow: var(--shadow);
 }
 
@@ -34,7 +36,9 @@
   z-index: 1198;
   opacity: 0;
   visibility: hidden;
-  transition: opacity .3s, visibility .3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
 }
 
 .hamburger-overlay.open {
@@ -52,7 +56,7 @@
   background: var(--bg-alt);
   z-index: 1199;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
-  transition: left .3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -78,7 +82,7 @@
   cursor: pointer;
   font-size: 1.3em;
   opacity: 0.8;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
   background: none;
   border: none;
   color: inherit;
@@ -109,7 +113,9 @@
   text-decoration: none;
   color: var(--text);
   font-size: 0.93em;
-  transition: background var(--transition), color var(--transition);
+  transition:
+    background var(--transition),
+    color var(--transition);
   border-left: 3px solid transparent;
 }
 

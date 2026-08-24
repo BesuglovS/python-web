@@ -13,6 +13,15 @@
 $passed = 0;
 $failed = 0;
 
+if (!function_exists('str_contains')) {
+    /**
+     * Полифилл для PHP 7.4 (str_contains появился в PHP 8.0).
+     */
+    function str_contains(string $haystack, string $needle): bool {
+        return $needle === '' || strpos($haystack, $needle) !== false;
+    }
+}
+
 function assert_test(string $name, bool $condition): void {
     global $passed, $failed;
     if ($condition) {

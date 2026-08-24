@@ -18,7 +18,9 @@
 
 .sets-visual .region {
   fill: transparent;
-  transition: fill var(--transition), fill-opacity var(--transition);
+  transition:
+    fill var(--transition),
+    fill-opacity var(--transition);
 }
 
 .sets-visual .region-a-only.shaded {
@@ -59,7 +61,9 @@
   fill: var(--card-bg);
   stroke: var(--border);
   stroke-width: 1.5;
-  transition: fill var(--transition), stroke var(--transition);
+  transition:
+    fill var(--transition),
+    stroke var(--transition);
 }
 
 .sets-visual .num-bubble text {

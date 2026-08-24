@@ -1,4 +1,17 @@
-# Deny access to sensitive subdirectories
+# Песочница: запрет доступа к чувствительным файлам (паритет с nginx-конфигом).
 RewriteEngine On
+
+# Runtime-каталоги
 RewriteRule ^\.repl_sessions/ - [R=404,L]
 RewriteRule ^\.ratelimit/ - [R=404,L]
+
+# Внутренние PHP-классы/конфиги: веб-эндпоинты — только run.php, repl.php,
+# progress.php, badges.php, auth_check.php, validate-test.php.
+<FilesMatch "^(config|Database|Auth|AuthClient|ProgressReporter|contest_map)\.php$">
+    Require all denied
+</FilesMatch>
+
+# Скрытые файлы, тестовые скрипты и исходники Python-песочницы.
+<FilesMatch "(^\.|^_test_|^permissions\.sh$|^ast_validator\.py$)">
+    Require all denied
+</FilesMatch>

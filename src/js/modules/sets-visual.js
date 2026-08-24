@@ -67,20 +67,30 @@ function buildDiagram(container) {
   const aSet = new Set(a);
   const bSet = new Set(b);
 
-  const inter = a.filter(function (v) { return bSet.has(v); });
-  const aOnly = a.filter(function (v) { return !bSet.has(v); });
-  const bOnly = b.filter(function (v) { return !aSet.has(v); });
+  const inter = a.filter(function (v) {
+    return bSet.has(v);
+  });
+  const aOnly = a.filter(function (v) {
+    return !bSet.has(v);
+  });
+  const bOnly = b.filter(function (v) {
+    return !aSet.has(v);
+  });
 
   const svg = buildSvg(a, b, aOnly, inter, bOnly);
   const setsInfo = buildSetsInfo(a, b);
   const result = buildResult();
-  const controls = buildControls({
-    a: a,
-    b: b,
-    aOnly: aOnly,
-    inter: inter,
-    bOnly: bOnly,
-  }, result, svg);
+  const controls = buildControls(
+    {
+      a: a,
+      b: b,
+      aOnly: aOnly,
+      inter: inter,
+      bOnly: bOnly,
+    },
+    result,
+    svg,
+  );
 
   container.appendChild(svg);
   container.appendChild(setsInfo);
@@ -92,12 +102,16 @@ function parseSet(raw) {
   if (!raw) return [];
   return raw
     .split(',')
-    .map(function (s) { return s.trim(); })
+    .map(function (s) {
+      return s.trim();
+    })
     .filter(Boolean);
 }
 
 function sortNumeric(values) {
-  return values.slice().sort(function (x, y) { return Number(x) - Number(y); });
+  return values.slice().sort(function (x, y) {
+    return Number(x) - Number(y);
+  });
 }
 
 function formatSet(values) {
@@ -118,8 +132,11 @@ function buildSvg(a, b, aOnly, inter, bOnly) {
   const svg = svgEl('svg', {
     viewBox: '0 0 ' + VIEWBOX.w + ' ' + VIEWBOX.h,
     role: 'img',
-    'aria-label': 'Диаграмма Эйлера: множества A = ' + formatSet(sortNumeric(a)) +
-      ' и B = ' + formatSet(sortNumeric(b)),
+    'aria-label':
+      'Диаграмма Эйлера: множества A = ' +
+      formatSet(sortNumeric(a)) +
+      ' и B = ' +
+      formatSet(sortNumeric(b)),
   });
 
   const regions = svgEl('g', { class: 'regions' });
@@ -130,18 +147,22 @@ function buildSvg(a, b, aOnly, inter, bOnly) {
   svg.appendChild(regions);
 
   const outlines = svgEl('g', { class: 'circle-outlines' });
-  outlines.appendChild(svgEl('circle', {
-    cx: CIRCLE_A.cx,
-    cy: CIRCLE_A.cy,
-    r: CIRCLE_A.r,
-    class: 'circle-outline circle-a',
-  }));
-  outlines.appendChild(svgEl('circle', {
-    cx: CIRCLE_B.cx,
-    cy: CIRCLE_B.cy,
-    r: CIRCLE_B.r,
-    class: 'circle-outline circle-b',
-  }));
+  outlines.appendChild(
+    svgEl('circle', {
+      cx: CIRCLE_A.cx,
+      cy: CIRCLE_A.cy,
+      r: CIRCLE_A.r,
+      class: 'circle-outline circle-a',
+    }),
+  );
+  outlines.appendChild(
+    svgEl('circle', {
+      cx: CIRCLE_B.cx,
+      cy: CIRCLE_B.cy,
+      r: CIRCLE_B.r,
+      class: 'circle-outline circle-b',
+    }),
+  );
   svg.appendChild(outlines);
 
   const labels = svgEl('g', { class: 'set-labels' });
@@ -181,9 +202,7 @@ function appendBubbles(parent, values, region, membershipClass) {
 function buildSetsInfo(a, b) {
   const p = document.createElement('p');
   p.className = 'sets-visual-sets';
-  p.textContent =
-    'A = ' + formatSet(sortNumeric(a)) +
-    '   B = ' + formatSet(sortNumeric(b));
+  p.textContent = 'A = ' + formatSet(sortNumeric(a)) + '   B = ' + formatSet(sortNumeric(b));
   return p;
 }
 
@@ -302,7 +321,9 @@ function applyOperation(button, op, sets, resultEl, svg, controls) {
   const values = new Set();
   operation.regions.forEach(function (key) {
     const regionValues = sets[key] || [];
-    regionValues.forEach(function (v) { values.add(v); });
+    regionValues.forEach(function (v) {
+      values.add(v);
+    });
   });
 
   svg.querySelectorAll('.num-bubble').forEach(function (bubble) {

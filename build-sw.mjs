@@ -4,7 +4,7 @@ import { createHash } from 'crypto';
 
 const PROJECT = process.cwd();
 const ROOT = join(PROJECT, 'dist');
-const TEMPLATE = join(PROJECT, 'sw.js');
+const TEMPLATE = join(PROJECT, 'src', 'sw', 'template.js');
 const SW_PATH = join(ROOT, 'sw.js');
 
 // Directories to scan for precacheable assets
@@ -30,9 +30,20 @@ const SKIP_FILES =
 const HASHED_ASSET = /\.[a-f0-9]{8}\.(css|js|png|ico|woff2)$/;
 
 // File extensions to include in precache
-const INCLUDE_EXTS = new Set(['.html', '.css', '.js', '.json', '.png', '.ico', '.txt', '.woff2', '.webp']);
+const INCLUDE_EXTS = new Set([
+  '.html',
+  '.css',
+  '.js',
+  '.json',
+  '.png',
+  '.ico',
+  '.txt',
+  '.woff2',
+  '.webp',
+]);
 
 // Files to always include (even if not found by scan)
+// Примечание: сам /sw.js в precache не включаем — SW не должен кэшировать себя.
 const ALWAYS_INCLUDE = [
   '/',
   '/offline.html',

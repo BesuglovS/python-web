@@ -330,5 +330,72 @@ class TestGlobalNonlocalAllowed(unittest.TestCase):
         self.assertTrue(result['ok'])
 
 
+class TestAliasAndCallTargetBypasses(unittest.TestCase):
+    """Обход через алиасинг и непрямые цели вызова (усиление visit_Call)."""
+
+    def test_alias_exec_blocked(self):
+        result = run_validator('f = exec\nf("print(1)")')
+        self.assertFalse(result['ok'])
+
+    def test_alias_import_blocked(self):
+        result = run_validator('imp = __import__\nimp("os")')
+        self.assertFalse(result['ok'])
+
+    def test_subscript_call_blocked(self):
+        result = run_validator('f = [__import__][0]\nf("os")')
+        self.assertFalse(result['ok'])
+
+    def test_call_result_call_blocked(self):
+        result = run_validator('(lambda x: x)("print(1)")()')
+        self.assertFalse(result['ok'])
+
+    def test_normal_calls_still_ok(self):
+        result = run_validator(
+            'def greet(name):\n'
+            '    return name\n'
+            'print(greet("мир"))'
+        )
+        self.assertTrue(result['ok'])
+
+
+class TestTracebackFrameEscalation(unittest.TestCase):
+    """Эскалация через traceback/frame атрибуты."""
+
+    def test_traceback_attr_blocked(self):
+        result = run_validator(
+            'try:\n'
+            '    raise ValueError("x")\n'
+            'except ValueError as e:\n'
+            '    t = e.__traceback__'
+        )
+        self.assertFalse(result['ok'])
+
+    def test_tb_frame_blocked(self):
+        result = run_validator(
+            'try:\n'
+            '    raise ValueError("x")\n'
+            'except ValueError as e:\n'
+            '    f = e.__traceback__.tb_frame.f_builtins\n'
+            '    print(f)'
+        )
+        self.assertFalse(result['ok'])
+
+    def test_f_globals_blocked(self):
+        result = run_validator('print("x".upper().f_globals)')
+        self.assertFalse(result['ok'])
+
+
+class TestRelativeImports(unittest.TestCase):
+    """Относительные импорты должны отклоняться явно."""
+
+    def test_relative_import_blocked(self):
+        result = run_validator('from . import os', allowed_imports=['os'])
+        self.assertFalse(result['ok'])
+
+    def test_relative_import_parent_blocked(self):
+        result = run_validator('from ..pkg import mod')
+        self.assertFalse(result['ok'])
+
+
 if __name__ == '__main__':
     unittest.main()

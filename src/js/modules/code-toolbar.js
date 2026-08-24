@@ -284,8 +284,7 @@ export function initCodeToolbar() {
       if (!isEditing) return;
       const code = pre.querySelector('code') || pre;
       const sel = window.getSelection();
-      const caretInside =
-        sel && sel.rangeCount && code.contains(sel.getRangeAt(0).startContainer);
+      const caretInside = sel && sel.rangeCount && code.contains(sel.getRangeAt(0).startContainer);
       const offset = caretInside ? saveCaretOffset(code) : -1;
       mergeCodeElements(pre);
       code.textContent = (code.textContent || '').replace(/\u200B/g, '');

@@ -18,6 +18,7 @@
 require_once __DIR__ . '/sandbox_common.php';
 
 sandbox_check_rate_limit();
+sandbox_require_json_content_type();
 $data = sandbox_read_input();
 
 $code = $data['code'];
@@ -74,7 +75,17 @@ $input = $data['input'] ?? '';
 $timeout = isset($data['timeout']) ? max(1, min(10, (int)$data['timeout'])) : SANDBOX_DEFAULT_TIMEOUT;
 
 if ($reset) {
-    @unlink($SESSION_FILE);
+    // flock защищает от гонки: параллельный запрос не должен прочитать
+    // файл, который мы удаляем посреди его обработки.
+    $resetHandle = @fopen($SESSION_FILE, 'c');
+    if (is_resource($resetHandle)) {
+        flock($resetHandle, LOCK_EX);
+        @unlink($SESSION_FILE);
+        flock($resetHandle, LOCK_UN);
+        fclose($resetHandle);
+    } else {
+        @unlink($SESSION_FILE);
+    }
     $resetResponse = ['ok' => true, 'stdout' => '', 'stderr' => 'Session reset'];
     if ($serverGenerated) $resetResponse['session_id'] = $sessionId;
     echo json_encode($resetResponse, SANDBOX_JSON_OPT);

@@ -34,7 +34,7 @@ export default function (eleventyConfig) {
   // Статика
   eleventyConfig.addPassthroughCopy({ '.htaccess': '.htaccess' });
   eleventyConfig.addPassthroughCopy({ 'robots.txt': 'robots.txt' });
-  eleventyConfig.addPassthroughCopy({ 'sitemap.xml': 'sitemap.xml' });
+  // sitemap.xml генерируется build-sitemap.mjs из lessons.json
   eleventyConfig.addPassthroughCopy({ 'offline.html': 'offline.html' });
   eleventyConfig.addPassthroughCopy({ 'highlight-theme.min.css': 'highlight-theme.min.css' });
   eleventyConfig.addPassthroughCopy({ 'manifest.json': 'manifest.json' });
@@ -94,12 +94,18 @@ export default function (eleventyConfig) {
 
   eleventyConfig.on('eleventy.after', () => {
     try {
-      execSync('node build-css.mjs && node build-js.mjs && node minify.cjs', {
+      // Passthrough копирует sandbox/ целиком — вычищаем runtime-каталоги,
+      // чтобы локальное состояние rate-limiter/REPL не уезжало в деплой.
+      for (const runtimeDir of ['.ratelimit', '.repl_sessions', '__pycache__']) {
+        const p = path.join(PROJECT, 'dist', 'sandbox', runtimeDir);
+        fs.rmSync(p, { recursive: true, force: true });
+      }
+      execSync('node build-css.mjs && node build-js.mjs && node minify.cjs && node build-sw.mjs', {
         stdio: 'inherit',
         shell: true,
       });
     } catch (_e) {
-      console.error('⚠ Не удалось пересобрать JS/CSS в режиме watch');
+      console.error('⚠ Не удалось пересобрать JS/CSS/SW в режиме watch');
     }
   });
 

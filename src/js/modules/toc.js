@@ -58,9 +58,4 @@ export function initTableOfContents() {
   headings.forEach(function (h) {
     observer.observe(h);
   });
-
-  // Disconnect on page unload to prevent memory leaks
-  window.addEventListener('beforeunload', function () {
-    observer.disconnect();
-  });
 }

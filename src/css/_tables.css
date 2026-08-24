@@ -6,7 +6,8 @@ table {
   font-size: 0.93em;
 }
 
-td, th {
+td,
+th {
   border: 1px solid var(--border);
   padding: 10px 14px;
   text-align: left;

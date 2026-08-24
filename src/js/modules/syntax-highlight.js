@@ -36,7 +36,9 @@ export function highlightPythonFallback(el) {
 
   // Restore string markers
   for (const mk in markers) {
-    html = html.replace(mk, markers[mk]);
+    html = html.replace(mk, function () {
+      return markers[mk];
+    });
   }
 
   // Keywords

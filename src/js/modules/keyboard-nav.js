@@ -10,9 +10,11 @@ export function initKeyboardNavigation() {
     if (
       e.target.tagName === 'INPUT' ||
       e.target.tagName === 'TEXTAREA' ||
+      e.target.tagName === 'SELECT' ||
       e.target.isContentEditable
     )
       return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
 
     if (e.key === 'ArrowLeft') {
       const prevLink = document.querySelector('.prev-link');

@@ -1,6 +1,13 @@
 # ==========================================
-# 1. Редирект HTTP -> HTTPS
+# python.nayanovaacademy.ru — конфиг nginx
+#
+# ВАЖНО про наследование add_header:
+# nginx наследует директивы add_header с уровня сервера ТОЛЬКО если
+# в location нет ни одной собственной директивы add_header. Поэтому
+# набор security-заголовков продублирован в каждом location, который
+# задаёт свой Cache-Control.
 # ==========================================
+
 # --- Rate limiting для песочницы (должна быть на уровне http) ---
 limit_req_zone $binary_remote_addr zone=sandbox:10m rate=5r/s;
 
@@ -15,7 +22,8 @@ server {
 # 2. Основной HTTPS-сервер
 # ==========================================
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
+    http2 on;
     server_name python.nayanovaacademy.ru;
 
     # --- SSL-сертификаты ---
@@ -24,7 +32,7 @@ server {
 
     # --- Настройки безопасности SSL ---
     ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
     ssl_prefer_server_ciphers off;
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 1d;
@@ -32,13 +40,13 @@ server {
     # HSTS
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
 
-    # Security Headers
+    # Security Headers — канонический набор (дублируется в location ниже).
+    # CSP идентична meta-CSP в layout.njk/layout-index.njk и .htaccess Apache.
     add_header X-Frame-Options "DENY" always;
     add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests; frame-ancestors 'none'" always;
 
     # --- Сжатие gzip ---
     gzip on;
@@ -49,15 +57,29 @@ server {
 
     # --- Основные параметры сайта ---
     root /var/www/python.nayanovaacademy.ru/public;
-    index index.html index.htm index.php;
+    index index.html;
     autoindex off;
 
     # Логирование
     access_log /var/log/nginx/python.nayanovaacademy.ru.access.log;
     error_log  /var/log/nginx/python.nayanovaacademy.ru.error.log;
 
+    # 0. База данных прогресса и служебные данные data/ никогда не отдаются.
+    location ^~ /data/ {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # 0a. ACME challenge — исключение из общего запрета скрытых путей,
+    # иначе не работает продление сертификата через webroot.
+    location ^~ /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        try_files $uri =404;
+    }
+
     # 1. Блокировка служебных файлов сборки
-    location ~* ^/(router\.php|playwright\.config\.js|package\.json|package-lock\.json|\.eleventy\.js|minify\.js|build-highlight\.mjs|build-css\.mjs|build-js\.mjs|build-sw\.mjs|build-config-meta\.mjs|build-assets-hash\.mjs|build-og-image\.py|ga\.js|vitest\.config\.mjs|tsconfig\.json|eslint\.config\.mjs|\.env|\.env\.example|ssh-private\.key|deploy\.ps1|lighthouserc\.json|nginx-sandbox\.conf)$ {
+    location ~* ^/(router\.php|playwright\.config\.js|package\.json|package-lock\.json|\.eleventy\.js|minify\.js|build-highlight\.mjs|build-css\.mjs|build-js\.mjs|build-sw\.mjs|build-config-meta\.mjs|build-assets-hash\.mjs|build-sitemap\.mjs|ga\.js|vitest\.config\.mjs|tsconfig\.json|eslint\.config\.mjs|\.env|\.env\.example|ssh-private\.key|deploy\.ps1|lighthouserc\.json|nginx-sandbox\.conf)$ {
         deny all;
         access_log off;
         log_not_found off;
@@ -68,31 +90,40 @@ server {
         try_files $uri $uri/ =404;
     }
 
-    # 3. Песочница PHP с rate limiting
-    location /sandbox/ {
+    # 3. Песочница: единый ^~ location — иначе generic regex `\.php$`
+    # перехватывал запросы раньше, и limit_req не применялся вообще.
+    # Вложенный regex-locаtion наследует limit_req от префиксного родителя.
+    location ^~ /sandbox/ {
         limit_req zone=sandbox burst=10 nodelay;
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
+
+        # 3a. Служебные каталоги песочницы (сессии REPL, rate-limit).
+        location ~ ^/sandbox/\.(.*)$ {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+
+        # 3b. Внутренние файлы песочницы: тестовые скрипты, исходники,
+        # PHP-классы и конфиги. Веб-эндпоинты — только перечисленные ниже
+        # в 3c (run, repl, progress, badges, auth_check, validate-test).
+        location ~ ^/sandbox/(_test_.*|permissions\.sh|\.repl_runner\.py|ast_validator\.py|sandbox_common\.php|config\.php|Database\.php|Auth\.php|AuthClient\.php|ProgressReporter\.php|contest_map\.php)$ {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+
+        # 3c. PHP-эндпоинты песочницы через FastCGI
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include fastcgi_params;
+        }
+
+        return 404;
     }
 
-    # 3a. Защита служебных каталогов песочницы (сессии REPL, rate-limit).
-    # На Apache их закрывает .htaccess; здесь дублируем для nginx.
-    location ~ ^/sandbox/\. {
-        deny all;
-        access_log off;
-        log_not_found off;
-    }
-
-    # 3b. Блокировка служебных файлов песочницы (ответы теста, AST-валидатор, скрипты).
-    location ~ ^/sandbox/(validate-test\.php|_test_.*\.php|ast_validator\.py|permissions\.sh|sandbox_common\.php|nginx-sandbox\.conf|config\.php|Database\.php|Auth\.php)$ {
-        deny all;
-        access_log off;
-        log_not_found off;
-    }
-
-    # 4. Обработка PHP-файлов через FastCGI
+    # 4. Обработка прочих PHP-файлов через FastCGI
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
@@ -101,30 +132,36 @@ server {
     }
 
     # 4a. Service Worker и JS-клиент трекинга без content-hash — не кэшируем,
-    # иначе браузер не увидит обновления sw.js и продолжит отдавать старые страницы
+    # иначе браузер не увидит обновления sw.js и продолжит отдавать старые страницы.
+    # Свой add_header => дублируем security-набор (см. шапку файла).
     location ~* ^/(sw\.js|tracking-client\.js)$ {
-        add_header Cache-Control "no-cache, must-revalidate";
+        add_header Cache-Control "no-cache, must-revalidate" always;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; upgrade-insecure-requests; frame-ancestors 'none'" always;
     }
 
     # 5. Кэширование статических ресурсов (CSS/JS/изображения/шрифты — 1 год)
     location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
         access_log off;
     }
 
     # 6. JSON и манифесты — не кэшируем (контент меняется при деплое)
     location ~* \.(json|webmanifest)$ {
-        add_header Cache-Control "no-cache, must-revalidate";
+        add_header Cache-Control "no-cache, must-revalidate" always;
         access_log off;
     }
 
     # 7. HTML — не кэшируем (контент меняется при деплое)
     location ~* \.html$ {
-        add_header Cache-Control "no-cache, must-revalidate";
+        add_header Cache-Control "no-cache, must-revalidate" always;
     }
 
-    # 8. Блокировка скрытых файлов
+    # 8. Блокировка скрытых файлов (кроме /.well-known/acme-challenge/)
     location ~ /\. {
         deny all;
         access_log off;

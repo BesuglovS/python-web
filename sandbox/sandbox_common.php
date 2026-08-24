@@ -4,8 +4,9 @@
  * Подключается через require_once в run.php и repl.php.
  */
 
-error_reporting(0);
+error_reporting(E_ALL);
 ini_set('display_errors', '0');
+ini_set('log_errors', '1');
 
 // ─── Конфигурация (читает из env, с фоллбэками на дефолты) ───
 define('SANDBOX_MAX_CODE_LENGTH', (int)(getenv('SANDBOX_MAX_CODE_LENGTH') ?: 65536));
@@ -66,14 +67,20 @@ header('Cache-Control: no-store, no-cache, must-revalidate');
 header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'none'");
 
 // ─── CORS ───
-if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] === $SANDBOX_ALLOWED_ORIGIN) {
+// Vary: Origin обязателен — ответ зависит от Origin и не должен кэшироваться
+// прокси/CDN для другого origin.
+header('Vary: Origin');
+$sandboxCorsAllowed = isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] === $SANDBOX_ALLOWED_ORIGIN;
+if ($sandboxCorsAllowed) {
     header('Access-Control-Allow-Origin: ' . $SANDBOX_ALLOWED_ORIGIN);
     header('Access-Control-Allow-Methods: POST, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type');
+    header('Access-Control-Max-Age: 600');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
+    // Preflight без доверенного origin — отказ, а не успех.
+    http_response_code($sandboxCorsAllowed ? 204 : 403);
     exit;
 }
 
@@ -81,6 +88,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['ok' => false, 'error' => 'Only POST allowed'], SANDBOX_JSON_OPT);
     exit;
+}
+
+/**
+ * CSRF-защита (вместе с SameSite=Lax сессией и CORS-whitelist):
+ * требуем application/json — HTML-форма чужого сайта не сможет
+ * отправить state-changing запрос простым POST (simple request).
+ *
+ * @return void завершает выполнение с HTTP 415 при неверном Content-Type
+ */
+function sandbox_require_json_content_type(): void {
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (stripos($contentType, 'application/json') === false) {
+        http_response_code(415);
+        echo json_encode(['ok' => false, 'error' => 'Content-Type must be application/json'], SANDBOX_JSON_OPT);
+        exit;
+    }
 }
 
 /**
@@ -426,7 +449,9 @@ function sandbox_validate_ast(string $code, array $allowedImports): array {
 
     $result = json_decode(trim($stdout), true);
     if (!is_array($result)) {
-        return [false, 'AST validation failed: ' . ($stderr ?: 'unknown error')];
+        // Детали (stderr валидатора с абсолютными путями) — только в серверный лог.
+        error_log('AST validator failure: ' . ($stderr ?: 'no stderr'));
+        return [false, 'AST validation failed'];
     }
 
     return [$result['ok'] ?? false, $result['error'] ?? 'Unknown AST error'];

@@ -21,9 +21,6 @@ updates:
     allow:
       - dependency-type: 'direct'
       - dependency-type: 'indirect'
-    ignore:
-      - dependency-name: 'esbuild'
-        versions: ['0.25.x'] # wait for 0.26+
     groups:
       dev-dependencies:
         patterns:

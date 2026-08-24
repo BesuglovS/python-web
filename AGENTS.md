@@ -12,10 +12,12 @@
    `LESSON_BADGES` генерируются из `lessons.json` скриптом `node build-config-meta.mjs`.
 2. **В front matter Markdown-урока не указывайте** `duration`, `complexity`, `prev`, `next`,
    `prevUrl`, `nextUrl` — они вычисляются при сборке из `lessons.json` (`src/_data/eleventyComputed.js`).
-3. **`dist/` — вывод сборки.** Никогда не редактируйте файлы в `dist/`, а также сгенерированные
-   корневые артефакты (`script.js`, `config.js`, `style.css`, `repl.js`, `mindmap.js`, `sw.js`,
-   `highlight-py.min.js`). Правки вносятся в `src/`, затем пересборка.
-4. **Не коммитьте** `.env`, `dist/`, `node_modules/` и сгенерированные файлы (см. `.gitignore`).
+3. **`dist/` — вывод сборки.** Никогда не редактируйте файлы в `dist/` и не коммитьте
+   сгенерированные корневые артефакты (`style.css`, `sw.js`, `sitemap.xml` — они в
+   `.gitignore`). Шаблон Service Worker — `src/sw/template.js`; sitemap генерирует
+   `build-sitemap.mjs`. Правки вносятся в `src/`, затем пересборка.
+4. **Не коммитьте** `.env`, `dist/`, `node_modules/`, `data/*.db*` (SQLite с персональными
+   данными живёт только на сервере) и сгенерированные файлы (см. `.gitignore`).
 5. **localStorage** доступен только через `src/js/config/security.js`
    (`safeGetItem`/`safeSetItem`/`safeRemoveItem`, белый список ключей `SAFE_KEYS`,
    лимит 102400 символов). Прогресс уроков хранится на сервере (SQLite), а не в localStorage.
@@ -53,7 +55,8 @@ Python-тесты с покрытием ≥ 80% по `sandbox/*`, PHP-тесты
 ```
 src/*.md                     # Уроки 01–50 (Markdown, русский язык)
 src/_includes/layout.njk     # Шаблон урока; layout-index.njk — главная
-src/_data/                   # site.json, lessonsData.cjs, eleventyComputed.js (навигация из lessons.json)
+src/_data/                   # site.json, eleventyComputed.js (навигация из lessons.json)
+src/sw/template.js           # шаблон Service Worker (dist/sw.js генерирует build-sw.mjs)
 src/css/index.css            # точка входа CSS (@import модулей _*.css)
 src/js/script.js             # точка входа JS; инициализация модулей строго по порядку (auth → progress → UI)
 src/js/modules/*.js          # изолированные модули функциональности (quiz, progress, badges-render и др.)
@@ -61,29 +64,34 @@ src/js/config/*.js           # security.js, badges.js, constants.js, courseData.
 src/_plugins/norun.mjs       # плагин markdown-it
 lessons.json                 # метаданные 50 уроков + секции (источник истины)
 quizzes/*.json               # квизы: 1.json–50.json + final-test.json
-sandbox/*.php/.py            # серверная песочница (PHP + Python AST-валидатор)
+sandbox/*.php/.py            # серверная песочница (PHP + Python AST-валидатор);
+                             # sandbox/contest_map.php генерируется build-config-meta.mjs
 tests/                       # Vitest (.test.mjs) + Python + PHP
 e2e/*.spec.cjs               # Playwright (CommonJS!)
 eleventy.config.mjs          # конфиг Eleventy (passthrough copy, коллекции)
 build-*.mjs, minify.cjs      # скрипты сборки
-data/python.db               # SQLite: прогресс, бейджи (создаётся на сервере)
+data/*.db*                   # SQLite: прогресс, бейджи (создаётся на сервере, НЕ в git)
 ```
 
 ## 🛠 Конвейер сборки
 
 `npm run build` (порядок важен):
-1. `build-config-meta.mjs` → перегенерирует `src/js/config/courseData.js` из `lessons.json`
+
+1. `build-config-meta.mjs` → перегенерирует `src/js/config/courseData.js` и
+   `sandbox/contest_map.php` из `lessons.json`
 2. `build-highlight.mjs` → `highlight-py.min.js`
 3. `build-css.mjs` → `dist/style.css` (esbuild, бандл из `src/css/index.css`)
 4. `eleventy` → `dist/*.html`
 5. `build-js.mjs` → `dist/script.js` (esbuild, IIFE-бандл `src/js/script.js` + модулей)
 6. `minify.cjs` → CSS-минификация + бандлы `repl.js`, `mindmap.js`, `cheatsheets.js`
-7. `build-sw.mjs` → `dist/sw.js` (Service Worker)
+7. `build-sw.mjs` → `dist/sw.js` (Service Worker из шаблона `src/sw/template.js`)
+8. `build-sitemap.mjs` → `dist/sitemap.xml` (из lessons.json)
 
 `npm run build:prod` дополнительно запускает `build-assets-hash.mjs` (content-hash ассетов
-и переписывание ссылок в HTML/sw.js).
+и переписывание ссылок в HTML/sw.js) и в конце ПЕРЕсчитывает `CACHE_NAME` в sw.js по
+финальному контенту — не убирайте этот шаг из цепочки.
 
-В `watch`-режиме Eleventy сам пересобирает JS/CSS после каждой пересборки
+В `watch`-режиме Eleventy сам пересобирает JS/CSS/SW после каждой пересборки
 (см. `eleventy.on('eleventy.after')`).
 
 ## 📝 Редактирование контента
@@ -98,7 +106,7 @@ layout: 'layout.njk'
 lesson: 25
 title: 'Списки'
 subtitle: 'list, методы списков'
-description: 'list, методы списков'   # опционально, для SEO/meta
+description: 'list, методы списков' # опционально, для SEO/meta
 section: 5
 ---
 ```
@@ -111,11 +119,13 @@ section: 5
 
 1. Создать `src/XX-topic.md` (front matter по образцу выше; `lesson`, `section` — как в lessons.json)
 2. Добавить запись в `lessons.json` (в нужную секцию, поля `num/file/title/desc/duration/complexity/badge/type/tags/interactive`, опц. `contest`)
-3. Создать `quizzes/XX.json` (см. формат ниже)
-4. `node build-config-meta.mjs` → перегенерация courseData.js
+3. Создать `quizzes/N.json` (см. формат ниже)
+4. `node build-config-meta.mjs` → перегенерация courseData.js и contest_map.php
 5. `npm run build` и проверка в браузере
 
-### Квиз (`quizzes/NN.json`)
+### Квиз (`quizzes/N.json`)
+
+Имя файла — номер урока **без ведущего нуля** (`1.json`…`50.json`) + `final-test.json`.
 
 ```json
 [
@@ -131,6 +141,7 @@ section: 5
 ## 💻 Конвенции кода
 
 ### JavaScript (`src/js/`)
+
 - `'use strict'` в каждом файле; ES6-модули (`import/export`); JSDoc для экспортных функций
 - `eqeqeq` (строгое сравнение), `no-var` (только `let`/`const`), `no-console` разрешён
 - Модули в `src/js/modules/` — одна изолированная функция на файл, инициализация через
@@ -141,17 +152,28 @@ section: 5
 - Новые модули добавляются в `script.js` с учётом зависимостей (auth-гейт обязателен)
 
 ### CSS (`src/css/`)
+
 - Модули `_*.css` импортируются из `index.css`; CSS Custom Properties; BEM-подобные имена
 - Тёмная тема через `[data-theme="dark"]` (атрибут на `html`)
 
 ### PHP (`sandbox/`)
+
 - PHP 7.4+ (совместимость), строгая типизация возвратов/аргументов в новых функциях
-- Все эндпоинты проходят через `config.php` (CORS-заголовки, сессия, CSRF),
-  JSON-ответы через `jsonResponse()`
-- Код пользователя выполняется только после AST-валидации (`ast_validator.py`) и rate-limit
+- Все эндпоинты проходят через `config.php` (CORS-заголовки, сессия) или
+  `sandbox_common.php` (песочница); JSON-ответы через `jsonResponse()`
+- POST-эндпоинты требуют `Content-Type: application/json` — это часть CSRF-защиты
+  вместе с `SameSite=Lax` кукой и CORS-whitelist (классический CSRF-токен не
+  используется: статические страницы не могут хранить per-session токен)
+- Код пользователя выполняется только после AST-валидации (`ast_validator.py`),
+  rate-limit и в рантайме с усечёнными builtins. Списки запрещённых имён в
+  `ast_validator.py`, `.repl_runner.py` и wrapper-шаблоне `run.php` синхронизированы —
+  меняйте все три места одновременно
 - Прогресс/бейджи требуют `Auth::requireLogin()` серверно; статический HTML — нет
+- `lesson_number = -1` зарезервирован за итоговым тестом; уроки — строго `1..50`
+  (`MAX_COURSE_LESSONS` в config.php)
 
 ### Markdown
+
 - Блоки кода с языком `python`; спойлеры `> [!NOTE|TIP|WARNING]`; перенос строк 120 символов
 
 ## 🧪 Тестирование
@@ -162,7 +184,9 @@ section: 5
 - **E2E (Playwright)**: `e2e/*.spec.cjs` (CommonJS, `'use strict'`). Auth-гейт мокается через
   `page.route('**/sandbox/auth_check.php', ...)`. Перед запуском нужна сборка (`npm run build`),
   сервер стартует автоматически (`npx http-server dist -p 8080`).
-- **Python**: `tests/test_ast_validator.py`, `tests/test_ast_validator_import.py` (pytest).
+- **Python**: `tests/test_ast_validator.py`, `tests/test_ast_validator_import.py`,
+  `tests/test_repl_runner.py` (pytest; последний импортирует `.repl_runner.py`
+  с подменённым stdin — держите список файлов в CI-джобе `python-test` актуальным).
 - **PHP**: `tests/test_sandbox.php` (самодостаточный скрипт).
 
 Перед сдачей изменений прогоняйте минимум: `npm run lint`, `npm run format:check`,
@@ -180,10 +204,15 @@ section: 5
 
 ## 🔒 Безопасность (не ломать)
 
-- CSP жёстко задан в `layout.njk` (script-src `'self'` + mc.yandex.ru и т.д.) — при добавлении
-  внешних ресурсов обновляйте CSP и проверяйте `sandbox`/`auth`/`contest` домены в `connect-src`.
-- Песочница изолирует Python-код: AST-валидация запрещённых импортов, rate-limit, таймаут,
-  лимит памяти/вывода. Не ослабляйте проверки.
+- CSP единая для сайта: meta в `layout.njk`/`layout-index.njk`, header в `.htaccess`
+  и nginx-конфиге — все четыре места должны совпадать (script-src `'self'`; внешние
+  домены — только `auth` и `contest` в connect-src). При добавлении внешних ресурсов
+  обновляйте CSP везде и проверяйте `connect-src`.
+- Песочница изолирует Python-код: AST-валидация запрещённых имён/импортов/форм вызовов,
+  усечённые builtins в рантайме, rate-limit, таймаут, лимит памяти/вывода.
+  Не ослабляйте проверки.
+- `data/` закрыта на уровне nginx (`location ^~ /data/ { deny all; }`) и `.htaccess`
+  (`RedirectMatch 404 ^/data/`) — база с персональными данными не отдаётся вебом.
 - Вся разметка от пользовательских данных (ответы квизов, данные lessons.json при рендере)
   проходит через `escapeHtml()` (`src/js/modules/utils.js`).
 - Редиректы auth ограничены доменом `nayanovaacademy.ru`.

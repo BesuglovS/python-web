@@ -2,17 +2,15 @@
 /**
  * Серверная валидация ответов итогового теста.
  * Принимает JSON: {"answers": {"1": "a", "2": "b", ...}}
- * Возвращает: {"score": 85, "total": 51, "correct": [1,3,...], "wrong": [2,...], "certificate": "uuid"}
+ * Возвращает: {"score": 85, "total": 51, "percentage": 85.0, "passed": true, "certificate": "uuid"}
+ *
+ * Эталонные номера НЕ возвращаются: ответ с перечнем верных/неверных
+ * вопросов превращает эндпоинт в оракул для подбора идеального результата.
  */
 
-header('Content-Type: application/json; charset=utf-8');
-header('X-Content-Type-Options: nosniff');
+require_once __DIR__ . '/sandbox_common.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Метод не разрешён. Используйте POST.'], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+sandbox_check_rate_limit();
 
 $input = json_decode(file_get_contents('php://input'), true);
 if (!$input || empty($input['answers']) || !is_array($input['answers'])) {
@@ -84,18 +82,13 @@ $correctAnswers = [
 ];
 
 $answers = $input['answers'];
-$correct = [];
-$wrong = [];
 $total = count($correctAnswers);
 $score = 0;
 
 foreach ($correctAnswers as $questionNum => $correctOption) {
     $userAnswer = $answers[(string)$questionNum] ?? $answers[$questionNum] ?? null;
     if ($userAnswer !== null && strtolower(trim($userAnswer)) === $correctOption) {
-        $correct[] = (int)$questionNum;
         $score++;
-    } else {
-        $wrong[] = (int)$questionNum;
     }
 }
 
@@ -121,8 +114,6 @@ echo json_encode([
     'score'       => $score,
     'total'       => $total,
     'percentage'  => $percentage,
-    'correct'     => $correct,
-    'wrong'       => $wrong,
     'passed'      => $percentage >= 70,
     'certificate' => $certificate,
 ], JSON_UNESCAPED_UNICODE);
