@@ -34,6 +34,8 @@ export default tseslint.config(
       'src/_data/lessonsData.cjs',
       // E2E tests using CommonJS
       'e2e/**/*.cjs',
+      // Вендоренная каноническая копия из auth-web (ES5 var, правится в каноне)
+      'src/js/tracking-client.js',
     ],
   },
   {

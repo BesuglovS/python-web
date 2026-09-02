@@ -43,6 +43,10 @@ export default function (eleventyConfig) {
   // PHP-песочница
   eleventyConfig.addPassthroughCopy({ sandbox: 'sandbox' });
 
+  // Админка: CSS/JS рядом с admin-quiz.html
+  eleventyConfig.addPassthroughCopy({ 'src/css/admin-quiz.css': 'admin-quiz/admin-quiz.css' });
+  eleventyConfig.addPassthroughCopy({ 'src/js/admin-quiz.js': 'admin-quiz/admin-quiz.js' });
+
   // Фильтр для форматирования дат
   eleventyConfig.addFilter('readableDate', (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: 'utc' }).toFormat('dd.MM.yyyy');

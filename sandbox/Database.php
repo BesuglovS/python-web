@@ -41,59 +41,78 @@ class Database
         // Миграции выполняются один раз: версия схемы в PRAGMA user_version.
         // Без этого CREATE/ALTER/UPDATE гонялись на каждом HTTP-запросе.
         $currentVersion = (int) $db->query('PRAGMA user_version')->fetchColumn();
-        if ($currentVersion >= 1) {
-            return;
+
+        if ($currentVersion < 1) {
+            $db->exec("
+                CREATE TABLE IF NOT EXISTS progress (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    lesson_number INTEGER NOT NULL DEFAULT 0,
+                    completed INTEGER NOT NULL DEFAULT 0,
+                    quiz_score INTEGER DEFAULT NULL,
+                    completed_at DATETIME DEFAULT NULL,
+                    updated_at DATETIME NOT NULL DEFAULT (datetime('now')),
+                    UNIQUE(user_id, lesson_number)
+                );
+
+                CREATE TABLE IF NOT EXISTS badges (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    badge_id TEXT NOT NULL,
+                    earned_at DATETIME NOT NULL DEFAULT (datetime('now')),
+                    UNIQUE(user_id, badge_id)
+                );
+
+                CREATE TABLE IF NOT EXISTS code_runs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    run_count INTEGER NOT NULL DEFAULT 0,
+                    updated_at DATETIME NOT NULL DEFAULT (datetime('now')),
+                    UNIQUE(user_id)
+                );
+            ");
+
+            // Миграция: добавляем колонку completed_at, если её нет (таблица уже существовала)
+            try {
+                $db->exec("ALTER TABLE progress ADD COLUMN completed_at DATETIME DEFAULT NULL");
+            } catch (PDOException $e) {
+                // Колонка уже существует — игнорируем
+            }
+
+            $indexes = [
+                'idx_progress_user_id'      => 'CREATE INDEX IF NOT EXISTS idx_progress_user_id ON progress(user_id)',
+                'idx_progress_lesson'       => 'CREATE INDEX IF NOT EXISTS idx_progress_lesson ON progress(user_id, lesson_number)',
+                'idx_progress_completed_at' => 'CREATE INDEX IF NOT EXISTS idx_progress_completed_at ON progress(user_id, completed_at)',
+                'idx_badges_user'           => 'CREATE INDEX IF NOT EXISTS idx_badges_user ON badges(user_id)',
+            ];
+            foreach ($indexes as $sql) {
+                try { $db->exec($sql); } catch (PDOException $e) {}
+            }
+
+            // Миграция: заполняем completed_at для старых записей, где его нет
+            $db->exec("UPDATE progress SET completed_at = updated_at WHERE completed = 1 AND completed_at IS NULL");
+
+            $db->exec("PRAGMA user_version = 1");
         }
 
-        $db->exec("
-            CREATE TABLE IF NOT EXISTS progress (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                lesson_number INTEGER NOT NULL DEFAULT 0,
-                completed INTEGER NOT NULL DEFAULT 0,
-                quiz_score INTEGER DEFAULT NULL,
-                completed_at DATETIME DEFAULT NULL,
-                updated_at DATETIME NOT NULL DEFAULT (datetime('now')),
-                UNIQUE(user_id, lesson_number)
-            );
+        if ($currentVersion < 2) {
+            $db->exec("
+                CREATE TABLE IF NOT EXISTS quiz_attempts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    lesson_number INTEGER NOT NULL,
+                    score INTEGER NOT NULL,
+                    total_questions INTEGER NOT NULL,
+                    correct_count INTEGER NOT NULL,
+                    answers TEXT DEFAULT NULL,
+                    attempted_at DATETIME NOT NULL DEFAULT (datetime('now'))
+                );
 
-            CREATE TABLE IF NOT EXISTS badges (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                badge_id TEXT NOT NULL,
-                earned_at DATETIME NOT NULL DEFAULT (datetime('now')),
-                UNIQUE(user_id, badge_id)
-            );
+                CREATE INDEX IF NOT EXISTS idx_qa_user_lesson ON quiz_attempts(user_id, lesson_number);
+                CREATE INDEX IF NOT EXISTS idx_qa_user ON quiz_attempts(user_id);
+            ");
 
-            CREATE TABLE IF NOT EXISTS code_runs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                run_count INTEGER NOT NULL DEFAULT 0,
-                updated_at DATETIME NOT NULL DEFAULT (datetime('now')),
-                UNIQUE(user_id)
-            );
-        ");
-
-        // Миграция: добавляем колонку completed_at, если её нет (таблица уже существовала)
-        try {
-            $db->exec("ALTER TABLE progress ADD COLUMN completed_at DATETIME DEFAULT NULL");
-        } catch (PDOException $e) {
-            // Колонка уже существует — игнорируем
+            $db->exec("PRAGMA user_version = 2");
         }
-
-        $indexes = [
-            'idx_progress_user_id'      => 'CREATE INDEX IF NOT EXISTS idx_progress_user_id ON progress(user_id)',
-            'idx_progress_lesson'       => 'CREATE INDEX IF NOT EXISTS idx_progress_lesson ON progress(user_id, lesson_number)',
-            'idx_progress_completed_at' => 'CREATE INDEX IF NOT EXISTS idx_progress_completed_at ON progress(user_id, completed_at)',
-            'idx_badges_user'           => 'CREATE INDEX IF NOT EXISTS idx_badges_user ON badges(user_id)',
-        ];
-        foreach ($indexes as $sql) {
-            try { $db->exec($sql); } catch (PDOException $e) {}
-        }
-
-        // Миграция: заполняем completed_at для старых записей, где его нет
-        $db->exec("UPDATE progress SET completed_at = updated_at WHERE completed = 1 AND completed_at IS NULL");
-
-        $db->exec("PRAGMA user_version = 1");
     }
 }

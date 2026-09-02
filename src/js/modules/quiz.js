@@ -5,7 +5,7 @@
  * Provides interactive quizzes for each lesson with full accessibility
  */
 
-import { saveProgress, checkBadges, checkContestProgress } from './api-client.js';
+import { saveProgress, saveQuizAttempt, checkBadges, checkContestProgress } from './api-client.js';
 import {
   updateLocalProgress,
   buildCompleteToggle,
@@ -91,6 +91,7 @@ export function initQuizSystem() {
         correct: 0,
         answered: false,
         total: questions.length,
+        answersLog: [],
       };
 
       function renderQuestion() {
@@ -184,6 +185,13 @@ export function initQuizSystem() {
 
             const selectedIdx = parseInt(optEl.getAttribute('data-idx'), 10);
             optEl.setAttribute('aria-checked', 'true');
+
+            state.answersLog.push({
+              question_idx: state.idx,
+              selected: selectedIdx,
+              correct: currentQuestion.correct,
+              is_correct: selectedIdx === currentQuestion.correct,
+            });
 
             if (selectedIdx === currentQuestion.correct) {
               state.correct++;
@@ -357,13 +365,15 @@ export function initQuizSystem() {
           updateLocalProgress(lessonNum, false, scorePct);
         }
 
+        saveQuizAttempt(lessonNum, scorePct, state.total, state.correct, state.answersLog);
+
         // Check badges after quiz
         checkBadges();
 
         h3.focus();
 
         quizContainer.querySelector('.quiz-retry').addEventListener('click', function () {
-          state = { idx: 0, correct: 0, answered: false, total: questions.length };
+          state = { idx: 0, correct: 0, answered: false, total: questions.length, answersLog: [] };
           renderQuestion();
         });
       }

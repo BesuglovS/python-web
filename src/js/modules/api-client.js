@@ -64,6 +64,19 @@ export async function incrementCodeRuns() {
 
 const CONTEST_API_BASE = 'https://contest.nayanovaacademy.ru';
 
+const QUIZ_ATTEMPTS_URL = 'sandbox/quiz_attempts.php';
+
+export async function saveQuizAttempt(lessonNumber, score, totalQuestions, correctCount, answers) {
+  return apiPost(QUIZ_ATTEMPTS_URL, {
+    action: 'save_attempt',
+    lesson_number: lessonNumber,
+    score: score,
+    total_questions: totalQuestions,
+    correct_count: correctCount,
+    answers: answers,
+  });
+}
+
 export async function checkContestProgress(contestId) {
   try {
     const response = await fetch(

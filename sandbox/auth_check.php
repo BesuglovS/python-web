@@ -60,7 +60,8 @@ $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($response === false || $httpCode !== 200) {
-    echo json_encode(['authenticated' => false]);
+    // Сбой auth-web — это НЕ «не авторизован»: помечаем ответ для клиента.
+    echo json_encode(['authenticated' => false, 'unavailable' => true]);
     exit;
 }
 

@@ -9,24 +9,25 @@
 (function (global) {
   'use strict';
 
-  const DEFAULTS = {
+  var DEFAULTS = {
     apiBase: 'https://auth.nayanovaacademy.ru',
-    interval: 30, // секунд между heartbeat'ами
-    trackTitle: true, // передавать document.title
-    trackReferrer: true, // передавать referrer первого захода
+    interval: 30,           // секунд между heartbeat'ами
+    trackTitle: true,       // передавать document.title
+    trackReferrer: true     // передавать referrer первого захода
   };
 
-  let config = Object.assign({}, DEFAULTS);
-  let authed = null; // tri-state: null = неизвестно, true/false
-  let enabled = false;
-  let initialized = false;
-  let timer = null;
-  let firstBeat = true;
-  let lastHref = '';
-  let lastBeatAt = 0;
+  var config = Object.assign({}, DEFAULTS);
+  var authed = null;        // tri-state: null = неизвестно, true/false
+  var enabled = false;
+  var initialized = false;
+  var timer = null;
+  var firstBeat = true;
+  var lastHref = '';
+  var lastBeatAt = 0;
 
-  const boundListeners = [];
-  const originalHistoryMethods = {};
+  // Учёт подписок и обёрток history — чтобы stop() полностью убирал за собой.
+  var boundListeners = [];
+  var originalHistoryMethods = {};
 
   function addListener(target, type, fn) {
     target.addEventListener(type, fn);
@@ -35,7 +36,7 @@
 
   function removeAllListeners() {
     while (boundListeners.length) {
-      const entry = boundListeners.pop();
+      var entry = boundListeners.pop();
       entry.target.removeEventListener(entry.type, entry.fn);
     }
   }
@@ -43,20 +44,18 @@
   // Уникальный ключ вкладки — чтобы несколько вкладок не конфликтовали
   // за одну открытую строку page_views на сервере.
   function tabKey() {
-    let k = null;
+    var k = null;
     try {
       k = global.sessionStorage.getItem('nayanova_tab_key');
     } catch (e) {}
     if (!k) {
       k = Math.random().toString(36).slice(2) + Date.now().toString(36);
-      try {
-        global.sessionStorage.setItem('nayanova_tab_key', k);
-      } catch (e) {}
+      try { global.sessionStorage.setItem('nayanova_tab_key', k); } catch (e) {}
     }
     return k;
   }
 
-  const tab = tabKey();
+  var tab = tabKey();
 
   function init(opts) {
     if (initialized) return;
@@ -71,9 +70,7 @@
   // на странице (инлайн-скрипты могут блокироваться CSP script-src 'self').
   function autoInit() {
     if (typeof global.document === 'undefined') return;
-    const boot = function () {
-      init();
-    };
+    var boot = function () { init(); };
     if (global.document.readyState === 'complete' || global.document.readyState === 'interactive') {
       boot();
     } else {
@@ -83,8 +80,7 @@
 
   function checkAuth() {
     if (authed !== null) return Promise.resolve(authed);
-    return global
-      .fetch(config.apiBase + '/api/check.php', { credentials: 'include' })
+    return global.fetch(config.apiBase + '/api/check.php', { credentials: 'include' })
       .then(function (r) {
         if (!r.ok) throw new Error('check.php HTTP ' + r.status);
         return r.json();
@@ -93,10 +89,7 @@
         authed = !!(d && d.authenticated);
         return authed;
       })
-      .catch(function () {
-        authed = false;
-        return false;
-      });
+      .catch(function () { authed = false; return false; });
   }
 
   function currentUrl() {
@@ -104,45 +97,40 @@
   }
 
   function currentTitle() {
-    return config.trackTitle ? global.document.title || '' : '';
+    return config.trackTitle ? (global.document.title || '') : '';
   }
 
   function currentReferrer() {
-    return config.trackReferrer && firstBeat ? global.document.referrer || '' : '';
+    return (config.trackReferrer && firstBeat) ? (global.document.referrer || '') : '';
   }
 
   // Секунд, прошедших с прошлого тика.
   function elapsedSeconds() {
-    const now = Date.now();
-    const d = lastBeatAt > 0 ? (now - lastBeatAt) / 1000 : 0;
+    var now = Date.now();
+    var d = lastBeatAt > 0 ? (now - lastBeatAt) / 1000 : 0;
     lastBeatAt = now;
     return Math.max(0, Math.round(d));
   }
 
   function send(url, title, referrer, duration) {
-    return global
-      .fetch(config.apiBase + '/api/track.php', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          url: url,
-          title: title,
-          referrer: referrer,
-          duration: duration,
-          tab: tab,
-        }),
+    return global.fetch(config.apiBase + '/api/track.php', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        url: url,
+        title: title,
+        referrer: referrer,
+        duration: duration,
+        tab: tab
       })
-      .then(function (r) {
-        if (r.status === 401 || r.status === 403) {
-          authed = false;
-          stop();
-        }
-        return r;
-      })
-      .catch(function () {
-        /* сеть недоступна — пропускаем тик */
-      });
+    }).then(function (r) {
+      if (r.status === 401 || r.status === 403) {
+        authed = false;
+        stop();
+      }
+      return r;
+    }).catch(function () { /* сеть недоступна — пропускаем тик */ });
   }
 
   // Обычный периодический тик: фиксирует время на текущей странице.
@@ -162,18 +150,18 @@
   // Финальный тик при уходе со страницы (в т.ч. закрытие вкладки).
   function beacon() {
     if (!enabled) return;
-    const data = JSON.stringify({
+    var data = JSON.stringify({
       url: currentUrl(),
       title: currentTitle(),
       referrer: '',
       duration: elapsedSeconds(),
-      tab: tab,
+      tab: tab
     });
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(
-        config.apiBase + '/api/track.php',
-        new Blob([data], { type: 'application/json' }),
-      );
+      // text/plain — CORS-safelisted тип: без preflight, beacon доходит
+      // надёжно во всех браузерах. Сервер парсит тело как JSON независимо
+      // от Content-Type.
+      navigator.sendBeacon(config.apiBase + '/api/track.php', new Blob([data], { type: 'text/plain' }));
     } else {
       send(currentUrl(), currentTitle(), '', elapsedSeconds());
     }
@@ -192,10 +180,7 @@
 
   function stop() {
     enabled = false;
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
+    if (timer) { clearInterval(timer); timer = null; }
     removeAllListeners();
     restoreHistoryMethods();
   }
@@ -223,7 +208,7 @@
     originalHistoryMethods.replaceState = global.history && global.history.replaceState;
 
     function wrapHistory(original, args) {
-      const oldUrl = currentUrl();
+      var oldUrl = currentUrl();
       original.apply(global.history, args);
       if (currentUrl() !== oldUrl) {
         pageSwitched(oldUrl);
@@ -232,14 +217,10 @@
     }
 
     if (originalHistoryMethods.pushState) {
-      global.history.pushState = function () {
-        wrapHistory(originalHistoryMethods.pushState, arguments);
-      };
+      global.history.pushState = function () { wrapHistory(originalHistoryMethods.pushState, arguments); };
     }
     if (originalHistoryMethods.replaceState) {
-      global.history.replaceState = function () {
-        wrapHistory(originalHistoryMethods.replaceState, arguments);
-      };
+      global.history.replaceState = function () { wrapHistory(originalHistoryMethods.replaceState, arguments); };
     }
     addListener(global, 'popstate', function () {
       if (currentUrl() !== lastHref) {
@@ -249,10 +230,10 @@
     });
   }
 
-  const apiObj = {
+  var apiObj = {
     init: init,
     checkAuth: checkAuth,
-    stop: stop,
+    stop: stop
   };
 
   global.NayanovaTrack = apiObj;
