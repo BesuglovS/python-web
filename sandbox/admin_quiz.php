@@ -88,7 +88,16 @@ if ($action === 'class_progress') {
     }
     unset($s);
 
-    jsonResponse(['students' => array_values($students)]);
+    $maxLesson = 0;
+    foreach ($students as $s) {
+        foreach ($s['lessons'] as $num => $lesson) {
+            if ($num > 0 && $lesson['quiz_score'] !== null && $num > $maxLesson) {
+                $maxLesson = $num;
+            }
+        }
+    }
+
+    jsonResponse(['students' => array_values($students), 'max_lesson_with_quizzes' => $maxLesson]);
 }
 
 if ($action === 'attempts') {

@@ -36,7 +36,7 @@ function populateLessonSelects() {
   lessonFrom.innerHTML = html;
   lessonTo.innerHTML = html;
   lessonFrom.value = '1';
-  lessonTo.value = '10';
+  lessonTo.value = '50';
 }
 populateLessonSelects();
 
@@ -102,10 +102,13 @@ function getLessonRange() {
   let to = parseInt(lessonTo.value, 10);
   if (isNaN(from)) from = 1;
   if (isNaN(to)) to = 50;
+  const includeFinal = (from === -1 || to === -1);
+  if (from === -1) from = 1;
+  if (to === -1) to = 50;
   if (from > to) { const tmp = from; from = to; to = tmp; }
   const range = [];
   for (let i = from; i <= to; i++) range.push(i);
-  range.push(-1);
+  if (includeFinal) range.push(-1);
   return range;
 }
 
@@ -146,6 +149,9 @@ loadBtn.addEventListener('click', function() {
         return;
       }
 
+      const maxLesson = data.max_lesson_with_quizzes || 50;
+      lessonTo.value = String(maxLesson);
+
       const range = getLessonRange();
       const students = data.students;
 
@@ -168,7 +174,7 @@ loadBtn.addEventListener('click', function() {
         range.forEach(function(n) {
           const lesson = s.lessons[n] || {};
           const score = lesson.quiz_score !== undefined ? lesson.quiz_score : null;
-          const completed = lesson.completed === 1;
+          const completed = score === 100;
           if (completed) completedCount++;
 
           const cls = scoreClass(score);
