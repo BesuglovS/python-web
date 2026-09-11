@@ -49,6 +49,13 @@ if ($identityFile -and (Test-Path $identityFile)) {
 }
 $identityArg = if ($identityFile) { "-i `"$identityFile`"" } else { '' }
 
+# Guard: the deploy wipes remotePath (rm -rf), allow only the project webroot.
+$expectedPath = '/var/www/python.nayanovaacademy.ru/public'
+if ($remotePath -ne $expectedPath) {
+  Write-Host ("ERROR: wrong DEPLOY_REMOTE_PATH=$remotePath, expected=$expectedPath. Deploy aborted.") -ForegroundColor Red
+  exit 1
+}
+
 $remote = "${sshUser}@${sshHost}"
 $portArg = if ($sshPort -ne '22') { "-P $sshPort" } else { '' }
 
