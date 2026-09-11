@@ -143,6 +143,18 @@ server {
         add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
     }
 
+    # 4b. admin-quiz — админ-утилита: JS/CSS без долгого кэша (файлы без content-hash,
+    # иначе обновления не доходят до браузера до Ctrl+F5).
+    location ~* ^/admin-quiz/(admin-quiz\.(js|css))$ {
+        add_header Cache-Control "no-cache, must-revalidate" always;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
+    }
+
     # 5. Кэширование статических ресурсов (CSS/JS/изображения/шрифты — 1 год)
     location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$ {
         add_header Cache-Control "public, max-age=31536000, immutable" always;

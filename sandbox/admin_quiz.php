@@ -1,14 +1,18 @@
 <?php
 /**
  * API администратора: квизы по классам.
- * GET ?action=groups                 — список групп (классов)
- * GET ?action=class_progress&group_id=N — прогресс учеников группы
- * GET ?action=attempts&user_id=N&lesson_number=M — попытки ученика
+ * GET  ?action=groups                 — список групп (классов)
+ * GET  ?action=class_progress&group_id=N — прогресс учеников группы
+ * GET  ?action=attempts&user_id=N&lesson_number=M — попытки ученика
+ * POST {action:'mark_quiz', user_id, lesson_number, quiz_score, completed}
+ *      — записать ученику пройденный квиз (только админ).
  */
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/Auth.php';
 require_once __DIR__ . '/AuthClient.php';
+require_once __DIR__ . '/contest_map.php';
+require_once __DIR__ . '/ProgressReporter.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -23,6 +27,158 @@ Database::initialize();
 Auth::requireAdmin();
 
 $action = $_GET['action'] ?? '';
+
+/**
+ * POST: админ записывает ученику пройденный квиз (см. mark_quiz ниже).
+ * Защита от CSRF: POST только с Content-Type: application/json (как в
+ * progress.php) + SameSite=Lax кука + CORS-whitelist.
+ */
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (stripos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') === false) {
+        jsonResponse(['error' => 'Content-Type must be application/json'], 415);
+    }
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($input)) {
+        jsonResponse(['error' => 'Некорректный JSON'], 400);
+    }
+
+    try {
+        $postAction = $input['action'] ?? '';
+
+        if ($postAction === 'clear_quiz') {
+            $clearUserId = isset($input['user_id']) ? (int) $input['user_id'] : 0;
+            if ($clearUserId <= 0) {
+                jsonResponse(['error' => 'user_id обязателен'], 400);
+            }
+
+            $clearLesson = isset($input['lesson_number']) ? (int) $input['lesson_number'] : null;
+            if ($clearLesson === null || ($clearLesson !== -1 && ($clearLesson < 1 || $clearLesson > MAX_COURSE_LESSONS))) {
+                jsonResponse(['error' => 'lesson_number должен быть от 1 до ' . MAX_COURSE_LESSONS . ' (или -1 для итогового теста)'], 400);
+            }
+
+            // Обученость: идентифицируем ученика через auth-web
+            $fFound = false;
+            foreach ((AuthClient::getUsers() ?? []) as $u) {
+                if ((int) ($u['id'] ?? 0) === $clearUserId) {
+                    $fFound = true;
+                }
+            }
+            if (!$fFound) {
+                jsonResponse(['error' => 'Ученик не найден'], 404);
+            }
+
+            $db = Database::getInstance();
+            $stmt = $db->prepare('DELETE FROM progress WHERE user_id = ? AND lesson_number = ?');
+            $stmt->execute([$clearUserId, $clearLesson]);
+            $deleted = $stmt->rowCount() > 0;
+
+            // сводка курса в auth-web: пересчитать
+            try {
+                $stmt = $db->prepare("SELECT COUNT(*) FROM progress WHERE user_id = ? AND completed = 1");
+                $stmt->execute([$clearUserId]);
+                $done = (int) $stmt->fetchColumn();
+                ProgressReporter::report($clearUserId, 'python', $done, MAX_COURSE_LESSONS);
+            } catch (Throwable $e) {
+                error_log('admin_quiz clear_quiz report: ' . $e->getMessage());
+            }
+
+            jsonResponse([
+                'success' => true,
+                'deleted' => $deleted,
+                'lesson_number' => $clearLesson,
+            ]);
+        }
+
+        if ($postAction !== 'mark_quiz') {
+            jsonResponse(['error' => 'Неизвестное действие'], 400);
+        }
+
+        $userId = isset($input['user_id']) ? (int) $input['user_id'] : 0;
+        if ($userId <= 0) {
+            jsonResponse(['error' => 'user_id обязателен'], 400);
+        }
+
+            // Ученик должен существовать в auth-web (не числится ли id случайно)
+            $found = false;
+            foreach ((AuthClient::getUsers() ?? []) as $u) {
+                if ((int) ($u['id'] ?? 0) === $userId) {
+                    $found = !empty($u['is_admin']) ? false : true;
+                }
+            }
+            if (!$found) {
+                jsonResponse(['error' => 'Ученик не найден'], 404);
+            }
+
+        $lessonNumber = isset($input['lesson_number']) ? (int) $input['lesson_number'] : null;
+        if ($lessonNumber === null || ($lessonNumber !== -1 && ($lessonNumber < 1 || $lessonNumber > MAX_COURSE_LESSONS))) {
+            jsonResponse(['error' => 'lesson_number должен быть от 1 до ' . MAX_COURSE_LESSONS . ' (или -1 для итогового теста)'], 400);
+        }
+
+        $quizScore = isset($input['quiz_score']) ? (int) $input['quiz_score'] : null;
+        if ($quizScore !== null && ($quizScore < 0 || $quizScore > 100)) {
+            jsonResponse(['error' => 'quiz_score должен быть от 0 до 100 (или null)'], 400);
+        }
+
+        $completed = !empty($input['completed']) ? 1 : 0;
+
+        // Контест-привязка: уроки с контестом считаются пройденными только
+        // совместно с решением контеста (та же логика, что в progress.php).
+        $contestOk = null;
+        $contestId = contestIdForLesson($lessonNumber);
+        if ($completed && $contestId !== null) {
+            $contestOk = checkContestCompleted($contestId);
+            if ($contestOk === false) {
+                $completed = 0;
+            }
+        }
+
+        $db = Database::getInstance();
+        $stmt = $db->prepare(
+            "INSERT INTO progress (user_id, lesson_number, completed, quiz_score, completed_at, updated_at)
+             VALUES (?, ?, ?, ?,
+               CASE WHEN ? = 1 THEN datetime('now') ELSE NULL END,
+               datetime('now'))
+             ON CONFLICT(user_id, lesson_number) DO UPDATE SET
+               completed = CASE WHEN excluded.completed = 1 THEN 1 ELSE progress.completed END,
+               quiz_score = CASE
+                 WHEN excluded.quiz_score IS NOT NULL AND (progress.quiz_score IS NULL OR excluded.quiz_score > progress.quiz_score)
+                 THEN excluded.quiz_score
+                 ELSE progress.quiz_score
+               END,
+               completed_at = CASE
+                 WHEN excluded.completed = 1 AND progress.completed = 0 AND progress.completed_at IS NULL
+                 THEN datetime('now')
+                 ELSE progress.completed_at
+               END,
+               updated_at = datetime('now')"
+        );
+        $stmt->execute([$userId, $lessonNumber, $completed, $quizScore, $completed]);
+
+        // Сводка курса в auth-web: пересчитать как в progress.php
+        try {
+            $stmt = $db->prepare("SELECT COUNT(*) FROM progress WHERE user_id = ? AND completed = 1");
+            $stmt->execute([$userId]);
+            $done = (int) $stmt->fetchColumn();
+            ProgressReporter::report($userId, 'python', $done, MAX_COURSE_LESSONS);
+        } catch (Throwable $e) {
+            error_log('admin_quiz mark_quiz report: ' . $e->getMessage());
+        }
+
+        jsonResponse([
+            'success' => true,
+            'lesson_number' => $lessonNumber,
+            'quiz_score' => $quizScore,
+            'completed' => $completed,
+            'contest_ok' => $contestOk,
+        ]);
+    } catch (PDOException $e) {
+        error_log('admin_quiz POST PDO: ' . $e->getMessage());
+        jsonResponse(['error' => 'Ошибка базы данных. Попробуйте позже.'], 500);
+    } catch (Throwable $e) {
+        error_log('admin_quiz POST: ' . $e->getMessage());
+        jsonResponse(['error' => 'Внутренняя ошибка сервера'], 500);
+    }
+}
 
 if ($action === 'groups') {
     $groups = AuthClient::getGroups();

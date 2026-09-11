@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Админ — Квизы по классам</title>
-  <link rel="stylesheet" href="admin-quiz.css">
+  <link rel="stylesheet" href="admin-quiz.css?v=2">
 </head>
 <body>
   <h1>Квизы по классам</h1>
@@ -26,6 +26,28 @@
       <label>&nbsp;</label>
       <button id="load-btn">Загрузить</button>
     </div>
+    <div class="control-group">
+      <label>&nbsp;</label>
+      <label for="only-quizzes" title="Показывать уроки с 1 до последнего, в котором есть результаты квизов">
+        <input type="checkbox" id="only-quizzes" checked> Только с результатами
+      </label>
+    </div>
+    <div class="control-group">
+      <label for="quick-mode">&nbsp;</label>
+      <label for="quick-mode" id="quick-mode-label" title="Нажатие на ячейку квиза ученика сразу ставит ему 100% и отметку «пройдено»">
+        <input type="checkbox" id="quick-mode" checked style="transform:scale(1.4)"> Быстрый ввод
+      </label>
+    </div>
+    <div class="control-group">
+      <label for="clear-mode">&nbsp;</label>
+      <label for="clear-mode" id="clear-mode-label" title="Нажатие на ячейку квиза ученика убирает результат квиза. Взаимоисключающий с «Быстрый ввод»">
+        <input type="checkbox" id="clear-mode" style="transform:scale(1.4)"> Убирать результаты
+      </label>
+    </div>
+  </div>
+
+  <div id="quick-hint" class="status" style="color:#1a5f1e; font-weight:600">
+    Быстрый ввод включён: клик по ячейке квиза ученика — записывается 100%. «Убирать результаты» — клик по ячейке снимает результат.
   </div>
 
   <div class="legend">
@@ -38,6 +60,33 @@
   <div id="status" class="status"></div>
   <div id="table-container" class="table-wrapper" style="display:none"></div>
 
-<script src="admin-quiz.js"></script>
+  <div id="mark-section" style="display:none" class="mark-section">
+    <h2>Записать пройденный квиз</h2>
+    <div class="mark-form">
+      <div class="control-group">
+        <label for="mark-student">Ученик</label>
+        <select id="mark-student"></select>
+      </div>
+      <div class="control-group">
+        <label for="mark-lesson">Квиз урока</label>
+        <select id="mark-lesson"></select>
+      </div>
+      <div class="control-group">
+        <label for="mark-score">Балл, %</label>
+        <input type="number" id="mark-score" min="0" max="100" value="100" style="width:90px">
+      </div>
+      <div class="control-group">
+        <label>&nbsp;</label>
+        <label><input type="checkbox" id="mark-completed" checked> Пройдено</label>
+      </div>
+      <div class="control-group">
+        <label>&nbsp;</label>
+        <button id="mark-btn">Записать</button>
+      </div>
+    </div>
+    <div id="mark-status" class="status"></div>
+  </div>
+
+<script src="admin-quiz.js?v=2"></script>
 </body>
 </html>
