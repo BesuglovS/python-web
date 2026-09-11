@@ -4,6 +4,7 @@
  * GET  ?action=groups                 — список групп (классов)
  * GET  ?action=class_progress&group_id=N — прогресс учеников группы
  * GET  ?action=attempts&user_id=N&lesson_number=M — попытки ученика
+ * GET  ?action=recent&limit=N       — последние по времени решённые квизы
  * POST {action:'mark_quiz', user_id, lesson_number, quiz_score, completed}
  *      — записать ученику пройденный квиз (только админ).
  */
@@ -254,6 +255,61 @@ if ($action === 'class_progress') {
     }
 
     jsonResponse(['students' => array_values($students), 'max_lesson_with_quizzes' => $maxLesson]);
+}
+
+if ($action === 'recent') {
+    $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 100;
+    if ($limit < 1) {
+        $limit = 100;
+    }
+    if ($limit > 500) {
+        $limit = 500;
+    }
+
+    $db = Database::getInstance();
+
+    // Последние по времени попытки из quiz_attempts.
+    // Лучший балл из progress (если записи нет — берём балл попытки).
+    $stmt = $db->prepare(
+        "SELECT qa.user_id, qa.lesson_number, qa.score, qa.total_questions,
+                qa.correct_count, qa.attempted_at,
+                p.quiz_score AS best_score, p.completed AS completed
+         FROM quiz_attempts qa
+         LEFT JOIN progress p
+           ON p.user_id = qa.user_id AND p.lesson_number = qa.lesson_number
+         WHERE qa.id IN (
+           SELECT id FROM quiz_attempts ORDER BY attempted_at DESC, id DESC LIMIT ?
+         )
+         ORDER BY qa.attempted_at DESC, qa.id DESC"
+    );
+    $stmt->execute([$limit]);
+    $rows = $stmt->fetchAll();
+
+    // Имена из auth-web
+    $usersMap = [];
+    foreach ((AuthClient::getUsers() ?? []) as $u) {
+        $uid = (int) $u['id'];
+        $usersMap[$uid] = $u['display_name'] ?? $u['login'] ?? 'ID:' . $uid;
+    }
+
+    $recent = [];
+    foreach ($rows as $row) {
+        $uid = (int) $row['user_id'];
+        $lesson = (int) $row['lesson_number'];
+        $recent[] = [
+            'user_id' => $uid,
+            'name' => $usersMap[$uid] ?? 'ID:' . $uid,
+            'lesson_number' => $lesson,
+            'score' => (int) $row['score'],
+            'best_score' => $row['best_score'] !== null ? (int) $row['best_score'] : null,
+            'completed' => $row['completed'] !== null ? (int) $row['completed'] : null,
+            'total_questions' => (int) $row['total_questions'],
+            'correct_count' => (int) $row['correct_count'],
+            'attempted_at' => $row['attempted_at'],
+        ];
+    }
+
+    jsonResponse(['recent' => $recent]);
 }
 
 if ($action === 'attempts') {

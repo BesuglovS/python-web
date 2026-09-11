@@ -62,7 +62,9 @@ td.completed-no { background: #f8d7da; color: #721c24; }
 .status { padding: 8px; font-size: .9rem; color: #666; }
 .error { color: #c0392b; font-weight: 600; }
 
-/* �������� ���������� ���� */
-.mark-section { margin-top: 24px; padding: 16px; border: 1px solid #ccc; border-radius: 8px; }
-.mark-section h2 { margin-top: 0; font-size: 1.05rem; }
+/* Запись пройденного квиза и последние решённые квизы */
+.mark-section, .recent-section { margin-top: 24px; padding: 16px; border: 1px solid #ccc; border-radius: 8px; }
+.mark-section h2, .recent-section h2 { margin-top: 0; font-size: 1.05rem; }
 .mark-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+.btn-secondary { background: #6c8ebf; }
+.btn-secondary:hover { background: #56789f; }

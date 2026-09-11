@@ -460,6 +460,106 @@ function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// === Последние решённые квизы ===
+const recentSection = document.getElementById('recent-section');
+const recentBtn = document.getElementById('recent-btn');
+const recentCsvBtn = document.getElementById('recent-csv-btn');
+const recentLimit = document.getElementById('recent-limit');
+const recentStatus = document.getElementById('recent-status');
+const recentTableContainer = document.getElementById('recent-table-container');
+let recentRows = [];
+
+if (recentBtn) {
+  recentBtn.addEventListener('click', function() {
+    const limit = parseInt(recentLimit.value, 10) || 100;
+    recentBtn.disabled = true;
+    recentStatus.textContent = 'Загрузка...';
+    recentTableContainer.style.display = 'none';
+
+    apiGet('/sandbox/admin_quiz.php?action=recent&limit=' + limit)
+      .then(function(data) {
+        recentBtn.disabled = false;
+        if (!data || !data.recent) {
+          recentStatus.innerHTML = '<span class="error">Ошибка загрузки данных</span>';
+          return;
+        }
+        recentRows = data.recent;
+        if (!recentRows.length) {
+          recentStatus.textContent = 'Попыток квизов пока нет';
+          recentCsvBtn.disabled = true;
+          return;
+        }
+        renderRecentTable();
+        recentCsvBtn.disabled = false;
+      })
+      .catch(function() {
+        recentBtn.disabled = false;
+        recentStatus.innerHTML = '<span class="error">Ошибка сети</span>';
+      });
+  });
+}
+
+function lessonLabel(n) {
+  return n === -1 ? 'Итоговый тест' : 'Урок ' + n;
+}
+
+function renderRecentTable() {
+  let html = '<table><thead><tr>' +
+    '<th>Время</th><th>Ученик</th><th>Урок</th><th>Балл, %</th><th>Лучший, %</th><th>Верно</th><th>Пройдено</th>' +
+    '</tr></thead><tbody>';
+  recentRows.forEach(function(r) {
+    const best = r.best_score !== null && r.best_score !== undefined ? r.best_score : r.score;
+    html += '<tr>' +
+      '<td style="white-space:nowrap">' + formatDate(r.attempted_at) + '</td>' +
+      '<td style="text-align:left">' + escapeHtml(r.name) + '</td>' +
+      '<td>' + escapeHtml(lessonLabel(r.lesson_number)) + '</td>' +
+      '<td class="score ' + scoreClass(r.score) + '">' + r.score + '</td>' +
+      '<td class="score ' + scoreClass(best) + '">' + (r.best_score !== null && r.best_score !== undefined ? r.best_score : '—') + '</td>' +
+      '<td>' + r.correct_count + '/' + r.total_questions + '</td>' +
+      '<td>' + (r.completed === 1 ? '✔' : '—') + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  recentTableContainer.innerHTML = html;
+  recentTableContainer.style.display = 'block';
+  recentStatus.textContent = 'Загружено попыток: ' + recentRows.length;
+}
+
+if (recentCsvBtn) {
+  recentCsvBtn.addEventListener('click', function() {
+    if (!recentRows.length) return;
+    const header = ['Время', 'Ученик', 'Урок', 'Балл %', 'Лучший %', 'Верно', 'Всего', 'Пройдено'];
+    const lines = [header.join(';')];
+    recentRows.forEach(function(r) {
+      const best = r.best_score !== null && r.best_score !== undefined ? r.best_score : '';
+      const row = [
+        formatDate(r.attempted_at),
+        r.name,
+        lessonLabel(r.lesson_number),
+        r.score,
+        best,
+        r.correct_count,
+        r.total_questions,
+        r.completed === 1 ? 'да' : 'нет',
+      ];
+      lines.push(row.map(function(v) {
+        v = String(v === null || v === undefined ? '' : v);
+        return '"' + v.replace(/"/g, '""') + '"';
+      }).join(';'));
+    });
+    // BOM для корректного открытия в Excel
+    const blob = new Blob(['\ufeff' + lines.join('\r\n')], {type: 'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'recent-quizzes.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
+
 // POST /sandbox/admin_quiz.php — запись пройденного квиза (только админ)
 markBtn.addEventListener('click', function() {
   const userId = parseInt(markStudent.value, 10);
