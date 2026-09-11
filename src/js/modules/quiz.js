@@ -59,6 +59,7 @@ export function initQuizSystem() {
 
   const quizContainer = document.createElement('section');
   quizContainer.className = 'quiz-container';
+  quizContainer.id = 'quiz'; // якорь для внешних ссылок «на место квиза»
   quizContainer.setAttribute('role', 'region');
   quizContainer.setAttribute(
     'aria-label',
@@ -76,6 +77,11 @@ export function initQuizSystem() {
     main.insertBefore(quizContainer, completeToggle);
   } else {
     main.appendChild(quizContainer);
+  }
+
+  // Если страница открыта с якорем #quiz — прокручиваем к квизу после вставки
+  if (window.location.hash === '#quiz') {
+    quizContainer.scrollIntoView({ behavior: 'smooth' });
   }
 
   fetch(quizFile)
