@@ -33,6 +33,7 @@
   }
 
   #toc {
+    display: block;
     position: static;
     width: auto;
     float: left;
