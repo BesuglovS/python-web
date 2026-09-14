@@ -50,6 +50,15 @@ export async function bulkSaveProgress(items) {
   });
 }
 
+/** Записать только оценку квиза, не трогая флаг «урок пройден». */
+export async function saveQuizScore(lessonNumber, quizScore) {
+  return apiPost(PROGRESS_URL, {
+    action: 'save_quiz_score',
+    lesson_number: lessonNumber,
+    quiz_score: quizScore,
+  });
+}
+
 export async function loadBadges() {
   return apiGet(BADGES_URL);
 }

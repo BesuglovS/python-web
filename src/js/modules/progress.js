@@ -89,11 +89,23 @@ export function updateLocalProgress(lessonNumber, completed, quizScore) {
   });
 }
 
-function syncToServer(lessonNumber, completed, quizScore) {
+/**
+ * Сервер может скорректировать флаг (гейт контеста) — принимаем его
+ * финальное значение как источник истины для локального состояния.
+ */
+function syncToServer(lessonNumber, completed, quizScore, onFinal) {
   if (lessonNumber === null) return;
-  saveProgress(lessonNumber, completed, quizScore).catch(function (err) {
-    console.warn('Progress sync failed (offline?):', err);
-  });
+  saveProgress(lessonNumber, completed, quizScore)
+    .then(function (data) {
+      if (data && typeof data.completed !== 'undefined') {
+        const finalCompleted = !!data.completed;
+        updateLocalProgress(lessonNumber, finalCompleted, undefined);
+        if (onFinal) onFinal(finalCompleted);
+      }
+    })
+    .catch(function (err) {
+      console.warn('Progress sync failed (offline?):', err);
+    });
 }
 
 export function initProgressTracking() {
@@ -127,10 +139,14 @@ export function buildCompleteToggle(container, lessonNum, completed) {
   label.querySelector('input').addEventListener('change', function (e) {
     const isChecked = e.target.checked;
     updateLocalProgress(lessonNum, isChecked, undefined);
-    syncToServer(lessonNum, isChecked, undefined);
-    span.textContent = isChecked
-      ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d'
-      : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
+    syncToServer(lessonNum, isChecked, undefined, function (finalCompleted) {
+      // Сервер может отклонить отметку (например, контест не решён) —
+      // приводим чекбокс к финальному состоянию сервера.
+      checkbox.checked = finalCompleted;
+      span.textContent = finalCompleted
+        ? '\u2713 \u0423\u0440\u043e\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d'
+        : '\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u043d\u044b\u0439';
+    });
     if (isChecked) checkBadges();
   });
 
@@ -219,7 +235,11 @@ function renderLessonPage() {
         if (!toggleDiv.isConnected) return;
         if (contestData && contestData.completed) {
           updateLocalProgress(lessonNum, true, undefined);
-          syncToServer(lessonNum, true, undefined);
+          syncToServer(lessonNum, true, undefined, function (finalCompleted) {
+            if (finalCompleted || !toggleDiv.isConnected) return;
+            toggleDiv.textContent = '';
+            buildContestRequiredMsg(toggleDiv);
+          });
           toggleDiv.textContent = '';
           buildCompleteToggle(toggleDiv, lessonNum, true);
           checkBadges();

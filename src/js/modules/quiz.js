@@ -5,7 +5,7 @@
  * Provides interactive quizzes for each lesson with full accessibility
  */
 
-import { saveProgress, saveQuizAttempt, checkBadges, checkContestProgress } from './api-client.js';
+import { saveProgress, saveQuizAttempt, saveQuizScore, checkBadges, checkContestProgress } from './api-client.js';
 import {
   updateLocalProgress,
   buildCompleteToggle,
@@ -37,13 +37,16 @@ export function sanitizeHtml(html) {
   return out.join('');
 }
 
-function syncQuizToServer(lessonNumber, score, completed) {
+/**
+ * Записать только оценку квиза. Флаг «урок пройден» запрос квиза
+ * не изменяет: это делает либо авто-завершение (без контеста), либо
+ * проверка контеста, либо отметка преподавателя.
+ */
+function syncQuizToServer(lessonNumber, score) {
   if (lessonNumber === null) return Promise.resolve();
-  return saveProgress(lessonNumber, completed !== undefined ? completed : true, score).catch(
-    function (err) {
-      console.warn('Quiz progress sync failed:', err);
-    },
-  );
+  return saveQuizScore(lessonNumber, score).catch(function (err) {
+    console.warn('Quiz progress sync failed:', err);
+  });
 }
 
 export function initQuizSystem() {
@@ -320,7 +323,7 @@ export function initQuizSystem() {
         if (scorePct === 100) {
           if (hasContest) {
             const generation = bumpLessonToggleGeneration();
-            syncQuizToServer(lessonNum, scorePct, false)
+            syncQuizToServer(lessonNum, scorePct)
               .then(function () {
                 return checkContestProgress(contestId);
               })
@@ -328,17 +331,30 @@ export function initQuizSystem() {
                 if (generation !== currentLessonToggleGeneration()) return;
                 const completeEl = document.querySelector('.lesson-complete-toggle');
                 if (contestData && contestData.completed) {
-                  updateLocalProgress(lessonNum, true, scorePct);
-                  saveProgress(lessonNum, true, scorePct).catch(function (err) {
-                    console.warn('Quiz progress sync failed:', err);
-                  });
+                  // Сохраняем и даём серверу применить гейт контеста ещё раз:
+                  // отображаем ФИНАЛЬНЫЙ completed из его ответа, а не локальный guess.
+                  return saveProgress(lessonNum, true, scorePct)
+                    .catch(function (err) {
+                      console.warn('Quiz progress sync failed:', err);
+                      return null;
+                    })
+                    .then(function (data) {
+                      if (generation !== currentLessonToggleGeneration()) return;
+                      const finalCompleted =
+                        data && typeof data.completed !== 'undefined' ? !!data.completed : true;
+                      updateLocalProgress(lessonNum, finalCompleted, scorePct);
 
-                  if (completeEl) {
-                    completeEl.textContent = '';
-                    buildCompleteToggle(completeEl, lessonNum, true);
-                  }
+                      if (completeEl) {
+                        completeEl.textContent = '';
+                        if (finalCompleted) {
+                          buildCompleteToggle(completeEl, lessonNum, true);
+                        } else {
+                          buildContestRequiredMsg(completeEl);
+                        }
+                      }
 
-                  checkBadges();
+                      if (finalCompleted) checkBadges();
+                    });
                 } else if (completeEl) {
                   completeEl.textContent = '';
                   buildContestRequiredMsg(completeEl);
@@ -357,7 +373,10 @@ export function initQuizSystem() {
                 }
               });
           } else {
-            syncQuizToServer(lessonNum, scorePct);
+            // Урок без контеста: 100% за квиз автоматически завершает урок.
+            saveProgress(lessonNum, true, scorePct).catch(function (err) {
+              console.warn('Quiz progress sync failed:', err);
+            });
             updateLocalProgress(lessonNum, true, scorePct);
 
             const completeEl = document.querySelector('.lesson-complete-toggle');
