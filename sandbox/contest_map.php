@@ -30,15 +30,22 @@ function contestIdForLesson(int $lessonNum): ?int
 
 /**
  * Проверяет, что пользователь решил все задачи контеста.
+ * Если $userId передан — прогресс проверяется по указанному ученику
+ * (параметр user_id API contest-web доступен только админу: учитель
+ * ставит отметки ученикам из админ-панели, у самого учителя контест решён не
+ * может быть). Если $userId === null — по сессии текущего запроса.
  * Возвращает:
  *   true  — контест решён полностью
  *   false — контест не решён
  *   null  — сервис контеста недоступен (вызывающий сам решает, что делать)
  */
-function checkContestCompleted(int $contestId): ?bool
+function checkContestCompleted(int $contestId, ?int $userId = null): ?bool
 {
     $url = defined('CONTEST_URL') ? CONTEST_URL : 'https://contest.nayanovaacademy.ru';
     $url .= '/index.php?page=api&endpoint=contest_progress&contest_id=' . $contestId;
+    if ($userId !== null) {
+        $url .= '&user_id=' . (int) $userId;
+    }
 
     $cookieHeader = '';
     if (!empty($_COOKIE['auth_session'])) {

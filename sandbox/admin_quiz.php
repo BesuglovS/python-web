@@ -123,11 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $completed = !empty($input['completed']) ? 1 : 0;
 
         // Контест-привязка: уроки с контестом считаются пройденными только
-        // совместно с решением контеста (та же логика, что в progress.php).
+        // совместно с решением контеста — прогресс проверяется УЧЕНИКА,
+        // у которого ставится отметка, а не сессии админа (та же логика, что в progress.php).
         $contestOk = null;
         $contestId = contestIdForLesson($lessonNumber);
         if ($completed && $contestId !== null) {
-            $contestOk = checkContestCompleted($contestId);
+            $contestOk = checkContestCompleted($contestId, $userId);
             if ($contestOk === false) {
                 $completed = 0;
             }
