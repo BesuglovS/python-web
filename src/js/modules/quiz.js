@@ -205,9 +205,9 @@ export function initQuizSystem() {
             if (selectedIdx === currentQuestion.correct) {
               state.correct++;
               optEl.classList.add('correct');
-              feedback.textContent =
+              feedback.innerHTML =
                 '\u2705 \u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e! ' +
-                (currentQuestion.explanation || '');
+                sanitizeHtml(currentQuestion.explanation || '');
               feedback.className = 'quiz-feedback correct-fb show';
             } else {
               optEl.classList.add('incorrect');
@@ -215,9 +215,9 @@ export function initQuizSystem() {
                 options[currentQuestion.correct].classList.add('correct');
                 options[currentQuestion.correct].setAttribute('aria-checked', 'true');
               }
-              feedback.textContent =
+              feedback.innerHTML =
                 '\u274c \u041d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e. ' +
-                (currentQuestion.explanation || '');
+                sanitizeHtml(currentQuestion.explanation || '');
               feedback.className = 'quiz-feedback incorrect-fb show';
             }
 
