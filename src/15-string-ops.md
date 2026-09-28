@@ -125,7 +125,7 @@ text = "раз два раз два раз"
 
 print(text.count("раз"))        # 3 — сколько раз встречается подстрока
 print(text.startswith("раз"))   # True — начинается ли с подстроки
-print(text.endswith("два"))     # True — заканчивается ли подстрокой
+print(text.endswith("раз"))     # True — заканчивается ли подстрокой
 
 # find — ищет слева, возвращает индекс или -1
 print(text.find("два"))         # 4
