@@ -50,15 +50,6 @@ export async function bulkSaveProgress(items) {
   });
 }
 
-/** Записать только оценку квиза, не трогая флаг «урок пройден». */
-export async function saveQuizScore(lessonNumber, quizScore) {
-  return apiPost(PROGRESS_URL, {
-    action: 'save_quiz_score',
-    lesson_number: lessonNumber,
-    quiz_score: quizScore,
-  });
-}
-
 export async function loadBadges() {
   return apiGet(BADGES_URL);
 }
@@ -73,15 +64,37 @@ export async function incrementCodeRuns() {
 
 const CONTEST_API_BASE = 'https://contest.nayanovaacademy.ru';
 
-const QUIZ_ATTEMPTS_URL = 'sandbox/quiz_attempts.php';
+const QUIZ_URL = 'sandbox/quiz.php';
 
-export async function saveQuizAttempt(lessonNumber, score, totalQuestions, correctCount, answers) {
-  return apiPost(QUIZ_ATTEMPTS_URL, {
-    action: 'save_attempt',
+/**
+ * Загрузить вопросы урока без правильных ответов.
+ * @param {number} lessonNumber 1..50 или -1 для итогового теста
+ */
+export async function loadQuiz(lessonNumber) {
+  return apiGet(QUIZ_URL + '?lesson_number=' + encodeURIComponent(lessonNumber));
+}
+
+/**
+ * Проверить один ответ на сервере (мгновенная обратная связь).
+ * Сервер возвращает правильный индекс и пояснение.
+ */
+export async function gradeQuizAnswer(lessonNumber, questionIdx, selected) {
+  return apiPost(QUIZ_URL, {
+    action: 'answer',
     lesson_number: lessonNumber,
-    score: score,
-    total_questions: totalQuestions,
-    correct_count: correctCount,
+    question_idx: questionIdx,
+    selected: selected,
+  });
+}
+
+/**
+ * Отправить все ответы: сервер считает балл, пишет попытку и лучший
+ * результат. Клиентский балл не передаётся.
+ */
+export async function submitQuiz(lessonNumber, answers) {
+  return apiPost(QUIZ_URL, {
+    action: 'grade',
+    lesson_number: lessonNumber,
     answers: answers,
   });
 }

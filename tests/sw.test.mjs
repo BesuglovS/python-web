@@ -31,11 +31,9 @@ describe('Service Worker template', () => {
       expect(swSrc).toContain('url.origin !== self.location.origin');
     });
 
-    it('should cache quizzes with network-first strategy', () => {
-      const quizNetworkFirst = swSrc.match(
-        /if\s*\(url\.pathname\.startsWith\('\/quizzes\/'\)\)\s*\{[\s\S]*?networkFirst/,
-      );
-      expect(quizNetworkFirst).not.toBeNull();
+    it('should not cache quizzes (served by sandbox/quiz.php)', () => {
+      expect(swSrc).not.toContain("startsWith('/quizzes/')");
+      expect(swSrc).not.toContain("'/quizzes/");
     });
   });
 

@@ -6,7 +6,7 @@ RewriteRule ^\.repl_sessions/ - [R=404,L]
 RewriteRule ^\.ratelimit/ - [R=404,L]
 
 # Внутренние PHP-классы/конфиги: веб-эндпоинты — только run.php, repl.php,
-# progress.php, badges.php, auth_check.php, validate-test.php.
+# progress.php, badges.php, auth_check.php, quiz.php, validate-test.php.
 <FilesMatch "^(config|Database|Auth|AuthClient|ProgressReporter|contest_map)\.php$">
     Require all denied
 </FilesMatch>

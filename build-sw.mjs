@@ -7,8 +7,10 @@ const ROOT = join(PROJECT, 'dist');
 const TEMPLATE = join(PROJECT, 'src', 'sw', 'template.js');
 const SW_PATH = join(ROOT, 'sw.js');
 
-// Directories to scan for precacheable assets
-const SCAN_DIRS = ['', 'quizzes'];
+// Directories to scan for precacheable assets.
+// quizzes/ не сканируем: ответы отдаёт sandbox/quiz.php, статический
+// доступ к /quizzes закрыт на веб-сервере.
+const SCAN_DIRS = [''];
 const SKIP_DIRS = new Set([
   'node_modules',
   '.git',
@@ -19,6 +21,8 @@ const SKIP_DIRS = new Set([
   'playwright-report',
   '_site',
   'e2e',
+  // Содержит правильные ответы квизов; отдаётся только через sandbox/quiz.php
+  'quizzes',
 ]);
 
 // Файлы сборки/инструментария — не кэшируем как контент сайта

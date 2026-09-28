@@ -59,14 +59,9 @@ self.addEventListener('fetch', (event) => {
   // cache-first на чужом origin закэшировал бы персональные ответы API.
   if (url.origin !== self.location.origin) return;
 
-  // Не кэшируем запросы к песочнице и API
+  // Не кэшируем запросы к песочнице и API (в т.ч. sandbox/quiz.php —
+  // вопросы и проверка ответов всегда идут на сервер).
   if (url.pathname.startsWith('/sandbox/')) return;
-
-  // Квизы кэшируем отдельно (Network-first для свежести)
-  if (url.pathname.startsWith('/quizzes/')) {
-    event.respondWith(networkFirst(event.request));
-    return;
-  }
 
   // Данные курса (lessons.json) — Network-first для свежести
   if (url.pathname === '/lessons.json') {

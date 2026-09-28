@@ -63,8 +63,10 @@ src/js/modules/*.js          # изолированные модули функ�
 src/js/config/*.js           # security.js, badges.js, constants.js, courseData.js (ГЕНЕРИРУЕТСЯ)
 src/_plugins/norun.mjs       # плагин markdown-it
 lessons.json                 # метаданные 50 уроков + секции (источник истины)
-quizzes/*.json               # квизы: 1.json–50.json + final-test.json
+quizzes/*.json               # квизы: 1.json–50.json + final-test.json (с ответами!);
+                             # веб-доступ к /quizzes закрыт, их читает sandbox/quiz.php
 sandbox/*.php/.py            # серверная песочница (PHP + Python AST-валидатор);
+                             # sandbox/quiz.php — отдача вопросов без ответов и проверка;
                              # sandbox/contest_map.php генерируется build-config-meta.mjs
 tests/                       # Vitest (.test.mjs) + Python + PHP
 e2e/*.spec.cjs               # Playwright (CommonJS!)
@@ -138,6 +140,11 @@ section: 5
 ]
 ```
 
+Поле `correct` и `explanation` — **только для сервера**: `sandbox/quiz.php` отдаёт
+вопросы без них, проверяет ответы и считает балл. Каталог `quizzes/` копируется в `dist/`
+(passthrough) для PHP, но веб-доступ к нему закрыт (`.htaccess`/nginx) и он исключён из
+PRECACHE Service Worker. Не открывайте каталог вебом и не отдавайте `correct` клиенту.
+
 ## 💻 Конвенции кода
 
 ### JavaScript (`src/js/`)
@@ -169,6 +176,9 @@ section: 5
   `ast_validator.py`, `.repl_runner.py` и wrapper-шаблоне `run.php` синхронизированы —
   меняйте все три места одновременно
 - Прогресс/бейджи требуют `Auth::requireLogin()` серверно; статический HTML — нет
+- `sandbox/quiz.php` отдаёт вопросы без `correct`/`explanation` и проверяет ответы
+  (`action: 'answer'` — мгновенная проверка, `action: 'grade'` — итог, запись попытки
+  и лучшего балла). Клиентский балл не принимается; `sandbox/quiz_attempts.php` — только чтение
 - `lesson_number = -1` зарезервирован за итоговым тестом; уроки — строго `1..50`
   (`MAX_COURSE_LESSONS` в config.php)
 

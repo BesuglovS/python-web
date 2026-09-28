@@ -28,6 +28,11 @@
 # (Параллельное правило есть в nginx-конфиге: location ^~ /data/ { deny all; })
 RedirectMatch 404 ^/data/
 
+# Файлы квизов содержат правильные ответы: веб-доступ закрыт, их читает
+# только PHP (sandbox/quiz.php) из файловой системы. Параллельное правило —
+# в nginx-конфиге: location ^~ /quizzes/ { deny all; }
+RedirectMatch 404 ^/quizzes/
+
 # Cache-Control for static assets
 <IfModule mod_expires.c>
     ExpiresActive On

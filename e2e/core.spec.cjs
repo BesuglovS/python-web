@@ -97,13 +97,39 @@ test.describe('Уроки', () => {
   });
 
   test('квиз загружается на странице урока', async ({ page }) => {
+    // Статический http-server не выполняет PHP: подменяем sandbox/quiz.php.
+    // Вопросы приходят без правильных ответов, проверка — на сервере.
+    await page.route('**/sandbox/quiz.php*', (route) => {
+      if (route.request().method() === 'POST') {
+        const body = route.request().postDataJSON();
+        const response =
+          body.action === 'grade'
+            ? { lesson_number: 3, score: 100, total: 1, correct_count: 1 }
+            : { question_idx: 0, is_correct: true, correct: 0, explanation: 'Верно' };
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(response),
+        });
+      }
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          lesson_number: 3,
+          questions: [
+            {
+              question: 'Что создаёт <code>[]</code>?',
+              options: ['list', 'tuple', 'dict', 'set'],
+            },
+          ],
+        }),
+      });
+    });
+
     await page.goto('/03-variables.html');
-    await page.waitForTimeout(1500);
     const quiz = page.locator('.quiz-container');
-    const exists = (await quiz.count()) > 0;
-    if (exists) {
-      await expect(quiz).toBeVisible();
-    }
+    await expect(quiz).toBeVisible();
   });
 
   test('диаграмма Эйлера множеств отображается и реагирует на кнопки', async ({ page }) => {

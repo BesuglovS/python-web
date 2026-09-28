@@ -70,7 +70,16 @@ server {
         log_not_found off;
     }
 
-    # 0a. ACME challenge — исключение из общего запрета скрытых путей,
+    # 0a. Файлы квизов содержат правильные ответы: веб-доступ закрыт,
+    # их читает только PHP (sandbox/quiz.php) из файловой системы.
+    # Параллельное правило — в .htaccess: RedirectMatch 404 ^/quizzes/
+    location ^~ /quizzes/ {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # 0b. ACME challenge — исключение из общего запрета скрытых путей,
     # иначе не работает продление сертификата через webroot.
     location ^~ /.well-known/acme-challenge/ {
         default_type "text/plain";
@@ -104,7 +113,7 @@ server {
 
         # 3b. Внутренние файлы песочницы: тестовые скрипты, исходники,
         # PHP-классы и конфиги. Веб-эндпоинты — только перечисленные ниже
-        # в 3c (run, repl, progress, badges, auth_check, validate-test).
+        # в 3c (run, repl, progress, badges, auth_check, quiz, validate-test).
         location ~ ^/sandbox/(_test_.*|permissions\.sh|\.repl_runner\.py|ast_validator\.py|sandbox_common\.php|config\.php|Database\.php|Auth\.php|AuthClient\.php|ProgressReporter\.php|contest_map\.php)$ {
             deny all;
             access_log off;

@@ -5,7 +5,14 @@
  * Provides interactive quizzes for each lesson with full accessibility
  */
 
-import { saveProgress, saveQuizAttempt, saveQuizScore, checkBadges, checkContestProgress } from './api-client.js';
+import {
+  loadQuiz,
+  gradeQuizAnswer,
+  submitQuiz,
+  saveProgress,
+  checkBadges,
+  checkContestProgress,
+} from './api-client.js';
 import {
   updateLocalProgress,
   buildCompleteToggle,
@@ -37,25 +44,11 @@ export function sanitizeHtml(html) {
   return out.join('');
 }
 
-/**
- * Записать только оценку квиза. Флаг «урок пройден» запрос квиза
- * не изменяет: это делает либо авто-завершение (без контеста), либо
- * проверка контеста, либо отметка преподавателя.
- */
-function syncQuizToServer(lessonNumber, score) {
-  if (lessonNumber === null) return Promise.resolve();
-  return saveQuizScore(lessonNumber, score).catch(function (err) {
-    console.warn('Quiz progress sync failed:', err);
-  });
-}
-
 export function initQuizSystem() {
   const lessonAttr = document.body.getAttribute('data-lesson');
   const isFinalTest = lessonAttr === 'final-test';
   const lessonNum = isFinalTest ? -1 : parseInt(lessonAttr, 10);
   if (!isFinalTest && (isNaN(lessonNum) || !lessonNum)) return;
-
-  const quizFile = isFinalTest ? 'quizzes/final-test.json' : 'quizzes/' + lessonNum + '.json';
 
   const main = document.querySelector('main, .main-content');
   if (!main) return;
@@ -87,18 +80,19 @@ export function initQuizSystem() {
     quizContainer.scrollIntoView({ behavior: 'smooth' });
   }
 
-  fetch(quizFile)
-    .then(function (response) {
-      if (!response.ok) throw new Error('Quiz not found');
-      return response.json();
-    })
-    .then(function (questions) {
-      if (!questions || !questions.length) return;
+  loadQuiz(lessonNum)
+    .then(function (data) {
+      const questions = data && Array.isArray(data.questions) ? data.questions : null;
+      if (!questions || !questions.length) {
+        quizContainer.style.display = 'none';
+        return;
+      }
 
       let state = {
         idx: 0,
         correct: 0,
         answered: false,
+        waiting: false,
         total: questions.length,
         answersLog: [],
       };
@@ -177,58 +171,80 @@ export function initQuizSystem() {
             : '\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442';
         quizContainer.appendChild(nextBtn);
 
-        bindOptionHandlers(q);
+        bindOptionHandlers();
 
         h3.focus();
       }
 
-      function bindOptionHandlers(currentQuestion) {
+      function bindOptionHandlers() {
         const options = quizContainer.querySelectorAll('.quiz-option');
         const feedback = quizContainer.querySelector('.quiz-feedback');
         const nextBtn = quizContainer.querySelector('.quiz-next-btn');
 
         options.forEach(function (optEl) {
           optEl.addEventListener('click', function () {
-            if (state.answered) return;
-            state.answered = true;
+            if (state.answered || state.waiting) return;
 
             const selectedIdx = parseInt(optEl.getAttribute('data-idx'), 10);
+            state.waiting = true;
             optEl.setAttribute('aria-checked', 'true');
 
-            state.answersLog.push({
-              question_idx: state.idx,
-              selected: selectedIdx,
-              correct: currentQuestion.correct,
-              is_correct: selectedIdx === currentQuestion.correct,
-            });
+            gradeQuizAnswer(lessonNum, state.idx, selectedIdx)
+              .then(function (result) {
+                state.waiting = false;
+                if (!result || typeof result.correct !== 'number') {
+                  optEl.setAttribute('aria-checked', 'false');
+                  feedback.textContent =
+                    '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u043e\u0442\u0432\u0435\u0442. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.';
+                  feedback.className = 'quiz-feedback incorrect-fb show';
+                  return;
+                }
 
-            if (selectedIdx === currentQuestion.correct) {
-              state.correct++;
-              optEl.classList.add('correct');
-              feedback.innerHTML =
-                '\u2705 \u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e! ' +
-                sanitizeHtml(currentQuestion.explanation || '');
-              feedback.className = 'quiz-feedback correct-fb show';
-            } else {
-              optEl.classList.add('incorrect');
-              if (options[currentQuestion.correct]) {
-                options[currentQuestion.correct].classList.add('correct');
-                options[currentQuestion.correct].setAttribute('aria-checked', 'true');
-              }
-              feedback.innerHTML =
-                '\u274c \u041d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e. ' +
-                sanitizeHtml(currentQuestion.explanation || '');
-              feedback.className = 'quiz-feedback incorrect-fb show';
-            }
+                state.answered = true;
+                const correctIdx = result.correct;
 
-            options.forEach(function (o) {
-              o.classList.add('disabled');
-              o.setAttribute('aria-disabled', 'true');
-              o.setAttribute('tabindex', '-1');
-            });
-            nextBtn.classList.add('show');
-            nextBtn.setAttribute('tabindex', '0');
-            nextBtn.focus();
+                state.answersLog.push({
+                  question_idx: state.idx,
+                  selected: selectedIdx,
+                  correct: correctIdx,
+                  is_correct: !!result.is_correct,
+                });
+
+                if (result.is_correct) {
+                  state.correct++;
+                  optEl.classList.add('correct');
+                  feedback.innerHTML =
+                    '\u2705 \u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e! ' +
+                    sanitizeHtml(result.explanation || '');
+                  feedback.className = 'quiz-feedback correct-fb show';
+                } else {
+                  optEl.classList.add('incorrect');
+                  if (options[correctIdx]) {
+                    options[correctIdx].classList.add('correct');
+                    options[correctIdx].setAttribute('aria-checked', 'true');
+                  }
+                  feedback.innerHTML =
+                    '\u274c \u041d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e. ' +
+                    sanitizeHtml(result.explanation || '');
+                  feedback.className = 'quiz-feedback incorrect-fb show';
+                }
+
+                options.forEach(function (o) {
+                  o.classList.add('disabled');
+                  o.setAttribute('aria-disabled', 'true');
+                  o.setAttribute('tabindex', '-1');
+                });
+                nextBtn.classList.add('show');
+                nextBtn.setAttribute('tabindex', '0');
+                nextBtn.focus();
+              })
+              .catch(function () {
+                state.waiting = false;
+                optEl.setAttribute('aria-checked', 'false');
+                feedback.textContent =
+                  '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u043e\u0442\u0432\u0435\u0442. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.';
+                feedback.className = 'quiz-feedback incorrect-fb show';
+              });
           });
 
           // Arrow key navigation within options
@@ -269,7 +285,33 @@ export function initQuizSystem() {
       }
 
       function showResults() {
-        const scorePct = Math.round((state.correct / state.total) * 100);
+        const selectedAnswers = state.answersLog.map(function (a) {
+          return a.selected;
+        });
+
+        quizContainer.textContent = '';
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'quiz-loading';
+        loadingDiv.textContent =
+          '\u23f3 \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u043e\u0432...';
+        quizContainer.appendChild(loadingDiv);
+
+        submitQuiz(lessonNum, selectedAnswers)
+          .then(function (grade) {
+            renderResults(grade);
+          })
+          .catch(function () {
+            renderResults(null);
+          });
+      }
+
+      function renderResults(grade) {
+        const serverOk = !!grade && typeof grade.score === 'number';
+        // Балл считает сервер (он же фиксирует попытку). Локальный расчёт —
+        // только для отображения, если сервер недоступен.
+        const scorePct = serverOk ? grade.score : Math.round((state.correct / state.total) * 100);
+        const totalQuestions = serverOk && grade.total ? grade.total : state.total;
+        const correctCount = serverOk ? grade.correct_count : state.correct;
         const icon =
           scorePct === 100 ? '\ud83e\udd47' : scorePct >= 50 ? '\ud83d\udc4d' : '\ud83d\udcda';
         const contestId =
@@ -299,7 +341,7 @@ export function initQuizSystem() {
 
         const scoreDiv = document.createElement('div');
         scoreDiv.className = 'quiz-score';
-        scoreDiv.textContent = state.correct + ' / ' + state.total + ' (' + scorePct + '%)';
+        scoreDiv.textContent = correctCount + ' / ' + totalQuestions + ' (' + scorePct + '%)';
         resultsDiv.appendChild(scoreDiv);
 
         const msgP = document.createElement('p');
@@ -320,20 +362,17 @@ export function initQuizSystem() {
 
         quizContainer.appendChild(resultsDiv);
 
-        if (scorePct === 100) {
+        if (scorePct === 100 && serverOk) {
           if (hasContest) {
             const generation = bumpLessonToggleGeneration();
-            syncQuizToServer(lessonNum, scorePct)
-              .then(function () {
-                return checkContestProgress(contestId);
-              })
+            checkContestProgress(contestId)
               .then(function (contestData) {
                 if (generation !== currentLessonToggleGeneration()) return;
                 const completeEl = document.querySelector('.lesson-complete-toggle');
                 if (contestData && contestData.completed) {
                   // Сохраняем и даём серверу применить гейт контеста ещё раз:
                   // отображаем ФИНАЛЬНЫЙ completed из его ответа, а не локальный guess.
-                  return saveProgress(lessonNum, true, scorePct)
+                  return saveProgress(lessonNum, true)
                     .catch(function (err) {
                       console.warn('Quiz progress sync failed:', err);
                       return null;
@@ -374,7 +413,7 @@ export function initQuizSystem() {
               });
           } else {
             // Урок без контеста: 100% за квиз автоматически завершает урок.
-            saveProgress(lessonNum, true, scorePct).catch(function (err) {
+            saveProgress(lessonNum, true).catch(function (err) {
               console.warn('Quiz progress sync failed:', err);
             });
             updateLocalProgress(lessonNum, true, scorePct);
@@ -385,20 +424,33 @@ export function initQuizSystem() {
               buildCompleteToggle(completeEl, lessonNum, true);
             }
           }
-        } else {
-          syncQuizToServer(lessonNum, scorePct);
+        } else if (serverOk) {
           updateLocalProgress(lessonNum, false, scorePct);
         }
 
-        saveQuizAttempt(lessonNum, scorePct, state.total, state.correct, state.answersLog);
-
-        // Check badges after quiz
-        checkBadges();
+        if (serverOk) {
+          // Check badges after quiz
+          checkBadges();
+        } else {
+          const warn = document.createElement('p');
+          warn.style.marginTop = '8px';
+          warn.style.color = 'var(--text-muted)';
+          warn.textContent =
+            '\u26a0 \u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442. \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u0438 \u043f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0441\u043d\u043e\u0432\u0430.';
+          resultsDiv.appendChild(warn);
+        }
 
         h3.focus();
 
         quizContainer.querySelector('.quiz-retry').addEventListener('click', function () {
-          state = { idx: 0, correct: 0, answered: false, total: questions.length, answersLog: [] };
+          state = {
+            idx: 0,
+            correct: 0,
+            answered: false,
+            waiting: false,
+            total: questions.length,
+            answersLog: [],
+          };
           renderQuestion();
         });
       }
