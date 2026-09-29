@@ -15,7 +15,12 @@
  *   { "ok": true/false, "stdout": "...", "stderr": "...", "exit_code": N }
  */
 
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/sandbox_common.php';
+require_once __DIR__ . '/Auth.php';
+
+// Выполнение произвольного Python-кода — только для авторизованных.
+Auth::requireLogin();
 
 sandbox_check_rate_limit();
 sandbox_require_json_content_type();
@@ -27,7 +32,15 @@ $code = $data['code'];
 $sessionId = $data['session_id'] ?? '';
 $uuidPattern = '/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i';
 
-$SESSIONS_DIR = __DIR__ . '/.repl_sessions';
+// Каталог сессий. При изолированном запуске .repl_runner.py исполняется от
+// пользователя sandbox, у которого нет доступа на запись в web-root, поэтому
+// сессии держим в отдельном каталоге (создаётся scripts/setup-sandbox-isolation.sh).
+$SESSIONS_DIR = getenv('SANDBOX_SESSIONS_DIR');
+if ($SESSIONS_DIR === false || $SESSIONS_DIR === '') {
+    $SESSIONS_DIR = (sandbox_isolation_helper() !== null)
+        ? '/var/lib/python-sandbox/sessions'
+        : __DIR__ . '/.repl_sessions';
+}
 $PYTHON_RUNNER = __DIR__ . '/.repl_runner.py';
 $MAX_SESSION_SIZE = SANDBOX_SESSION_MAX_SIZE;
 $reset = !empty($data['reset']);

@@ -171,10 +171,13 @@ PRECACHE Service Worker. Не открывайте каталог вебом и 
 - POST-эндпоинты требуют `Content-Type: application/json` — это часть CSRF-защиты
   вместе с `SameSite=Lax` кукой и CORS-whitelist (классический CSRF-токен не
   используется: статические страницы не могут хранить per-session токен)
-- Код пользователя выполняется только после AST-валидации (`ast_validator.py`),
-  rate-limit и в рантайме с усечёнными builtins. Списки запрещённых имён в
-  `ast_validator.py`, `.repl_runner.py` и wrapper-шаблоне `run.php` синхронизированы —
-  меняйте все три места одновременно
+- `run.php` и `repl.php` требуют `Auth::requireLogin()` и выполняют код только
+  через изолирующий root-хелпер `scripts/sandbox-python.run` (см. ниже) после
+  AST-валидации (`ast_validator.py`), rate-limit и в рантайме с усечёнными builtins.
+  Списки запрещённых имён в `ast_validator.py`, `.repl_runner.py` и wrapper-шаблоне
+  `run.php` синхронизированы — меняйте все три места одновременно.
+  Дополнительно `BLOCKED_MODULE_ATTRS` в валидаторе запрещает доступ к `sys`/`os`
+  через атрибуты разрешённых модулей (`fractions.sys` и т.п.)
 - Прогресс/бейджи требуют `Auth::requireLogin()` серверно; статический HTML — нет
 - `sandbox/quiz.php` отдаёт вопросы без `correct`/`explanation` и проверяет ответы
   (`action: 'answer'` — мгновенная проверка, `action: 'grade'` — итог, запись попытки
@@ -214,13 +217,21 @@ PRECACHE Service Worker. Не открывайте каталог вебом и 
 
 ## 🔒 Безопасность (не ломать)
 
+- **Деплой без root (сентябрь 2026, deploy-пользователь):** `.env` → `DEPLOY_SSH_USER=deploy`
+  (`../ssh-deploy.key`); webroot развернут как deploy:www-data, `data/`, `sandbox/.repl_sessions`
+  и `sandbox/.ratelimit` остаются под www-data; `deploy.ps1` больше не делает chown — каталоги
+  хозяйские и переживают деплой (замена хрупкой cp-backup схемы).
 - CSP единая для сайта: meta в `layout.njk`/`layout-index.njk`, header в `.htaccess`
   и nginx-конфиге — все четыре места должны совпадать (script-src `'self'`; внешние
   домены — только `auth` и `contest` в connect-src). При добавлении внешних ресурсов
   обновляйте CSP везде и проверяйте `connect-src`.
-- Песочница изолирует Python-код: AST-валидация запрещённых имён/импортов/форм вызовов,
-  усечённые builtins в рантайме, rate-limit, таймаут, лимит памяти/вывода.
-  Не ослабляйте проверки.
+- Песочница изолирует Python-код в несколько слоёв: обязательная авторизация
+  (`run.php`/`repl.php`), AST-валидация запрещённых имён/импортов/форм вызовов,
+  усечённые builtins в рантайме, а также реальная изоляция процесса через
+  `scripts/sandbox-python.run` (user/net/pid namespace, непривилегированный
+  пользователь `sandbox`, RLIMIT). Хелпер и sudoers-правило ставит
+  `scripts/setup-sandbox-isolation.sh`; web-root не должен быть writable для
+  `www-data` (только `data/` и runtime-каталоги песочницы). Не ослабляйте проверки.
 - `data/` закрыта на уровне nginx (`location ^~ /data/ { deny all; }`) и `.htaccess`
   (`RedirectMatch 404 ^/data/`) — база с персональными данными не отдаётся вебом.
 - Вся разметка от пользовательских данных (ответы квизов, данные lessons.json при рендере)

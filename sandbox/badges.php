@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 setCorsHeaders();
 Database::initialize();
 Auth::requireLogin();
+apiCheckRateLimit('badges', 120, 60);
 
 $userId = Auth::getUserId();
 $db = Database::getInstance();
@@ -51,6 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $earned = recalculateBadges($db, $userId);
         $progress = computeAllBadgeProgress($db, $userId);
         jsonResponse(['badges' => $earned, 'progress' => $progress]);
+    }
+
+    // ===== ПАСХАЛКА: «Секретный урок 51» =====
+    // Активируется с главной страницы (Konami-код, см.
+    // src/js/modules/easter-egg.js). Начисляет скрытый бейдж secret_51.
+    if ($action === 'easter_egg_claim') {
+        $stmt = $db->prepare(
+            "INSERT OR IGNORE INTO badges (user_id, badge_id, earned_at)
+             VALUES (?, 'secret_51', datetime('now'))"
+        );
+        $stmt->execute([$userId]);
+        jsonResponse(['success' => true, 'badge' => 'secret_51']);
     }
 
     if ($action === 'increment_code_runs') {

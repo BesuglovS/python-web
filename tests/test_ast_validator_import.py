@@ -63,5 +63,50 @@ class TestValidateImport(unittest.TestCase):
         self.assertFalse(r['ok'])
 
 
+class TestModuleAttrLeak(unittest.TestCase):
+    """Регрессия: утечка sys/os через атрибуты разрешённых модулей.
+
+    fractions/pprint/copy/statistics импортируют sys и выставляют его
+    атрибутом, random — os как _os. Через них обходился blacklist
+    (fractions.sys.modules["os"].system(...)).
+    """
+
+    def test_fractions_sys_blocked(self):
+        r = ast_validator.validate(
+            'import fractions\nfractions.sys.modules["os"].system("id")', ALLOWED
+        )
+        self.assertFalse(r['ok'])
+
+    def test_pprint_sys_blocked(self):
+        r = ast_validator.validate('import pprint\npprint.sys.modules["os"]', ALLOWED)
+        self.assertFalse(r['ok'])
+
+    def test_copy_sys_blocked(self):
+        r = ast_validator.validate('import copy\nprint(copy.sys.version)', ALLOWED)
+        self.assertFalse(r['ok'])
+
+    def test_random_os_blocked(self):
+        r = ast_validator.validate('import random\nprint(random._os.getcwd())', ALLOWED)
+        self.assertFalse(r['ok'])
+
+    def test_dangerous_method_call_blocked(self):
+        r = ast_validator.validate('obj = 1\nobj.system("id")', ALLOWED)
+        self.assertFalse(r['ok'])
+
+    def test_allowed_modules_still_ok(self):
+        self.assertTrue(ast_validator.validate('import math\nprint(math.sqrt(4))', ALLOWED)['ok'])
+        self.assertTrue(
+            ast_validator.validate('import random\nprint(random.randint(1, 6))', ALLOWED)['ok']
+        )
+        self.assertTrue(
+            ast_validator.validate(
+                'import fractions\nprint(fractions.Fraction(1, 2))', ALLOWED
+            )['ok']
+        )
+        self.assertTrue(
+            ast_validator.validate('import json\nprint(json.dumps({"a": 1}))', ALLOWED)['ok']
+        )
+
+
 if __name__ == '__main__':
     unittest.main()

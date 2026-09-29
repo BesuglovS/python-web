@@ -72,7 +72,8 @@ function renderAchievementsBlock(badgesBlock, badgesGrid, badgesAllBtn) {
     summaryEl.className = 'badge-summary';
     badgesBlock.appendChild(summaryEl);
   }
-  summaryEl.textContent = countEarnedFrom(BADGES) + ' из ' + BADGES.length + ' достижений';
+  const visible = visibleBadges();
+  summaryEl.textContent = countEarnedFrom(visible) + ' из ' + visible.length + ' достижений';
 
   if (badgesAllBtn && !badgesAllBtn.dataset.bound) {
     badgesAllBtn.dataset.bound = 'true';
@@ -138,6 +139,16 @@ function countEarnedFrom(badges) {
   return count;
 }
 
+/**
+ * Список отображаемых бейджей. Скрытые (`hidden: true`) показываются только
+ * после получения — чтобы «Секретный урок 51» не раскрывался заранее.
+ */
+function visibleBadges() {
+  return BADGES.filter(function (badge) {
+    return !badge.hidden || !!_earnedSet[badge.id];
+  });
+}
+
 function openAchievementsModal() {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
@@ -164,16 +175,18 @@ function openAchievementsModal() {
   const body = document.createElement('div');
   body.className = 'modal-body';
 
+  const visible = visibleBadges();
+
   const counter = document.createElement('div');
   counter.className = 'achievements-counter';
-  counter.textContent = countEarnedFrom(BADGES) + ' из ' + BADGES.length + ' получено';
+  counter.textContent = countEarnedFrom(visible) + ' из ' + visible.length + ' получено';
   body.appendChild(counter);
 
   const grid = document.createElement('div');
   grid.className = 'achievements-grid';
 
-  for (let j = 0; j < BADGES.length; j++) {
-    const b = BADGES[j];
+  for (let j = 0; j < visible.length; j++) {
+    const b = visible[j];
     grid.appendChild(createAchievementCard(b.icon, b.name, b.desc, b.id));
   }
 

@@ -1,0 +1,74 @@
+#!/bin/bash
+# ==========================================================================
+# sandbox-python.run — root-хелпер изолированного запуска Python-кода.
+#
+# Устанавливается в /usr/local/sbin (root:root 0755) скриптом
+# scripts/setup-sandbox-isolation.sh. PHP-песочница (пользователь www-data)
+# вызывает его через sudo:
+#     sudo -n /usr/local/sbin/sandbox-python.run <script> <mem_mb> <timeout> [python]
+# а sudoers-правило /etc/sudoers.d/python-sandbox разрешает только эту команду.
+#
+# Изоляция (в отличие от прежнего «усечённых builtins»):
+#   1. unshare --net --pid --fork --mount-proc — новый сетевой namespace
+#      (сеть полностью отключена), новый PID namespace и /proc;
+#   2. сброс привилегий до непривилегированного пользователя sandbox
+#      (--clear-groups --no-new-privs) — web-root и data/ ему недоступны;
+#   3. prlimit — жёсткие лимиты RLIMIT_AS/RLIMIT_CPU/nproc/nofile;
+#   4. python3 -I -S — изолированный режим без site/user site-packages.
+#
+# Даже при обходе AST-валидатора и усечённых builtins процесс не может
+# ни писать в сайт, ни читать его секреты, ни выйти в сеть.
+#
+# Аргументы:
+#   $1 script_file  — путь к файлу с кодом (только /tmp, /var/tmp, /var/lib/python-sandbox)
+#   $2 mem_mb       — лимит памяти (МБ)
+#   $3 timeout_sec  — лимит времени (сек)
+#   $4 python_cmd   — интерпретатор (по умолчанию python3)
+# ==========================================================================
+set -euo pipefail
+
+SCRIPT="${1:-}"
+MEM_MB="${2:-128}"
+TIMEOUT="${3:-5}"
+PYTHON_CMD="${4:-python3}"
+SANDBOX_USER="${SANDBOX_USER:-sandbox}"
+
+die() { echo "sandbox-python: $*" >&2; exit 64; }
+
+[ -n "$SCRIPT" ] || die "script path required"
+case "$MEM_MB" in ''|*[!0-9]*) die "bad mem_mb";; esac
+case "$TIMEOUT" in ''|*[!0-9]*) die "bad timeout";; esac
+[ -f "$SCRIPT" ] || die "script not found"
+[ -L "$SCRIPT" ] && die "symlink not allowed"
+
+# Только доверенные временные каталоги — запрет запуска произвольных файлов
+# (например, скрипта из web-root) даже при компрометации вызывающей стороны.
+case "$SCRIPT" in
+  /tmp/*|/var/tmp/*|/var/lib/python-sandbox/*) : ;;
+  *) die "script outside allowed dirs";;
+esac
+
+id -u "$SANDBOX_USER" >/dev/null 2>&1 || die "sandbox user missing: $SANDBOX_USER"
+SANDBOX_UID="$(id -u "$SANDBOX_USER")"
+SANDBOX_GID="$(id -g "$SANDBOX_USER")"
+
+# Файл создаёт www-data (0600). Даём песочнице прочитать только этот файл.
+chown www-data:www-data "$SCRIPT" 2>/dev/null || true
+chmod 0644 "$SCRIPT" 2>/dev/null || true
+
+if command -v "$PYTHON_CMD" >/dev/null 2>&1; then
+  PYTHON_BIN="$(command -v "$PYTHON_CMD")"
+elif [ -x "$PYTHON_CMD" ]; then
+  PYTHON_BIN="$PYTHON_CMD"
+else
+  die "python not found: $PYTHON_CMD"
+fi
+
+MEM_BYTES=$(( MEM_MB * 1024 * 1024 ))
+CPU_SEC=$(( TIMEOUT + 1 ))
+
+exec /usr/bin/unshare --net --pid --fork --mount-proc \
+  /usr/bin/setpriv --reuid="$SANDBOX_UID" --regid="$SANDBOX_GID" \
+    --clear-groups --no-new-privs \
+  /usr/bin/prlimit --as="$MEM_BYTES" --cpu="$CPU_SEC" --nproc=64 --nofile=256 -- \
+  "$PYTHON_BIN" -I -S -X utf8 "$SCRIPT"

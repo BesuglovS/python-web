@@ -94,6 +94,30 @@ BLOCKED_FRAME_ATTRS: set[str] = {
     "cr_frame", "cr_await",
 }
 
+# Имена модулей, доступ к которым запрещён через атрибут любого объекта.
+# Закрывает утечку запрещённых модулей из разрешённых: fractions/pprint/copy/
+# statistics импортируют sys и выставляют его атрибутом (fractions.sys),
+# random — os как _os. Без этого `fractions.sys.modules["os"].system(...)`
+# проходит проверку FORBIDDEN_MODULE_ATTRS, т.к. корневое имя — fractions.
+BLOCKED_MODULE_ATTRS: set[str] = {
+    "sys", "os", "subprocess", "shutil", "importlib", "runpy", "pkgutil",
+    "site", "ctypes", "marshal", "pickle", "shelve", "code", "codeop",
+    "builtins", "posix", "nt", "posixpath", "ntpath", "genericpath",
+    "_os", "_sys", "_subprocess", "_posixsubprocess", "_winapi",
+    "_collections_abc", "_aix_support", "_bootsubprocess", "modules",
+}
+
+# Опасные методы, вызов которых запрещён по имени атрибута независимо от
+# объекта-владельца (system/popen/... существуют только у os/subprocess).
+DANGEROUS_ATTR_CALLS: set[str] = {
+    "system", "popen", "popen2", "popen3", "popen4",
+    "spawn", "spawnl", "spawnle", "spawnlp", "spawnlpe",
+    "spawnv", "spawnve", "spawnvp", "spawnvpe",
+    "execv", "execve", "execvp", "execvpe", "execl", "execle", "execlp", "execlpe",
+    "fork", "forkpty", "kill", "killpg", "chroot", "setuid", "setgid",
+    "listdir", "scandir", "walk", "getcwd", "makedirs", "symlink",
+}
+
 # Запрещённые модули и их атрибуты — блокируют доступ к os.path, sys.path, subprocess.run и т.д.
 FORBIDDEN_MODULE_ATTRS: dict[str, set[str]] = {
     "os": {"path", "environ", "system", "popen", "spawn", "fork", "kill", "remove", "rmdir", "mkdir", "rename", "chdir", "getcwd", "listdir", "walk", "stat", "access", "chmod", "chown", "link", "symlink", "readlink", "utime", "times", "wait", "waitpid", "execv", "execve", "execvp", "execvpe", "spawnv", "spawnve", "spawnvp", "spawnvpe", "startfile", "fdopen", "popen2", "popen3", "popen4", "tmpfile", "tempnam", "tmpnam", "ttyname", "isatty", "ctermid", "device_encoding", "getloadavg", "setpriority", "getpriority", "nice", "uname", "sysconf", "confstr", "fpathconf", "pathconf", "getlogin", "getpid", "getppid", "getuid", "geteuid", "getgid", "getegid", "getgroups", "initgroups", "setuid", "setgid", "seteuid", "setegid", "setreuid", "setregid", "setresuid", "setresgid", "setgroups", "getpgid", "setpgid", "getsid", "setsid", "tcgetpgrp", "tcsetpgrp", "getpass", "getuser", "getenv", "putenv", "unsetenv", "clearenv", "load", "unload", "dlopen", "dlsym", "dlclose", "dlerror", "RTLD_LAZY", "RTLD_NOW", "RTLD_GLOBAL", "RTLD_LOCAL", "RTLD_NODELETE", "RTLD_NOLOAD", "RTLD_DEEPBIND"},
@@ -170,9 +194,13 @@ class SafeVisitor(ast.NodeVisitor):
             if node.func.id in DANGEROUS_CALLS:
                 errors.append(f"Forbidden function call: {node.func.id}() (line {node.lineno})")
         elif isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name):
-                if node.func.value.id in ("os", "sys", "subprocess"):
-                    errors.append(f"Forbidden module access: {node.func.value.id}.{node.func.attr} (line {node.lineno})")
+            direct_module = isinstance(node.func.value, ast.Name) and node.func.value.id in ("os", "sys", "subprocess")
+            if direct_module:
+                errors.append(f"Forbidden module access: {node.func.value.id}.{node.func.attr} (line {node.lineno})")
+            elif node.func.attr in DANGEROUS_ATTR_CALLS:
+                # Вызов опасного метода через любой объект/цепочку
+                # (например, fractions.sys.modules["os"].system(...)).
+                errors.append(f"Forbidden method call: .{node.func.attr}() (line {node.lineno})")
         else:
             # Вызов через произвольное выражение (subscript, результат вызова,
             # лямбда и т.п.) — классический обход чёрных списков:
@@ -184,6 +212,11 @@ class SafeVisitor(ast.NodeVisitor):
         if node.attr in BLOCKED_DUNDER_ATTRS or node.attr in BLOCKED_FRAME_ATTRS:
             errors.append(
                 f"Forbidden attribute access: .{node.attr} "
+                f"(line {node.lineno})"
+            )
+        if node.attr in BLOCKED_MODULE_ATTRS:
+            errors.append(
+                f"Forbidden module attribute access: .{node.attr} "
                 f"(line {node.lineno})"
             )
         # Check for forbidden module attribute access (e.g., os.path.join, sys.exit, subprocess.run)

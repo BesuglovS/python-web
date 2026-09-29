@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 setCorsHeaders();
 Database::initialize();
 Auth::requireAdmin();
+apiCheckRateLimit('admin_quiz', 180, 60);
 
 $action = $_GET['action'] ?? '';
 

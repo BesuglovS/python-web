@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 setCorsHeaders();
 Database::initialize();
 Auth::requireLogin();
+apiCheckRateLimit('quiz_attempts', 120, 60);
 
 $userId = Auth::getUserId();
 $db = Database::getInstance();

@@ -544,6 +544,10 @@ if (recentCsvBtn) {
       ];
       lines.push(row.map(function(v) {
         v = String(v === null || v === undefined ? '' : v);
+        // Защита от CSV-инъекции формул в Excel/LibreOffice.
+        if (/^[=+\-@\t\r]/.test(v)) {
+          v = "'" + v;
+        }
         return '"' + v.replace(/"/g, '""') + '"';
       }).join(';'));
     });

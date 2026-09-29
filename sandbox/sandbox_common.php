@@ -254,6 +254,71 @@ function sandbox_python_cmd(): string {
 }
 
 /**
+ * Возвращает путь к root-хелперу изолированного запуска или null.
+ *
+ * Режим управляется env SANDBOX_ISOLATION:
+ *   '1'   — требовать изоляцию (если хелпера нет — пишем в error_log);
+ *   '0'   — выключить (локальная разработка/CI);
+ *   пусто — авто: использовать изоляцию, если хелпер установлен.
+ *
+ * Хелпер scripts/sandbox-python.run запускает код в отдельном
+ * user/net/pid namespace от имени непривилегированного пользователя sandbox.
+ *
+ * @return string|null абсолютный путь к хелперу или null (legacy-режим)
+ */
+function sandbox_isolation_helper(): ?string {
+    $mode = getenv('SANDBOX_ISOLATION');
+    if ($mode === '0') {
+        return null;
+    }
+    $helper = getenv('SANDBOX_RUN_HELPER');
+    if ($helper === false || $helper === '') {
+        $helper = '/usr/local/sbin/sandbox-python.run';
+    }
+    if (DIRECTORY_SEPARATOR === '\\' || !is_file($helper) || !is_executable($helper)) {
+        if ($mode === '1') {
+            error_log('SANDBOX_ISOLATION=1, но изолирующий хелпер недоступен: ' . $helper);
+        }
+        return null;
+    }
+    return $helper;
+}
+
+/**
+ * Собирает argv для запуска Python-скрипта.
+ *
+ * С изоляцией — через sudo + root-хелпер (см. scripts/sandbox-python.run),
+ * legacy-режим — прямой запуск интерпретатора (только локальная разработка).
+ *
+ * @param string $tmpFile  путь к файлу со скриптом
+ * @param int    $timeout  таймаут, сек
+ * @param int    $memoryMb лимит памяти, МБ
+ * @return list<string>    argv для proc_open
+ */
+function sandbox_build_run_command(string $tmpFile, int $timeout, int $memoryMb): array {
+    $helper = sandbox_isolation_helper();
+    if ($helper !== null) {
+        $sudo = getenv('SANDBOX_SUDO_BIN');
+        if ($sudo === false || $sudo === '') {
+            $sudo = '/usr/bin/sudo';
+        }
+        return [
+            $sudo, '-n', '--', $helper,
+            $tmpFile, (string)$memoryMb, (string)$timeout, sandbox_python_cmd(),
+        ];
+    }
+
+    $pythonCmd = sandbox_python_cmd();
+    // sandbox_python_cmd() может вернуть строку с пробелом (напр. "py -3" на
+    // Windows). При bypass_shell такая строка попадает в argv[0] как имя
+    // несуществующего файла → "Failed to start Python". Разбиваем на токены.
+    $baseArgs = str_contains($pythonCmd, ' ')
+        ? preg_split('/\s+/', $pythonCmd)
+        : [$pythonCmd];
+    return array_merge($baseArgs, ['-I', '-S', '-X', 'utf8', $tmpFile]);
+}
+
+/**
  * Запускает Python-скрипт с заданными параметрами.
  * Создаёт временный файл, передаёт stdin, читает stdout/stderr с таймаутом.
  *
@@ -280,20 +345,19 @@ function sandbox_run_python(string $scriptContent, string $stdinData = '', int $
 
         file_put_contents($tmpFile, $scriptContent);
 
+        // При изолированном запуске код исполняет отдельный пользователь
+        // sandbox, поэтому файл со скриптом должен быть ему доступен на чтение.
+        if (sandbox_isolation_helper() !== null) {
+            @chmod($tmpFile, 0644);
+        }
+
         $descriptorspec = [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
             2 => ['pipe', 'w'],
         ];
 
-        $pythonCmd = sandbox_python_cmd();
-        // sandbox_python_cmd() может вернуть строку с пробелом (напр. "py -3" на
-        // Windows). При bypass_shell такая строка попадает в argv[0] как имя
-        // несуществующего файла → "Failed to start Python". Разбиваем на токены.
-        $baseArgs = str_contains($pythonCmd, ' ')
-            ? preg_split('/\s+/', $pythonCmd)
-            : [$pythonCmd];
-        $cmd = array_merge($baseArgs, ['-I', '-S', '-X', 'utf8', $tmpFile]);
+        $cmd = sandbox_build_run_command($tmpFile, $timeout, $memoryMb);
 
         $process = proc_open(
             $cmd,
@@ -410,7 +474,8 @@ function sandbox_build_ast_command(array $allowedImports): array {
     $baseArgs = str_contains($pythonCmd, ' ')
         ? preg_split('/\s+/', $pythonCmd)
         : [$pythonCmd];
-    return array_merge($baseArgs, ['-I', '-S', $scriptPath, $importsJson]);
+    // -B: не создавать __pycache__ рядом с валидатором (web-root не writable).
+    return array_merge($baseArgs, ['-I', '-S', '-B', $scriptPath, $importsJson]);
 }
 
 /**

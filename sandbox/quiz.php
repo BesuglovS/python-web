@@ -29,9 +29,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 setCorsHeaders();
 Database::initialize();
 Auth::requireLogin();
+apiCheckRateLimit('quiz', 180, 60);
 
 $userId = Auth::getUserId();
 $db = Database::getInstance();
+
+/**
+ * Ответы текущей попытки храним на сервере (в сессии), по (урок).
+ * Так grade считает балл по реально выбранным вариантам, а не по данным,
+ * присланным клиентом: клиентские ответы и балл не принимаются.
+ */
+function quizSessionKey(int $lessonNumber): string {
+    return 'quiz_answers_' . $lessonNumber;
+}
+
+function quizRecordedAnswers(int $lessonNumber): array {
+    $key = quizSessionKey($lessonNumber);
+    return (isset($_SESSION[$key]) && is_array($_SESSION[$key])) ? $_SESSION[$key] : [];
+}
+
+function quizRecordAnswer(int $lessonNumber, int $questionIdx, int $selected): int {
+    $key = quizSessionKey($lessonNumber);
+    if (!isset($_SESSION[$key]) || !is_array($_SESSION[$key])) {
+        $_SESSION[$key] = [];
+    }
+    if (!array_key_exists($questionIdx, $_SESSION[$key])) {
+        $_SESSION[$key][$questionIdx] = $selected;
+    }
+    return (int) $_SESSION[$key][$questionIdx];
+}
+
+function quizResetAnswers(int $lessonNumber): void {
+    unset($_SESSION[quizSessionKey($lessonNumber)]);
+}
 
 /**
  * Номер урока: 1..50 или -1 (итоговый тест). Остальное — отклоняем.
@@ -87,6 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ];
     }
 
+    // Новый прогон квиза — старые ответы попытки сбрасываем.
+    quizResetAnswers($lessonNumber);
+
     jsonResponse(['lesson_number' => $lessonNumber, 'questions' => $public]);
 }
 
@@ -128,6 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             jsonResponse(['error' => 'selected вне диапазона'], 400);
         }
         $correct = (int) ($question['correct'] ?? -1);
+        // Фиксируем первый выбор по вопросу; повторный ответ его не перезаписывает.
+        $selected = quizRecordAnswer($lessonNumber, $questionIdx, $selected);
 
         jsonResponse([
             'question_idx' => $questionIdx,
@@ -138,16 +173,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'grade') {
-        $answers = $input['answers'] ?? null;
-        if (!is_array($answers) || count($answers) !== $total) {
-            jsonResponse(['error' => 'answers должен содержать ответ на каждый вопрос'], 400);
-        }
+        // Балл считаем только по серверно записанным ответам попытки.
+        $answers = quizRecordedAnswers($lessonNumber);
 
         $correctCount = 0;
         $log = [];
         foreach ($questions as $i => $question) {
-            $rawSelected = array_key_exists($i, $answers) ? $answers[$i] : null;
-            $selected = is_numeric($rawSelected) ? (int) $rawSelected : -1;
+            $selected = array_key_exists($i, $answers) ? (int) $answers[$i] : -1;
             $correct = (int) ($question['correct'] ?? -1);
             $isCorrect = $selected === $correct;
             if ($isCorrect) {
@@ -189,6 +221,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                END"
         );
         $stmt->execute([$userId, $lessonNumber, $score]);
+
+        // Попытка учтена — сбрасываем записанные ответы (следующий прогон с чистого листа).
+        quizResetAnswers($lessonNumber);
 
         jsonResponse([
             'lesson_number' => $lessonNumber,

@@ -62,6 +62,13 @@ export async function incrementCodeRuns() {
   return apiPost(BADGES_URL, { action: 'increment_code_runs' });
 }
 
+/**
+ * Начислить секретный бейдж пасхалки «Секретный урок 51».
+ */
+export async function claimEasterEgg() {
+  return apiPost(BADGES_URL, { action: 'easter_egg_claim' });
+}
+
 const CONTEST_API_BASE = 'https://contest.nayanovaacademy.ru';
 
 const QUIZ_URL = 'sandbox/quiz.php';

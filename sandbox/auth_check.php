@@ -40,7 +40,12 @@ $authUrl = 'https://auth.nayanovaacademy.ru/api/check.php';
 
 $cookieHeader = '';
 if (!empty($_COOKIE['auth_session'])) {
-    $cookieHeader = 'auth_session=' . $_COOKIE['auth_session'];
+    // Значение куки идёт в HTTP-заголовок запроса к auth-web — оставляем только
+    // допустимые символы (защита от CRLF/header injection), как в AuthClient.php.
+    $safeValue = preg_replace('/[^A-Za-z0-9,_\-]/', '', (string) $_COOKIE['auth_session']);
+    if ($safeValue !== '') {
+        $cookieHeader = 'auth_session=' . $safeValue;
+    }
 }
 
 $ch = curl_init($authUrl);

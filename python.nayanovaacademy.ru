@@ -164,21 +164,57 @@ server {
         add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
     }
 
-    # 5. Кэширование статических ресурсов (CSS/JS/изображения/шрифты — 1 год)
+    # 4c. admin-quiz — админ-страница использует inline style-атрибуты, поэтому
+    # для неё CSP допускает inline-стили (скрипты по-прежнему только 'self').
+    # Расположена ПОСЛЕ 4b, чтобы JS/CSS админки продолжали матчиться в 4b.
+    location ~* ^/admin-quiz/ {
+        add_header Cache-Control "no-cache, must-revalidate" always;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
+    }
+
+    # 5. Кэширование статических ресурсов (CSS/JS/изображения/шрифты — 1 год).
+    # Свой add_header => дублируем security-набор (см. шапку файла): иначе
+    # серверные заголовки не наследуются и ассеты уходят без CSP/nosniff.
     location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$ {
         add_header Cache-Control "public, max-age=31536000, immutable" always;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
         access_log off;
     }
 
-    # 6. JSON и манифесты — не кэшируем (контент меняется при деплое)
+    # 6. JSON и манифесты — не кэшируем (контент меняется при деплое).
+    # Свой add_header => дублируем security-набор.
     location ~* \.(json|webmanifest)$ {
         add_header Cache-Control "no-cache, must-revalidate" always;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
         access_log off;
     }
 
-    # 7. HTML — не кэшируем (контент меняется при деплое)
+    # 7. HTML — не кэшируем (контент меняется при деплое).
+    # Свой add_header => дублируем security-набор. Важно: именно здесь
+    # отдаются HTML-страницы, поэтому CSP/XFO/HSTS обязательны.
     location ~* \.html$ {
         add_header Cache-Control "no-cache, must-revalidate" always;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.nayanovaacademy.ru https://contest.nayanovaacademy.ru; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://auth.nayanovaacademy.ru; frame-ancestors 'none'" always;
     }
 
     # 8. Блокировка скрытых файлов (кроме /.well-known/acme-challenge/)

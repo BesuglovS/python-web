@@ -86,6 +86,21 @@ assert_test('Содержит -S флаг', in_array('-S', $astCmd, true));
 assert_test('Содержит ast_validator.py', in_array('ast_validator.py', array_map('basename', $astCmd)));
 assert_test('Содержит JSON с модулями', str_contains(implode(' ', $astCmd), 'math') && str_contains(implode(' ', $astCmd), 'json'));
 
+echo "\n=== sandbox_build_run_command() ===\n";
+
+assert_test('sandbox_isolation_helper() определена', function_exists('sandbox_isolation_helper'));
+$runCmd = sandbox_build_run_command('/tmp/script.py', 5, 128);
+assert_test('Возвращает массив', is_array($runCmd));
+assert_test('Содержит путь к скрипту', in_array('/tmp/script.py', $runCmd, true));
+assert_test('Первый элемент — непустая строка', isset($runCmd[0]) && is_string($runCmd[0]) && $runCmd[0] !== '');
+
+// При отсутствии хелпера (CI/Windows) — legacy-режим без sudo.
+if (sandbox_isolation_helper() === null) {
+    assert_test('Без хелпера — прямой запуск python', $runCmd[0] !== '/usr/bin/sudo');
+} else {
+    assert_test('С хелпером — запуск через sudo + helper', $runCmd[0] === '/usr/bin/sudo');
+}
+
 echo "\n=== sandbox_reject_ast() — subprocess test ===\n";
 
 // sandbox_reject_ast() вызывает exit, поэтому тестируем через подпроцесс

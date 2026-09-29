@@ -11,7 +11,12 @@
  *   { "ok": true/false, "stdout": "...", "stderr": "...", "exit_code": N }
  */
 
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/sandbox_common.php';
+require_once __DIR__ . '/Auth.php';
+
+// Выполнение произвольного Python-кода — только для авторизованных.
+Auth::requireLogin();
 
 sandbox_check_rate_limit();
 sandbox_require_json_content_type();

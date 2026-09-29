@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 setCorsHeaders();
 Database::initialize();
 Auth::requireLogin();
+apiCheckRateLimit('progress', 120, 60);
 
 $userId = Auth::getUserId();
 $db = Database::getInstance();
@@ -72,19 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      * Номер урока: 1..50 или -1 (итоговый тест). Остальное — отклоняем.
      */
     function normalizeLessonNumber($raw): ?int {
-        $n = isset($raw) ? (int) $raw : null;
-        if ($n === null || ($n !== -1 && ($n < 1 || $n > MAX_COURSE_LESSONS))) {
+        if (is_int($raw)) {
+            $n = $raw;
+        } elseif (is_string($raw) && is_numeric($raw)) {
+            $n = (int) $raw;
+        } else {
+            return null;
+        }
+        if ($n !== -1 && ($n < 1 || $n > MAX_COURSE_LESSONS)) {
             return null;
         }
         return $n;
-    }
-
-    /** Оценка квиза строго 0..100 либо null. */
-    function normalizeQuizScore($raw): ?int {
-        if (!isset($raw)) return null;
-        $s = (int) $raw;
-        if ($s < 0 || $s > 100) return null;
-        return $s;
     }
 
     /**
@@ -111,7 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'save') {
         $lessonNumber = normalizeLessonNumber($input['lesson_number'] ?? null);
         $completed = !empty($input['completed']) ? 1 : 0;
-        $quizScore = normalizeQuizScore($input['quiz_score'] ?? null);
+        // Балл квиза пишет только sandbox/quiz.php по серверному подсчёту.
+        // Значение из клиентского запроса не принимается.
+        $quizScore = null;
 
         if ($lessonNumber === null) {
             jsonResponse(['error' => 'lesson_number обязателен и должен быть от 1 до ' . MAX_COURSE_LESSONS . ' (или -1 для итогового теста)'], 400);
@@ -151,41 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Финальное состояние флага — клиент обязан отображать его, а не локальное.
         jsonResponse(['success' => true, 'lesson_number' => $lessonNumber, 'completed' => (int) $completed]);
-    }
-
-    /**
-     * Запись только оценки квиза (запрос квиза не меняет флаг completed:
-     * решённый урок нельзя «снять» повторной попыткой квиза).
-     */
-    if ($action === 'save_quiz_score') {
-        $lessonNumber = normalizeLessonNumber($input['lesson_number'] ?? null);
-        $quizScore = normalizeQuizScore($input['quiz_score'] ?? null);
-
-        if ($lessonNumber === null) {
-            jsonResponse(['error' => 'lesson_number обязателен и должен быть от 1 до ' . MAX_COURSE_LESSONS . ' (или -1 для итогового теста)'], 400);
-        }
-
-        $stmt = $db->prepare(
-            "INSERT INTO progress (user_id, lesson_number, completed, quiz_score, completed_at, updated_at)
-             VALUES (?, ?, 0, ?,
-               NULL,
-               datetime('now'))
-             ON CONFLICT(user_id, lesson_number) DO UPDATE SET
-               quiz_score = CASE
-                 WHEN excluded.quiz_score IS NOT NULL AND (progress.quiz_score IS NULL OR excluded.quiz_score > progress.quiz_score)
-                 THEN excluded.quiz_score
-                 ELSE progress.quiz_score
-               END,
-               updated_at = CASE
-                 WHEN excluded.quiz_score IS NOT NULL
-                      AND (progress.quiz_score IS NULL OR excluded.quiz_score > progress.quiz_score)
-                 THEN datetime('now')
-                 ELSE progress.updated_at
-               END"
-        );
-        $stmt->execute([$userId, $lessonNumber, $quizScore]);
-
-        jsonResponse(['success' => true, 'lesson_number' => $lessonNumber]);
     }
 
     if ($action === 'bulk_save') {
@@ -234,7 +200,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $lessonNumber = normalizeLessonNumber($item['lesson_number'] ?? null);
                 if ($lessonNumber === null) continue;
                 $completed = !empty($item['completed']) ? 1 : 0;
-                $quizScore = normalizeQuizScore($item['quiz_score'] ?? null);
+                // Балл квиза приходит только из quiz.php; из bulk_save не принимается.
+                $quizScore = null;
 
                 $completed = contestGateCompleted($lessonNumber, $completed, $userId, $contestCache);
 

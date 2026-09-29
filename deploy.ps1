@@ -94,19 +94,15 @@ if (-not (Test-Path $distPath)) {
 $sshArgStr = ""
 if ($sshPort -ne '22') { $sshArgStr += "-P $sshPort " }
 if ($identityFile) { $sshArgStr += "-i `"$identityFile`" " }
-# Сохраняем data/ на сервере перед очисткой, восстанавливаем после распаковки.
-# Все подстановки $remotePath берём в двойные кавычки remote-shell — пробелы
-# и спецсимволы в пути не должны ломать команду.
+# data/ НЕ стирается и НЕ восстанавливается: каталог остаётся под www-data
+# (SQLite с персональными данными переживает деплой), webroot стирается
+# и распаковывается от deploy-пользователя. Удаление www-data-файлов в
+# webroot под силами deploy, т.к. его основная группа — www-data.
 # tar-исключения: __pycache__ и .ratelimit — runtime-каталоги, которые
 # перезаписали бы боевое состояние rate-limiter на сервере.
-$remoteScript = "cp -r `"$remotePath/data`" /tmp/.deploy-data 2>/dev/null; " +
-  "rm -rf `"$remotePath`"/* `"$remotePath`"/.[!.]* 2>/dev/null; " +
-  "mkdir -p `"$remotePath/data`" 2>/dev/null; " +
-  "cp -r /tmp/.deploy-data/* `"$remotePath/data/`" 2>/dev/null; " +
-  "rm -rf /tmp/.deploy-data; " +
-  "tar -xzf - -C `"$remotePath`"; " +
-  "chown -R www-data:www-data `"$remotePath/data`" 2>/dev/null; " +
-  "chmod -R 750 `"$remotePath/data`" 2>/dev/null"
+$remoteScript = "find \`"$remotePath\`" -mindepth 1 -maxdepth 1 ! -name 'data' -exec rm -rf {} + 2>/dev/null; " +
+  "mkdir -p \`"$remotePath/data\`" 2>/dev/null; " +
+  "tar -xzf - -C \`"$remotePath\`""
 $sshArgStr += "$remote `"$remoteScript`""
 
 Write-Host "`n==> Deploying to ${remote}:${remotePath} ..." -ForegroundColor Cyan
@@ -164,14 +160,20 @@ if ($DryRun) {
   Write-Host "  Done." -ForegroundColor Green
 }
 
-# ─── 4. Deploy nginx config ───
+# ─── 3b. Sandbox isolation + web-root permissions ───
+# Изоляция (helper sandbox-python.run, sudoers, права web-root) на сервере
+# устанавливается ОДНОРАЗОВО от root:
+#   bash scripts/setup-sandbox-isolation.sh /var/www/python.nayanovaacademy.ru/public
+# Обычный деплой (deploy-пользователь без root) ничего не трогает:
+# webroot при деплое стирается только содержимым тарбола, data/, .repl_sessions
+# и .ratelimit остаются под www-data.
 # Порядок критичен: конфиг устанавливается ТОЛЬКО после успешного nginx -t.
-# При провале теста предыдущий (рабочий) конфиг немедленно восстанавливается —
-# иначе сломанный конфиг остался бы в sites-available и сервер не поднялся бы
-# после restart/reboot.
+# При провале предыдущий (рабочий) конфиг восстанавливается хелпером.
+# Установка выполняется через root-хелпер /usr/local/sbin/deploy-nginx.sh
+# (sudoers deploy-nginx): хелпер сам валидирует nginx -t и откатывает конфиг
+# при ошибке.
 $nginxSite = 'python.nayanovaacademy.ru'
 $nginxLocal = Join-Path $PSScriptRoot $nginxSite
-$nginxRemote = '/etc/nginx/sites-available/' + $nginxSite
 
 if ($DryRun) {
   Write-Host "  [DryRun] Deploy nginx config: $nginxSite" -ForegroundColor Yellow
@@ -181,20 +183,12 @@ if ($DryRun) {
   cmd /c $scpCmd
   if ($LASTEXITCODE -ne 0) { Write-Host "  Nginx config scp failed" -ForegroundColor Red; exit 1 }
 
-  # Устанавливаем новый конфиг, тестируем; при ошибке откатываемся и выходим.
-  $sshNginxCmd = 'ssh ' + $portArg + ' ' + $identityArg + ' ' + $remote + ' "cp ' + $nginxRemote + ' /tmp/nginx-backup-' + $nginxSite + ' ; cp /tmp/nginx-' + $nginxSite + ' ' + $nginxRemote + ' ; nginx -t"'
+  $sshNginxCmd = 'ssh ' + $portArg + ' ' + $identityArg + ' ' + $remote + ' "sudo -n /usr/local/sbin/deploy-nginx.sh ' + $nginxSite + '"'
   cmd /c $sshNginxCmd
   if ($LASTEXITCODE -ne 0) {
-    Write-Host "  nginx -t failed — rolling back previous config..." -ForegroundColor Red
-    $sshRollbackCmd = 'ssh ' + $portArg + ' ' + $identityArg + ' ' + $remote + ' "cp /tmp/nginx-backup-' + $nginxSite + ' ' + $nginxRemote + ' ; rm -f /tmp/nginx-' + $nginxSite + ' /tmp/nginx-backup-' + $nginxSite + ' ; systemctl reload nginx"'
-    cmd /c $sshRollbackCmd
-    Write-Host "  Rolled back. Deploy aborted." -ForegroundColor Red
+    Write-Host "  nginx deploy failed (config not applied). Deploy aborted." -ForegroundColor Red
     exit 1
   }
-
-  $sshReloadCmd = 'ssh ' + $portArg + ' ' + $identityArg + ' ' + $remote + ' "systemctl reload nginx ; rm -f /tmp/nginx-' + $nginxSite + ' /tmp/nginx-backup-' + $nginxSite + '"'
-  cmd /c $sshReloadCmd
-  if ($LASTEXITCODE -ne 0) { Write-Host "  Nginx reload failed" -ForegroundColor Red; exit 1 }
   Write-Host "  Done." -ForegroundColor Green
 }
 

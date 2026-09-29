@@ -191,6 +191,12 @@ describe('config/badges.js', () => {
     const ids = badges.BADGES.map((b) => b.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it('includes hidden secret_51 easter-egg badge', () => {
+    const secret = badges.BADGES.find((b) => b.id === 'secret_51');
+    expect(secret).toBeTruthy();
+    expect(secret.hidden).toBe(true);
+  });
 });
 
 describe('config/courseData.js LESSON_BADGES', () => {

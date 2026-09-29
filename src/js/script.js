@@ -26,6 +26,7 @@ import { initScrollRestore } from './modules/scroll-restore.js';
 import { initErrorTracking } from './modules/error-tracking.js';
 import { initAuth } from './modules/auth.js';
 import { initSetsVisual } from './modules/sets-visual.js';
+import { initEasterEgg } from './modules/easter-egg.js';
 
 // Service Worker Registration
 // Регистрируем SW только в secure context (https) и не в headless-браузерах
@@ -84,6 +85,7 @@ async function initializeApplication() {
       initDragDropExercises(),
       initSetsVisual(),
       initScrollRestore(),
+      initEasterEgg(),
     ]);
   } catch (error) {
     console.error('Critical initialization error:', error);

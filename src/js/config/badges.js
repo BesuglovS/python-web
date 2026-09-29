@@ -121,6 +121,13 @@ const BADGES = [
     icon: '⭐',
     desc: 'Завершить первый урок',
   },
+  {
+    id: 'secret_51',
+    name: 'Секретный урок 51',
+    icon: '🥚',
+    desc: 'Найти пасхалку (Konami-код)',
+    hidden: true,
+  },
 ];
 
 export { BADGES };
