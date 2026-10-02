@@ -8,16 +8,21 @@
     Ограничение: сохраняются только JSON-сериализуемые типы
     (числа, строки, списки, словари, bool, None).
     Функции, классы и другие объекты не переносятся между сессиями.
-  - Запускается с флагами -I -S (изолированный режим).
+  - Запускается с флагами -I -S (изолированный режим) через
+    root-хелпер scripts/sandbox-python.run (mount/net/pid namespace).
   - Лимит namespace: 200 ключей.
   - Лимит размера вывода настраивается извне.
+  - Защита в глубину: перед exec() опасные имена удаляются из САМОГО
+    объекта builtins (не только из namespace). У функций разрешённых
+    модулей __globals__ ссылается на тот же словарь, поэтому цепочка
+    print.__self__.getattr / json.loads.__globals__['__builtins__']
+    больше не даёт доступ к exec/open/getattr.
 """
 
 import builtins
 import io
 import json
 import sys
-import traceback
 from typing import Any
 
 # Force UTF-8 everywhere (even if -X utf8 is not set)
@@ -69,28 +74,42 @@ def custom_input(prompt: str = '') -> str:
         return ''
 
 
-# ─── Усечённые builtins (защита в глубину) ───
-# AST-валидатор — основной рубеж; здесь мы дополнительно лишаем код
-# доступа к опасным встроенным функциям на случай обхода статики.
-# Список исключений синхронизирован с DANGEROUS_CALLS/BLOCKED_NAMES
-# в ast_validator.py.
-_RUNTIME_BLOCKED_BUILTINS = frozenset({
-    'open', 'exec', 'eval', 'compile',
-    'getattr', 'setattr', 'delattr', 'hasattr',
-    'globals', 'locals', 'vars', 'dir',
-    'type', 'isinstance', 'issubclass', 'callable',
-    'help', 'memoryview', 'exit', 'quit',
-})
-
+# ─── Изоляция builtins (защита в глубину) ───
 # Разрешённые для импорта модули — синхронизированы с
-# $SANDBOX_ALLOWED_IMPORTS в sandbox_common.php.
-_RUNTIME_ALLOWED_MODULES = frozenset({
+# $SANDBOX_ALLOWED_IMPORTS в sandbox_common.php и _sb_allowed_modules
+# в run.php.
+_ALLOWED_MODULES = frozenset({
     'math', 'random', 'datetime', 'itertools', 'collections',
     'functools', 'json', 're', 'string', 'statistics',
-    'decimal', 'fractions', 'copy', 'pprint',
+    'decimal', 'fractions', 'copy',
 })
 
+# Внутренние модули stdlib, которые разрешённым модулям нужны в рантайме
+# (ленивые импорты: collections → heapq, datetime → time и т.п.).
+# Самостоятельный импорт этих модулей пользователем по-прежнему запрещён
+# AST-валидатором (его список разрешённых импортов = _ALLOWED_MODULES).
+_SAFE_HELPER_MODULES = _ALLOWED_MODULES | frozenset({
+    'heapq', 'bisect', '_bisect', '_heapq', 'time', 'keyword', 'enum',
+    'reprlib', 'types', 'copyreg', 'numbers', 'warnings',
+    '_collections_abc', 'collections.abc',
+    'sre_compile', 'sre_parse', 'sre_constants',
+    '_strptime', '_decimal', '_pydecimal', '_fractions', '_statistics',
+    '_json', '_random', '_datetime', '_string',
+})
+
+# Ссылки, нужные самому раннеру — сохраняем ДО мутации builtins.
 _real_import = builtins.__import__
+_open = builtins.open
+_exec = builtins.exec
+_type = builtins.type
+_ORIGINAL_BUILTINS = dict(builtins.__dict__)
+
+# 1) Предзагрузка разрешённых и helper-модулей, пока builtins полные.
+for _m in _SAFE_HELPER_MODULES:
+    try:
+        _real_import(_m)
+    except Exception:
+        pass
 
 
 def _safe_import(name, globals=None, locals=None, fromlist=(), level=0):
@@ -98,55 +117,75 @@ def _safe_import(name, globals=None, locals=None, fromlist=(), level=0):
     if level > 0:
         raise ImportError('Относительные импорты запрещены в песочнице')
     root = name.split('.')[0]
-    if root not in _RUNTIME_ALLOWED_MODULES:
-        raise ImportError(f'Модуль "{root}" недоступен в песочнице')
+    if root not in _SAFE_HELPER_MODULES:
+        raise ImportError('Модуль "%s" недоступен в песочнице' % root)
     return _real_import(name, globals, locals, fromlist, level)
 
 
-SAFE_BUILTINS: dict[str, Any] = {
-    name: getattr(builtins, name)
-    for name in dir(builtins)
-    if not name.startswith('_') and name not in _RUNTIME_BLOCKED_BUILTINS
-}
-# Служебные имена с подчёркиваниями, необходимые легитимному коду:
-# __build_class__ — работа оператора class, __debug__ — оператор assert,
-# __import__ — ограниченная версия для разрешённых импортов.
-SAFE_BUILTINS['__build_class__'] = builtins.__build_class__
-SAFE_BUILTINS['__debug__'] = True
-SAFE_BUILTINS['__import__'] = _safe_import
-SAFE_BUILTINS['input'] = custom_input
+# 2) Глобальная очистка реального builtins.__dict__. У функций разрешённых
+# модулей __globals__['__builtins__'] указывает на этот же словарь, поэтому
+# после очистки print.__self__.getattr и json.loads.__globals__ больше не
+# дают exec/open/getattr.
+# ВАЖНО: type/isinstance/issubclass/callable НЕ удаляются — они нужны
+# разрешённым модулям в рантайме (re, copy, statistics, fractions, decimal).
+# Их вызов пользователем блокируется AST-валидатором (DANGEROUS_CALLS).
+# ВАЖНО: hasattr НЕ удаляется — его использует importlib при `from X import Y`.
+# hasattr возвращает только bool и не позволяет извлечь объект, поэтому не
+# открывает доступ к дундер-атрибутам (в отличие от getattr).
+_STRIP = (
+    'open', 'exec', 'eval', 'compile',
+    'getattr', 'setattr', 'delattr',
+    'globals', 'locals', 'vars', 'dir',
+    'breakpoint', 'help', 'exit', 'quit', 'input', 'memoryview',
+    '__import__',
+)
+for _name in _STRIP:
+    builtins.__dict__.pop(_name, None)
+builtins.__dict__['__import__'] = _safe_import
+builtins.__dict__['input'] = custom_input
+
+# Явно подставляем очищенный словарь: exec() возьмёт его как __builtins__.
+namespace['__builtins__'] = builtins.__dict__
+namespace['__name__'] = '__main__'
 
 # ─── Подмена stdout/stderr ───
 old_stdout = sys.stdout
 old_stderr = sys.stderr
-# Явно подставляем усечённые builtins: без этого exec() автоматически
-# подставляет ПОЛНЫЙ словарь builtins в namespace.
-namespace['__builtins__'] = SAFE_BUILTINS
-# __build_class__ (оператор class) читает __name__ из globals сессии.
-namespace['__name__'] = '__main__'
-
 sys.stdout = io.StringIO()
 sys.stderr = io.StringIO()
 
 # ─── Выполнение кода ───
 exit_code: int = 0
 try:
-    exec(code, namespace)  # noqa: S102
-except SystemExit:
-    pass
-except Exception:
-    tb = traceback.extract_tb(sys.exc_info()[2])
-    user_frame = tb[-1] if tb else None
-    line_no = user_frame.lineno if user_frame and user_frame.filename == '<string>' else '?'
-    sys.stderr.write(f"Line {line_no}: {type(sys.exc_info()[1]).__name__}: {sys.exc_info()[1]}\n")
-    exit_code = 1
+    try:
+        _exec(code, namespace)  # noqa: S102
+    except SystemExit:
+        pass
+    except Exception:
+        # Ошибку форматируем вручную: модуль traceback и getattr недоступны
+        # после очистки builtins.
+        _tb = sys.exc_info()[2]
+        line_no: Any = '?'
+        while _tb is not None:
+            try:
+                if _tb.tb_frame.f_code.co_filename == '<string>':
+                    line_no = _tb.tb_lineno
+            except Exception:
+                pass
+            _tb = _tb.tb_next
+        _exc = sys.exc_info()[1]
+        sys.stderr.write(f"Line {line_no}: {_type(_exc).__name__}: {_exc}\n")
+        exit_code = 1
 
-builtins.input = _original_input
-
-captured_out: str = sys.stdout.getvalue()
-captured_err: str = sys.stderr.getvalue()
-sys.stdout = old_stdout
-sys.stderr = old_stderr
+    captured_out: str = sys.stdout.getvalue()
+    captured_err: str = sys.stderr.getvalue()
+finally:
+    sys.stdout = old_stdout
+    sys.stderr = old_stderr
+    # Восстанавливаем builtins. В проде процесс одноразовый (не влияет),
+    # в in-process тестах это делает раннер re-entrant.
+    builtins.__dict__.clear()
+    builtins.__dict__.update(_ORIGINAL_BUILTINS)
 
 # ─── Сериализация namespace → JSON ───
 # Сохраняем только JSON-сериализуемые значения.
@@ -193,7 +232,7 @@ if len(sanitized_namespace) > MAX_NAMESPACE_KEYS:
 
 # Сохраняем состояние в JSON
 try:
-    with open(session_file, 'w', encoding='utf-8') as f:
+    with _open(session_file, 'w', encoding='utf-8') as f:
         json.dump(sanitized_namespace, f, ensure_ascii=False, separators=(',', ':'))
 except OSError as e:
     sys.__stderr__.write(f"Warning: failed to save session to {session_file}: {e}\n")

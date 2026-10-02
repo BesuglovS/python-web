@@ -29,6 +29,13 @@ SUDOERS_FILE="/etc/sudoers.d/python-sandbox"
 [ -d "$PUBLIC_DIR" ] || { echo "ERROR: public dir not found: $PUBLIC_DIR"; exit 1; }
 [ -f "$HELPER_SRC" ] || { echo "ERROR: helper not found: $HELPER_SRC"; exit 1; }
 
+echo "==> bubblewrap"
+if command -v bwrap >/dev/null 2>&1; then
+  echo "    bwrap already installed"
+else
+  apt-get update -qq && apt-get install -y bubblewrap
+fi
+
 echo "==> sandbox user"
 if ! id -u "$SANDBOX_USER" >/dev/null 2>&1; then
   useradd --system --no-create-home --home-dir /nonexistent \

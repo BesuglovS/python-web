@@ -72,8 +72,11 @@ echo json_encode([
  * Формирует полный скрипт для выполнения.
  *
  * Код пользователя встраивается как base64-литерал и исполняется через
- * exec(compile(...)) в отдельном namespace с УСЕЧЁННЫМИ builtins
- * (защита в глубину на случай обхода AST-валидации).
+ * exec(compile(...)) в отдельном namespace; перед exec() опасные имена
+ * удаляются из САМОГО объекта builtins (защита в глубину на случай
+ * обхода AST-валидации). У функций разрешённых модулей __globals__ ссылается
+ * на тот же словарь, поэтому print.__self__.getattr / json.loads.__globals__
+ * больше не дают доступ к exec/open/getattr.
  * Блок try/finally гарантирует, что накопленный stdout/stderr будет
  * выведен с sentinel-маркерами даже при исключении в коде пользователя
  * (иначе вывод теряется, а traceback утекает в ответ с путями /tmp).
@@ -103,41 +106,63 @@ sys.stdout = io.StringIO()
 _original_stderr = sys.stderr
 sys.stderr = io.StringIO()
 
-_sb_blocked = frozenset({
-    'open', 'exec', 'eval', 'compile',
-    'getattr', 'setattr', 'delattr', 'hasattr',
-    'globals', 'locals', 'vars', 'dir',
-    'type', 'isinstance', 'issubclass', 'callable',
-    'help', 'memoryview', 'exit', 'quit',
-})
+# Разрешённые модули — синхронизировано с .repl_runner.py и sandbox_common.php.
 _sb_allowed_modules = frozenset({
     'math', 'random', 'datetime', 'itertools', 'collections',
     'functools', 'json', 're', 'string', 'statistics',
-    'decimal', 'fractions', 'copy', 'pprint',
+    'decimal', 'fractions', 'copy',
 })
+# Внутренние зависимости разрешённых модулей (ленивые импорты в рантайме).
+_sb_helper_modules = _sb_allowed_modules | frozenset({
+    'heapq', 'bisect', '_bisect', '_heapq', 'time', 'keyword', 'enum',
+    'reprlib', 'types', 'copyreg', 'numbers', 'warnings',
+    '_collections_abc', 'collections.abc',
+    'sre_compile', 'sre_parse', 'sre_constants',
+    '_strptime', '_decimal', '_pydecimal', '_fractions', '_statistics',
+    '_json', '_random', '_datetime', '_string',
+})
+
 _sb_real_import = _sb_builtins.__import__
+_sb_compile = _sb_builtins.compile
+_sb_exec = _sb_builtins.exec
+_sb_input = _sb_builtins.input
+
+# Предзагрузка, пока builtins полные.
+for _sb_m in _sb_helper_modules:
+    try:
+        _sb_real_import(_sb_m)
+    except Exception:
+        pass
 
 def _sb_safe_import(name, globals=None, locals=None, fromlist=(), level=0):
     if level > 0:
         raise ImportError('Относительные импорты запрещены в песочнице')
     root = name.split('.')[0]
-    if root not in _sb_allowed_modules:
+    if root not in _sb_helper_modules:
         raise ImportError('Модуль "%s" недоступен в песочнице' % root)
     return _sb_real_import(name, globals, locals, fromlist, level)
 
-_sb_safe_builtins = {
-    _n: getattr(_sb_builtins, _n)
-    for _n in dir(_sb_builtins)
-    if not _n.startswith('_') and _n not in _sb_blocked
-}
-# Служебные имена для class/assert/import (см. .repl_runner.py — держать синхронно)
-_sb_safe_builtins['__build_class__'] = _sb_builtins.__build_class__
-_sb_safe_builtins['__debug__'] = True
-_sb_safe_builtins['__import__'] = _sb_safe_import
-_sb_globals = {'__name__': '__main__', '__builtins__': _sb_safe_builtins}
+# Глобальная очистка builtins.__dict__ (тот же словарь видят __globals__
+# функций разрешённых модулей). type/isinstance/issubclass/callable
+# оставляем — они нужны stdlib в рантайме; их вызов блокирует AST-валидатор.
+# hasattr не удаляем — его использует importlib при `from X import Y`;
+# возвращает только bool и не даёт извлечь объект.
+_sb_strip = (
+    'open', 'exec', 'eval', 'compile',
+    'getattr', 'setattr', 'delattr',
+    'globals', 'locals', 'vars', 'dir',
+    'breakpoint', 'help', 'exit', 'quit', 'memoryview',
+    '__import__',
+)
+for _sb_n in _sb_strip:
+    _sb_builtins.__dict__.pop(_sb_n, None)
+_sb_builtins.__dict__['__import__'] = _sb_safe_import
+# input возвращаем (в run.php нет подмены stdin; читает переданный ввод).
+_sb_builtins.__dict__['input'] = _sb_input
+_sb_globals = {'__name__': '__main__', '__builtins__': _sb_builtins.__dict__}
 
 try:
-    exec(compile(_sb_base64.b64decode('%CODE%').decode('utf-8'), '<lesson>', 'exec'), _sb_globals)
+    _sb_exec(_sb_compile(_sb_base64.b64decode('%CODE%').decode('utf-8'), '<lesson>', 'exec'), _sb_globals)
 except SystemExit:
     raise
 except BaseException as _sb_exc:

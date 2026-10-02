@@ -8,16 +8,20 @@
 #     sudo -n /usr/local/sbin/sandbox-python.run <script> <mem_mb> <timeout> [python]
 # а sudoers-правило /etc/sudoers.d/python-sandbox разрешает только эту команду.
 #
-# Изоляция (в отличие от прежнего «усечённых builtins»):
-#   1. unshare --net --pid --fork --mount-proc — новый сетевой namespace
-#      (сеть полностью отключена), новый PID namespace и /proc;
-#   2. сброс привилегий до непривилегированного пользователя sandbox
-#      (--clear-groups --no-new-privs) — web-root и data/ ему недоступны;
-#   3. prlimit — жёсткие лимиты RLIMIT_AS/RLIMIT_CPU/nproc/nofile;
-#   4. python3 -I -S — изолированный режим без site/user site-packages.
+# Изоляция (bubblewrap, основной режим):
+#   1. mount/pid/net/ipc/uts namespace (bwrap): в песочницу монтируются ТОЛЬКО
+#      системные пути (/usr, /lib*, /bin, /sbin) и сам файл кода. /var/www,
+#      /etc/ssl, /etc/nginx, .env, /var/lib/php и чужие каталоги физически
+#      недостижимы;
+#   2. приватный /tmp (tmpfs) — не видит хостовый /tmp;
+#   3. сеть отключена (--unshare-net);
+#   4. сброс привилегий до пользователя sandbox (--no-new-privs), RLIMIT.
+#   Единственный доступный для записи каталог — /var/lib/python-sandbox
+#   (REPL-сессии самого запуска).
 #
-# Даже при обходе AST-валидатора и усечённых builtins процесс не может
-# ни писать в сайт, ни читать его секреты, ни выйти в сеть.
+# Fallback: если bubblewrap не установлен, используется прежний режим
+# unshare --net --pid (без mount-изоляции). Это слабее, поэтому bwrap
+# настоятельно рекомендуется (apt-get install bubblewrap).
 #
 # Аргументы:
 #   $1 script_file  — путь к файлу с кодом (только /tmp, /var/tmp, /var/lib/python-sandbox)
@@ -32,6 +36,8 @@ MEM_MB="${2:-128}"
 TIMEOUT="${3:-5}"
 PYTHON_CMD="${4:-python3}"
 SANDBOX_USER="${SANDBOX_USER:-sandbox}"
+SANDBOX_HOME="${SANDBOX_HOME:-/var/lib/python-sandbox}"
+BWRAP="${BWRAP:-/usr/bin/bwrap}"
 
 die() { echo "sandbox-python: $*" >&2; exit 64; }
 
@@ -67,6 +73,48 @@ fi
 MEM_BYTES=$(( MEM_MB * 1024 * 1024 ))
 CPU_SEC=$(( TIMEOUT + 1 ))
 
+if [ -x "$BWRAP" ]; then
+  # ─── Основной режим: bubblewrap (mount-изоляция) ───
+  # --unshare-* без user namespace: запуск от root (через sudo), внутри
+  # setpriv сбрасывает до sandbox. /var/www не монтируется.
+  exec "$BWRAP" \
+    --die-with-parent \
+    --new-session \
+    --unshare-pid \
+    --unshare-net \
+    --unshare-ipc \
+    --unshare-uts \
+    --unshare-cgroup-try \
+    --ro-bind /usr /usr \
+    --ro-bind-try /lib /lib \
+    --ro-bind-try /lib64 /lib64 \
+    --ro-bind-try /bin /bin \
+    --ro-bind-try /sbin /sbin \
+    --ro-bind-try /etc/ld.so.cache /etc/ld.so.cache \
+    --ro-bind-try /etc/ld.so.conf /etc/ld.so.conf \
+    --ro-bind-try /etc/ld.so.conf.d /etc/ld.so.conf.d \
+    --ro-bind-try /etc/alternatives /etc/alternatives \
+    --ro-bind-try /usr/lib/locale /usr/lib/locale \
+    --proc /proc \
+    --dev /dev \
+    --tmpfs /tmp \
+    --dir /var/lib \
+    --bind "$SANDBOX_HOME" "$SANDBOX_HOME" \
+    --ro-bind "$SCRIPT" /code.py \
+    --chdir /tmp \
+    --setenv HOME "$SANDBOX_HOME" \
+    --setenv LC_ALL C.UTF-8 \
+    --setenv PYTHONIOENCODING utf-8 \
+    -- \
+    /usr/bin/setpriv --reuid="$SANDBOX_UID" --regid="$SANDBOX_GID" \
+      --clear-groups --no-new-privs \
+    /usr/bin/prlimit --as="$MEM_BYTES" --cpu="$CPU_SEC" \
+      --nproc=64 --nofile=256 -- \
+    "$PYTHON_BIN" -I -S -X utf8 /code.py
+fi
+
+# ─── Fallback: unshare без mount-изоляции (bwrap не установлен) ───
+echo "sandbox-python: WARNING: bubblewrap not found ($BWRAP), using weaker unshare fallback" >&2
 exec /usr/bin/unshare --net --pid --fork --mount-proc \
   /usr/bin/setpriv --reuid="$SANDBOX_UID" --regid="$SANDBOX_GID" \
     --clear-groups --no-new-privs \

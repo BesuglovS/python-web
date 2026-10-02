@@ -36,7 +36,7 @@ $SANDBOX_TRUSTED_PROXIES = array_filter(array_map('trim', explode(',', getenv('S
 $SANDBOX_ALLOWED_IMPORTS = [
     'math', 'random', 'datetime', 'itertools', 'collections',
     'functools', 'json', 're', 'string', 'statistics',
-    'decimal', 'fractions', 'copy', 'pprint',
+    'decimal', 'fractions', 'copy',
 ];
 
 // Защита от ошибки конфигурации: никогда не разрешать заведомо опасные модули,
