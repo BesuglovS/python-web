@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   Build and deploy static site to remote server via SSH.
 .DESCRIPTION
@@ -102,7 +102,7 @@ if ($identityFile) { $sshArgStr += "-i `"$identityFile`" " }
 # перезаписали бы боевое состояние rate-limiter на сервере.
 $remoteScript = "find \`"$remotePath\`" -mindepth 1 -maxdepth 1 ! -name 'data' -exec rm -rf {} + 2>/dev/null; " +
   "mkdir -p \`"$remotePath/data\`" 2>/dev/null; " +
-  "tar -xzf - -C \`"$remotePath\`""
+  "tar -xzf - --skip-old-files -C \`"$remotePath\`""
 $sshArgStr += "$remote `"$remoteScript`""
 
 Write-Host "`n==> Deploying to ${remote}:${remotePath} ..." -ForegroundColor Cyan
