@@ -22,6 +22,17 @@ define('ALLOWED_ORIGINS', [
     'https://python.nayanovaacademy.ru',
 ]);
 
+// Доверенные IP для сервер-к-сервер чтения прогресса конкретного ученика
+// (j-web — карточка ребёнка у родителя). Override user_id в progress.php
+// разрешён только без Origin (не из браузера) и с этих адресов.
+$pythonServerIps = ['79.143.31.184'];
+$pythonHostEarly = strtolower((string)($_SERVER['HTTP_HOST'] ?? ''));
+if ($pythonHostEarly === '' || preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?$/', $pythonHostEarly)) {
+    $pythonServerIps[] = '127.0.0.1';
+    $pythonServerIps[] = '::1';
+}
+define('ALLOWED_SERVER_IPS', $pythonServerIps);
+
 // --- Сессия ---
 if (session_status() === PHP_SESSION_NONE) {
     session_name('python_session');

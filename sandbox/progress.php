@@ -1,7 +1,9 @@
 <?php
 /**
  * API прогресса python-web.
- * GET  — загрузить прогресс текущего пользователя
+ * GET  — загрузить прогресс текущего пользователя; либо, для серверных
+ *        вызовов с доверенных IP (j-web → карточка ребёнка родителю),
+ *        прогресс ученика, переданного в ?user_id=.
  * POST — сохранить прогресс урока
  */
 require_once __DIR__ . '/config.php';
@@ -20,10 +22,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 setCorsHeaders();
 Database::initialize();
-Auth::requireLogin();
+
+/**
+ * Сервер-к-сервер чтение прогресса конкретного ученика: j-web показывает
+ * карточку ребёнка родителю. Разрешено только для GET без Origin (не из
+ * браузера) с доверенных IP (ALLOWED_SERVER_IPS). POST (сохранение) сюда
+ * не попадает — там всегда работает обычная авторизация сессии.
+ */
+function trustedServerUserId(): ?int
+{
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {
+        return null;
+    }
+    if (($_SERVER['HTTP_ORIGIN'] ?? '') !== '') {
+        return null;
+    }
+    if (!in_array($_SERVER['REMOTE_ADDR'] ?? '', ALLOWED_SERVER_IPS, true)) {
+        return null;
+    }
+    $uid = isset($_GET['user_id']) ? (int) $_GET['user_id'] : 0;
+    return $uid > 0 ? $uid : null;
+}
+
+$serverUserId = trustedServerUserId();
+if ($serverUserId === null) {
+    Auth::requireLogin();
+}
 apiCheckRateLimit('progress', 120, 60);
 
-$userId = Auth::getUserId();
+$userId = $serverUserId ?? Auth::getUserId();
 $db = Database::getInstance();
 
 /**

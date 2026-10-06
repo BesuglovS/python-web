@@ -3,6 +3,7 @@
  * API администратора: квизы по классам.
  * GET  ?action=groups                 — список групп (классов)
  * GET  ?action=class_progress&group_id=N — прогресс учеников группы
+ *      (также доступно сервер-к-сервер с доверенных IP — кабинет тьютора в j-web)
  * GET  ?action=attempts&user_id=N&lesson_number=M — попытки ученика
  * GET  ?action=recent&limit=N       — последние по времени решённые квизы
  * POST {action:'mark_quiz', user_id, lesson_number, quiz_score, completed}
@@ -25,7 +26,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 setCorsHeaders();
 Database::initialize();
-Auth::requireAdmin();
+
+/**
+ * Сервер-к-сервер сводка по классу: j-web показывает классному руководителю
+ * (тьютору) успеваемость его класса. Разрешён только GET action=class_progress
+ * без Origin (не из браузера) с доверенных IP (ALLOWED_SERVER_IPS); все прочие
+ * действия (в т.ч. POST mark_quiz/clear_quiz) — строго для администратора.
+ */
+$serverClassGroupId = null;
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET'
+    && ($_GET['action'] ?? '') === 'class_progress'
+    && ($_SERVER['HTTP_ORIGIN'] ?? '') === ''
+    && in_array($_SERVER['REMOTE_ADDR'] ?? '', ALLOWED_SERVER_IPS, true)) {
+    $gid = isset($_GET['group_id']) ? (int) $_GET['group_id'] : 0;
+    if ($gid > 0) {
+        $serverClassGroupId = $gid;
+    }
+}
+if ($serverClassGroupId === null) {
+    Auth::requireAdmin();
+}
 apiCheckRateLimit('admin_quiz', 180, 60);
 
 $action = $_GET['action'] ?? '';
@@ -189,7 +209,7 @@ if ($action === 'groups') {
 }
 
 if ($action === 'class_progress') {
-    $groupId = (int) ($_GET['group_id'] ?? 0);
+    $groupId = $serverClassGroupId ?? (int) ($_GET['group_id'] ?? 0);
     if ($groupId <= 0) {
         jsonResponse(['error' => 'group_id обязателен'], 400);
     }
