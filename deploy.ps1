@@ -21,6 +21,49 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# --- Deploy marker: writes version.json into the deployed payload ---
+# Records commit/branch/tree/dirty/deployedAt/via so the deployed content can be
+# compared with the local repository later (see na-web/check-deploy.ps1).
+function New-DeployMarker {
+  param(
+    [Parameter(Mandatory)][string]$ProjectDir,
+    [Parameter(Mandatory)][string]$OutFile,
+    [string]$Via = 'deploy.ps1'
+  )
+  $commit = $null; $branch = $null; $tree = $null; $dirty = $null; $changed = $null
+  if (Test-Path (Join-Path $ProjectDir '.git')) {
+    $prevEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    try {
+      $commit  = (& git -C $ProjectDir rev-parse HEAD 2>$null)
+      $branch  = (& git -C $ProjectDir rev-parse --abbrev-ref HEAD 2>$null)
+      $tracked   = @(& git -C $ProjectDir diff HEAD --numstat 2>$null)
+      $untracked = @(& git -C $ProjectDir ls-files -o --exclude-standard 2>$null)
+      $changed   = $tracked.Count + $untracked.Count
+      $dirty     = ($changed -gt 0)
+      if ($dirty) {
+        $stash = (& git -C $ProjectDir stash create 2>$null)
+        if ($stash) { $tree = (& git -C $ProjectDir rev-parse "$($stash.Trim())^{tree}" 2>$null) }
+      } else {
+        $tree = (& git -C $ProjectDir rev-parse 'HEAD^{tree}' 2>$null)
+      }
+    } finally { $ErrorActionPreference = $prevEap }
+  }
+  $marker = [ordered]@{
+    project    = Split-Path -Leaf $ProjectDir
+    commit     = if ($commit) { $commit.Trim() } else { $null }
+    branch     = if ($branch) { $branch.Trim() } else { $null }
+    tree       = if ($tree)   { $tree.Trim() }   else { $null }
+    dirty      = $dirty
+    dirtyFiles = $changed
+    deployedAt = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+    deployedBy = $env:USERNAME
+    via        = $Via
+  }
+  New-Item -ItemType Directory -Force -Path (Split-Path -Parent $OutFile) | Out-Null
+  [System.IO.File]::WriteAllText($OutFile, ($marker | ConvertTo-Json -Depth 3),
+    (New-Object System.Text.UTF8Encoding($false)))
+}
+
 # ─── 1. Load .env ───
 $envFile = Join-Path $PSScriptRoot '.env'
 if (Test-Path $envFile) {
@@ -91,6 +134,9 @@ if (-not (Test-Path $distPath)) {
   exit 1
 }
 
+# --- Deploy marker (version.json goes to webroot) ---
+New-DeployMarker -ProjectDir $PSScriptRoot -OutFile (Join-Path $distPath 'version.json')
+
 $sshArgStr = ""
 if ($sshPort -ne '22') { $sshArgStr += "-P $sshPort " }
 if ($identityFile) { $sshArgStr += "-i `"$identityFile`" " }
@@ -102,7 +148,8 @@ if ($identityFile) { $sshArgStr += "-i `"$identityFile`" " }
 # перезаписали бы боевое состояние rate-limiter на сервере.
 $remoteScript = "find \`"$remotePath\`" -mindepth 1 -maxdepth 1 ! -name 'data' -exec rm -rf {} + 2>/dev/null; " +
   "mkdir -p \`"$remotePath/data\`" 2>/dev/null; " +
-  "tar -xzf - --skip-old-files -C \`"$remotePath\`""
+  "tar -xzf - --skip-old-files -C \`"$remotePath\`"; " +
+  "chmod -R g+w \`"$remotePath/sandbox\`" 2>/dev/null || true"
 $sshArgStr += "$remote `"$remoteScript`""
 
 Write-Host "`n==> Deploying to ${remote}:${remotePath} ..." -ForegroundColor Cyan
