@@ -5,6 +5,8 @@
  * GET  ?action=class_progress&group_id=N — прогресс учеников группы
  *      (также доступно сервер-к-сервер с доверенных IP — кабинет тьютора в j-web)
  *      необязательный &until=YYYY-MM-DD[ HH:MM:SS] — прогресс по состоянию на конец дня / момент
+ * GET  ?action=class_progress_batch&group_id=N&untils=... — пакет срезов
+ *      (until1|until2|...) одним запросом: j-web строит прогресс на начало уроков
  * GET  ?action=attempts&user_id=N&lesson_number=M — попытки ученика
  * GET  ?action=recent&limit=N       — последние по времени решённые квизы
  * POST {action:'mark_quiz', user_id, lesson_number, quiz_score, completed}
@@ -30,13 +32,14 @@ Database::initialize();
 
 /**
  * Сервер-к-сервер сводка по классу: j-web показывает классному руководителю
- * (тьютору) успеваемость его класса. Разрешён только GET action=class_progress
- * без Origin (не из браузера) с доверенных IP (ALLOWED_SERVER_IPS); все прочие
- * действия (в т.ч. POST mark_quiz/clear_quiz) — строго для администратора.
+ * (тьютору) успеваемость его класса. Разрешены только GET class_progress и
+ * class_progress_batch без Origin (не из браузера) с доверенных IP
+ * (ALLOWED_SERVER_IPS); все прочие действия (в т.ч. POST mark_quiz/clear_quiz) —
+ * строго для администратора.
  */
 $serverClassGroupId = null;
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET'
-    && ($_GET['action'] ?? '') === 'class_progress'
+    && in_array((string)($_GET['action'] ?? ''), ['class_progress', 'class_progress_batch'], true)
     && ($_SERVER['HTTP_ORIGIN'] ?? '') === ''
     && in_array($_SERVER['REMOTE_ADDR'] ?? '', ALLOWED_SERVER_IPS, true)) {
     $gid = isset($_GET['group_id']) ? (int) $_GET['group_id'] : 0;
@@ -348,6 +351,171 @@ if ($action === 'class_progress') {
         'max_lesson_with_quizzes' => $maxLesson,
         'until' => $until !== '' ? $until : null,
     ]);
+}
+
+if ($action === 'class_progress_batch') {
+    $groupId = $serverClassGroupId ?? (int) ($_GET['group_id'] ?? 0);
+    if ($groupId <= 0) {
+        jsonResponse(['error' => 'group_id обязателен'], 400);
+    }
+
+    // Список моментов в UTC: untils=2026-09-02 08:40:00|2026-09-03 11:10:00|...
+    $untils = [];
+    foreach (explode('|', (string) ($_GET['untils'] ?? '')) as $u) {
+        $u = trim($u);
+        if ($u === '') {
+            continue;
+        }
+        $dt = DateTime::createFromFormat('!Y-m-d H:i:s', $u);
+        if ($dt && $dt->format('Y-m-d H:i:s') === $u) {
+            $untils[] = $u;
+        }
+    }
+    $untils = array_values(array_unique($untils));
+    if (!$untils) {
+        jsonResponse(['error' => 'untils должен содержать моменты YYYY-MM-DD HH:MM:SS через |'], 400);
+    }
+    if (count($untils) > 80) {
+        jsonResponse(['error' => 'Слишком много untils (максимум 80)'], 400);
+    }
+
+    $memberships = AuthClient::getMemberships() ?? [];
+    $userIds = [];
+    foreach ($memberships as $m) {
+        if ((int) $m['group_id'] === $groupId) {
+            $uid = (int) $m['user_id'];
+            if ($uid > 0 && !in_array($uid, $userIds, true)) {
+                $userIds[] = $uid;
+            }
+        }
+    }
+
+    $users = AuthClient::getUsers() ?? [];
+    $usersMap = [];
+    foreach ($users as $u) {
+        $uid = (int) $u['id'];
+        $usersMap[$uid] = $u['display_name'] ?? $u['login'] ?? 'ID:' . $uid;
+    }
+
+    if (empty($userIds)) {
+        $snapshots = [];
+        foreach ($untils as $until) {
+            $snapshots[$until] = [
+                'students' => [],
+                'max_lesson_with_quizzes' => 0,
+                'until' => $until,
+            ];
+        }
+        jsonResponse(['snapshots' => $snapshots, 'untils' => $untils]);
+    }
+
+    $db = Database::getInstance();
+    $placeholders = implode(',', array_fill(0, count($userIds), '?'));
+
+    $stmt = $db->prepare(
+        "SELECT user_id, lesson_number, completed, quiz_score, completed_at, updated_at
+         FROM progress
+         WHERE user_id IN ($placeholders)"
+    );
+    $stmt->execute($userIds);
+    $progressRows = $stmt->fetchAll();
+
+    // Все попытки один раз; для каждого среза берём лучший балл до момента.
+    $stmt = $db->prepare(
+        "SELECT user_id, lesson_number, score, attempted_at
+         FROM quiz_attempts
+         WHERE user_id IN ($placeholders)
+         ORDER BY attempted_at ASC, id ASC"
+    );
+    $stmt->execute($userIds);
+    $attemptsByPair = [];
+    $attemptTotals = [];
+    foreach ($stmt->fetchAll() as $a) {
+        $pair = (int) $a['user_id'] . ':' . (int) $a['lesson_number'];
+        $attemptsByPair[$pair][] = [
+            'at' => (string) $a['attempted_at'],
+            'score' => (int) $a['score'],
+        ];
+        $attemptTotals[$pair] = ($attemptTotals[$pair] ?? 0) + 1;
+    }
+
+    $snapshots = [];
+    foreach ($untils as $until) {
+        $students = [];
+        foreach ($userIds as $uid) {
+            $students[$uid] = [
+                'id' => $uid,
+                'name' => $usersMap[$uid] ?? 'ID:' . $uid,
+                'lessons' => [],
+            ];
+        }
+
+        foreach ($progressRows as $row) {
+            $uid = (int) $row['user_id'];
+            if (!isset($students[$uid])) {
+                continue;
+            }
+            $num = (int) $row['lesson_number'];
+            $completed = (int) $row['completed'];
+            $quizScore = $row['quiz_score'] !== null ? (int) $row['quiz_score'] : null;
+            $pair = $uid . ':' . $num;
+
+            if (($attemptTotals[$pair] ?? 0) > 0) {
+                // Попытки есть — исторический балл строго по ним.
+                $best = null;
+                foreach (($attemptsByPair[$pair] ?? []) as $attempt) {
+                    if ($attempt['at'] > $until) {
+                        break;
+                    }
+                    if ($best === null || $attempt['score'] > $best) {
+                        $best = $attempt['score'];
+                    }
+                }
+                $quizScore = $best;
+            } elseif ($quizScore !== null) {
+                // Попыток нет (легаси): балл был уже на дату, только если
+                // запись не обновлялась после неё (как в одиночном срезе).
+                $updatedDate = substr((string) $row['updated_at'], 0, 10);
+                if ($updatedDate === '' || $updatedDate > $until) {
+                    $quizScore = null;
+                }
+            }
+
+            $completedAt = (string) ($row['completed_at'] ?? '');
+            $completed = ($completed === 1 && $completedAt !== '' && substr($completedAt, 0, 10) <= $until) ? 1 : 0;
+
+            if ($quizScore === null) {
+                continue;
+            }
+
+            $students[$uid]['lessons'][$num] = [
+                'completed' => $completed,
+                'quiz_score' => $quizScore,
+            ];
+        }
+
+        foreach ($students as &$s) {
+            ksort($s['lessons']);
+        }
+        unset($s);
+
+        $maxLesson = 0;
+        foreach ($students as $s) {
+            foreach ($s['lessons'] as $num => $lesson) {
+                if ($num > 0 && $lesson['quiz_score'] !== null && $num > $maxLesson) {
+                    $maxLesson = $num;
+                }
+            }
+        }
+
+        $snapshots[$until] = [
+            'students' => array_values($students),
+            'max_lesson_with_quizzes' => $maxLesson,
+            'until' => $until,
+        ];
+    }
+
+    jsonResponse(['snapshots' => $snapshots, 'untils' => $untils]);
 }
 
 if ($action === 'recent') {
