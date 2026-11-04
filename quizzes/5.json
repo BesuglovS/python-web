@@ -33,15 +33,15 @@
     "explanation": "str() преобразует любое значение в строку. str(None) вернёт строку \"None\" (4 символа)."
   },
   {
-    "question": "Как проверить, является ли число целым?",
+    "question": "Что вернёт <code>bool(\"False\")</code>?",
     "options": [
-      "type(x) == int",
-      "isint(x)",
-      "x.is_integer()",
-      "x % 1 == 0"
+      "False",
+      "True",
+      "Ошибка",
+      "Строку \"False\""
     ],
-    "correct": 0,
-    "explanation": "type(x) == int проверяет, имеет ли переменная тип int."
+    "correct": 1,
+    "explanation": "bool() не разбирает текст, а проверяет «пустоту»: строка \"False\" непустая, поэтому результат — True."
   },
   {
     "question": "Что вернёт <code>str(42)</code>?",

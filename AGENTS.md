@@ -104,18 +104,26 @@ data/*.db*                   # SQLite: прогресс, бейджи (созд�
 
 ```yaml
 ---
-layout: 'layout.njk'
-lesson: 25
 title: 'Списки'
-subtitle: 'list, методы списков'
+lesson: 25
 description: 'list, методы списков' # опционально, для SEO/meta
-section: 5
+layout: 'layout.njk'
+permalink: '25-lists.html'
+subtitle: 'list, методы списков'
 ---
 ```
 
-Контент: заголовки `##`, блоки ` ```python `, визуальные блоки `> [!NOTE]`, `> [!TIP]`,
-`> [!WARNING]`, ссылки на другие уроки — относительные (`25-lists.html`). Комментарии в
+Контент: заголовки `##`, блоки ` ```python `, выноски-блокквоты `> **⚠️ Важно:**`,
+`> **💡 Совет:**`, `> **ℹ️ Замечание:**`, ссылки на другие уроки — относительные
+(`25-lists.html`). Таблицы — сырой HTML с `<thead>`:
+`<table class="lesson-table"><thead>…</thead><tbody>…</tbody></table>`. Комментарии в
 примерах кода на русском. Язык контента — **русский**.
+
+Front matter урока содержит только `title`, `lesson`, `description`, `layout`, `permalink`
+и `subtitle` (при необходимости). Поле `permalink` обязательно: без него Eleventy
+соберёт страницу в подкаталог (`dist/03-variables/index.html`), а `lessons.json`
+ссылается на плоский `03-variables.html`. Поля `badge`/`file` во front matter не нужны —
+их источник — `lessons.json`.
 
 ### Новый урок (полный цикл)
 
@@ -187,7 +195,8 @@ PRECACHE Service Worker. Не открывайте каталог вебом и 
 
 ### Markdown
 
-- Блоки кода с языком `python`; спойлеры `> [!NOTE|TIP|WARNING]`; перенос строк 120 символов
+- Блоки кода с языком `python`; выноски `> **⚠️ Важно:**`, `> **💡 Совет:**`, `> **ℹ️ Замечание:**`;
+  перенос строк 120 символов
 
 ## 🧪 Тестирование
 

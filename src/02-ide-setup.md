@@ -1,9 +1,7 @@
 ---
-title: 'Настройка IDE'
+title: 'Настройка IDE: IDLE, VS Code и PyCharm'
 lesson: 2
 description: 'Запуск в IDLE, установка, создание проекта'
-badge: 'ide_pioneer'
-file: '02-ide-setup.html'
 layout: 'layout.njk'
 permalink: '02-ide-setup.html'
 subtitle: 'Настройка окружения для разработки на Python'
@@ -13,7 +11,7 @@ subtitle: 'Настройка окружения для разработки н�
 
 **IDE** (Integrated Development Environment, интегрированная среда разработки) — это программа, которая объединяет редактор кода, отладчик, терминал и другие инструменты разработки в одном окне. IDLE, VS Code и PyCharm — примеры таких сред; IDLE — самая простая из них.
 
-<table><tbody><tr><th>Характеристика</th><th>IDLE</th><th>VS Code</th><th>PyCharm</th></tr><tr><td>Разработчик</td><td>Python Software Foundation</td><td>Microsoft</td><td>JetBrains</td></tr><tr><td>Вес</td><td>Очень лёгкий (~10 МБ)</td><td>Лёгкий (~200 МБ)</td><td>Тяжёлый (~1 ГБ)</td></tr><tr><td>Лицензия</td><td>Бесплатно (Open Source)</td><td>Бесплатно (Open Source)</td><td>Community — бесплатно, Professional — платно</td></tr><tr><td>Python "из коробки"</td><td>Да (встроен в Python)</td><td>Требуется установка расширения</td><td>Полная поддержка сразу</td></tr><tr><td>Лучше всего подходит</td><td>Для обучения и простых скриптов</td><td>Для лёгких проектов, скриптов, веб-разработки</td><td>Для крупных проектов, Data Science, Django</td></tr></tbody></table>
+<table class="lesson-table"><thead><tr><th scope="col">Характеристика</th><th scope="col">IDLE</th><th scope="col">VS Code</th><th scope="col">PyCharm</th></tr></thead><tbody><tr><td>Разработчик</td><td>Python Software Foundation</td><td>Microsoft</td><td>JetBrains</td></tr><tr><td>Вес</td><td>Очень лёгкий (~10 МБ)</td><td>Лёгкий (~200 МБ)</td><td>Тяжёлый (~1 ГБ)</td></tr><tr><td>Лицензия</td><td>Бесплатно (открытый код, PSF)</td><td>Бесплатно (сборка Microsoft; ядро Code-OSS — MIT)</td><td>Базовые функции бесплатны; PyCharm Pro — подписка</td></tr><tr><td>Python "из коробки"</td><td>Да (встроен в Python)</td><td>Требуется установка расширения</td><td>Да (базовые функции)</td></tr><tr><td>Лучше всего подходит</td><td>Для обучения и простых скриптов</td><td>Для лёгких проектов, скриптов, веб-разработки</td><td>Для крупных проектов, веб-разработки и Data Science (Jupyter — в Pro)</td></tr></tbody></table>
 
 Все IDE отлично подходят для изучения Python. Вы можете выбрать любую — разница для начинающего минимальна. Мы рассмотрим их, чтобы вы могли принять взвешенное решение.
 
@@ -74,8 +72,10 @@ Hello, World!
 
 ```python
 python --version
-# Пример вывода: Python 3.13.x
+# Пример вывода: Python 3.15.x
 ```
+
+> **ℹ️ Замечание:** на macOS и Linux интерпретатор обычно вызывается командой `python3`, а не `python`.
 
 ### Шаг 3. Установка расширения Python
 
@@ -110,25 +110,25 @@ print("Python работает!")
 
 Способы запуска:
 
-- **Через терминал:** `Ctrl+Shift+~` > введите `python main.py`
+- **Через терминал:** ``Ctrl+` `` (открыть терминал) > введите `python main.py`
 - **Кнопка Run ▶** (в правом верхнем углу)
 - **Правой кнопкой мыши** на файле > «Run Python File in Terminal»
 
-**Совет:** Установите также расширение **Python Debugger** (ms-python.debugger) для удобной отладки кода с точками останова.
+**Совет:** Установите также расширение **Python Debugger** (`ms-python.debugpy`) для удобной отладки кода с точками останова.
 
 ### Дополнительные полезные расширения
 
-- **Pylance** — улучшенное автодополнение и проверка типов
-- **Python Docstring Generator** — автоматическая генерация docstring
+- **Pylance** — улучшенное автодополнение и проверка типов (устанавливается вместе с расширением Python)
+- **autoDocstring** — автоматическая генерация docstring
 - **Jupyter** — поддержка Jupyter Notebook прямо в VS Code
 - **GitLens** — удобная работа с Git
-- **Prettier / Black** — форматирование кода
+- **Black** (или расширение Python) — автоформатирование кода по PEP 8
 
 ## Настройка PyCharm
 
 ### Шаг 1. Установка PyCharm
 
-Скачайте установщик с официального сайта [jetbrains.com/pycharm](https://www.jetbrains.com/pycharm/download). Для обучения достаточно **PyCharm Community Edition** — он бесплатен и содержит все необходимые функции.
+Скачайте установщик с официального сайта [jetbrains.com/pycharm](https://www.jetbrains.com/pycharm/download). Для обучения достаточно бесплатных возможностей PyCharm: базовый редактор, отладчик и рефакторинг доступны без подписки. Платная подписка **PyCharm Pro** добавляет расширенную поддержку веб-фреймворков, полноценный Jupyter и работу с базами данных.
 
 ### Шаг 2. Установка Python
 
@@ -172,15 +172,15 @@ print("Python работает!")
 
 ### Советы по настройке PyCharm
 
-- **Тема оформления:** `File > Settings > Appearance & Behavior > Theme` (выберите Dracula, One Dark или другую)
+- **Тема оформления:** `File > Settings > Appearance & Behavior > Theme` (например, Dracula)
 - **Размер шрифта:** `Settings > Editor > Font`
-- **Автосохранение:** PyCharm сохраняет файлы автоматически, но можно включить явно в `Settings > Appearance & Behavior > System Settings > Synchronization`
+- **Автосохранение:** PyCharm сохраняет файлы автоматически при потере фокуса — отдельная настройка не нужна
 
-## Сравнение: VS Code vs PyCharm для новичка
+## Сравнение: IDLE vs VS Code vs PyCharm для новичка
 
-<table><tbody><tr><th>Критерий</th><th>IDLE</th><th>VS Code</th><th>PyCharm</th></tr><tr><td>Скорость запуска</td><td>Мгновенно</td><td>Мгновенно</td><td>10–30 секунд</td></tr><tr><td>Сложность освоения</td><td>Очень просто</td><td>Проще, минимум настроек</td><td>Больше функций, круче кривая обучения</td></tr><tr><td>Python "из коробки"</td><td>Да</td><td>Нет (нужно расширение)</td><td>Да</td></tr><tr><td>Универсальность</td><td>Низкая (только Python)</td><td>Высокая (много языков)</td><td>Средняя (фокус на Python)</td></tr><tr><td>Потребление памяти</td><td>~20–50 МБ</td><td>~300–500 МБ</td><td>~1–2 ГБ</td></tr></tbody></table>
+<table class="lesson-table"><thead><tr><th scope="col">Критерий</th><th scope="col">IDLE</th><th scope="col">VS Code</th><th scope="col">PyCharm</th></tr></thead><tbody><tr><td>Скорость запуска</td><td>Мгновенно</td><td>Мгновенно</td><td>10–30 секунд</td></tr><tr><td>Сложность освоения</td><td>Очень просто</td><td>Просто, минимум настроек</td><td>Больше функций, выше порог входа</td></tr><tr><td>Python "из коробки"</td><td>Да</td><td>Нет (нужно расширение)</td><td>Да (базовые функции)</td></tr><tr><td>Универсальность</td><td>Низкая (только Python)</td><td>Высокая (много языков)</td><td>Средняя (фокус на Python)</td></tr><tr><td>Потребление памяти</td><td>~20–50 МБ</td><td>~300–500 МБ</td><td>~1–2 ГБ</td></tr></tbody></table>
 
-**Что выбрать?** Если вы делаете самые первые шаги — начните с **IDLE**, он не требует установки и настроек. Если хотите что-то лёгкое и универсальное — переходите на **VS Code**. Если планируете серьёзно изучать Python и Data Science — **PyCharm Community Edition** будет отличным выбором. Все три среды бесплатны.
+**Что выбрать?** Если вы делаете самые первые шаги — начните с **IDLE**, он не требует установки и настроек. Если хотите что-то лёгкое и универсальное — переходите на **VS Code**. Если планируете серьёзно изучать Python, веб-разработку или Data Science — присмотритесь к **PyCharm** (базовые функции бесплатны, Jupyter и профилирование — в Pro).
 
 > **💡 Совет:** Попробуйте все три! Начните с IDLE, затем установите VS Code и PyCharm, создайте в каждом простой проект и выберите ту среду, в которой вам комфортнее работать.
 
@@ -193,13 +193,16 @@ print("Python работает!")
 <!-- norun -->
 
 ```python
-# Создать виртуальное окружение
+# Создать виртуальное окружение (macOS/Linux — python3 вместо python)
 python -m venv .venv
 
-# Активировать (Windows)
-.venv\Scripts\activate
+# Активировать (Windows, PowerShell)
+.venv\Scripts\Activate.ps1
 
-# Активировать (Mac/Linux)
+# Активировать (Windows, cmd)
+.venv\Scripts\activate.bat
+
+# Активировать (macOS/Linux)
 source .venv/bin/activate
 
 # Установить пакет
@@ -209,4 +212,14 @@ pip install numpy
 deactivate
 ```
 
+> **ℹ️ Замечание:** если PowerShell запрещает запуск скриптов, разрешите его для текущего окна терминала: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`.
+
 VS Code предложит использовать виртуальное окружение при открытии проекта. PyCharm создаёт его автоматически при создании нового проекта.
+
+## Итоги
+
+- **IDLE** встроен в дистрибутив Python и подходит для самых первых шагов.
+- **VS Code** — лёгкий и универсальный редактор; для Python нужно расширение `ms-python.python`.
+- **PyCharm** — полноценная IDE: базовые функции бесплатны, расширенные возможности — в подписке Pro.
+- При установке Python на Windows отметьте **«Add Python to PATH»**, иначе команда `python` не будет работать в терминале.
+- **Виртуальное окружение** (`venv`) изолирует зависимости проекта от системного Python.

@@ -34,7 +34,7 @@
           "file": "02-ide-setup.html",
           "title": "Настройка IDE: IDLE, VS Code и PyCharm",
           "desc": "Запуск в IDLE, установка, создание проекта",
-          "duration": 8,
+          "duration": 15,
           "complexity": "beginner",
           "badge": "ide_pioneer",
           "type": "practice",
@@ -64,7 +64,7 @@
           "file": "03-variables.html",
           "title": "Переменные",
           "desc": "Объявление, присваивание, имена",
-          "duration": 10,
+          "duration": 8,
           "complexity": "beginner",
           "badge": "var_master",
           "type": "mixed",
@@ -77,7 +77,7 @@
           "interactive": {
             "exercise": true,
             "quiz": true,
-            "dragDrop": true,
+            "dragDrop": false,
             "game": false
           }
         },
@@ -86,7 +86,7 @@
           "file": "04-data-types.html",
           "title": "Типы данных",
           "desc": "int, float, str, bool, NoneType",
-          "duration": 12,
+          "duration": 10,
           "complexity": "beginner",
           "badge": "type_explorer",
           "type": "theory",
@@ -102,7 +102,7 @@
           "interactive": {
             "exercise": true,
             "quiz": true,
-            "dragDrop": true,
+            "dragDrop": false,
             "game": false
           }
         },
@@ -111,7 +111,7 @@
           "file": "05-type-casting.html",
           "title": "Приведение типов",
           "desc": "int(), float(), str(), bool()",
-          "duration": 8,
+          "duration": 10,
           "complexity": "beginner",
           "badge": "caster",
           "type": "practice",
@@ -135,7 +135,7 @@
           "file": "06-io.html",
           "title": "Ввод и вывод",
           "desc": "print(), input(), форматирование",
-          "duration": 10,
+          "duration": 12,
           "complexity": "beginner",
           "badge": "io_master",
           "type": "practice",
@@ -181,7 +181,7 @@
           "file": "08-number-ops.html",
           "title": "Операции над числами",
           "desc": "+, -, *, /, //, %, **",
-          "duration": 10,
+          "duration": 12,
           "complexity": "beginner",
           "badge": "math_wiz",
           "type": "practice",
@@ -195,8 +195,8 @@
           "interactive": {
             "exercise": true,
             "quiz": true,
-            "dragDrop": true,
-            "game": true
+            "dragDrop": false,
+            "game": false
           },
           "contest": 7
         }

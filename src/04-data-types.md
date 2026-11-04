@@ -2,8 +2,6 @@
 title: 'Типы данных'
 lesson: 4
 description: 'int, float, str, bool, NoneType'
-badge: 'type_explorer'
-file: '04-data-types.html'
 layout: 'layout.njk'
 permalink: '04-data-types.html'
 subtitle: 'int, float, str, bool, NoneType, type(), isinstance()'
@@ -15,9 +13,9 @@ subtitle: 'int, float, str, bool, NoneType, type(), isinstance()'
 
 ```python
 # Числовые типы
-x = 10          # int — целое число
+x = 10          # int   — целое число
 y = 3.14        # float — число с плавающей точкой
-z = 1 + 2j      # complex — комплексное число
+z = 1 + 2j      # complex — комплексное число (инженерия, наука)
 
 # Строковый тип
 name = "Python"  # str — строка
@@ -31,70 +29,51 @@ result = None    # NoneType — отсутствие значения
 
 ## Определение типа — type() и isinstance()
 
-Узнать тип переменной:
-
 ```python
 print(type(10))          # <class 'int'>
 print(type("hello"))     # <class 'str'>
 print(type(True))        # <class 'bool'>
+print(type(None))        # <class 'NoneType'>
 
 # isinstance — проверка принадлежности типу
-print(isinstance(10, int))       # True
-print(isinstance("abc", str))    # True
-print(isinstance(10, (int, float)))  # True
+print(isinstance(10, int))            # True
+print(isinstance("abc", str))         # True
+print(isinstance(10, (int, float)))   # True
 ```
+
+**`bool` — подкласс `int`.** Поэтому `isinstance(True, int)` возвращает `True`, а `True == 1`. Именно поэтому булевы значения можно складывать с числами.
 
 ## Преобразование типов
 
-Явное преобразование (приведение) типов — превращение значения из одного типа в другой с помощью функций-конструкторов: `int()`, `float()`, `str()`, `bool()`.
+Значение можно явно превратить в другой тип функциями-конструкторами:
 
-### Числовые преобразования
-
-```python
-# int > float
-print(float(5))        # 5.0
-
-# float > int (дробная часть отбрасывается!)
-print(int(3.14))       # 3
-print(int(3.99))       # 3  (не округляет, а отбрасывает)
-
-# int > str
-print(str(100))        # "100"
-
-# float > str
-print(str(3.14))       # "3.14"
-```
-
-### Преобразование строк в числа
+<table class="lesson-table"><thead><tr><th scope="col">Функция</th><th scope="col">Что делает</th><th scope="col">Пример</th></tr></thead><tbody><tr><td><code>int(x)</code></td><td>Целое число (дробная часть отбрасывается)</td><td><code>int(3.99)</code> → <code>3</code></td></tr><tr><td><code>float(x)</code></td><td>Число с плавающей точкой</td><td><code>float("3.14")</code> → <code>3.14</code></td></tr><tr><td><code>str(x)</code></td><td>Строка</td><td><code>str(42)</code> → <code>"42"</code></td></tr><tr><td><code>bool(x)</code></td><td>Логическое значение</td><td><code>bool(0)</code> → <code>False</code></td></tr></tbody></table>
 
 ```python
-# Строка > int
-print(int("42"))       # 42
-
-# Строка > float
-print(float("2.5"))    # 2.5
-print(float("3"))      # 3.0  (float допускает целое в строке)
+print(int("42"))      # 42
+print(int(3.99))      # 3 — дробная часть отбрасывается, а не округляется
+print(float(10))      # 10.0
+print(str(100))       # 100 — это уже строка, но print выводит её без кавычек
+print(bool(0))        # False
 ```
 
-**Ошибка преобразования.** Если строка не является числом, Python выбросит ошибку `ValueError`:
+Если строка не является числом, Python выбрасывает `ValueError`:
 
 ```python
-# int("abc")    # ValueError: invalid literal for int()
-# float("12,5") # ValueError: 12,5 — нужна точка, а не запятая
+# int("abc")     # ValueError: invalid literal for int() with base 10: 'abc'
+# float("12,5")  # ValueError: нужна точка, а не запятая
 ```
 
-### Преобразование в bool
-
-Любое значение можно превратить в `bool`. Правило простое: «пустые» значения дают `False`, всё остальное — `True`. Подробнее о truthy и falsy значениях — в уроке 9.
+**Правило `bool()`:** «пустые» значения дают `False`, всё остальное — `True`:
 
 ```python
-print(bool(1))         # True
-print(bool(0))         # False   (ноль — «пустое» число)
-print(bool(-5))        # True
-print(bool(""))        # False   (пустая строка)
-print(bool("text"))    # True    (непустая строка)
-print(bool(None))      # False
+print(bool(0), bool(""), bool([]), bool(None))   # False False False False
+print(bool(-5), bool("0"), bool([0]))            # True True True
 ```
+
+> **⚠️ Важно:** строка `"0"` и список `[0]` — **непустые**, поэтому дают `True`. Подробнее о truthy/falsy — в уроке 9.
+
+Более подробно о правилах преобразования, ловушках и ошибках — в [уроке 5](05-type-casting.html).
 
 ### Bool как число
 
@@ -107,17 +86,37 @@ print(True + 5)        # 6
 print(False * 10)      # 0
 ```
 
+## Точность float
+
+`float` хранит число в двоичном формате, поэтому часть десятичных дробей представляется приближённо:
+
+```python
+print(0.1 + 0.2)             # 0.30000000000000004
+print(0.1 + 0.2 == 0.3)      # False!
+```
+
+Сравнивать дробные числа «в лоб» через `==` нельзя: используйте `math.isclose()` (модуль `math` — в уроке 8). А для красивого вывода — форматирование из урока 7.
+
 ## Изменяемые и неизменяемые типы
 
-Одни типы можно изменять после создания (изменяемые), другие — нет (неизменяемые):
+Одни типы можно изменять после создания (изменяемые), другие — нет (неизменяемые).
 
-Неизменяемые (immutable): int, float, str, bool
+**Неизменяемые (immutable):** `int`, `float`, `str`, `bool`, `NoneType`, `tuple`.
 
-Изменяемые (mutable) мы изучим позже — к ним относятся list, dict, set и другие коллекции.
+**Изменяемые (mutable):** коллекции `list`, `dict`, `set` и другие — их изучим в следующих уроках.
 
 ```python
 # Строки неизменяемы
 s = "hello"
-# s[0] = "H"  # Ошибка! Нельзя изменить символ
+# s[0] = "H"  # TypeError: 'str' object does not support item assignment
 s = "H" + s[1:]  # Нужно создать новую строку
+print(s)         # Hello
 ```
+
+## Итоги
+
+- У каждого значения есть тип: `type()` возвращает его, `isinstance()` — проверяет принадлежность.
+- `bool` — подкласс `int`: `True == 1`, `False == 0`.
+- `int()` отбрасывает дробную часть (для отрицательных — в сторону нуля), а не округляет.
+- Дробные числа хранятся приближённо: `0.1 + 0.2 != 0.3`.
+- `str`, `int`, `float`, `bool`, `tuple` неизменяемы; `list`, `dict`, `set` — изменяемы.

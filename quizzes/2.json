@@ -52,7 +52,7 @@
       "Sublime Text"
     ],
     "correct": 2,
-    "explanation": "PyCharm создан компанией JetBrains. Доступны бесплатная Community Edition и платная Professional Edition."
+    "explanation": "PyCharm создан компанией JetBrains. Базовые возможности PyCharm бесплатны, а расширенные функции (Jupyter, профилирование, поддержка веб-фреймворков, работа с базами данных) входят в платную подписку PyCharm Pro."
   },
   {
     "question": "Что такое виртуальное окружение (venv) в Python?",
@@ -88,7 +88,7 @@
     "explanation": "В PyCharm для запуска кода используется Shift+F10 (или зелёная стрелка в правом верхнем углу)."
   },
   {
-    "question": "Какая IDE лучше всего подходит для начинающих по сравнению с таблицей в уроке?",
+    "question": "Какая IDE лучше всего подходит для самых первых шагов?",
     "options": [
       "PyCharm Professional",
       "VS Code",
