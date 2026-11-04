@@ -44,6 +44,45 @@ export function sanitizeHtml(html) {
   return out.join('');
 }
 
+function _range(count) {
+  const out = [];
+  for (let i = 0; i < count; i++) out.push(i);
+  return out;
+}
+
+/**
+ * Перемешивает копию массива (Fisher–Yates). Исходный массив не меняется.
+ * @param {Array} items
+ * @returns {Array} новая перестановка элементов
+ */
+export function shuffleCopy(items) {
+  const out = items.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = out[i];
+    out[i] = out[j];
+    out[j] = tmp;
+  }
+  return out;
+}
+
+/**
+ * Порядок показа вопросов и вариантов для одной попытки квиза.
+ * В API всегда уходят канонические индексы (позиции в quizzes/N.json),
+ * поэтому перемешивание не ломает серверную проверку ответов.
+ * @param {Array<{options: string[]}>} questions
+ * @returns {Array<{q: number, opts: number[]}>} q — канонический индекс вопроса,
+ *   opts — канонические индексы его вариантов в порядке показа
+ */
+export function buildQuizPresentation(questions) {
+  const list = Array.isArray(questions) ? questions : [];
+  return shuffleCopy(_range(list.length)).map(function (questionIdx) {
+    const question = list[questionIdx];
+    const options = question && Array.isArray(question.options) ? question.options : [];
+    return { q: questionIdx, opts: shuffleCopy(_range(options.length)) };
+  });
+}
+
 export function initQuizSystem() {
   const lessonAttr = document.body.getAttribute('data-lesson');
   const isFinalTest = lessonAttr === 'final-test';
@@ -95,10 +134,13 @@ export function initQuizSystem() {
         waiting: false,
         total: questions.length,
         answersLog: [],
+        // Порядок вопросов и вариантов перемешивается на каждую попытку.
+        presentation: buildQuizPresentation(questions),
       };
 
       function renderQuestion() {
-        const q = questions[state.idx];
+        const slot = state.presentation[state.idx];
+        const q = questions[slot.q];
 
         quizContainer.textContent = '';
         const h3 = document.createElement('h3');
@@ -133,13 +175,15 @@ export function initQuizSystem() {
           '\u0412\u0430\u0440\u0438\u0430\u043d\u0442\u044b \u043e\u0442\u0432\u0435\u0442\u0430',
         );
 
-        q.options.forEach(function (opt, i) {
+        slot.opts.forEach(function (realIdx, i) {
           const optEl = document.createElement('button');
           optEl.type = 'button';
           optEl.className = 'quiz-option';
           optEl.setAttribute('role', 'radio');
           optEl.setAttribute('aria-checked', 'false');
-          optEl.setAttribute('data-idx', String(i));
+          // data-idx — канонический индекс варианта (его проверяет сервер),
+          // а не позиция на экране: порядок вариантов перемешивается.
+          optEl.setAttribute('data-idx', String(realIdx));
 
           const marker = document.createElement('span');
           marker.className = 'quiz-opt-marker';
@@ -147,7 +191,7 @@ export function initQuizSystem() {
 
           const text = document.createElement('span');
           text.className = 'quiz-opt-text';
-          text.textContent = opt.replace(/\n/g, '\\n');
+          text.textContent = q.options[realIdx].replace(/\n/g, '\\n');
 
           optEl.appendChild(marker);
           optEl.appendChild(text);
@@ -171,12 +215,12 @@ export function initQuizSystem() {
             : '\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442';
         quizContainer.appendChild(nextBtn);
 
-        bindOptionHandlers();
+        bindOptionHandlers(slot);
 
         h3.focus();
       }
 
-      function bindOptionHandlers() {
+      function bindOptionHandlers(slot) {
         const options = quizContainer.querySelectorAll('.quiz-option');
         const feedback = quizContainer.querySelector('.quiz-feedback');
         const nextBtn = quizContainer.querySelector('.quiz-next-btn');
@@ -189,7 +233,7 @@ export function initQuizSystem() {
             state.waiting = true;
             optEl.setAttribute('aria-checked', 'true');
 
-            gradeQuizAnswer(lessonNum, state.idx, selectedIdx)
+            gradeQuizAnswer(lessonNum, slot.q, selectedIdx)
               .then(function (result) {
                 state.waiting = false;
                 if (!result || typeof result.correct !== 'number') {
@@ -204,7 +248,7 @@ export function initQuizSystem() {
                 const correctIdx = result.correct;
 
                 state.answersLog.push({
-                  question_idx: state.idx,
+                  question_idx: slot.q,
                   selected: selectedIdx,
                   correct: correctIdx,
                   is_correct: !!result.is_correct,
@@ -219,9 +263,12 @@ export function initQuizSystem() {
                   feedback.className = 'quiz-feedback correct-fb show';
                 } else {
                   optEl.classList.add('incorrect');
-                  if (options[correctIdx]) {
-                    options[correctIdx].classList.add('correct');
-                    options[correctIdx].setAttribute('aria-checked', 'true');
+                  // result.correct — канонический индекс, переводим его
+                  // в позицию на экране по текущей перестановке вариантов.
+                  const correctPos = slot.opts.indexOf(correctIdx);
+                  if (correctPos !== -1 && options[correctPos]) {
+                    options[correctPos].classList.add('correct');
+                    options[correctPos].setAttribute('aria-checked', 'true');
                   }
                   feedback.innerHTML =
                     '\u274c \u041d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e. ' +
@@ -450,6 +497,8 @@ export function initQuizSystem() {
             waiting: false,
             total: questions.length,
             answersLog: [],
+            // Новая попытка — новая перестановка вопросов и вариантов.
+            presentation: buildQuizPresentation(questions),
           };
           renderQuestion();
         });
