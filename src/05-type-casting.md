@@ -50,6 +50,7 @@ print(float("5"))      # 5.0
 print(str(42))         # "42"
 print(str(3.14))       # "3.14"
 print(str(True))       # "True"
+print(str(None))       # "None" — строка из четырёх символов
 
 # Полезно для склеивания чисел со строками:
 age = 25

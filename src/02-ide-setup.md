@@ -11,6 +11,8 @@ subtitle: 'Настройка окружения для разработки н�
 
 ## Обзор IDLE, VS Code и PyCharm
 
+**IDE** (Integrated Development Environment, интегрированная среда разработки) — это программа, которая объединяет редактор кода, отладчик, терминал и другие инструменты разработки в одном окне. IDLE, VS Code и PyCharm — примеры таких сред; IDLE — самая простая из них.
+
 <table><tbody><tr><th>Характеристика</th><th>IDLE</th><th>VS Code</th><th>PyCharm</th></tr><tr><td>Разработчик</td><td>Python Software Foundation</td><td>Microsoft</td><td>JetBrains</td></tr><tr><td>Вес</td><td>Очень лёгкий (~10 МБ)</td><td>Лёгкий (~200 МБ)</td><td>Тяжёлый (~1 ГБ)</td></tr><tr><td>Лицензия</td><td>Бесплатно (Open Source)</td><td>Бесплатно (Open Source)</td><td>Community — бесплатно, Professional — платно</td></tr><tr><td>Python "из коробки"</td><td>Да (встроен в Python)</td><td>Требуется установка расширения</td><td>Полная поддержка сразу</td></tr><tr><td>Лучше всего подходит</td><td>Для обучения и простых скриптов</td><td>Для лёгких проектов, скриптов, веб-разработки</td><td>Для крупных проектов, Data Science, Django</td></tr></tbody></table>
 
 Все IDE отлично подходят для изучения Python. Вы можете выбрать любую — разница для начинающего минимальна. Мы рассмотрим их, чтобы вы могли принять взвешенное решение.
